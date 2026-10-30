@@ -1,0 +1,22 @@
+\begin{longtable}{@{}P{5.4cm}P{2.6cm}P{7.0cm}@{}}
+\caption{Relationships between use cases}\label{tab:uclinks}\\
+\toprule
+\small \textbf{Relationship} & \small \textbf{Kind} & \small \textbf{Meaning}\\
+\midrule
+\endfirsthead
+\toprule
+\small \textbf{Relationship} & \small \textbf{Kind} & \small \textbf{Meaning}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\small UC02 Search by Keyword $\rightarrow$ UC01 Search Product & \small Generalization & \small Searching with keywords is one way to find paintings\\
+\small UC03 Search by Voice $\rightarrow$ UC01 Search Product & \small Generalization & \small Searching by voice is one way to find paintings\\
+\small UC04 Search by Image $\rightarrow$ UC01 Search Product & \small Generalization & \small Searching with a photo is one way to find paintings\\
+\small UC07 Checkout $\rightarrow$ UC06 Manage Cart & \small «include» & \small Checkout always reads and checks the cart\\
+\small UC10 Ask Shopping Assistant $\rightarrow$ UC01 Search Product & \small «include» & \small The assistant calls the painting search tool\\
+\small UC10 Ask Shopping Assistant $\rightarrow$ UC09 Search Order & \small «include» & \small The assistant calls the order look-up tool\\
+\small UC05 View Product $\rightarrow$ UC01 Search Product & \small «extend» & \small From the results the customer may open a painting\\
+\small UC11 Cancel Order $\rightarrow$ UC08 View Order & \small «extend» & \small While viewing an order that is not shipped, the customer may cancel it\\
+\small UC14 Find Painting for My Room $\rightarrow$ UC01 Search Product & \small Generalization & \small Finding a painting for a room is one way to find paintings; the input is a room photo\\
+\end{longtable}

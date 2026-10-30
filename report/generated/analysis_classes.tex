@@ -1,0 +1,30 @@
+\begin{longtable}{@{}P{2.6cm}P{5.2cm}P{7.2cm}@{}}
+\caption{The analysis classes}\label{tab:classes41}\\
+\toprule
+\small \textbf{Class} & \small \textbf{Business meaning} & \small \textbf{Attributes}\\
+\midrule
+\endfirsthead
+\toprule
+\small \textbf{Class} & \small \textbf{Business meaning} & \small \textbf{Attributes}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\small \code{FullName} & \small Name of a customer, a value object & \small \code{firstName}, \code{middleName}, \code{lastName}\\
+\small \code{Customer} & \small A customer with an account & \small \code{customerId}, \code{email}, \code{phone}, \code{dateOfBirth}\\
+\small \code{Address} & \small Contact and delivery address & \small \code{houseNumber}, \code{street}, \code{district}, \code{city}\\
+\small \code{CustomerVIP} & \small VIP customer with a discount and reward points & \small \code{vipLevel}, \code{discountRate}, \code{rewardPoints}\\
+\small \code{CustomerNew} & \small Newly registered customer with a welcome voucher & \small \code{registeredDate}, \code{welcomeVoucher}\\
+\small \code{Cart} & \small Current shopping state (temporary) & \small \code{cartId}, \code{createdDate}, \code{updatedDate}\\
+\small \code{CartItem} & \small A product and the intended quantity in the cart & \small \code{quantity}, \code{cartPrice}\\
+\small \code{Order} & \small A confirmed purchase transaction & \small \code{orderId}, \code{orderDate}, \code{status}, \code{totalAmount}\\
+\small \code{OrderItem} & \small A purchased product with its frozen transaction price & \small \code{quantity}, \code{unitPrice}\\
+\small \code{Shipping} & \small Delivery of one order to one address & \small \code{shippingId}, \code{carrier}, \code{trackingNumber}, \code{shippingFee}, \code{status}, \code{deliveredDate}\\
+\small \code{Payment} \emph{(abstract)} & \small One payment attempt (abstract) & \small \code{paymentId}, \code{amount}, \code{paymentDate}, \code{status}\\
+\small \code{PayCash} & \small Cash on delivery & \small \code{cashReceived}, \code{changeAmount}\\
+\small \code{PayCredit} & \small Card payment through the payment service & \small \code{cardHolder}, \code{bankName}, \code{cardLast4}, \code{authorizationCode}\\
+\small \code{Product} \emph{(abstract)} & \small Anything the gallery sells (abstract) & \small \code{productId}, \code{name}, \code{price}, \code{stockQuantity}, \code{imageUrl}, \code{description}\\
+\small \code{Artist} & \small Painter of the original work & \small \code{artistId}, \code{name}, \code{nationality}, \code{lifeYears}\\
+\small \code{Painting} & \small A fine-art print of one painting & \small \code{style}, \code{subject}, \code{dominantColor}, \code{medium}, \code{yearCreated}, \code{widthCm}, \code{heightCm}\\
+\small \code{Frame} & \small A frame sold with a print & \small \code{material}, \code{color}, \code{sizeLabel}\\
+\end{longtable}

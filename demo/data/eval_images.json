@@ -1,0 +1,98 @@
+[
+  {
+    "queryId": "Q01",
+    "expected": "P06",
+    "image": "data/eval_images/Q01.jpg",
+    "source": {
+      "file": "File:Van Gogh Sunflowers Neue Pinakothek 8672.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Van_Gogh_Sunflowers_Neue_Pinakothek_8672.jpg/960px-Van_Gogh_Sunflowers_Neue_Pinakothek_8672.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Van_Gogh_Sunflowers_Neue_Pinakothek_8672.jpg",
+      "licence": "Public domain",
+      "credit": "User:Bibi Saint-Pol"
+    }
+  },
+  {
+    "queryId": "Q02",
+    "expected": "P10",
+    "image": "data/eval_images/Q02.jpg",
+    "source": {
+      "file": "File:Great Wave off Kanagawa2.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Great_Wave_off_Kanagawa2.jpg/960px-Great_Wave_off_Kanagawa2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Great_Wave_off_Kanagawa2.jpg",
+      "licence": "Public domain",
+      "credit": "After Katsushika Hokusai"
+    }
+  },
+  {
+    "queryId": "Q03",
+    "expected": "P22",
+    "image": "data/eval_images/Q03.jpg",
+    "source": {
+      "file": "File:Paul Cézanne - La Montagne Sainte-Victoire - 1946-0014 - Kunsthaus Zürich.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Paul_C%C3%A9zanne_-_La_Montagne_Sainte-Victoire_-_1946-0014_-_Kunsthaus_Z%C3%BCrich.jpg/960px-Paul_C%C3%A9zanne_-_La_Montagne_Sainte-Victoire_-_1946-0014_-_Kunsthaus_Z%C3%BCrich.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Paul_C%C3%A9zanne_-_La_Montagne_Sainte-Victoire_-_1946-0014_-_Kunsthaus_Z%C3%BCrich.jpg",
+      "licence": "Public domain",
+      "credit": "Paul Cézanne"
+    }
+  },
+  {
+    "queryId": "Q04",
+    "expected": "P02",
+    "image": "data/eval_images/Q04.jpg",
+    "source": {
+      "file": "File:Water Lilies, Reflections of Weeping Willows (1916) Claude Monet - NMWA, Tokyo (W 1971).jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Water_Lilies%2C_Reflections_of_Weeping_Willows_%281916%29_Claude_Monet_-_NMWA%2C_Tokyo_%28W_1971%29.jpg/960px-Water_Lilies%2C_Reflections_of_Weeping_Willows_%281916%29_Claude_Monet_-_NMWA%2C_Tokyo_%28W_1971%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Water_Lilies,_Reflections_of_Weeping_Willows_(1916)_Claude_Monet_-_NMWA,_Tokyo_(W_1971).jpg",
+      "licence": "Public domain",
+      "credit": "Claude Monet"
+    }
+  },
+  {
+    "queryId": "Q05",
+    "expected": "P05",
+    "image": "data/eval_images/Q05.jpg",
+    "source": {
+      "file": "File:VanGogh-starry night ballance1.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/VanGogh-starry_night_ballance1.jpg/960px-VanGogh-starry_night_ballance1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:VanGogh-starry_night_ballance1.jpg",
+      "licence": "Public domain",
+      "credit": "Vincent van Gogh"
+    }
+  },
+  {
+    "queryId": "Q06",
+    "expected": "P14",
+    "image": "data/eval_images/Q06.jpg",
+    "source": {
+      "file": "File:The Kiss - Gustav Klimt - Google Cultural Institute.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg/960px-The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
+      "licence": "Public domain",
+      "credit": "Gustav Klimt"
+    }
+  },
+  {
+    "queryId": "Q07",
+    "expected": "P25",
+    "image": "data/eval_images/Q07.jpg",
+    "source": {
+      "file": "File:Edvard Munch - The Scream - Google Art Project.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Edvard_Munch_-_The_Scream_-_Google_Art_Project.jpg/960px-Edvard_Munch_-_The_Scream_-_Google_Art_Project.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Edvard_Munch_-_The_Scream_-_Google_Art_Project.jpg",
+      "licence": "Public domain",
+      "credit": "Edvard Munch"
+    }
+  },
+  {
+    "queryId": "Q08",
+    "expected": "P18",
+    "image": "data/eval_images/Q08.jpg",
+    "source": {
+      "file": "File:1665 Girl with a Pearl Earring.jpg",
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/960px-1665_Girl_with_a_Pearl_Earring.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg",
+      "licence": "Public domain",
+      "credit": "Johannes Vermeer"
+    }
+  }
+]

@@ -1,0 +1,60 @@
+\begin{longtable}{@{}P{3.3cm}P{1.6cm}P{4.5cm}P{5.6cm}@{}}
+\caption{Classes outside the domain layer: kind, package and public methods}\label{tab:appclasses}\\
+\toprule
+\footnotesize \textbf{Class} & \footnotesize \textbf{Kind} & \footnotesize \textbf{Package} & \footnotesize \textbf{Methods}\\
+\midrule
+\endfirsthead
+\toprule
+\footnotesize \textbf{Class} & \footnotesize \textbf{Kind} & \footnotesize \textbf{Package} & \footnotesize \textbf{Methods}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\footnotesize \code{CustomerRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{findById}, \code{allCustomers}\\
+\footnotesize \code{ProductRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{allProducts}, \code{findById}, \code{decreaseStock}, \code{save}\\
+\footnotesize \code{CartRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{findById}, \code{findByCustomerId}, \code{save}, \code{clear}\\
+\footnotesize \code{OrderRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{findOrder}, \code{findByCustomer}, \code{allOrders}, \code{save}, \code{updateStatus}\\
+\footnotesize \code{Database} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{getConnection}, \code{initialize}\\
+\footnotesize \code{SqliteCustomerRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{findById}, \code{allCustomers}\\
+\footnotesize \code{SqliteProductRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{allProducts}, \code{findById}, \code{decreaseStock}, \code{save}\\
+\footnotesize \code{SqliteCartRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{findById}, \code{findByCustomerId}, \code{save}, \code{clear}\\
+\footnotesize \code{SqliteOrderRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{findOrder}, \code{findByCustomer}, \code{allOrders}, \code{save}, \code{updateStatus}\\
+\footnotesize \code{VectorIndex} & \footnotesize class & \footnotesize \code{infrastructure.search} & \footnotesize \code{build}, \code{embedProduct}, \code{toVector}, \code{cosineSimilarity}, \code{nearest}\\
+\footnotesize \code{ToolCall} & \footnotesize class & \footnotesize \code{infrastructure.ai} & \footnotesize \\
+\footnotesize \code{LlmReply} & \footnotesize class & \footnotesize \code{infrastructure.ai} & \footnotesize \code{hasToolCalls}\\
+\footnotesize \code{LlmClient} & \footnotesize interface & \footnotesize \code{infrastructure.ai} & \footnotesize \code{chat}, \code{isAvailable}\\
+\footnotesize \code{SpeechClient} & \footnotesize interface & \footnotesize \code{infrastructure.ai} & \footnotesize \code{transcribe}, \code{isAvailable}\\
+\footnotesize \code{WhisperClient} & \footnotesize class & \footnotesize \code{infrastructure.ai} & \footnotesize \code{transcribe}, \code{isAvailable}\\
+\footnotesize \code{GemmaClient} & \footnotesize class & \footnotesize \code{infrastructure.ai} & \footnotesize \code{chat}, \code{isAvailable}\\
+\footnotesize \code{CommonQuery} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \\
+\footnotesize \code{SearchResult} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \\
+\footnotesize \code{QueryService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{textQuery}, \code{voiceQuery}, \code{imageQuery}, \code{understand}, \code{parseRules}\\
+\footnotesize \code{SpeechService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{transcribe}\\
+\footnotesize \code{ImageService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{embed}, \code{describe}\\
+\footnotesize \code{RankingService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{rank}, \code{businessScore}\\
+\footnotesize \code{SearchService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{searchText}, \code{searchVoice}, \code{searchImage}, \code{searchRoom}, \code{describeRoom}, \code{searchMultimodal}, \code{retrieve}\\
+\footnotesize \code{CartService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{addToCart}, \code{updateQuantity}, \code{removeItem}, \code{viewCart}\\
+\footnotesize \code{CheckoutService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{checkout}\\
+\footnotesize \code{OrderService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{getOrder}, \code{listOrders}, \code{latestOrder}, \code{cancelOrder}, \code{listAllOrders}, \code{updateStatus}\\
+\footnotesize \code{ProductService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{listProducts}, \code{updatePriceAndStock}, \code{addPainting}\\
+\footnotesize \code{AssistantReply} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \\
+\footnotesize \code{AssistantService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{ask}, \code{tools}, \code{runTool}\\
+\footnotesize \code{SearchController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{search}, \code{transcribe}, \code{searchVoice}, \code{searchImage}, \code{searchRoom}, \code{describeRoom}, \code{searchMultimodal}\\
+\footnotesize \code{CartController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{addItem}, \code{updateQuantity}, \code{removeItem}, \code{viewCart}\\
+\footnotesize \code{CheckoutController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{checkout}\\
+\footnotesize \code{OrderController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{viewOrder}, \code{listOrders}, \code{cancelOrder}\\
+\footnotesize \code{AdminController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{listProducts}, \code{updateProduct}, \code{addPainting}, \code{listAllOrders}, \code{updateOrderStatus}\\
+\footnotesize \code{AssistantController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{ask}\\
+\footnotesize \code{SessionManager} & \footnotesize class & \footnotesize \code{presentation.web} & \footnotesize \code{login}, \code{customerOf}, \code{isAdmin}\\
+\footnotesize \code{WebServer} & \footnotesize class & \footnotesize \code{presentation.web} & \footnotesize \code{start}, \code{stop}\\
+\footnotesize \code{EcomApplication} & \footnotesize class & \footnotesize \code{presentation.web} & \footnotesize \code{main}\\
+\footnotesize \code{SearchUI} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{submitText}, \code{submitVoice}, \code{submitImage}, \code{submitMultimodal}\\
+\footnotesize \code{VoiceInput} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{start}, \code{stop}, \code{upload}, \code{onTranscript}\\
+\footnotesize \code{RoomPreview} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{chooseRoom}, \code{placePainting}, \code{renderSuggestions}\\
+\footnotesize \code{ImageUpload} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{choose}, \code{validate}, \code{preview}\\
+\footnotesize \code{SearchResultView} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{render}, \code{renderEmpty}\\
+\footnotesize \code{CartView} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{render}, \code{checkout}\\
+\footnotesize \code{OrderView} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{render}, \code{lookup}\\
+\footnotesize \code{AssistantView} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{send}, \code{render}\\
+\footnotesize \code{AdminView} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{renderProducts}, \code{saveProduct}, \code{renderOrders}, \code{updateStatus}\\
+\end{longtable}

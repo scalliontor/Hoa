@@ -1,0 +1,78 @@
+Họa. demo — test run 2026-10-30 16:07
+
+== Domain rules (4.1, 4.3)
+PASS  FullName shows last, middle and first name
+PASS  Cart.addItem merges the same product and refuses quantity 0
+PASS  Cart.calculateTotal sums the lines; updateQuantity(0) removes a line
+PASS  OrderItem.fromCartItem takes the current catalogue price, not the cart price
+PASS  Order.calculateTotal: subtotal minus VIP discount plus shipping fee
+PASS  Order.cancel is allowed only before shipment (UC11)
+PASS  Order.advanceTo moves one step: PLACED > PROCESSING > SHIPPED > DELIVERED (UC13)
+PASS  Order.isOwnedBy compares the customer id (NFR01)
+PASS  Product.decreaseStock never goes below zero
+PASS  Payment.process is polymorphic: card needs an authorisation, cash needs enough money
+PASS  Customer.findAddress refuses an address of another customer
+PASS  Only a VIP customer has a discount
+
+== Repositories and seed data (4.2)
+PASS  Seed: 32 paintings and 5 frames, prices in US dollars
+PASS  A customer is loaded as CustomerVIP or CustomerNew with name and addresses
+PASS  An order is read with its items, shipping and the PayCredit subclass
+PASS  decreaseStock refuses to go below zero in the database
+PASS  ProductService.addPainting stores the painting, a new artist and its feature vector (UC12)
+PASS  ProductService refuses negative price or stock
+
+== Checkout (slide A05)
+PASS  Checkout saves the order, decreases stock and empties the cart
+PASS  The price is read again from the catalogue at checkout
+PASS  A customer cannot check out another customer's cart (NFR01)
+PASS  An empty cart cannot be checked out
+PASS  A product sold out since it was added to the cart stops the checkout
+PASS  A card is authorised (PayCredit.process); a declined card saves nothing
+PASS  An address of another customer is refused
+
+== Orders: ownership, cancel, status (NFR01, UC11, UC13)
+PASS  find my order 20261001 returns the customer's own order
+PASS  Another customer's order is answered exactly like a missing one (NFR01)
+PASS  where is my latest order? returns the newest order
+PASS  cancelOrder: only the owner, only PLACED or PROCESSING (UC11)
+PASS  updateStatus moves one step and updates the shipping (UC13)
+
+== Search and ranking (slide A06)
+PASS  cosineSimilarity follows the slide formula
+PASS  toVector is one-hot: 10 styles + 8 subjects + 10 colours = 28 dimensions
+PASS  RankingService: S = 0.45 Stext + 0.45 Simage + 0.10 Sbusiness, best first, limited
+PASS  Gemma's JSON becomes a CommonQuery (style, artist, max price)
+PASS  Values outside the catalogue vocabulary are dropped
+PASS  Keyword rules replace Gemma when it is offline (NFR02)
+PASS  Offline search still puts Monet first and respects the price limit
+PASS  Text search with Gemma: blue landscape paintings
+PASS  Image search: Gemma's reading of a photo finds the painting (cosine = 1)
+PASS  Room search (UC14): Gemma picks 3-5 shortlisted paintings, each with one concrete sentence
+PASS  Room search without Gemma: vector ranking, one full sentence per painting (NFR02)
+PASS  Without Gemma the photo's average colour is read on the server
+PASS  SpeechService asks Whisper in English: transcript, "" when nothing is heard, null when it is down
+
+== Assistant with tool calling (UC10)
+PASS  Gemma is offered exactly four tools, none with a customer id parameter
+PASS  find my order 20261001: Gemma calls find_order and answers from the tool result
+PASS  A tool call for another customer's order returns only 'not found' to Gemma (NFR01)
+PASS  Offline (NFR02): rules answer 'where is my latest order?'
+PASS  Offline: an order number of another customer is refused, a request is searched
+
+== Vocabulary shared by prompts, VectorIndex and the database
+PASS  VectorIndex has one distinct dimension per style, subject and colour
+PASS  The QueryService prompt lists the whole vocabulary
+PASS  Both ImageService prompts (artwork, room) list the whole vocabulary
+PASS  Every stored feature vector equals VectorIndex.toVector of its painting
+
+== HTTP API (WebServer)
+PASS  Customer routes need a signed-in customer (403)
+PASS  Login sets an HttpOnly session cookie; the session names the customer
+PASS  Another customer's order answers 404 with the same message as a missing order (NFR01)
+PASS  A customerId in the request body is ignored: the session decides
+PASS  Uploads: only JPEG, PNG or WebP up to 5 MB, checked on the bytes (NFR03)
+PASS  Administrator routes need the ADMIN session
+PASS  Voice: transcript to correct; nothing heard (200, empty); Whisper down (503)
+
+59 tests passed, 0 failed

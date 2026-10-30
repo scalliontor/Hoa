@@ -1,0 +1,21 @@
+\begin{longtable}{@{}P{4.6cm}P{1.6cm}P{8.8cm}@{}}
+\caption{Exceptions of the application layer and the HTTP status returned by WebServer}\label{tab:errors}\\
+\toprule
+\footnotesize \textbf{Exception} & \footnotesize \textbf{Status} & \footnotesize \textbf{Meaning for the browser}\\
+\midrule
+\endfirsthead
+\toprule
+\footnotesize \textbf{Exception} & \footnotesize \textbf{Status} & \footnotesize \textbf{Meaning for the browser}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\footnotesize \code{(no exception)} & \footnotesize 200 & \footnotesize Success; the result object is returned as JSON\\
+\footnotesize \code{SecurityException} & \footnotesize 403 & \footnotesize Forbidden: wrong or missing session\\
+\footnotesize \code{NoSuchElementException} & \footnotesize 404 & \footnotesize Not found, also used for orders of another customer\\
+\footnotesize \code{IllegalArgumentException} & \footnotesize 400 & \footnotesize Bad request: invalid input\\
+\footnotesize \code{JsonParseException} & \footnotesize 400 & \footnotesize Bad request: invalid input\\
+\footnotesize \code{UnavailableException} & \footnotesize 503 & \footnotesize --\\
+\footnotesize \code{IllegalStateException} & \footnotesize 409 & \footnotesize Conflict with a business rule (stock, status, payment)\\
+\footnotesize \code{RuntimeException} & \footnotesize 500 & \footnotesize Unexpected error\\
+\end{longtable}

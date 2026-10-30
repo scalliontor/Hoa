@@ -1,0 +1,30 @@
+\begin{longtable}{@{}P{0.6cm}P{2.8cm}P{3.2cm}P{5.0cm}P{3.4cm}@{}}
+\caption{Tables of the database}\label{tab:tables}\\
+\toprule
+\small \textbf{\#} & \small \textbf{Table} & \small \textbf{Primary key} & \small \textbf{Foreign key $\rightarrow$ parent} & \small \textbf{Source class}\\
+\midrule
+\endfirsthead
+\toprule
+\small \textbf{\#} & \small \textbf{Table} & \small \textbf{Primary key} & \small \textbf{Foreign key $\rightarrow$ parent} & \small \textbf{Source class}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\small 1 & \small \code{customer} & \small \code{customer_id} & \small -- & \small Customer + FullName\\
+\small 2 & \small \code{customer_vip} & \small \code{customer_id} & \small \code{customer_id} $\rightarrow$ \code{customer} & \small CustomerVIP\\
+\small 3 & \small \code{customer_new} & \small \code{customer_id} & \small \code{customer_id} $\rightarrow$ \code{customer} & \small CustomerNew\\
+\small 4 & \small \code{address} & \small \code{address_id} & \small \code{customer_id} $\rightarrow$ \code{customer} & \small Address\\
+\small 5 & \small \code{product} & \small \code{product_id} & \small -- & \small Product\\
+\small 6 & \small \code{artist} & \small \code{artist_id} & \small -- & \small Artist\\
+\small 7 & \small \code{painting} & \small \code{product_id} & \small \code{product_id} $\rightarrow$ \code{product}; \code{artist_id} $\rightarrow$ \code{artist} & \small Painting\\
+\small 8 & \small \code{frame} & \small \code{product_id} & \small \code{product_id} $\rightarrow$ \code{product} & \small Frame\\
+\small 9 & \small \code{product_feature} & \small \code{product_id} & \small \code{product_id} $\rightarrow$ \code{product} & \small VectorIndex (search)\\
+\small 10 & \small \code{cart} & \small \code{cart_id} & \small \code{customer_id} $\rightarrow$ \code{customer} & \small Cart\\
+\small 11 & \small \code{cart_item} & \small \code{cart_id}, \code{product_id} & \small \code{cart_id} $\rightarrow$ \code{cart}; \code{product_id} $\rightarrow$ \code{product} & \small CartItem\\
+\small 12 & \small \code{orders} & \small \code{order_id} & \small \code{customer_id} $\rightarrow$ \code{customer} & \small Order\\
+\small 13 & \small \code{order_item} & \small \code{order_id}, \code{product_id} & \small \code{order_id} $\rightarrow$ \code{orders}; \code{product_id} $\rightarrow$ \code{product} & \small OrderItem\\
+\small 14 & \small \code{shipping} & \small \code{shipping_id} & \small \code{order_id} $\rightarrow$ \code{orders}; \code{address_id} $\rightarrow$ \code{address} & \small Shipping\\
+\small 15 & \small \code{payment} & \small \code{payment_id} & \small \code{order_id} $\rightarrow$ \code{orders} & \small Payment\\
+\small 16 & \small \code{pay_cash} & \small \code{payment_id} & \small \code{payment_id} $\rightarrow$ \code{payment} & \small PayCash\\
+\small 17 & \small \code{pay_credit} & \small \code{payment_id} & \small \code{payment_id} $\rightarrow$ \code{payment} & \small PayCredit\\
+\end{longtable}

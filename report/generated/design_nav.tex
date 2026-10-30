@@ -1,0 +1,25 @@
+\begin{longtable}{@{}P{3.5cm}P{3.8cm}P{2.0cm}P{5.7cm}@{}}
+\caption{Directed relationships at design level}\label{tab:nav43}\\
+\toprule
+\footnotesize \textbf{Relationship} & \footnotesize \textbf{Direction and role} & \footnotesize \textbf{Multiplicity} & \footnotesize \textbf{Meaning}\\
+\midrule
+\endfirsthead
+\toprule
+\footnotesize \textbf{Relationship} & \footnotesize \textbf{Direction and role} & \footnotesize \textbf{Multiplicity} & \footnotesize \textbf{Meaning}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\footnotesize \code{Customer} -- \code{FullName} (has) & \footnotesize \code{Customer -> fullName} & \footnotesize 1 -- 1 & \footnotesize Each customer has exactly one name; the name does not exist without the customer, hence composition.\\
+\footnotesize \code{Customer} -- \code{Address} (has) & \footnotesize \code{Customer -> addresses} & \footnotesize 1 -- 1..* & \footnotesize A customer keeps at least one delivery address; Shipping also uses it, so only aggregation.\\
+\footnotesize \code{Cart} -- \code{Customer} (owned by) & \footnotesize \code{Cart -> owner} & \footnotesize 0..1 -- 1 & \footnotesize At most one active cart per customer; a new customer may have none.\\
+\footnotesize \code{Cart} -- \code{CartItem} (contains) & \footnotesize \code{Cart -> items} & \footnotesize 1 -- 0..* & \footnotesize A cart line exists only inside its cart; an empty cart is valid.\\
+\footnotesize \code{CartItem} -- \code{Product} (refers to) & \footnotesize \code{CartItem -> product} & \footnotesize 0..* -- 1 & \footnotesize Each cart line refers to exactly one product; a product appears in many carts.\\
+\footnotesize \code{Order} -- \code{Customer} (placed by) & \footnotesize \code{Order -> customer} & \footnotesize 0..* -- 1 & \footnotesize A customer places many orders; a new customer has none yet.\\
+\footnotesize \code{Order} -- \code{OrderItem} (contains) & \footnotesize \code{Order -> items} & \footnotesize 1 -- 1..* & \footnotesize An order line is part of its order; an order without lines makes no sense.\\
+\footnotesize \code{OrderItem} -- \code{Product} (refers to) & \footnotesize \code{OrderItem -> product} & \footnotesize 0..* -- 1 & \footnotesize Each order line refers to exactly one product; a product appears in many orders.\\
+\footnotesize \code{Order} -- \code{Shipping} (delivered by) & \footnotesize \code{Order -> shipping} & \footnotesize 1 -- 0..1 & \footnotesize A new order may not be shipped yet; once shipped it has exactly one delivery record.\\
+\footnotesize \code{Shipping} -- \code{Address} (ships to) & \footnotesize \code{Shipping -> address} & \footnotesize 0..* -- 1 & \footnotesize Each delivery goes to exactly one address; an address receives many deliveries.\\
+\footnotesize \code{Order} -- \code{Payment} (paid by) & \footnotesize \code{Order -> payments} & \footnotesize 1 -- 0..* & \footnotesize An order may be unpaid, or have several attempts when one fails.\\
+\footnotesize \code{Painting} -- \code{Artist} (painted by) & \footnotesize \code{Painting -> artist} & \footnotesize 0..* -- 1 & \footnotesize An artist has many paintings in the gallery; each print belongs to exactly one artist.\\
+\end{longtable}

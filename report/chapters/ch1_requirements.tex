@@ -1,0 +1,557 @@
+\chapter{Requirement Determination}\label{ch:req}\label{ch:1}
+
+This chapter follows the first two lectures of the course~\cite{slidesL01,slidesL02}. The first part is \emph{business investigation}
+(Lecture~01): what the painting shop Họa. does, who is involved, which processes run, which information must be
+managed and which problems occur. The second part is \emph{requirements engineering} (Lecture~02): turning the
+problems and needs into \nFR{} functional requirements, \nNFR{} non-functional requirements, the actors and
+\nUseCases{} use cases. The thread through the whole chapter is the chain stressed in the lectures:
+\begin{center}
+\emph{Business problem $\rightarrow$ Root cause $\rightarrow$ Stakeholder need $\rightarrow$ System requirement
+$\rightarrow$ Actor $\rightarrow$ Use case.}
+\end{center}
+The result of the chapter is the input of the behaviour analysis and the domain model of
+Chapter~\ref{ch:analysis}.
+
+%% =========================================================================
+\section{Information System and Development Process}\label{sec:1.1}
+
+An information system is more than software. Lecture~01 defines it as \textbf{information system = people +
+processes + data + technology}~\cite{slidesL01,dennis}; software is an important component but not the whole system. Before asking
+``which database'' or ``which AI model'', the analyst must therefore understand what the organisation does and
+where its problems are. Table~\ref{tab:is4} describes the four components of the Họa. information system.
+
+\begin{longtable}{@{}P{2.6cm}P{12.4cm}@{}}
+\caption{The four components of the Họa. information system}\label{tab:is4}\\
+\toprule
+\textbf{Component} & \textbf{In Họa.}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Component} & \textbf{In Họa.}\\
+\midrule
+\endhead
+\small People & \small Customers who buy paintings; the shop administrator who manages paintings and orders; warehouse staff who pack prints; support staff who answer customers; the owner who takes business decisions.\\
+\small Processes & \small Catalogue management, finding and recommending paintings, order processing, payment, stock management, delivery, after-sales support (order look-up, cancellation).\\
+\small Data & \small Customers and addresses, paintings and artists, frames, carts, orders and order lines, payments, deliveries; search data such as queries, transcripts of spoken queries and the feature vectors of paintings.\\
+\small Technology & \small Web browser, Java application, SQLite database, Gemma~4 AI server, self-hosted Whisper speech server; the Visual Paradigm modelling tool used in analysis and design.\\
+\bottomrule
+\end{longtable}
+
+The course follows one continuous process: \emph{Investigation $\rightarrow$ Requirements $\rightarrow$ Analysis
+$\rightarrow$ Design $\rightarrow$ Implementation}. The five chapters of this essay match these steps and use one
+system throughout -- the Họa. gallery -- so that every chapter is a different view of the same product.
+
+%% =========================================================================
+\section{Organization and Business Objectives}\label{sec:1.2}
+
+\subsection{The organisation}
+
+Họa. is a small online gallery. Its main products are \emph{fine-art prints} (on canvas or fine-art paper) of
+famous paintings that are now in the public domain, by painters such as Claude Monet, Vincent van Gogh or
+Katsushika Hokusai; its secondary products are \emph{frames} sold with the prints. Each print belongs to one
+artist and has the attributes that buyers use to choose: style (Impressionism, Post-Impressionism,
+Ukiyo-e\dots), subject (landscape, flowers, sea, portrait\dots), dominant colour, original medium, year and size.
+The target customers are young city dwellers decorating a flat, an office or a coffee shop. All prices are in US
+dollars.
+
+Before the system existed, the shop sold mainly through social-media messages. A customer sent a description or a
+photo, a member of staff searched an image folder, quoted a price and wrote the order into a spreadsheet; the stock
+was kept in another spreadsheet updated by the warehouse.
+
+\subsection{Business objectives}
+
+\begin{longtable}{@{}P{1.3cm}P{6.4cm}P{7.3cm}@{}}
+\caption{Business objectives of Họa.}\label{tab:goals}\\
+\toprule
+\textbf{ID} & \textbf{Objective} & \textbf{How it is measured (proposed; thresholds set by the owner)}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Objective} & \textbf{How it is measured (proposed; thresholds set by the owner)}\\
+\midrule
+\endhead
+\small BO1 & \small Customers find a suitable painting faster, even when they do not know its title & \small Time and number of steps from the first query to the painting detail page\\
+\small BO2 & \small More searches lead to a purchase & \small Share of search sessions with an ``add to cart''\\
+\small BO3 & \small Never sell a sold-out print, never charge a wrong price & \small Number of orders cancelled because of stock or price errors\\
+\small BO4 & \small Less staff time spent answering ``where is my order?'' & \small Number of order questions answered by the system itself\\
+\small BO5 & \small Protect customer and payment data & \small No case of a customer seeing another customer's order; no full card number stored\\
+\bottomrule
+\end{longtable}
+
+The objectives are written with a measure but without a target number: the essay has no real sales data to set
+thresholds. What can be measured on the demo -- search accuracy, behaviour when the AI fails, speed of speech
+recognition -- is reported in Chapter~3 and Chapter~\ref{ch:code}.
+
+%% =========================================================================
+\section{Stakeholders}\label{sec:1.3}
+
+A stakeholder is a person, group or organisation that is affected by the system, is interested in it, provides
+information to it or receives information from it, or takes decisions about it. Lecture~01 insists that
+stakeholders must not only be listed but \emph{analysed}: what is each one's goal and what information does each
+one need?
+
+\begin{longtable}{@{}P{2.9cm}P{4.6cm}P{5.3cm}P{2.2cm}@{}}
+\caption{Stakeholder catalogue and analysis (goal, information need)}\label{tab:stakeholders}\\
+\toprule
+\textbf{Stakeholder} & \textbf{Goal} & \textbf{Information need} & \textbf{Influence}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Stakeholder} & \textbf{Goal} & \textbf{Information need} & \textbf{Influence}\\
+\midrule
+\endhead
+\small Customer & \small Find and buy a painting they like; know where the order is & \small Paintings, artists, prices, stock, status of own orders & \small High\\
+\small Shop owner & \small Control the business, increase revenue & \small Sales, orders, stock, best-selling paintings & \small High\\
+\small Shop administrator & \small Keep the catalogue right and process orders on time & \small Paintings, prices, stock, orders waiting to be processed & \small High\\
+\small Warehouse staff & \small Pack and ship the right order & \small Order lines, delivery address, stock level & \small Medium\\
+\small Support staff & \small Answer customers quickly and correctly & \small Order status, cancellation policy & \small Medium\\
+\small Payment service & \small Process transactions safely & \small Amount, transaction id, authorisation code & \small Medium\\
+\small Gemma 4 AI service & \small Serve inference requests within its resources & \small Queries, images to describe, list of tools & \small Medium\\
+\small Development team, lecturer & \small A correct model that follows the lectures; a demo that runs & \small Requirements, diagrams, source code, test results & \small High\\
+\bottomrule
+\end{longtable}
+
+The analysis shows two conflicts that have to be solved early. Customers want the AI assistant to ``know
+everything'' about their orders, while the owner must guarantee that nobody can see another person's order.
+Customers want to search with photos and voice at any time, while the AI services can be slow or down. The two
+conflicts become requirements NFR01 and NFR02 in Section~\ref{sec:frnfr}. A third, quieter conflict concerns
+voice: speaking is convenient, but a recording of a customer's voice is personal data. It becomes NFR08 (audio
+never leaves the machine).
+
+%% =========================================================================
+\section{Business Processes}\label{sec:1.4}
+
+A business process is a structured sequence of activities that produces a business result.
+Table~\ref{tab:processes} is the process catalogue of Họa., written as purpose -- input -- main activities --
+output.
+
+\begin{longtable}{@{}P{2.9cm}P{3.0cm}P{5.5cm}P{3.6cm}@{}}
+\caption{Business process catalogue}\label{tab:processes}\\
+\toprule
+\textbf{Process} & \textbf{Input} & \textbf{Main activities} & \textbf{Output}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Process} & \textbf{Input} & \textbf{Main activities} & \textbf{Output}\\
+\midrule
+\endhead
+\small Catalogue management & \small Painting images, artist data, purchase price & \small Add a print, record its attributes, set price and stock & \small Catalogue of paintings for sale\\
+\small Finding and recommending & \small A description, a spoken query, a photo of a painting or of a room & \small Understand the need, filter, match, rank, present & \small Ranked list of suitable paintings\\
+\small Order processing & \small Cart, address, payment method & \small Check cart and stock, freeze prices, create the order, decrease stock & \small Order in status PLACED\\
+\small Payment & \small Order, amount & \small Collect cash on delivery or obtain a card authorisation code & \small Payment succeeded or failed\\
+\small Stock management & \small Orders, goods received & \small Decrease stock on order, increase on receipt, reconcile & \small Current stock\\
+\small Delivery & \small Packed order, address & \small Move the order through its statuses, hand over to the carrier, confirm delivery & \small Order DELIVERED\\
+\small After-sales support & \small Customer question, order id & \small Look up status, cancel an order that is not shipped & \small Answer, order CANCELLED\\
+\bottomrule
+\end{longtable}
+
+\subsection{Order processing and its exceptions}
+
+The most important process is order processing. In its simplest form it is: \emph{choose a painting
+$\rightarrow$ cart $\rightarrow$ place the order $\rightarrow$ payment $\rightarrow$ order confirmation
+$\rightarrow$ processing $\rightarrow$ shipping $\rightarrow$ delivered}. But, as Lecture~01 warns, the analyst
+must keep asking ``what happens if\dots''. Table~\ref{tab:exceptions} records the exceptions found; each one
+later becomes an alternative flow in the use case specifications of Chapter~\ref{ch:analysis}.
+
+\begin{longtable}{@{}P{4.4cm}P{6.4cm}P{4.2cm}@{}}
+\caption{Exceptions of the order processing process}\label{tab:exceptions}\\
+\toprule
+\textbf{Situation} & \textbf{Expected handling} & \textbf{Recorded as}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Situation} & \textbf{Expected handling} & \textbf{Recorded as}\\
+\midrule
+\endhead
+\small A print is sold out at checkout & \small Say which print is short, ask the customer to change the cart, create no order & \small FR07, alternative flow of UC07\\
+\small The price changed after the print was added to the cart & \small The order uses the current catalogue price at checkout time & \small FR07, frozen-price rule\\
+\small The cart is empty & \small Checkout is refused & \small FR07\\
+\small The address does not belong to the customer & \small Refuse and ask for one of the customer's own addresses & \small UC07\\
+\small The card payment is refused & \small Record a failed payment; the order is not considered paid & \small UC07, NFR05\\
+\small The customer wants to cancel & \small Allowed only while the order is PLACED or PROCESSING; refused once shipped & \small FR11, UC11\\
+\small Someone asks about another customer's order & \small Reveal nothing; answer as if the order did not exist & \small FR09, NFR01\\
+\bottomrule
+\end{longtable}
+
+%% =========================================================================
+\section{Information Catalogue}\label{sec:1.5}
+
+Information is the central resource of an information system. Table~\ref{tab:info} lists the groups of
+information that Họa. must manage, together with the attribute names agreed in the model; the same names are used
+in the class diagrams, the database tables and the source code.
+
+\begin{longtable}{@{}P{2.9cm}P{7.6cm}P{4.5cm}@{}}
+\caption{Information catalogue}\label{tab:info}\\
+\toprule
+\textbf{Information} & \textbf{Content (names in the model)} & \textbf{Created by / used by}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Information} & \textbf{Content (names in the model)} & \textbf{Created by / used by}\\
+\midrule
+\endhead
+\small Customer & \small \code{customerId}, name \code{FullName}, \code{email}, \code{phone}, address \code{Address}, VIP or new customer & \small Customer / shop, warehouse\\
+\small Painting & \small \code{productId}, \code{name}, \code{price}, \code{stockQuantity}, \code{imageUrl}, \code{description}; \code{style}, \code{subject}, \code{dominantColor}, \code{medium}, \code{yearCreated}, \code{widthCm} x \code{heightCm} & \small Administrator / customers, search\\
+\small Artist & \small \code{artistId}, \code{name}, \code{nationality}, \code{lifeYears} & \small Administrator / customers\\
+\small Frame & \small \code{material}, \code{color}, \code{sizeLabel} & \small Administrator / customers\\
+\small Cart & \small \code{cartId}, cart lines with \code{quantity} and \code{cartPrice} & \small Customer / checkout\\
+\small Order & \small \code{orderId}, \code{orderDate}, \code{status}, \code{totalAmount}, order lines with \code{quantity} and \code{unitPrice} & \small System / customer, warehouse, administrator\\
+\small Payment & \small \code{paymentId}, \code{amount}, \code{paymentDate}, \code{status}; for cards only \code{cardLast4} and \code{authorizationCode} & \small Confirmed by the payment service\\
+\small Shipping & \small \code{shippingId}, \code{carrier}, \code{trackingNumber}, \code{shippingFee}, \code{deliveredDate} & \small Warehouse, carrier / customer\\
+\small Search and AI & \small Queries, voice audio (processed on the machine only), transcripts, photos of paintings or rooms (not stored), feature vectors of paintings & \small Customer / search service, Whisper, Gemma\\
+\bottomrule
+\end{longtable}
+
+Two kinds of information in the last row deserve a remark. Audio and room photos are \emph{transient}: they are
+needed for one request and are never written to the database. Feature vectors, in contrast, are
+\emph{derived} data: they are computed from the painting attributes and stored in table \code{product_feature}
+together with the version of the encoding (Chapter~4).
+
+%% =========================================================================
+\section{Business Problems and Root Causes}\label{sec:1.6}
+
+The analyst must point out problems, not only describe activities. From observing the message-based sales process
+the group recorded five problems: (P1) customers cannot find a suitable painting when they do not know its title;
+(P2) sold-out prints are sometimes sold; (P3) customers do not know where their order is and ask again and
+again; (P4) staff process orders and update the catalogue by hand; (P5) order and payment details can leak when
+customers are identified through messages.
+
+\subsection{Asking ``why'' down to the root cause}
+
+For problem P1, asking ``why'' repeatedly gives:
+\begin{enumerate}
+\item \emph{Why can customers not find paintings?} Because the catalogue can only be searched by title.
+\item \emph{Why is searching by title not enough?} Because customers describe what they feel: a colour, a subject,
+      ``something like this one''.
+\item \emph{Why can the catalogue not be searched by colour or subject?} Because the painting data has no
+      structured attributes such as style, subject or dominant colour.
+\item \emph{Why are these attributes missing?} Because the knowledge about the paintings is in the heads of the
+      sales staff, not in the system.
+\item \emph{Why can the photos and voice messages sent by customers not be used?} Because there is no way to turn
+      a photo or a recording into information that can be matched.
+\end{enumerate}
+The root cause is therefore not ``a missing search box'' but \emph{missing structured data about paintings and no
+way to understand queries given as natural sentences, speech or images}. This is why the AI features
+(Chapter~3) come together with a structured painting model in the data design
+(Chapter~4).
+
+\subsection{Problem -- cause -- impact -- need}
+
+\begin{longtable}{@{}P{0.8cm}P{3.4cm}P{3.6cm}P{3.4cm}P{3.8cm}@{}}
+\caption{Problem -- cause -- impact -- need analysis}\label{tab:pcin}\\
+\toprule
+\textbf{ID} & \textbf{Problem} & \textbf{Cause} & \textbf{Impact} & \textbf{Need}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Problem} & \textbf{Cause} & \textbf{Impact} & \textbf{Need}\\
+\midrule
+\endhead
+\small P1 & \small Customers cannot find a suitable painting & \small Search by title only; no descriptive attributes; photos and speech cannot be used & \small Lost customers, long consultations & \small Find paintings by description, voice, photo, or a photo of the room\\
+\small P2 & \small Sold-out prints are sold & \small Stock updated by hand, separate from orders & \small Cancelled or late orders, lost trust & \small Accurate stock at checkout time\\
+\small P3 & \small Customers do not know where their order is & \small Order status only in a staff spreadsheet & \small Repeated questions, overloaded staff & \small See and look up order status at any time\\
+\small P4 & \small Orders and prices handled by hand & \small No administration tool & \small Wrong prices, slow delivery & \small Tools to manage paintings and order status\\
+\small P5 & \small Risk of leaking data & \small Customers identified by an order id in a message; card numbers written down & \small Legal risk, loss of trust & \small Ownership checks, no stored card numbers, voice kept local\\
+\bottomrule
+\end{longtable}
+
+%% =========================================================================
+\section{System Scope, Boundary and Context View}\label{sec:1.7}
+
+Before designing, the analyst must decide what is inside the system and what is outside. Inside the boundary of
+\emph{Họa. Gallery} are the painting catalogue, customers, carts, orders, stock and the search services. Outside
+are four parties: the \textbf{Customer}, the \textbf{Administrator}, the \textbf{Payment Service} and the
+\textbf{Gemma 4 Service}. Gemma is outside because the group does not control the model and only calls it
+through an API; every decision about price, stock and access rights stays inside Họa. The Whisper speech server,
+on the other hand, runs on the shop's own machine and is therefore \emph{inside} the boundary: a customer's
+voice never leaves the system (NFR08). Figure~\ref{fig:context} is the context view of Lecture~01 for Họa.
+
+\begin{figure}[H]
+\centering
+\vpfig{c1_context}{0.42\textheight}
+\caption[Context view of Họa.]{Context view of Họa.: the system in the centre, the four external parties and the main information flows. Visual Paradigm diagram \vpsrc{c1_context}.}\label{fig:c1_context}\label{fig:context}
+\end{figure}
+
+\begin{longtable}{@{}P{7.4cm}P{7.6cm}@{}}
+\caption{In and out of the scope of the demo release}\label{tab:scope}\\
+\toprule
+\textbf{In scope} & \textbf{Out of scope (recorded for later)}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{In scope} & \textbf{Out of scope (recorded for later)}\\
+\midrule
+\endhead
+\small Catalogue of paintings and frames, painting detail page & \small Account registration, passwords, two-factor authentication\\
+\small Search by keyword, natural sentence, voice, photo, text and photo combined & \small Personalised recommendations from purchase history\\
+\small Cart, checkout, VIP discount, cancellation before shipment & \small Real payment gateway, real refunds\\
+\small Suggestions from a photo of the customer's room, preview on the wall & \small Reading results aloud (text-to-speech)\\
+\small Viewing and looking up own orders; AI curator based on Gemma 4 & \small Connection to a real carrier\\
+\small Administration: add paintings, change price and stock, move order status & \small Training or fine-tuning the AI models\\
+\bottomrule
+\end{longtable}
+
+The scope comes with constraints: the application is written in Java, the database is a SQLite file and
+everything runs on one machine (NFR06); painting images come only from public-domain works; Gemma~4 is reached
+through the public IP address of the L40S server. The payment service is simulated but still follows the
+decision not to store full card numbers (NFR05).
+
+%% =========================================================================
+\section{Requirement Levels}\label{sec:1.8}
+
+Lecture~02 starts with the question: what must the new system do? A \emph{requirement} describes a capability,
+condition or constraint that the system must satisfy. Requirements have three levels~\cite{slidesL02,sommerville}: \emph{business
+requirements} say why the organisation needs the system; \emph{user requirements} say what users need to
+achieve; \emph{system requirements} say what the system must provide. Table~\ref{tab:levels} shows how the same
+problem moves through the three levels.
+
+\begin{longtable}{@{}P{2.4cm}P{4.0cm}P{4.2cm}P{4.4cm}@{}}
+\caption{The three requirement levels of Họa.}\label{tab:levels}\\
+\toprule
+\textbf{Problem} & \textbf{Business requirement} & \textbf{User requirement} & \textbf{System requirement}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Problem} & \textbf{Business requirement} & \textbf{User requirement} & \textbf{System requirement}\\
+\midrule
+\endhead
+\small P1 hard to find paintings & \small More customers find a painting and buy it (BO1, BO2) & \small Customers need to search by description, voice or photo, or by a photo of their room & \small FR01, FR02, FR03, FR04, FR14, NFR08\\
+\small P2 sold-out prints sold & \small No order cancelled because of stock (BO3) & \small Customers need to know that a print is in stock before buying & \small FR05, FR07, FR12\\
+\small P3 order status unknown & \small Fewer order questions (BO4) & \small Customers need to see the status of their orders at any time & \small FR08, FR09, FR10, FR13\\
+\small P5 risk of data leaks & \small Protect customer data (BO5) & \small Customers need to be sure that nobody else can see their orders & \small NFR01, NFR05\\
+\bottomrule
+\end{longtable}
+
+%% =========================================================================
+\section{Functional and Non-functional Requirements}\label{sec:frnfr}\label{sec:1.9}
+
+A \emph{functional requirement} describes a function or behaviour that the system provides. A
+\emph{non-functional requirement} describes a quality, constraint or condition of the system: performance,
+security, reliability, maintainability. Each requirement follows the pattern of Lecture~02:
+\textbf{``The system shall + action + object + condition''}, with an identifier, a type, a priority and a source
+(the stakeholder who asks for it). The two tables below are generated from the group's shared specification file,
+so the identifiers are the same as in the diagrams, the tests and the code.
+
+\input{generated/req_fr}
+
+\input{generated/req_nfr}
+
+A common mistake pointed out in Lecture~02 is to write ``the system shall be fast''. How many seconds, under which
+load? NFR07 is therefore written as ``return text search results within 2 seconds on the demo data'', and the
+waiting limit of an AI call is set separately, because the response time of an external service is not under the
+control of Họa. NFR08 is both a privacy requirement (audio never leaves the machine) and a measurable time limit,
+so it decides how speech recognition is built in Chapter~3. Table~\ref{tab:nfrcheck} in Appendix~C states how
+each non-functional requirement is verified.
+
+\subsection{Criteria of a good requirement}
+
+A good requirement is correct, complete, consistent, unambiguous, feasible, verifiable, traceable, prioritised,
+understandable and testable~\cite{iso29148,slidesL02}. The simplest test is the question of Lecture~02: \emph{can this requirement be
+verified objectively?} Table~\ref{tab:goodreq} checks the criteria against the requirements of Họa.
+
+\begin{longtable}{@{}P{2.6cm}P{12.4cm}@{}}
+\caption{Checking the criteria of a good requirement}\label{tab:goodreq}\\
+\toprule
+\textbf{Criterion} & \textbf{How the requirements of Họa. meet it}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Criterion} & \textbf{How the requirements of Họa. meet it}\\
+\midrule
+\endhead
+\small Unambiguous & \small Each statement has one main action; FR07 lists the four things that must happen at checkout instead of saying ``process the order''.\\
+\small Verifiable & \small NFR07 has a 2-second limit and the condition ``on the demo data''; NFR03 names the formats and the size; NFR08 names the place of processing and a 3-second limit.\\
+\small Consistent & \small FR11 (cancel before shipment) agrees with the order statuses of FR13 and with the state machine of Chapter~\ref{ch:analysis}.\\
+\small Feasible & \small Image search uses an existing model through an API instead of training one; speech recognition uses an open model that runs on a laptop.\\
+\small Traceable & \small Every requirement has a stable id and a list of use cases; the matrix is in Section~\ref{sec:trace}.\\
+\small Prioritised & \small Every requirement is Must, Should or Could (Table~\ref{tab:moscow}).\\
+\small Testable & \small The Given -- When -- Then acceptance criteria of Table~\ref{tab:stories} become the test and demo scenarios of Chapter~\ref{ch:code}.\\
+\bottomrule
+\end{longtable}
+
+\subsection{Acceptance criteria}
+
+An acceptance criterion is the check that tells whether one requirement is met. Table~\ref{tab:stories} writes
+the main requirements as user stories with Given -- When -- Then conditions; the queries are the demo queries of
+the shared specification, which are the painting-shop versions of the example queries of Assignment~06.
+
+\begin{longtable}{@{}P{1.1cm}P{5.2cm}P{8.7cm}@{}}
+\caption{User stories and acceptance criteria}\label{tab:stories}\\
+\toprule
+\textbf{ID} & \textbf{User story} & \textbf{Acceptance criteria (Given -- When -- Then)}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{User story} & \textbf{Acceptance criteria (Given -- When -- Then)}\\
+\midrule
+\endhead
+\small US01 & \small As a customer, I want to type ``blue landscape paintings'' and see suitable paintings without knowing any title (FR01). & \small Given the catalogue has blue landscapes, When the customer sends the sentence, Then the top results have subject landscape or dominant colour blue, ordered by decreasing score.\\
+\small US02 & \small As a customer, I want to search ``Monet paintings under 100 dollars'' (FR01). & \small Given Monet prints at several prices, When the customer sends the sentence, Then every result is a Monet print priced at most 100 USD.\\
+\small US03 & \small As a customer, I want to speak instead of typing (FR02, NFR08). & \small Given the browser may use the microphone, When the customer says the query, Then the transcript appears in the search box for editing, the results are the same as when typing the sentence, and no audio is sent outside the machine.\\
+\small US04 & \small As a customer, I want to upload a photo and find paintings in a similar style (FR03). & \small Given a valid JPEG under 5 MB, When the customer uploads it, Then the system shows the paintings with the closest style, subject and colour, each with a similarity score.\\
+\small US05 & \small As a customer, I want to add paintings to the cart and place an order (FR06, FR07). & \small Given a cart with at least one line and enough stock, When the customer confirms address and payment method, Then a PLACED order is created with frozen prices, stock decreases and the cart is emptied; an empty cart is refused.\\
+\small US06 & \small As a customer, I want to look up an order by its id (FR09, NFR01). & \small Given order 20261001 belongs to C001, When C001 asks ``find my order 20261001'', Then the status is shown; When C002 asks for the same id, Then the system answers ``order not found''.\\
+\small US07 & \small As a customer, I want to ask the assistant ``where is my latest order?'' (FR10). & \small Given Gemma is available, When the customer asks, Then the assistant calls the order look-up tool for the customer of the session and states the status; if Gemma fails, the page says that the assistant is unavailable.\\
+\small US08 & \small As a customer, I want to cancel an order I have just placed (FR11). & \small Given an order in status PLACED, When the customer cancels it, Then it becomes CANCELLED; Given an order already SHIPPED, Then the cancellation is refused.\\
+\small US09 & \small As the administrator, I want to change the price and stock of a painting (FR12). & \small Given an administrator session, When a valid price and stock are entered, Then the catalogue shows the new price; a negative price or stock is refused.\\
+\small US10 & \small As the administrator, I want to move an order to its next status (FR13). & \small Given an order PLACED, When it is moved to PROCESSING, Then it succeeds; When it is moved directly to DELIVERED, Then it is refused because the order of statuses is wrong.\\
+\small US11 & \small As a customer, I want to upload a photo of my living room and see which paintings suit it (FR14). & \small Given a valid room photo, When the customer uploads it, Then the system shows the palette and style it read from the room and suggests three to five paintings, each with a reason, and one can be previewed on the wall of the photo.\\
+\bottomrule
+\end{longtable}
+
+%% =========================================================================
+\section{Actors and Use Cases}\label{sec:1.10}
+
+\subsection{Stakeholder is not actor}
+
+An actor is \emph{an external role that interacts directly with the system}; it is not necessarily a specific
+person. Stakeholders and actors are related but not the same: a stakeholder may only be interested in or
+affected by the system without using it, while an actor exchanges information with the system directly
+(Table~\ref{tab:stakeactor}).
+
+\begin{longtable}{@{}P{3.6cm}P{2.4cm}P{2.8cm}P{6.2cm}@{}}
+\caption{Stakeholders and actors of Họa.}\label{tab:stakeactor}\\
+\toprule
+\textbf{Party} & \textbf{Stakeholder} & \textbf{Actor} & \textbf{Explanation}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Party} & \textbf{Stakeholder} & \textbf{Actor} & \textbf{Explanation}\\
+\midrule
+\endhead
+\small Customer & \small Yes & \small Customer & \small Both interested and a direct user\\
+\small Shop administrator & \small Yes & \small Administrator & \small Manages paintings and orders directly\\
+\small Shop owner & \small Yes & \small No & \small Takes decisions and reads reports through the administrator; no direct use in the demo\\
+\small Warehouse and support staff & \small Yes & \small No & \small Use order information through the administrator role\\
+\small Payment service & \small Yes & \small Payment Service & \small External system that exchanges payment data\\
+\small Gemma 4 server & \small Yes & \small Gemma 4 Service & \small External system called to understand sentences, describe images and choose tools\\
+\small Whisper speech server & \small No & \small No & \small Part of the system itself (inside the boundary), not an external role\\
+\bottomrule
+\end{longtable}
+
+\input{generated/actors}
+
+\subsection{A use case is a goal, not a button}
+
+A use case describes a goal-oriented interaction between an actor and the system~\cite{larman}. The key question is:
+\emph{what goal does the actor want to achieve?} ``Click the search button'' is not a use case; the goal is
+``find a painting''. Table~\ref{tab:notbutton} shows how the group grouped user-interface actions into goals.
+
+\begin{longtable}{@{}P{6.6cm}P{8.4cm}@{}}
+\caption{User-interface actions and the use cases they belong to}\label{tab:notbutton}\\
+\toprule
+\textbf{User-interface action (not a use case)} & \textbf{Use case (goal of the actor)}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{User-interface action (not a use case)} & \textbf{Use case (goal of the actor)}\\
+\midrule
+\endhead
+\small Type in the search box and press Enter & \small UC02 Search by Keyword\\
+\small Press the microphone button, speak, correct the transcript & \small UC03 Search by Voice\\
+\small Choose an image file, look at the preview, press search & \small UC04 Search by Image\\
+\small Press ``Add to cart'', change a quantity, remove a line & \small UC06 Manage Cart\\
+\small Choose an address and a payment method, press ``Place order'' & \small UC07 Checkout\\
+\small Type or speak a question in the curator panel & \small UC10 Ask Shopping Assistant\\
+\small Press ``Cancel order'' on the order page & \small UC11 Cancel Order\\
+\small Edit the price and stock cells in the admin table & \small UC12 Manage Products\\
+\small Upload a room photo, pick a painting from the strip, press ``Try it in my room'' on a painting page & \small UC14 Find Painting for My Room\\
+\bottomrule
+\end{longtable}
+
+\subsection{Use case catalogue and use case diagram}
+
+The use case names follow the Visual Paradigm diagram and the wording of Assignment~06 (Search Product, Search by
+Keyword, Search by Voice, Search by Image, Search Order, View Product, View Order), extended with the use cases of
+the purchase flow and of administration. The priority of a use case is the priority of the functional
+requirements it realises.
+
+\input{generated/usecases}
+
+\landscapefig{c1_usecase}{Use case diagram of Họa.}{Use case diagram of Họa.: four actors and the use cases inside the Họa. Gallery boundary. Visual Paradigm diagram \vpsrc{c1_usecase}.}{\label{fig:c1_usecase}\label{fig:usecase}}
+
+Figure~\ref{fig:usecase} uses the three kinds of UML relationship~\cite{uml}; Table~\ref{tab:uclinks} in Appendix~C
+lists every relationship with its meaning.
+\emph{Generalization} says that Search by Keyword, Search by Voice and Search by Image are three concrete ways of
+the general goal Search Product -- exactly the structure of Assignment~06; Find Painting for My Room is a fourth
+way whose input is a photo of a room instead of a photo of a painting. \emph{Include} says that a behaviour is
+always used: Checkout always reads and checks the cart (Manage Cart); the assistant always goes through the
+painting search or the order look-up tool. \emph{Extend} says that a behaviour is optional: from the search
+results the customer may open a painting; while viewing an order that is not shipped, the customer may cancel it.
+Gemma 4 Service and Payment Service are supporting actors and take part only in the use cases that need them.
+
+
+%% =========================================================================
+\section{Prioritization and Change Management}\label{sec:1.11}
+
+Not all requirements are equally important. MoSCoW divides them into Must (essential), Should (important but not
+essential), Could (useful improvement) and Won't (not in this release). Besides business value, the group
+considered risk and dependencies: image search is attractive but depends on an external service, so it is
+Should and comes with the fallback requirement NFR02 at level Must. Voice privacy (NFR08) is Must even though
+voice search (FR02) is only Should: if voice search is offered at all, it must be private.
+
+\input{generated/moscow}
+
+Requirements do not stay fixed once they are written. While preparing the essay the group met five real changes,
+recorded as change -- reason -- affected parts (Table~\ref{tab:changes}); each change was followed along the trace
+to use cases, classes, tables, code and tests.
+
+\begin{longtable}{@{}P{1.3cm}P{3.9cm}P{4.4cm}P{5.4cm}@{}}
+\caption{Requirement change log}\label{tab:changes}\\
+\toprule
+\textbf{ID} & \textbf{Change} & \textbf{Reason} & \textbf{Affected parts}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Change} & \textbf{Reason} & \textbf{Affected parts}\\
+\midrule
+\endhead
+\small CR-01 & \small Product domain changed from books, clothes, shoes and electronics to paintings and frames & \small Search by photo and by feeling is most valuable for paintings & \small Product classes, database tables, sample data, demo queries\\
+\small CR-02 & \small AI shopping assistant with tool calling added (FR10) & \small Gemma 4 supports tool calling; fewer order questions (BO4) & \small UC10, class \code{AssistantService}, ownership tests\\
+\small CR-03 & \small Storage layer renamed from DAO to Repository & \small Match the class names of the A05 slides and the A06 sample code & \small Layered class diagram, source code, Section~4.4 and Chapter~\ref{ch:code}\\
+\small CR-04 & \small Voice search through a self-hosted Whisper server instead of a cloud speech service (FR02, NFR08) & \small Customer voice is personal data; works offline & \small Context view, \code{SpeechService}, \code{WhisperClient}, deployment\\
+\small CR-05 & \small Product, data and essay in English; prices in USD; ``find a painting for my room'' added (FR14, UC14) & \small Match the A06 queries (``under 100 dollars''); a new reason to buy & \small Demo queries, catalogue, Whisper language, use case diagram, \code{RoomPreview}\\
+\bottomrule
+\end{longtable}
+
+%% =========================================================================
+\section{Requirement Derivation and Traceability}\label{sec:trace}\label{sec:1.12}
+
+Lecture~02 stresses that every requirement needs a unique identifier and that the derivation chain \emph{problem
+$\rightarrow$ need $\rightarrow$ functional requirement $\rightarrow$ actor $\rightarrow$ use case} must be kept
+during the whole project. Table~\ref{tab:derivation} links the five problems to use cases; therefore the question
+``why does this use case exist?'' is answered with a concrete business problem instead of a random list of
+functions.
+
+\begin{longtable}{@{}P{2.3cm}P{3.5cm}P{2.6cm}P{2.6cm}P{4.0cm}@{}}
+\caption{Derivation chain problem -- need -- requirement -- actor -- use case}\label{tab:derivation}\\
+\toprule
+\textbf{Problem} & \textbf{Need} & \textbf{Requirements} & \textbf{Actors} & \textbf{Use cases}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Problem} & \textbf{Need} & \textbf{Requirements} & \textbf{Actors} & \textbf{Use cases}\\
+\midrule
+\endhead
+\small P1 hard to find paintings & \small Search by description, voice, photo, room & \small FR01--FR04, FR14, NFR08 & \small Customer, Gemma 4 Service & \small UC01--UC05, UC14\\
+\small P2 sold-out prints sold & \small Accurate stock at checkout & \small FR05, FR07, FR12 & \small Customer, Administrator & \small UC05, UC07, UC12\\
+\small P3 order status unknown & \small See and look up order status & \small FR08--FR11, FR13 & \small Customer, Administrator, Gemma 4 Service & \small UC08, UC09, UC10, UC11, UC13\\
+\small P4 manual work & \small Administration tools & \small FR12, FR13 & \small Administrator & \small UC12, UC13\\
+\small P5 risk of data leaks & \small Ownership checks, no card numbers, local voice & \small NFR01, NFR05, NFR08 & \small Customer, Payment Service & \small UC03, UC07, UC08, UC09, UC10\\
+\bottomrule
+\end{longtable}
+
+Table~\ref{tab:traceuc} in Appendix~C is the two-way traceability matrix between requirements and use cases: every
+requirement is realised by at least one use case and every use case has at least one source requirement. The trace
+continues to scenarios and activities in Chapter~\ref{ch:analysis}, and to classes, tables and code in Section~4.6 and
+Appendix~B.
+
+%% =========================================================================
+\section{Conclusion}\label{sec:1.13}
+
+Chapter~1 has gone through the first two steps of the course. Business investigation showed that Họa. is an
+information system of people, processes, data and technology, and traced five problems to missing structured
+painting data, missing up-to-date tools and missing access checks. Requirements engineering turned the needs into
+\nFR{} functional and \nNFR{} non-functional requirements written as ``The system shall\dots'', each with a priority
+and a source, and then into four actors and \nUseCases{} use cases. Chapter~\ref{ch:analysis} answers the next
+question: \emph{when an actor performs a use case, what happens?}

@@ -1,0 +1,4 @@
+# Self-hosted voice server (Whisper on CTranslate2). PyAV decodes the audio, so no ffmpeg binary is needed.
+faster-whisper==1.2.1
+# faster-whisper 1.2.1 calls av.open(..., metadata_errors=...), which PyAV 16+ no longer accepts.
+av==15.1.0

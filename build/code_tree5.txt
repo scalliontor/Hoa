@@ -1,0 +1,153 @@
+demo/
+├── API.md
+├── README.md
+├── build.sh
+├── config/
+│   └── app.properties
+├── data/
+│   ├── ATTRIBUTION.md
+│   ├── catalog.json
+│   ├── eval_images/   (8 photos used as image queries in the evaluation)
+│   └── eval_images.json
+├── db/
+│   ├── ecom_schema_sqlite.sql
+│   └── seed.sql
+├── generated/
+│   └── src/   (58 generated classes, same packages as src/main/java)
+├── lib/
+│   ├── gson-2.11.0.jar
+│   ├── slf4j-api-1.7.36.jar
+│   ├── slf4j-nop-1.7.36.jar
+│   └── sqlite-jdbc-3.46.1.3.jar
+├── run.sh
+├── scripts/
+│   ├── evaluate.py
+│   ├── java_home.sh
+│   └── make_excerpts.py
+├── src/
+│   └── main/
+│       └── java/
+│           └── com/
+│               └── ptit/
+│                   └── ecom/
+│                       ├── application/
+│                       │   ├── search/
+│                       │   │   ├── CommonQuery.java
+│                       │   │   ├── ImageService.java
+│                       │   │   ├── QueryService.java
+│                       │   │   ├── RankingService.java
+│                       │   │   ├── SearchResult.java
+│                       │   │   ├── SearchService.java
+│                       │   │   └── SpeechService.java
+│                       │   └── service/
+│                       │       ├── AssistantReply.java
+│                       │       ├── AssistantService.java
+│                       │       ├── CartService.java
+│                       │       ├── CheckoutService.java
+│                       │       ├── OrderService.java
+│                       │       └── ProductService.java
+│                       ├── domain/
+│                       │   ├── cart/
+│                       │   │   ├── Cart.java
+│                       │   │   └── CartItem.java
+│                       │   ├── customer/
+│                       │   │   ├── Address.java
+│                       │   │   ├── Customer.java
+│                       │   │   ├── CustomerNew.java
+│                       │   │   ├── CustomerVIP.java
+│                       │   │   └── FullName.java
+│                       │   ├── order/
+│                       │   │   ├── Order.java
+│                       │   │   ├── OrderItem.java
+│                       │   │   ├── OrderStatus.java
+│                       │   │   ├── Shipping.java
+│                       │   │   └── ShippingStatus.java
+│                       │   ├── payment/
+│                       │   │   ├── PayCash.java
+│                       │   │   ├── PayCredit.java
+│                       │   │   ├── Payment.java
+│                       │   │   └── PaymentStatus.java
+│                       │   └── product/
+│                       │       ├── Artist.java
+│                       │       ├── Frame.java
+│                       │       ├── Painting.java
+│                       │       └── Product.java
+│                       ├── infrastructure/
+│                       │   ├── ai/
+│                       │   │   ├── GemmaClient.java
+│                       │   │   ├── LlmClient.java
+│                       │   │   ├── LlmReply.java
+│                       │   │   ├── SpeechClient.java
+│                       │   │   ├── ToolCall.java
+│                       │   │   └── WhisperClient.java
+│                       │   ├── repository/
+│                       │   │   ├── CartRepository.java
+│                       │   │   ├── CustomerRepository.java
+│                       │   │   ├── OrderRepository.java
+│                       │   │   ├── ProductRepository.java
+│                       │   │   └── sqlite/
+│                       │   │       ├── Database.java
+│                       │   │       ├── SqliteCartRepository.java
+│                       │   │       ├── SqliteCustomerRepository.java
+│                       │   │       ├── SqliteOrderRepository.java
+│                       │   │       └── SqliteProductRepository.java
+│                       │   └── search/
+│                       │       └── VectorIndex.java
+│                       └── presentation/
+│                           ├── controller/
+│                           │   ├── AdminController.java
+│                           │   ├── AssistantController.java
+│                           │   ├── CartController.java
+│                           │   ├── CheckoutController.java
+│                           │   ├── OrderController.java
+│                           │   └── SearchController.java
+│                           └── web/
+│                               ├── EcomApplication.java
+│                               ├── SessionManager.java
+│                               └── WebServer.java
+├── test.sh
+├── tests/
+│   └── java/
+│       └── com/
+│           └── ptit/
+│               └── ecom/
+│                   └── test/
+│                       ├── AssistantTest.java
+│                       ├── CheckoutTest.java
+│                       ├── DomainTest.java
+│                       ├── Fixtures.java
+│                       ├── OrderServiceTest.java
+│                       ├── RepositoryTest.java
+│                       ├── SearchTest.java
+│                       ├── TestRunner.java
+│                       ├── VocabularyTest.java
+│                       └── WebServerTest.java
+├── voice-server/
+│   ├── README.md
+│   ├── bench_models.py
+│   ├── eval_voice.py
+│   ├── requirements.txt
+│   ├── run_voice.sh
+│   ├── samples/   (recorded test requests (en, vi))
+│   └── server.py
+└── web/
+    ├── README.md
+    ├── css/
+    │   ├── base.css
+    │   ├── fonts.css
+    │   └── screens.css
+    ├── fonts/   (web fonts)
+    ├── img/   (painting images P01-P32, rooms/ (3 sample rooms + rooms.json), credits.json)
+    ├── index.html
+    └── js/
+        ├── admin-view.js
+        ├── app.js
+        ├── assistant-view.js
+        ├── cart-view.js
+        ├── core.js
+        ├── image-upload.js
+        ├── order-view.js
+        ├── room-preview.js
+        ├── search-result-view.js
+        ├── search-ui.js
+        └── voice-input.js

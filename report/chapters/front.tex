@@ -1,0 +1,76 @@
+\input{generated/counts}
+
+\chapter*{Abbreviations}
+\addcontentsline{toc}{chapter}{Abbreviations}
+\markboth{Abbreviations}{}
+\begin{longtable}{@{}P{3.0cm}P{12.0cm}@{}}
+\toprule
+\textbf{Abbreviation} & \textbf{Meaning}\\
+\midrule
+\endhead
+AI & Artificial Intelligence\\
+API & Application Programming Interface\\
+ASR & Automatic Speech Recognition (speech-to-text)\\
+DB & Database\\
+DDL & Data Definition Language, the SQL statements that define tables\\
+ERD & Entity Relationship Diagram\\
+FK / PK & Foreign key / Primary key\\
+FR / NFR & Functional / Non-functional Requirement\\
+HTTP / JSON & Web protocol / data format exchanged between the browser and the server\\
+IS & Information System\\
+JDBC & Java Database Connectivity\\
+LLM & Large Language Model\\
+MoSCoW & Must -- Should -- Could -- Won't, a way to rank requirements\\
+ORM & Object-Relational Mapping\\
+SRS & Software Requirements Specification\\
+UC & Use case\\
+UI & User Interface\\
+UML & Unified Modeling Language\\
+USD & United States dollar, the currency of all prices in the demo\\
+vLLM & Open-source server that runs large language models on a GPU\\
+VP & Visual Paradigm, the modelling tool used for every diagram\\
+\bottomrule
+\end{longtable}
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+\markboth{Introduction}{}
+
+\textbf{Context.} Buying a painting online is not like buying an item with a clear product code. People
+remember how a painting feels rather than what it is called: ``a blue landscape'', ``Monet, but under
+100 dollars'', or just a photo of a print they saw in a caf\'e. A shop that only offers a search box over
+titles loses these customers. On the other hand, adding artificial intelligence without careful analysis
+can make the system recommend sold-out prints, show one customer another customer's order, or stop working
+whenever the AI service is slow.
+
+\textbf{Topic.} This group essay analyses, designs and builds \textbf{Họa.}, an online gallery that sells
+fine-art prints of public-domain paintings together with frames. Customers can find paintings with keywords
+or a natural sentence, by speaking, with a photo, or with a photo of their own room; they can ask an AI
+curator, add prints to the cart, place an order and follow it until delivery. The AI part uses the
+\textbf{Gemma 4} model served by vLLM on the group's L40S server through an OpenAI-compatible interface, and
+a \textbf{self-hosted Whisper} model that turns speech into text on the laptop itself. Everything else
+(web pages, Java application, SQLite database) runs on one machine, so the demo works without any cloud
+service. All prices are in US dollars.
+
+\textbf{Objectives.} The essay follows the five chapters set by the lecturer, and each chapter produces a
+concrete artefact of Họa.: Chapter~1 (Requirement Determination) states \nFR{} functional and \nNFR{}
+non-functional requirements and \nUseCases{} use cases from the business problems of the gallery; Chapter~2
+(Analysis) specifies the main use cases and models the business with activity diagrams, a domain model, a sequence
+diagram and a state machine; Chapter~3 (AI in E-commerce) explains the five AI features, how each can fail and how
+they are measured; Chapter~4 (Design) follows the lecturer's outline 4.1--4.6 from the analysis class diagram to the
+generated code; Chapter~5 (Code) presents the source code, the user interface, the tests and how to run the demo.
+
+\textbf{Method and consistency.} All diagrams are drawn in one editable Visual Paradigm project~\cite{visualparadigm}. The names of
+requirements, use cases, classes, methods and tables are declared once in the specification file
+\code{tools/model.py}; from this file the group generates the VP diagrams, the SQL schema, the Java skeleton
+and the tables of this essay, and a checker compares the real code and database with it. Class and method
+names follow the code in the course slides: Assignment~03 (\code{Cart}, \code{CartItem}, \code{Order},
+\code{OrderItem} and the checkout transformation), Assignment~05 (Controller -- Service -- Domain --
+Repository and \code{CheckoutService.checkout}) and Assignment~06 (\code{SearchUI}, \code{QueryService},
+\code{SpeechService}, \code{SearchService}, \code{RankingService}, \code{ProductRepository},
+\code{OrderRepository}, \code{VectorIndex}). Appendix~A maps every chapter, figure and code excerpt to its
+file in the project folder.
+
+\textbf{Scope.} Họa. is a study project. Payment and delivery are simulated; painting images come from
+Wikimedia Commons~\cite{wikimedia} and only public-domain works are used; evaluation figures describe the group's own data
+and test queries, not the performance of a real shop.

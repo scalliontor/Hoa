@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Họa. — Paintings that find you</title>
+  <meta name="description" content="Họa. gallery: museum-quality prints found by words, by voice or with a photo, and tried on your own wall before you buy.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230b0b0b'/%3E%3Cg fill='%23f1f0ec'%3E%3Ccircle cx='4' cy='4' r='1.2'/%3E%3Ccircle cx='8' cy='4' r='1.2'/%3E%3Ccircle cx='12' cy='4' r='1.2'/%3E%3Ccircle cx='4' cy='8' r='1.2'/%3E%3Ccircle cx='8' cy='8' r='1.2'/%3E%3Ccircle cx='4' cy='12' r='1.2'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/css/fonts.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/screens.css">
+  <script>
+    // Apply the saved theme before the first paint (no flash).
+    try { document.documentElement.dataset.theme = localStorage.getItem("hoa-theme") || "dark"; } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="header" id="header">
+    <a class="logo" href="#/" aria-label="Họa. home">
+      <span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      Họa.
+    </a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="#/collection" data-route="collection">Collection</a>
+      <a href="#/room" data-route="room">Find for my room</a>
+      <button type="button" data-open-assistant>Assistant</button>
+      <a href="#/orders" data-route="orders" class="mobile-only">My orders</a>
+      <a href="#/admin" data-route="admin" id="nav-admin" class="hidden">Back office</a>
+    </nav>
+    <div class="header-right">
+      <div class="account" id="account">
+        <button type="button" class="account-button" id="account-button" aria-haspopup="true" aria-label="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20c.8-3.6 3.8-5.6 7.5-5.6s6.7 2 7.5 5.6"/></svg>
+          <span class="name" id="account-name">Sign in</span>
+        </button>
+        <div class="account-menu" id="account-menu" role="menu"></div>
+      </div>
+      <a class="cart-link" href="#/cart" aria-label="Cart"><span class="label">Cart</span><span class="count" id="cart-count">0</span></a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark mode"></button>
+      <button type="button" class="menu-toggle mono" id="menu-toggle" aria-label="Open menu">Menu</button>
+    </div>
+  </header>
+
+  <main id="app" aria-live="polite"></main>
+
+  <footer class="footer">
+    <div class="footer-cols">
+      <div>
+        <h4>Họa. gallery</h4>
+        <p>Museum-quality prints of the paintings people stop for. Describe what you love, say it, or show us a photo — then try it on your own wall before you buy.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <a href="#/collection">Collection</a>
+        <a href="#/room">Find a painting for my room</a>
+        <a href="#/cart">Cart</a>
+      </div>
+      <div>
+        <h4>Help</h4>
+        <a href="#/orders">My orders</a>
+        <a href="#/orders">Track an order</a>
+        <button type="button" data-open-assistant>Ask the assistant</button>
+      </div>
+      <div>
+        <h4>Our promise</h4>
+        <p>Flat $8 delivery</p>
+        <p>Free cancellation until it ships</p>
+        <p>VIP members save 10%</p>
+      </div>
+    </div>
+    <div class="wordmark" aria-hidden="true">Họa.</div>
+    <div class="footer-note"><span>Images: Wikimedia Commons ▪ public domain</span><span>© 2026 Họa. gallery</span></div>
+  </footer>
+
+  <button type="button" class="assistant-fab" id="assistant-fab" data-open-assistant aria-label="Ask the assistant">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5.5h16v10.5H9.5L5 19.5V16H4z" stroke-linejoin="round"/><path d="M8 9.5h8M8 12.5h5"/></svg>
+    <i></i><span>Ask the assistant</span>
+  </button>
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <aside class="drawer" id="assistant" aria-label="Shopping assistant">
+    <div class="drawer-head">
+      <div>
+        <span class="label">Assistant</span>
+        <h3>How can we help?</h3>
+      </div>
+      <button type="button" class="icon-btn" id="assistant-close" aria-label="Close assistant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="chat" id="chat"></div>
+    <div class="chat-foot">
+      <div class="chips" id="assistant-suggestions"></div>
+      <form class="chat-input" id="assistant-form">
+        <input class="input" id="assistant-input" autocomplete="off" placeholder="Ask about a painting or your order…">
+        <button type="button" class="icon-btn" id="assistant-mic" aria-label="Speak to the assistant">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+        </button>
+        <button type="submit" class="btn solid">Send</button>
+      </form>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

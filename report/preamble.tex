@@ -1,0 +1,138 @@
+% Shared preamble of the essay: formal layout (black text, numbered headings,
+% "Figure x.y." / "Table x.y." captions), English text.
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage[variant=british]{english}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Arial}{\setsansfont{Arial}}{\setsansfont{TeX Gyre Heros}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}[Scale=0.80]}{\setmonofont{TeX Gyre Cursor}[Scale=0.85]}
+\usepackage[left=2.6cm,right=1.8cm,top=2.4cm,bottom=2.4cm,headheight=16pt]{geometry}
+\usepackage{setspace,titlesec,tikz}
+\setstretch{1.2}
+\usepackage{graphicx,array,booktabs,longtable,tabularx,multirow}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem,float,caption,needspace,pdflscape,rotating}
+\usepackage{listings,fancyvrb}
+\usepackage{xcolor}
+\definecolor{codegray}{HTML}{F6F6F6}
+\usepackage[obeyspaces,spaces]{url}
+\usepackage[unicode,hidelinks]{hyperref}
+\usepackage{fancyhdr}
+
+\AtBeginDocument{%
+  \renewcommand{\contentsname}{Contents}%
+  \renewcommand{\listfigurename}{List of Figures}%
+  \renewcommand{\listtablename}{List of Tables}%
+  \renewcommand{\bibname}{References}}
+
+% Running head: essay title on the left, current chapter on the right.
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape Information System Analysis and Design -- Group Course Essay}
+\fancyhead[R]{\small\itshape\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\chaptermark}[1]{\markboth{Chapter \thechapter. #1}{}}
+\fancypagestyle{plain}{\fancyhf{}\fancyhead[L]{\small\itshape Information System Analysis and Design -- Group Course Essay}%
+  \fancyhead[R]{\small\itshape\nouppercase{\leftmark}}\fancyfoot[C]{\thepage}}
+
+% Headings: "CHAPTER 1" over the title; "1.1." and "1.1.1." in black bold.
+\titleformat{\chapter}[display]{\centering\normalfont\bfseries}{\Large CHAPTER \thechapter}{6pt}{\LARGE}
+\titlespacing*{\chapter}{0pt}{-12pt}{18pt}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries\itshape}{}{0em}{}
+\titlespacing*{\section}{0pt}{14pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{8pt}{3pt}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\setlength{\parindent}{0.8cm}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{3em}
+\renewcommand{\arraystretch}{1.18}
+\setlength{\tabcolsep}{4.6pt}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\renewcommand{\tabularxcolumn}[1]{>{\raggedright\arraybackslash}p{#1}}
+\setlist{topsep=3pt,itemsep=2pt,parsep=0pt}
+\captionsetup{font=small,labelfont=bf,labelsep=period}
+\captionsetup[figure]{textfont=it}
+\setlength{\LTpre}{4pt}
+\setlength{\LTpost}{6pt}
+
+% Identifiers and signatures: monospaced and breakable after . , ( ) : < > _
+\makeatletter
+\def\UrlBreaks{\do\.\do\,\do\(\do\)\do\:\do\<\do\>\do\_\do\/\do\[\do\]}
+\makeatother
+\DeclareUrlCommand\code{\urlstyle{tt}}
+% \codex{...}: like \code, but expands macros first (configuration values such as \cfgServerPort).
+\makeatletter
+\newcommand{\codex}[1]{\begingroup\edef\codex@arg{#1}\expandafter\code\expandafter{\codex@arg}\endgroup}
+\makeatother
+
+\lstdefinestyle{ecom}{basicstyle=\ttfamily\scriptsize,breaklines=true,frame=single,
+  backgroundcolor=\color{codegray},columns=fullflexible,keepspaces=true,showstringspaces=false,
+  numbers=left,numberstyle=\tiny\color{gray},xleftmargin=2em,framexleftmargin=1.6em,tabsize=4,
+  keywordstyle=\bfseries,commentstyle=\itshape\color{black!65},
+}
+\lstset{style=ecom}
+% Non-ASCII characters in code (names, quotes, dashes): typeset as literates so listings keeps them in place.
+\lstset{extendedchars=true,literate={ọ}{{ọ}}1 {ạ}{{ạ}}1 {ả}{{ả}}1 {ố}{{ố}}1 {ư}{{ư}}1 {đ}{{đ}}1
+  {é}{{é}}1 {è}{{è}}1 {—}{{---}}1 {–}{{--}}1 {“}{{``}}1 {”}{{''}}1 {‘}{{`}}1 {’}{{'}}1 {…}{{\ldots}}1 {▪}{{▪}}1
+  {→}{{$\rightarrow$}}1 {«}{{«}}1 {»}{{»}}1}
+\fvset{fontsize=\scriptsize,frame=single,framesep=6pt}
+
+% Assets produced by the other parts of the project; a framed placeholder keeps drafts compiling.
+\newcommand{\assetbox}[2]{\fbox{\parbox[c][4.2cm][c]{0.85\linewidth}{\centering #1\\[3pt]\small\texttt{\detokenize{#2}}}}}
+\newcommand{\vpfig}[2]{%
+  \IfFileExists{../figures/vp/#1.png}%
+    {\includegraphics[width=\linewidth,height=#2,keepaspectratio]{../figures/vp/#1.png}}%
+    {\assetbox{Figure exported from the Visual Paradigm project}{figures/vp/#1.png}}}
+% A full-page landscape diagram: a float page of its own (the text keeps filling the current page), turned in the
+% PDF viewer like a pdflscape page. #1 VP id, #2 short caption (list of figures), #3 caption, #4 labels.
+% Inside sidewaysfigure \textwidth and \textheight are swapped, so the height is capped by the portrait width.
+\newlength{\portraitwidth}
+\AtBeginDocument{\setlength{\portraitwidth}{\textwidth}}
+\newcommand{\landscapefig}[4]{\begin{sidewaysfigure}\special{pdf:put @thispage <</Rotate 90>>}\centering
+  \vpfig{#1}{0.86\portraitwidth}\caption[#2]{#3}#4\end{sidewaysfigure}}
+\newcommand{\demofig}[2]{%
+  \IfFileExists{../figures/demo/#1.png}%
+    {\includegraphics[width=\linewidth,height=#2,keepaspectratio]{../figures/demo/#1.png}}%
+    {\assetbox{Screenshot of the Họa. demo}{figures/demo/#1.png}}}
+\newcommand{\txtfile}[1]{\IfFileExists{#1}{\VerbatimInput{#1}}{\assetbox{Output written by the demo build}{#1}}}
+% Captions name the exported file, so a reader can find every figure in tieuluan/.
+\newcommand{\vpsrc}[1]{\texttt{figures/vp/\detokenize{#1}.png}}
+\newcommand{\demosrc}[1]{\texttt{figures/demo/\detokenize{#1}.png}}
+% Code excerpts: the listing title shows the real source file (report/generated/paths.tex).
+\makeatletter
+\def\srcpathof#1{\srcpath@aux#1\relax}
+\def\srcpath@aux#1.#2\relax{\ifcsname srcpath:#1\endcsname\csname srcpath:#1\endcsname\else build/excerpts5/#1.#2\fi}
+\makeatother
+% Code excerpts: the demo's choice (build/excerpts5) or the methods cut from the real file (report/generated/excerpts),
+% copied by report/gen_tables.py to report/generated/listings with an escape character around non-ASCII text.
+\newcommand{\excerpt}[2]{% #1 language, #2 file name in build/excerpts5
+  \IfFileExists{generated/listings/#2}%
+    {\begingroup\excerptsetup{#2}%
+     \lstinputlisting[language=#1,title={\footnotesize\ttfamily Source file: \srcpathof{#2}\excerptnote{#2}}]{generated/listings/#2}%
+     \endgroup}%
+    {\assetbox{Code excerpt from the demo}{build/excerpts5/#2}}}
+\makeatletter
+\def\excerptsetup#1{\excerpt@name#1\relax\ifcsname lstesc:\excerpt@base\endcsname\csname lstesc:\excerpt@base\endcsname\fi}
+\def\excerptnote#1{\excerpt@name#1\relax\ifcsname lstnote:\excerpt@base\endcsname\csname lstnote:\excerpt@base\endcsname\fi}
+\def\excerpt@name#1.#2\relax{\def\excerpt@base{#1}}
+\makeatother
+% A text file written by the demo build, or the fallback written by report/gen_tables.py.
+\newcommand{\txtfileor}[2]{\IfFileExists{#1}{\VerbatimInput{#1}}{\txtfile{#2}}}
+\lstdefinelanguage{JavaScript}{morekeywords={async,await,break,case,catch,class,const,continue,default,delete,do,
+  else,export,extends,false,finally,for,function,if,import,in,instanceof,let,new,null,return,static,super,switch,
+  this,throw,true,try,typeof,undefined,var,void,while},morecomment=[l]{//},morecomment=[s]{/*}{*/},
+  morestring=[b]",morestring=[b]',morestring=[b]`,sensitive=true}
+
+% Code statistics written by the demo build (build/code_stats5.tex).
+\IfFileExists{../build/code_stats5.tex}{\input{../build/code_stats5.tex}}{}
+\IfFileExists{generated/code_stats.tex}{\input{generated/code_stats.tex}}{}
+\providecommand{\javaFileCount}{[Java files]}
+\providecommand{\javaLineCount}{[Java lines]}
+\providecommand{\jsFileCount}{[JS files]}
+\providecommand{\jsLineCount}{[JS lines]}
+\providecommand{\testCount}{[tests]}

@@ -1,0 +1,31 @@
+\begin{longtable}{@{}P{5.4cm}P{2.3cm}P{2.0cm}P{5.3cm}@{}}
+\caption{Foreign keys, relationship names and multiplicities}\label{tab:fks}\\
+\toprule
+\small \textbf{Foreign key} & \small \textbf{Name} & \small \textbf{Multiplicity} & \small \textbf{Meaning}\\
+\midrule
+\endfirsthead
+\toprule
+\small \textbf{Foreign key} & \small \textbf{Name} & \small \textbf{Multiplicity} & \small \textbf{Meaning}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\small \code{customer_vip.customer_id} $\rightarrow$ \code{customer} & \small is a & \small 1 -- 0..1 & \small VIP part of a customer\\
+\small \code{customer_new.customer_id} $\rightarrow$ \code{customer} & \small is a & \small 1 -- 0..1 & \small New-customer part of a customer\\
+\small \code{address.customer_id} $\rightarrow$ \code{customer} & \small has & \small 1 -- 1..* & \small Addresses of a customer\\
+\small \code{painting.product_id} $\rightarrow$ \code{product} & \small is a & \small 1 -- 0..1 & \small Painting part of a product\\
+\small \code{painting.artist_id} $\rightarrow$ \code{artist} & \small paints & \small 1 -- 0..* & \small Artist of the painting\\
+\small \code{frame.product_id} $\rightarrow$ \code{product} & \small is a & \small 1 -- 0..1 & \small Frame part of a product\\
+\small \code{product_feature.product_id} $\rightarrow$ \code{product} & \small indexed by & \small 1 -- 0..1 & \small Feature vector used by search\\
+\small \code{cart.customer_id} $\rightarrow$ \code{customer} & \small owns & \small 1 -- 0..1 & \small At most one cart per customer (UNIQUE)\\
+\small \code{cart_item.cart_id} $\rightarrow$ \code{cart} & \small contains & \small 1 -- 0..* & \small Lines of a cart\\
+\small \code{cart_item.product_id} $\rightarrow$ \code{product} & \small refers to & \small 1 -- 0..* & \small Product of a cart line\\
+\small \code{orders.customer_id} $\rightarrow$ \code{customer} & \small places & \small 1 -- 0..* & \small Customer who placed the order\\
+\small \code{order_item.order_id} $\rightarrow$ \code{orders} & \small contains & \small 1 -- 1..* & \small Lines of an order\\
+\small \code{order_item.product_id} $\rightarrow$ \code{product} & \small refers to & \small 1 -- 0..* & \small Purchased product\\
+\small \code{shipping.order_id} $\rightarrow$ \code{orders} & \small is delivered by & \small 1 -- 0..1 & \small At most one delivery per order (UNIQUE)\\
+\small \code{shipping.address_id} $\rightarrow$ \code{address} & \small ships to & \small 1 -- 0..* & \small Delivery address\\
+\small \code{payment.order_id} $\rightarrow$ \code{orders} & \small is paid by & \small 1 -- 0..* & \small Payment attempts of an order\\
+\small \code{pay_cash.payment_id} $\rightarrow$ \code{payment} & \small is a & \small 1 -- 0..1 & \small Cash part of a payment\\
+\small \code{pay_credit.payment_id} $\rightarrow$ \code{payment} & \small is a & \small 1 -- 0..1 & \small Card part of a payment\\
+\end{longtable}

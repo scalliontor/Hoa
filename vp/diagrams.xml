@@ -1,0 +1,2738 @@
+<?xml version='1.0' encoding='utf-8'?>
+<diagrams project="vp/tieuluan_design.vpp">
+  <diagram id="c1_context" name="1.1 Context View - Hoa Gallery" kind="class" scope="usecase" scopeName="1 Use cases">
+    <node id="system" type="Class" name="Họa. Gallery" x="560" y="300" w="240" h="70" stereotype="system" hideMembers="true" />
+    <node id="Customer" type="Actor" name="Customer" x="120" y="295" w="40" h="80" />
+    <node id="Payment Service" type="Actor" name="Payment Service" x="1200" y="295" w="40" h="80" />
+    <node id="Administrator" type="Actor" name="Administrator" x="660" y="30" w="40" h="80" />
+    <node id="Gemma 4 Service" type="Actor" name="Gemma 4 Service" x="660" y="520" w="40" h="80" />
+    <edge type="Dependency" from="Customer" to="system" stereotype="flow" name="search queries (text, voice, image), cart, orders" labelX="222" labelY="281" labelW="277" labelH="34">
+      <pt x="160" y="323" />
+      <pt x="560" y="323" />
+    </edge>
+    <edge type="Dependency" from="system" to="Customer" stereotype="flow" name="search results, order status, assistant answers" labelX="224" labelY="355" labelW="272" labelH="34">
+      <pt x="560" y="347" />
+      <pt x="160" y="347" />
+    </edge>
+    <edge type="Dependency" from="system" to="Payment Service" stereotype="flow" name="payment request (order id, amount)" labelX="892" labelY="281" labelW="216" labelH="34">
+      <pt x="800" y="323" />
+      <pt x="1200" y="323" />
+    </edge>
+    <edge type="Dependency" from="Payment Service" to="system" stereotype="flow" name="authorisation result (authorizationCode)" labelX="880" labelY="355" labelW="240" labelH="34">
+      <pt x="1200" y="347" />
+      <pt x="800" y="347" />
+    </edge>
+    <edge type="Dependency" from="Administrator" to="system" stereotype="flow" name="paintings, prices, stock, order status" labelX="437" labelY="201" labelW="221" labelH="34">
+      <pt x="668" y="136" />
+      <pt x="668" y="300" />
+    </edge>
+    <edge type="Dependency" from="system" to="Administrator" stereotype="flow" name="painting and order lists" labelX="702" labelY="201" labelW="150" labelH="34">
+      <pt x="692" y="300" />
+      <pt x="692" y="136" />
+    </edge>
+    <edge type="Dependency" from="system" to="Gemma 4 Service" stereotype="flow" name="prompts, photos, tool definitions" labelX="455" labelY="428" labelW="203" labelH="34">
+      <pt x="668" y="370" />
+      <pt x="668" y="520" />
+    </edge>
+    <edge type="Dependency" from="Gemma 4 Service" to="system" stereotype="flow" name="filters, photo descriptions, tool calls, answers" labelX="702" labelY="428" labelW="269" labelH="34">
+      <pt x="692" y="520" />
+      <pt x="692" y="370" />
+    </edge>
+  </diagram>
+  <diagram id="c1_usecase" name="1.2 Use Case Diagram - Hoa Gallery" kind="usecase" scope="usecase" scopeName="1 Use cases">
+    <node id="system" type="System" name="Họa. Gallery" x="280" y="30" w="749" h="805" />
+    <node id="UC06" type="UseCase" name="UC06 Manage Cart" x="330" y="77" w="222" h="46" parent="system" />
+    <node id="UC07" type="UseCase" name="UC07 Checkout" x="330" y="161" w="222" h="46" parent="system" />
+    <node id="UC08" type="UseCase" name="UC08 View Order" x="330" y="245" w="222" h="46" parent="system" />
+    <node id="UC09" type="UseCase" name="UC09 Search Order" x="330" y="329" w="222" h="46" parent="system" />
+    <node id="UC10" type="UseCase" name="UC10 Ask Shopping Assistant" x="330" y="413" w="222" h="46" parent="system" />
+    <node id="UC01" type="UseCase" name="UC01 Search Product" x="330" y="497" w="222" h="46" parent="system" abstract="true" />
+    <node id="UC05" type="UseCase" name="UC05 View Product" x="330" y="581" w="222" h="46" parent="system" />
+    <node id="UC12" type="UseCase" name="UC12 Manage Products" x="330" y="665" w="222" h="46" parent="system" />
+    <node id="UC13" type="UseCase" name="UC13 Update Order Status" x="330" y="749" w="222" h="46" parent="system" />
+    <node id="UC11" type="UseCase" name="UC11 Cancel Order" x="742" y="245" w="237" h="46" parent="system" />
+    <node id="UC02" type="UseCase" name="UC02 Search by Keyword" x="742" y="497" w="237" h="46" parent="system" />
+    <node id="UC03" type="UseCase" name="UC03 Search by Voice" x="742" y="581" w="237" h="46" parent="system" />
+    <node id="UC04" type="UseCase" name="UC04 Search by Image" x="742" y="665" w="237" h="46" parent="system" />
+    <node id="UC14" type="UseCase" name="UC14 Find Painting for My Room" x="742" y="749" w="237" h="46" parent="system" />
+    <node id="Customer" type="Actor" name="Customer" x="120" y="312" w="40" h="80" />
+    <node id="Administrator" type="Actor" name="Administrator" x="120" y="690" w="40" h="80" />
+    <node id="Payment Service" type="Actor" name="Payment Service" x="1149" y="144" w="40" h="80" />
+    <node id="Gemma 4 Service" type="Actor" name="Gemma 4 Service" x="1149" y="606" w="40" h="80" />
+    <edge type="Association" from="Customer" to="UC06">
+      <pt x="160" y="346" />
+      <pt x="330" y="100" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC07">
+      <pt x="160" y="346" />
+      <pt x="330" y="184" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC08">
+      <pt x="160" y="346" />
+      <pt x="330" y="268" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC09">
+      <pt x="160" y="346" />
+      <pt x="330" y="352" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC10">
+      <pt x="160" y="346" />
+      <pt x="330" y="436" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC01">
+      <pt x="160" y="346" />
+      <pt x="330" y="520" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC05">
+      <pt x="160" y="346" />
+      <pt x="330" y="604" />
+    </edge>
+    <edge type="Association" from="Administrator" to="UC12">
+      <pt x="160" y="724" />
+      <pt x="330" y="688" />
+    </edge>
+    <edge type="Association" from="Administrator" to="UC13">
+      <pt x="160" y="724" />
+      <pt x="330" y="772" />
+    </edge>
+    <edge type="Association" from="Gemma 4 Service" to="UC02">
+      <pt x="1149" y="640" />
+      <pt x="979" y="520" />
+    </edge>
+    <edge type="Association" from="Gemma 4 Service" to="UC03">
+      <pt x="1149" y="640" />
+      <pt x="979" y="604" />
+    </edge>
+    <edge type="Association" from="Gemma 4 Service" to="UC04">
+      <pt x="1149" y="640" />
+      <pt x="979" y="688" />
+    </edge>
+    <edge type="Association" from="Gemma 4 Service" to="UC10">
+      <pt x="1169" y="606" />
+      <pt x="1169" y="436" />
+      <pt x="552" y="436" />
+    </edge>
+    <edge type="Association" from="Payment Service" to="UC07">
+      <pt x="1149" y="184" />
+      <pt x="552" y="184" />
+    </edge>
+    <edge type="Association" from="Gemma 4 Service" to="UC14">
+      <pt x="1149" y="640" />
+      <pt x="979" y="772" />
+    </edge>
+    <edge type="Generalization" from="UC02" to="UC01">
+      <pt x="742" y="520" />
+      <pt x="552" y="520" />
+    </edge>
+    <edge type="Generalization" from="UC03" to="UC01">
+      <pt x="742" y="604" />
+      <pt x="647" y="604" />
+      <pt x="647" y="520" />
+      <pt x="552" y="520" />
+    </edge>
+    <edge type="Generalization" from="UC04" to="UC01">
+      <pt x="742" y="688" />
+      <pt x="647" y="688" />
+      <pt x="647" y="520" />
+      <pt x="552" y="520" />
+    </edge>
+    <edge type="Include" from="UC07" to="UC06" labelX="451" labelY="132" labelW="99" labelH="20">
+      <pt x="441" y="161" />
+      <pt x="441" y="123" />
+    </edge>
+    <edge type="Include" from="UC10" to="UC01" labelX="451" labelY="468" labelW="99" labelH="20">
+      <pt x="441" y="459" />
+      <pt x="441" y="497" />
+    </edge>
+    <edge type="Include" from="UC10" to="UC09" labelX="451" labelY="384" labelW="99" labelH="20">
+      <pt x="441" y="413" />
+      <pt x="441" y="375" />
+    </edge>
+    <edge type="Extend" from="UC05" to="UC01" labelX="451" labelY="552" labelW="97" labelH="20">
+      <pt x="441" y="581" />
+      <pt x="441" y="543" />
+    </edge>
+    <edge type="Extend" from="UC11" to="UC08" labelX="598" labelY="240" labelW="97" labelH="20">
+      <pt x="742" y="268" />
+      <pt x="552" y="268" />
+    </edge>
+    <edge type="Generalization" from="UC14" to="UC01">
+      <pt x="742" y="772" />
+      <pt x="647" y="772" />
+      <pt x="647" y="520" />
+      <pt x="552" y="520" />
+    </edge>
+  </diagram>
+  <diagram id="c2_domain" name="2.1 Domain Model (concepts)" kind="class" scope="analysis" scopeName="4.1 Analysis model">
+    <node id="FullName" type="Class" name="FullName" x="382" y="40" w="139" h="26" hideMembers="true" hideOperations="true">
+      <attr name="firstName" type="String" />
+      <attr name="middleName" type="String" />
+      <attr name="lastName" type="String" />
+    </node>
+    <node id="Customer" type="Class" name="Customer" x="385" y="156" w="132" h="26" hideMembers="true" hideOperations="true">
+      <attr name="customerId" type="String" />
+      <attr name="email" type="String" />
+      <attr name="phone" type="String" />
+      <attr name="dateOfBirth" type="Date" />
+    </node>
+    <node id="Address" type="Class" name="Address" x="48" y="504" w="147" h="26" hideMembers="true" hideOperations="true">
+      <attr name="houseNumber" type="String" />
+      <attr name="street" type="String" />
+      <attr name="district" type="String" />
+      <attr name="city" type="String" />
+    </node>
+    <node id="CustomerVIP" type="Class" name="CustomerVIP" x="54" y="40" w="134" h="26" hideMembers="true" hideOperations="true">
+      <attr name="vipLevel" type="int" />
+      <attr name="discountRate" type="float" />
+      <attr name="rewardPoints" type="int" />
+    </node>
+    <node id="CustomerNew" type="Class" name="CustomerNew" x="40" y="272" w="162" h="26" hideMembers="true" hideOperations="true">
+      <attr name="registeredDate" type="Date" />
+      <attr name="welcomeVoucher" type="String" />
+    </node>
+    <node id="Cart" type="Class" name="Cart" x="700" y="156" w="133" h="26" hideMembers="true" hideOperations="true">
+      <attr name="cartId" type="String" />
+      <attr name="createdDate" type="Date" />
+      <attr name="updatedDate" type="Date" />
+    </node>
+    <node id="CartItem" type="Class" name="CartItem" x="1016" y="156" w="110" h="26" hideMembers="true" hideOperations="true">
+      <attr name="quantity" type="int" />
+      <attr name="cartPrice" type="float" />
+    </node>
+    <node id="Order" type="Class" name="Order" x="701" y="388" w="131" h="26" hideMembers="true" hideOperations="true">
+      <attr name="orderId" type="String" />
+      <attr name="orderDate" type="Date" />
+      <attr name="status" type="String" />
+      <attr name="totalAmount" type="float" />
+    </node>
+    <node id="OrderItem" type="Class" name="OrderItem" x="1016" y="388" w="111" h="26" hideMembers="true" hideOperations="true">
+      <attr name="quantity" type="int" />
+      <attr name="unitPrice" type="float" />
+    </node>
+    <node id="Shipping" type="Class" name="Shipping" x="372" y="504" w="158" h="26" hideMembers="true" hideOperations="true">
+      <attr name="shippingId" type="String" />
+      <attr name="carrier" type="String" />
+      <attr name="trackingNumber" type="String" />
+      <attr name="shippingFee" type="float" />
+      <attr name="status" type="String" />
+      <attr name="deliveredDate" type="Date" />
+    </node>
+    <node id="Payment" type="Class" name="Payment" x="1003" y="504" w="136" h="26" abstract="true" hideMembers="true" hideOperations="true">
+      <attr name="paymentId" type="String" />
+      <attr name="amount" type="float" />
+      <attr name="paymentDate" type="Date" />
+      <attr name="status" type="String" />
+    </node>
+    <node id="PayCash" type="Class" name="PayCash" x="828" y="620" w="145" h="26" hideMembers="true" hideOperations="true">
+      <attr name="cashReceived" type="float" />
+      <attr name="changeAmount" type="float" />
+    </node>
+    <node id="PayCredit" type="Class" name="PayCredit" x="1156" y="620" w="171" h="26" hideMembers="true" hideOperations="true">
+      <attr name="cardHolder" type="String" />
+      <attr name="bankName" type="String" />
+      <attr name="cardLast4" type="String" />
+      <attr name="authorizationCode" type="String" />
+    </node>
+    <node id="Product" type="Class" name="Product" x="1006" y="272" w="131" h="26" abstract="true" hideMembers="true" hideOperations="true">
+      <attr name="productId" type="String" />
+      <attr name="name" type="String" />
+      <attr name="price" type="float" />
+      <attr name="stockQuantity" type="int" />
+      <attr name="imageUrl" type="String" />
+      <attr name="description" type="String" />
+    </node>
+    <node id="Artist" type="Class" name="Artist" x="1631" y="156" w="128" h="26" hideMembers="true" hideOperations="true">
+      <attr name="artistId" type="String" />
+      <attr name="name" type="String" />
+      <attr name="nationality" type="String" />
+      <attr name="lifeYears" type="String" />
+    </node>
+    <node id="Painting" type="Class" name="Painting" x="1309" y="156" w="152" h="26" hideMembers="true" hideOperations="true">
+      <attr name="style" type="String" />
+      <attr name="subject" type="String" />
+      <attr name="dominantColor" type="String" />
+      <attr name="medium" type="String" />
+      <attr name="yearCreated" type="int" />
+      <attr name="widthCm" type="int" />
+      <attr name="heightCm" type="int" />
+    </node>
+    <node id="Frame" type="Class" name="Frame" x="1324" y="388" w="121" h="26" hideMembers="true" hideOperations="true">
+      <attr name="material" type="String" />
+      <attr name="color" type="String" />
+      <attr name="sizeLabel" type="String" />
+    </node>
+    <edge type="Association" from="Customer" to="FullName" name="has" fromMult="1" toMult="1" aggregation="composite" labelX="399" labelY="101" labelW="44" labelH="20" fromMultX="459" fromMultY="128" fromMultW="17" fromMultH="18" toMultX="459" toMultY="76" toMultW="17" toMultH="18">
+      <pt x="451" y="156" />
+      <pt x="451" y="66" />
+    </edge>
+    <edge type="Association" from="Customer" to="Address" name="has" fromMult="1" toMult="1..*" aggregation="shared" labelX="252" labelY="432" labelW="44" labelH="20" fromMultX="402" fromMultY="192" fromMultW="17" fromMultH="18" toMultX="129" toMultY="476" toMultW="29" toMultH="18">
+      <pt x="427" y="182" />
+      <pt x="427" y="459" />
+      <pt x="121" y="459" />
+      <pt x="121" y="504" />
+    </edge>
+    <edge type="Association" from="Customer" to="Cart" name="owns" fromMult="1" toMult="0..1" labelX="582" labelY="142" labelW="53" labelH="20" fromMultX="527" fromMultY="176" fromMultW="17" fromMultH="18" toMultX="659" toMultY="176" toMultW="31" toMultH="18">
+      <pt x="517" y="169" />
+      <pt x="700" y="169" />
+    </edge>
+    <edge type="Association" from="Customer" to="Order" name="places" fromMult="1" toMult="0..*" labelX="558" labelY="374" labelW="59" labelH="20" fromMultX="483" fromMultY="192" fromMultW="17" fromMultH="18" toMultX="662" toMultY="408" toMultW="29" toMultH="18">
+      <pt x="475" y="182" />
+      <pt x="475" y="401" />
+      <pt x="701" y="401" />
+    </edge>
+    <edge type="Association" from="Cart" to="CartItem" name="contains" fromMult="1" toMult="0..*" aggregation="composite" labelX="889" labelY="142" labelW="71" labelH="20" fromMultX="843" fromMultY="176" fromMultW="17" fromMultH="18" toMultX="977" toMultY="176" toMultW="29" toMultH="18">
+      <pt x="833" y="169" />
+      <pt x="1016" y="169" />
+    </edge>
+    <edge type="Association" from="Order" to="OrderItem" name="contains" fromMult="1" toMult="1..*" aggregation="composite" labelX="888" labelY="374" labelW="71" labelH="20" fromMultX="842" fromMultY="408" fromMultW="17" fromMultH="18" toMultX="976" toMultY="408" toMultW="29" toMultH="18">
+      <pt x="832" y="401" />
+      <pt x="1016" y="401" />
+    </edge>
+    <edge type="Association" from="CartItem" to="Product" name="refers to" fromMult="0..*" toMult="1" labelX="992" labelY="217" labelW="71" labelH="20" fromMultX="1079" fromMultY="192" fromMultW="29" fromMultH="18" toMultX="1079" toMultY="244" toMultW="17" toMultH="18">
+      <pt x="1071" y="182" />
+      <pt x="1071" y="272" />
+    </edge>
+    <edge type="Association" from="OrderItem" to="Product" name="refers to" fromMult="0..*" toMult="1" labelX="992" labelY="333" labelW="71" labelH="20" fromMultX="1079" fromMultY="360" fromMultW="29" fromMultH="18" toMultX="1079" toMultY="308" toMultW="17" toMultH="18">
+      <pt x="1071" y="388" />
+      <pt x="1071" y="298" />
+    </edge>
+    <edge type="Association" from="Order" to="Shipping" name="is delivered by" fromMult="1" toMult="0..1" labelX="585" labelY="490" labelW="103" labelH="20" fromMultX="718" fromMultY="424" fromMultW="17" fromMultH="18" toMultX="540" toMultY="524" toMultW="31" toMultH="18">
+      <pt x="742" y="414" />
+      <pt x="742" y="517" />
+      <pt x="530" y="517" />
+    </edge>
+    <edge type="Association" from="Shipping" to="Address" name="ships to" fromMult="0..*" toMult="1" labelX="249" labelY="490" labelW="68" labelH="20" fromMultX="333" fromMultY="524" fromMultW="29" fromMultH="18" toMultX="204" toMultY="524" toMultW="17" toMultH="18">
+      <pt x="372" y="517" />
+      <pt x="194" y="517" />
+    </edge>
+    <edge type="Association" from="Order" to="Payment" name="is paid by" fromMult="1" toMult="0..*" labelX="858" labelY="490" labelW="77" labelH="20" fromMultX="798" fromMultY="424" fromMultW="17" fromMultH="18" toMultX="964" toMultY="524" toMultW="29" toMultH="18">
+      <pt x="790" y="414" />
+      <pt x="790" y="517" />
+      <pt x="1003" y="517" />
+    </edge>
+    <edge type="Association" from="Artist" to="Painting" name="paints" fromMult="1" toMult="0..*" labelX="1517" labelY="142" labelW="58" labelH="20" fromMultX="1604" fromMultY="176" fromMultW="17" fromMultH="18" toMultX="1471" toMultY="176" toMultW="29" toMultH="18">
+      <pt x="1631" y="169" />
+      <pt x="1461" y="169" />
+    </edge>
+    <edge type="Generalization" from="CustomerVIP" to="Customer">
+      <pt x="188" y="53" />
+      <pt x="286" y="53" />
+      <pt x="286" y="169" />
+      <pt x="385" y="169" />
+    </edge>
+    <edge type="Generalization" from="CustomerNew" to="Customer">
+      <pt x="202" y="285" />
+      <pt x="286" y="285" />
+      <pt x="286" y="169" />
+      <pt x="385" y="169" />
+    </edge>
+    <edge type="Generalization" from="Painting" to="Product">
+      <pt x="1309" y="169" />
+      <pt x="1223" y="169" />
+      <pt x="1223" y="285" />
+      <pt x="1136" y="285" />
+    </edge>
+    <edge type="Generalization" from="Frame" to="Product">
+      <pt x="1324" y="401" />
+      <pt x="1223" y="401" />
+      <pt x="1223" y="285" />
+      <pt x="1136" y="285" />
+    </edge>
+    <edge type="Generalization" from="PayCash" to="Payment">
+      <pt x="900" y="620" />
+      <pt x="900" y="575" />
+      <pt x="1071" y="575" />
+      <pt x="1071" y="530" />
+    </edge>
+    <edge type="Generalization" from="PayCredit" to="Payment">
+      <pt x="1242" y="620" />
+      <pt x="1242" y="575" />
+      <pt x="1071" y="575" />
+      <pt x="1071" y="530" />
+    </edge>
+    <edge type="Dependency" from="Cart" to="Order" stereotype="create" name="checkout" labelX="774" labelY="268" labelW="93" labelH="34">
+      <pt x="766" y="182" />
+      <pt x="766" y="388" />
+    </edge>
+  </diagram>
+  <diagram id="c2_activity_checkout" name="2.2 Activity - Checkout" kind="activity" scope="activity" scopeName="2 Behaviour">
+    <node id="lanes" type="Swimlane" name="" x="20" y="20" w="1040" h="1190" header="34">
+      <lane name="Customer" w="300" />
+      <lane name="Họa. system" w="420" />
+      <lane name="Database" w="320" />
+    </node>
+    <node id="start" type="Initial" name="" x="159" y="74" w="22" h="22" lane="0" />
+    <node id="view" type="Action" name="View the cart" x="120" y="131" w="100" h="38" lane="0" />
+    <node id="choose" type="Action" name="Choose the delivery address and the payment method" x="70" y="204" w="200" h="52" lane="0" />
+    <node id="place" type="Action" name="Place the order" x="115" y="301" w="110" h="38" lane="0" />
+    <node id="checkout" type="Action" name="checkout(cartId, customerId, addressId, payment)" x="415" y="294" w="230" h="52" lane="1" />
+    <node id="readCart" type="Action" name="Read cart and cart_item" x="822" y="301" w="156" h="38" lane="2" />
+    <node id="d1" type="Decision" name="" x="512" y="408" w="36" h="44" lane="1" />
+    <node id="readStock" type="Action" name="Read price and stock_quantity" x="815" y="494" w="170" h="52" lane="2" />
+    <node id="d2" type="Decision" name="" x="512" y="588" w="36" h="44" lane="1" />
+    <node id="merge" type="Merge" name="" x="152" y="588" w="36" h="44" lane="0" />
+    <node id="error" type="Action" name="See the error and fix the cart" x="85" y="674" w="170" h="52" lane="0" />
+    <node id="stop" type="FlowFinal" name="" x="159" y="779" w="22" h="22" lane="0" />
+    <node id="create" type="Action" name="Create Order and OrderItem, freeze unitPrice" x="415" y="674" w="230" h="52" lane="1" />
+    <node id="total" type="Action" name="calculateTotal(discountRate)" x="445" y="771" w="170" h="38" lane="1" />
+    <node id="pay" type="Action" name="Create Payment (PENDING)" x="445" y="844" w="170" h="52" lane="1" />
+    <node id="save" type="Action" name="Save orders, order_item, payment and shipping (one transaction)" x="780" y="844" w="240" h="52" lane="2" />
+    <node id="stock" type="Action" name="Decrease stock_quantity, clear cart_item" x="780" y="934" w="240" h="52" lane="2" />
+    <node id="placed" type="Action" name="Return the Order (PLACED)" x="445" y="1034" w="170" h="52" lane="1" />
+    <node id="confirm" type="Action" name="See the order confirmation" x="85" y="1034" w="170" h="52" lane="0" />
+    <node id="end" type="Final" name="" x="159" y="1129" w="22" h="22" lane="0" />
+    <edge type="ControlFlow" from="start" to="view">
+      <pt x="170" y="96" />
+      <pt x="170" y="131" />
+    </edge>
+    <edge type="ControlFlow" from="view" to="choose">
+      <pt x="170" y="169" />
+      <pt x="170" y="204" />
+    </edge>
+    <edge type="ControlFlow" from="choose" to="place">
+      <pt x="170" y="256" />
+      <pt x="170" y="301" />
+    </edge>
+    <edge type="ControlFlow" from="place" to="checkout">
+      <pt x="225" y="320" />
+      <pt x="415" y="320" />
+    </edge>
+    <edge type="ControlFlow" from="checkout" to="readCart">
+      <pt x="645" y="320" />
+      <pt x="822" y="320" />
+    </edge>
+    <edge type="ControlFlow" from="readCart" to="d1">
+      <pt x="900" y="339" />
+      <pt x="900" y="380" />
+      <pt x="530" y="380" />
+      <pt x="530" y="415" />
+    </edge>
+    <edge type="ControlFlow" from="d1" to="merge" guard="empty or not owned" labelX="348" labelY="403" labelW="140" labelH="20">
+      <pt x="515" y="430" />
+      <pt x="170" y="430" />
+      <pt x="170" y="595" />
+    </edge>
+    <edge type="ControlFlow" from="d1" to="readStock" guard="cart OK" labelX="450" labelY="472" labelW="72" labelH="20">
+      <pt x="530" y="445" />
+      <pt x="530" y="520" />
+      <pt x="815" y="520" />
+    </edge>
+    <edge type="ControlFlow" from="readStock" to="d2">
+      <pt x="900" y="546" />
+      <pt x="900" y="560" />
+      <pt x="530" y="560" />
+      <pt x="530" y="595" />
+    </edge>
+    <edge type="ControlFlow" from="d2" to="merge" guard="out of stock" labelX="369" labelY="583" labelW="97" labelH="20">
+      <pt x="515" y="610" />
+      <pt x="185" y="610" />
+    </edge>
+    <edge type="ControlFlow" from="d2" to="create" guard="in stock" labelX="538" labelY="640" labelW="75" labelH="20">
+      <pt x="530" y="625" />
+      <pt x="530" y="674" />
+    </edge>
+    <edge type="ControlFlow" from="merge" to="error">
+      <pt x="170" y="625" />
+      <pt x="170" y="674" />
+    </edge>
+    <edge type="ControlFlow" from="error" to="stop">
+      <pt x="170" y="726" />
+      <pt x="170" y="779" />
+    </edge>
+    <edge type="ControlFlow" from="create" to="total">
+      <pt x="530" y="726" />
+      <pt x="530" y="771" />
+    </edge>
+    <edge type="ControlFlow" from="total" to="pay">
+      <pt x="530" y="809" />
+      <pt x="530" y="844" />
+    </edge>
+    <edge type="ControlFlow" from="pay" to="save">
+      <pt x="615" y="870" />
+      <pt x="780" y="870" />
+    </edge>
+    <edge type="ControlFlow" from="save" to="stock">
+      <pt x="900" y="896" />
+      <pt x="900" y="934" />
+    </edge>
+    <edge type="ControlFlow" from="stock" to="placed">
+      <pt x="900" y="986" />
+      <pt x="900" y="1060" />
+      <pt x="615" y="1060" />
+    </edge>
+    <edge type="ControlFlow" from="placed" to="confirm">
+      <pt x="445" y="1060" />
+      <pt x="255" y="1060" />
+    </edge>
+    <edge type="ControlFlow" from="confirm" to="end">
+      <pt x="170" y="1086" />
+      <pt x="170" y="1129" />
+    </edge>
+  </diagram>
+  <diagram id="c2_activity_search" name="2.3 Activity - Multimodal Search" kind="activity" scope="activity" scopeName="2 Behaviour">
+    <node id="lanes" type="Swimlane" name="" x="20" y="20" w="1210" h="1190" header="34">
+      <lane name="Customer" w="290" />
+      <lane name="Họa. system" w="620" />
+      <lane name="Gemma 4 Service" w="300" />
+    </node>
+    <node id="start" type="Initial" name="" x="154" y="74" w="22" h="22" lane="0" />
+    <node id="input" type="Action" name="Type a sentence, speak or choose a photo" x="65" y="124" w="200" h="52" lane="0" />
+    <node id="mode" type="Decision" name="" x="602" y="218" w="36" h="44" lane="1" />
+    <node id="text" type="Action" name="textQuery(text)" x="374" y="311" w="111" h="38" lane="1" />
+    <node id="voice" type="Action" name="transcribe(audioInput) with self-hosted Whisper" x="538" y="304" w="165" h="52" lane="1" />
+    <node id="photo" type="Action" name="Check the photo: JPEG, PNG or WebP, at most 5 MB" x="728" y="297" w="165" h="66" lane="1" />
+    <node id="m1" type="Merge" name="" x="602" y="418" w="36" h="44" lane="1" />
+    <node id="ai" type="Decision" name="" x="602" y="508" w="36" h="44" lane="1" />
+    <node id="gemma" type="Action" name="Understand the query: style, subject, colour, artist, maxPrice" x="965" y="504" w="230" h="52" lane="2" />
+    <node id="rules" type="Action" name="Keyword rules; a photo gets no vector (NFR02)" x="348" y="594" w="165" h="52" lane="1" />
+    <node id="m2" type="Merge" name="" x="602" y="688" w="36" h="44" lane="1" />
+    <node id="retrieve" type="Action" name="retrieve(query): candidates from allProducts() and nearest()" x="500" y="764" w="240" h="52" lane="1" />
+    <node id="rank" type="Action" name="rank(query, candidates, limit): S = α·Stext + β·Simage + γ·Sbusiness" x="495" y="854" w="250" h="52" lane="1" />
+    <node id="found" type="Decision" name="" x="602" y="948" w="36" h="44" lane="1" />
+    <node id="results" type="Action" name="See the paintings and why each one fits" x="65" y="944" w="200" h="52" lane="0" />
+    <node id="empty" type="Action" name="See an empty state and a hint" x="80" y="1034" w="170" h="52" lane="0" />
+    <node id="end" type="Final" name="" x="154" y="1139" w="22" h="22" lane="0" />
+    <edge type="ControlFlow" from="start" to="input">
+      <pt x="165" y="96" />
+      <pt x="165" y="124" />
+    </edge>
+    <edge type="ControlFlow" from="input" to="mode">
+      <pt x="265" y="150" />
+      <pt x="620" y="150" />
+      <pt x="620" y="225" />
+    </edge>
+    <edge type="ControlFlow" from="mode" to="text" guard="text" labelX="490" labelY="213" labelW="54" labelH="20">
+      <pt x="605" y="240" />
+      <pt x="430" y="240" />
+      <pt x="430" y="311" />
+    </edge>
+    <edge type="ControlFlow" from="mode" to="voice" guard="voice" labelX="628" labelY="270" labelW="60" labelH="20">
+      <pt x="620" y="255" />
+      <pt x="620" y="304" />
+    </edge>
+    <edge type="ControlFlow" from="mode" to="photo" guard="photo" labelX="690" labelY="213" labelW="64" labelH="20">
+      <pt x="635" y="240" />
+      <pt x="810" y="240" />
+      <pt x="810" y="297" />
+    </edge>
+    <edge type="ControlFlow" from="text" to="m1">
+      <pt x="430" y="349" />
+      <pt x="430" y="440" />
+      <pt x="605" y="440" />
+    </edge>
+    <edge type="ControlFlow" from="voice" to="m1">
+      <pt x="620" y="356" />
+      <pt x="620" y="425" />
+    </edge>
+    <edge type="ControlFlow" from="photo" to="m1">
+      <pt x="810" y="363" />
+      <pt x="810" y="440" />
+      <pt x="635" y="440" />
+    </edge>
+    <edge type="ControlFlow" from="m1" to="ai">
+      <pt x="620" y="455" />
+      <pt x="620" y="515" />
+    </edge>
+    <edge type="ControlFlow" from="ai" to="gemma" guard="Gemma 4 replies" labelX="738" labelY="503" labelW="123" labelH="20">
+      <pt x="635" y="530" />
+      <pt x="965" y="530" />
+    </edge>
+    <edge type="ControlFlow" from="ai" to="rules" guard="error or timeout" labelX="458" labelY="503" labelW="119" labelH="20">
+      <pt x="605" y="530" />
+      <pt x="430" y="530" />
+      <pt x="430" y="594" />
+    </edge>
+    <edge type="ControlFlow" from="gemma" to="m2">
+      <pt x="1080" y="556" />
+      <pt x="1080" y="710" />
+      <pt x="635" y="710" />
+    </edge>
+    <edge type="ControlFlow" from="rules" to="m2">
+      <pt x="430" y="646" />
+      <pt x="430" y="710" />
+      <pt x="605" y="710" />
+    </edge>
+    <edge type="ControlFlow" from="m2" to="retrieve">
+      <pt x="620" y="725" />
+      <pt x="620" y="764" />
+    </edge>
+    <edge type="ControlFlow" from="retrieve" to="rank">
+      <pt x="620" y="816" />
+      <pt x="620" y="854" />
+    </edge>
+    <edge type="ControlFlow" from="rank" to="found">
+      <pt x="620" y="906" />
+      <pt x="620" y="955" />
+    </edge>
+    <edge type="ControlFlow" from="found" to="results" guard="results" labelX="400" labelY="943" labelW="69" labelH="20">
+      <pt x="605" y="970" />
+      <pt x="265" y="970" />
+    </edge>
+    <edge type="ControlFlow" from="found" to="empty" guard="no result" labelX="628" labelY="1012" labelW="80" labelH="20">
+      <pt x="620" y="985" />
+      <pt x="620" y="1060" />
+      <pt x="250" y="1060" />
+    </edge>
+    <edge type="ControlFlow" from="empty" to="end">
+      <pt x="165" y="1086" />
+      <pt x="165" y="1139" />
+    </edge>
+    <edge type="ControlFlow" from="results" to="end">
+      <pt x="65" y="970" />
+      <pt x="38" y="970" />
+      <pt x="38" y="1150" />
+      <pt x="154" y="1150" />
+    </edge>
+  </diagram>
+  <diagram id="c2_state_order" name="2.4 State Machine - Order" kind="state" scope="state" scopeName="2 Behaviour">
+    <node id="PLACED" type="State" name="PLACED" x="400" y="200" w="130" h="34" />
+    <node id="PROCESSING" type="State" name="PROCESSING" x="730" y="200" w="130" h="34" />
+    <node id="SHIPPED" type="State" name="SHIPPED" x="1060" y="200" w="130" h="34" />
+    <node id="DELIVERED" type="State" name="DELIVERED" x="1390" y="200" w="130" h="34" />
+    <node id="init" type="InitialState" name="" x="40" y="206" w="22" h="22" />
+    <node id="CANCELLED" type="State" name="CANCELLED" x="565" y="380" w="130" h="34" />
+    <node id="end" type="FinalState" name="" x="1640" y="205" w="24" h="24" />
+    <node id="endCancel" type="FinalState" name="" x="618" y="500" w="24" h="24" />
+    <edge type="Transition" from="init" to="PLACED" name="checkout(cartId, customerId, addressId, payment)" labelX="86" labelY="190" labelW="290" labelH="20">
+      <pt x="62" y="217" />
+      <pt x="400" y="217" />
+    </edge>
+    <edge type="Transition" from="PLACED" to="PROCESSING" name="advanceTo(PROCESSING)" labelX="552" labelY="190" labelW="156" labelH="20">
+      <pt x="530" y="217" />
+      <pt x="730" y="217" />
+    </edge>
+    <edge type="Transition" from="PROCESSING" to="SHIPPED" name="advanceTo(SHIPPED)" labelX="894" labelY="190" labelW="133" labelH="20">
+      <pt x="860" y="217" />
+      <pt x="1060" y="217" />
+    </edge>
+    <edge type="Transition" from="SHIPPED" to="DELIVERED" name="advanceTo(DELIVERED)" labelX="1216" labelY="190" labelW="147" labelH="20">
+      <pt x="1190" y="217" />
+      <pt x="1390" y="217" />
+    </edge>
+    <edge type="Transition" from="DELIVERED" to="end">
+      <pt x="1520" y="217" />
+      <pt x="1640" y="217" />
+    </edge>
+    <edge type="Transition" from="PLACED" to="CANCELLED" name="cancel()" labelX="391" labelY="306" labelW="66" labelH="20">
+      <pt x="465" y="234" />
+      <pt x="465" y="397" />
+      <pt x="565" y="397" />
+    </edge>
+    <edge type="Transition" from="PROCESSING" to="CANCELLED" name="cancel()" labelX="803" labelY="306" labelW="66" labelH="20">
+      <pt x="795" y="234" />
+      <pt x="795" y="397" />
+      <pt x="695" y="397" />
+    </edge>
+    <edge type="Transition" from="CANCELLED" to="endCancel">
+      <pt x="630" y="414" />
+      <pt x="630" y="500" />
+    </edge>
+  </diagram>
+  <diagram id="c2_seq_voice" name="2.5 Sequence - Search by Voice (A06)" kind="sequence" scope="design" scopeName="4.3-4.5 Design model" numbers="true">
+    <node id="Customer" type="SeqActor" name="Customer" x="80" y="40" w="40" h="680" />
+    <node id="SearchUI" type="Lifeline" name="" x="295" y="40" w="100" h="680" classifier="SearchUI" />
+    <node id="SpeechService" type="Lifeline" name="" x="479" y="40" w="116" h="680" classifier="SpeechService" />
+    <node id="QueryService" type="Lifeline" name="" x="635" y="40" w="110" h="680" classifier="QueryService" />
+    <node id="SearchService" type="Lifeline" name="" x="790" y="40" w="113" h="680" classifier="SearchService" />
+    <node id="ProductRepository" type="Lifeline" name="" x="1011" y="40" w="138" h="680" classifier="ProductRepository" />
+    <node id="RankingService" type="Lifeline" name="" x="1189" y="40" w="121" h="680" classifier="RankingService" />
+    <activation on="SpeechService" y1="170" y2="210" />
+    <activation on="SearchUI" y1="130" y2="250" />
+    <activation on="QueryService" y1="370" y2="410" />
+    <activation on="ProductRepository" y1="450" y2="490" />
+    <activation on="RankingService" y1="530" y2="570" />
+    <activation on="SearchService" y1="330" y2="610" />
+    <activation on="SearchUI" y1="290" y2="650" />
+    <edge type="Message" from="Customer" to="SearchUI" name="speak &quot;blue landscape paintings&quot;" labelX="115" labelY="103" labelW="215" labelH="20">
+      <pt x="100" y="130" />
+      <pt x="345" y="130" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="SpeechService" name="transcribe(audioInput)" labelX="362" labelY="143" labelW="158" labelH="20">
+      <pt x="345" y="170" />
+      <pt x="537" y="170" />
+    </edge>
+    <edge type="Message" from="SpeechService" to="SearchUI" name="transcript" return="true" labelX="396" labelY="183" labelW="91" labelH="20">
+      <pt x="537" y="210" />
+      <pt x="345" y="210" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="Customer" name="show the transcript" return="true" labelX="151" labelY="223" labelW="143" labelH="20">
+      <pt x="345" y="250" />
+      <pt x="100" y="250" />
+    </edge>
+    <edge type="Message" from="Customer" to="SearchUI" name="submitVoice(transcript)" labelX="140" labelY="263" labelW="164" labelH="20">
+      <pt x="100" y="290" />
+      <pt x="345" y="290" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="SearchService" name="searchVoice(transcript)" labelX="360" labelY="303" labelW="162" labelH="20">
+      <pt x="345" y="330" />
+      <pt x="847" y="330" />
+    </edge>
+    <edge type="Message" from="SearchService" to="QueryService" name="voiceQuery(text)" labelX="705" labelY="343" labelW="127" labelH="20">
+      <pt x="847" y="370" />
+      <pt x="690" y="370" />
+    </edge>
+    <edge type="Message" from="QueryService" to="SearchService" name="CommonQuery" return="true" labelX="708" labelY="383" labelW="120" labelH="20">
+      <pt x="690" y="410" />
+      <pt x="847" y="410" />
+    </edge>
+    <edge type="Message" from="SearchService" to="ProductRepository" name="allProducts()" labelX="911" labelY="423" labelW="105" labelH="20">
+      <pt x="847" y="450" />
+      <pt x="1080" y="450" />
+    </edge>
+    <edge type="Message" from="ProductRepository" to="SearchService" name="List&lt;Product&gt;" return="true" labelX="902" labelY="463" labelW="123" labelH="20">
+      <pt x="1080" y="490" />
+      <pt x="847" y="490" />
+    </edge>
+    <edge type="Message" from="SearchService" to="RankingService" name="rank(query, candidates, limit)" labelX="862" labelY="503" labelW="203" labelH="20">
+      <pt x="847" y="530" />
+      <pt x="1250" y="530" />
+    </edge>
+    <edge type="Message" from="RankingService" to="SearchService" name="List&lt;SearchResult&gt;" return="true" labelX="888" labelY="543" labelW="151" labelH="20">
+      <pt x="1250" y="570" />
+      <pt x="847" y="570" />
+    </edge>
+    <edge type="Message" from="SearchService" to="SearchUI" name="List&lt;SearchResult&gt;" return="true" labelX="366" labelY="583" labelW="151" labelH="20">
+      <pt x="847" y="610" />
+      <pt x="345" y="610" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="Customer" name="show the ranked paintings" return="true" labelX="128" labelY="623" labelW="188" labelH="20">
+      <pt x="345" y="650" />
+      <pt x="100" y="650" />
+    </edge>
+  </diagram>
+  <diagram id="c3_ai_architecture" name="3.1 AI Components (Gemma 4 and Whisper)" kind="class" scope="design" scopeName="4.3-4.5 Design model">
+    <node id="AssistantService" type="Class" name="AssistantService" x="40" y="40" w="343" h="72" hideAttributes="true" hideOps="AssistantService">
+      <attr name="llmClient" type="LlmClient" vis="private" />
+      <attr name="searchService" type="SearchService" vis="private" />
+      <attr name="orderService" type="OrderService" vis="private" />
+      <op name="AssistantService" vis="public" params="llmClient: LlmClient; searchService: SearchService; orderService: OrderService" />
+      <op name="ask" vis="public" params="customerId: String; message: String" ret="AssistantReply" />
+      <op name="tools" vis="private" params="" ret="List&lt;Map&lt;String, Object&gt;&gt;" />
+      <op name="runTool" vis="private" params="customerId: String; call: ToolCall" ret="String" />
+    </node>
+    <node id="SearchService" type="Class" name="SearchService" x="814" y="40" w="392" h="128" hideAttributes="true" hideOps="SearchService">
+      <attr name="repository" type="ProductRepository" vis="private" />
+      <attr name="queryService" type="QueryService" vis="private" />
+      <attr name="imageService" type="ImageService" vis="private" />
+      <attr name="vectorIndex" type="VectorIndex" vis="private" />
+      <attr name="rankingService" type="RankingService" vis="private" />
+      <op name="SearchService" vis="public" params="repository: ProductRepository; queryService: QueryService; imageService: ImageService; vectorIndex: VectorIndex; rankingService: RankingService" />
+      <op name="searchText" vis="public" params="text: String" ret="List&lt;SearchResult&gt;" />
+      <op name="searchVoice" vis="public" params="transcript: String" ret="List&lt;SearchResult&gt;" />
+      <op name="searchImage" vis="public" params="image: byte[]" ret="List&lt;SearchResult&gt;" />
+      <op name="searchRoom" vis="public" params="image: byte[]" ret="List&lt;SearchResult&gt;" />
+      <op name="describeRoom" vis="public" params="image: byte[]" ret="Map&lt;String, String&gt;" />
+      <op name="searchMultimodal" vis="public" params="text: String; image: byte[]" ret="List&lt;SearchResult&gt;" />
+      <op name="retrieve" vis="private" params="query: CommonQuery" ret="List&lt;SearchResult&gt;" />
+    </node>
+    <node id="RankingService" type="Class" name="RankingService" x="1485" y="40" w="533" h="100" hideOps="RankingService">
+      <attr name="alpha" type="double" vis="private" />
+      <attr name="beta" type="double" vis="private" />
+      <attr name="gamma" type="double" vis="private" />
+      <op name="RankingService" vis="public" params="alpha: double; beta: double; gamma: double" />
+      <op name="rank" vis="public" params="query: CommonQuery; candidates: List&lt;SearchResult&gt;; limit: int" ret="List&lt;SearchResult&gt;" />
+      <op name="businessScore" vis="public" params="product: Product" ret="double" />
+    </node>
+    <node id="QueryService" type="Class" name="QueryService" x="636" y="273" w="309" h="100" hideAttributes="true" hideOps="QueryService">
+      <attr name="llmClient" type="LlmClient" vis="private" />
+      <op name="QueryService" vis="public" params="llmClient: LlmClient" />
+      <op name="textQuery" vis="public" params="text: String" ret="CommonQuery" />
+      <op name="voiceQuery" vis="public" params="text: String" ret="CommonQuery" />
+      <op name="imageQuery" vis="public" params="embedding: double[]" ret="CommonQuery" />
+      <op name="understand" vis="private" params="query: CommonQuery" ret="void" />
+      <op name="parseRules" vis="private" params="query: CommonQuery" ret="void" />
+    </node>
+    <node id="ImageService" type="Class" name="ImageService" x="1015" y="273" w="370" h="58" hideAttributes="true" hideOps="ImageService">
+      <attr name="llmClient" type="LlmClient" vis="private" />
+      <op name="ImageService" vis="public" params="llmClient: LlmClient" />
+      <op name="embed" vis="public" params="image: byte[]" ret="double[]" />
+      <op name="describe" vis="public" params="image: byte[]; purpose: String" ret="Map&lt;String, String&gt;" />
+    </node>
+    <node id="VectorIndex" type="Class" name="VectorIndex" x="1485" y="273" w="388" h="114">
+      <attr name="productEmbeddings" type="Map&lt;String, double[]&gt;" vis="private" />
+      <op name="build" vis="public" params="products: List&lt;Product&gt;" ret="void" />
+      <op name="embedProduct" vis="public" params="product: Product" ret="double[]" />
+      <op name="toVector" vis="public" params="style: String; subject: String; color: String" ret="double[]" static="true" />
+      <op name="cosineSimilarity" vis="public" params="a: double[]; b: double[]" ret="double" static="true" />
+      <op name="nearest" vis="public" params="queryEmbedding: double[]; k: int" ret="Map&lt;String, Double&gt;" />
+    </node>
+    <node id="LlmClient" type="Class" name="LlmClient" x="40" y="497" w="526" h="72" stereotype="Interface" hideAttributes="true">
+      <op name="chat" vis="public" params="messages: List&lt;Map&lt;String, Object&gt;&gt;; tools: List&lt;Map&lt;String, Object&gt;&gt;" ret="LlmReply" abstract="true" />
+      <op name="isAvailable" vis="public" params="" ret="boolean" abstract="true" />
+    </node>
+    <node id="SpeechService" type="Class" name="SpeechService" x="1485" y="497" w="233" h="44" hideAttributes="true" hideOps="SpeechService">
+      <attr name="speechClient" type="SpeechClient" vis="private" />
+      <op name="SpeechService" vis="public" params="speechClient: SpeechClient" />
+      <op name="transcribe" vis="public" params="audioInput: byte[]" ret="String" />
+    </node>
+    <node id="GemmaClient" type="Class" name="GemmaClient" x="40" y="674" w="526" h="114" hideOps="GemmaClient">
+      <attr name="baseUrl" type="String" vis="private" />
+      <attr name="apiKey" type="String" vis="private" />
+      <attr name="model" type="String" vis="private" />
+      <attr name="timeoutSeconds" type="int" vis="private" />
+      <op name="GemmaClient" vis="public" params="baseUrl: String; apiKey: String; model: String; timeoutSeconds: int" />
+      <op name="chat" vis="public" params="messages: List&lt;Map&lt;String, Object&gt;&gt;; tools: List&lt;Map&lt;String, Object&gt;&gt;" ret="LlmReply" />
+      <op name="isAvailable" vis="public" params="" ret="boolean" />
+    </node>
+    <node id="LlmReply" type="Class" name="LlmReply" x="636" y="674" w="167" h="72" hideOps="LlmReply">
+      <attr name="content" type="String" vis="private" />
+      <attr name="toolCalls" type="List&lt;ToolCall&gt;" vis="private" />
+      <op name="LlmReply" vis="public" params="content: String; toolCalls: List&lt;ToolCall&gt;" />
+      <op name="hasToolCalls" vis="public" params="" ret="boolean" />
+    </node>
+    <node id="ToolCall" type="Class" name="ToolCall" x="873" y="674" w="129" h="72" hideOps="ToolCall">
+      <attr name="id" type="String" vis="private" />
+      <attr name="name" type="String" vis="private" />
+      <attr name="arguments" type="String" vis="private" />
+      <op name="ToolCall" vis="public" params="id: String; name: String; arguments: String" />
+    </node>
+    <node id="SpeechClient" type="Class" name="SpeechClient" x="1485" y="674" w="303" h="72" stereotype="Interface" hideAttributes="true">
+      <op name="transcribe" vis="public" params="audio: byte[]; language: String" ret="String" abstract="true" />
+      <op name="isAvailable" vis="public" params="" ret="boolean" abstract="true" />
+    </node>
+    <node id="WhisperClient" type="Class" name="WhisperClient" x="1485" y="898" w="303" h="100" hideOps="WhisperClient">
+      <attr name="baseUrl" type="String" vis="private" />
+      <attr name="model" type="String" vis="private" />
+      <attr name="timeoutSeconds" type="int" vis="private" />
+      <op name="WhisperClient" vis="public" params="baseUrl: String; model: String; timeoutSeconds: int" />
+      <op name="transcribe" vis="public" params="audio: byte[]; language: String" ret="String" />
+      <op name="isAvailable" vis="public" params="" ret="boolean" />
+    </node>
+    <edge type="Dependency" from="AssistantService" to="SearchService" stereotype="use" labelX="559" labelY="43" labelW="79" labelH="20">
+      <pt x="383" y="70" />
+      <pt x="814" y="70" />
+    </edge>
+    <edge type="Dependency" from="AssistantService" to="LlmClient" stereotype="use" labelX="220" labelY="294" labelW="79" labelH="20">
+      <pt x="212" y="112" />
+      <pt x="212" y="497" />
+    </edge>
+    <edge type="Dependency" from="SearchService" to="QueryService" stereotype="use" labelX="852" labelY="210" labelW="79" labelH="20">
+      <pt x="844" y="168" />
+      <pt x="844" y="273" />
+    </edge>
+    <edge type="Dependency" from="SearchService" to="ImageService" stereotype="use" labelX="1184" labelY="210" labelW="79" labelH="20">
+      <pt x="1176" y="168" />
+      <pt x="1176" y="273" />
+    </edge>
+    <edge type="Dependency" from="SearchService" to="RankingService" stereotype="use" labelX="1306" labelY="43" labelW="79" labelH="20">
+      <pt x="1206" y="70" />
+      <pt x="1485" y="70" />
+    </edge>
+    <edge type="Dependency" from="SearchService" to="VectorIndex" stereotype="use" labelX="1281" labelY="115" labelW="79" labelH="20">
+      <pt x="1206" y="142" />
+      <pt x="1435" y="142" />
+      <pt x="1435" y="330" />
+      <pt x="1485" y="330" />
+    </edge>
+    <edge type="Dependency" from="QueryService" to="LlmClient" stereotype="use" labelX="798" labelY="438" labelW="79" labelH="20">
+      <pt x="790" y="373" />
+      <pt x="790" y="523" />
+      <pt x="566" y="523" />
+    </edge>
+    <edge type="Dependency" from="ImageService" to="LlmClient" stereotype="use" labelX="1208" labelY="417" labelW="79" labelH="20">
+      <pt x="1200" y="331" />
+      <pt x="1200" y="523" />
+      <pt x="566" y="523" />
+    </edge>
+    <edge type="Dependency" from="SpeechService" to="SpeechClient" stereotype="use" labelX="1610" labelY="598" labelW="79" labelH="20">
+      <pt x="1602" y="541" />
+      <pt x="1602" y="674" />
+    </edge>
+    <edge type="Realization" from="GemmaClient" to="LlmClient">
+      <pt x="303" y="674" />
+      <pt x="303" y="569" />
+    </edge>
+    <edge type="Realization" from="WhisperClient" to="SpeechClient">
+      <pt x="1636" y="898" />
+      <pt x="1636" y="746" />
+    </edge>
+    <node id="gemma" type="Note" name="Gemma 4 on the L40S server (vLLM behind Nginx :8000)&#10;OpenAI-compatible API: chat completions, images, tool calling" x="40" y="858" w="398" h="52" />
+    <edge type="Anchor" from="gemma" to="GemmaClient">
+      <pt x="80" y="858" />
+      <pt x="80" y="788" />
+    </edge>
+    <node id="whisper" type="Note" name="Self-hosted Whisper (faster-whisper) on 127.0.0.1:9000&#10;Audio never leaves the laptop" x="1050" y="925" w="365" h="52" />
+    <edge type="Anchor" from="whisper" to="WhisperClient">
+      <pt x="1415" y="948" />
+      <pt x="1485" y="948" />
+    </edge>
+  </diagram>
+  <diagram id="c3_seq_image" name="3.2 Sequence - Search by Image with Gemma 4" kind="sequence" scope="design" scopeName="4.3-4.5 Design model" numbers="true">
+    <node id="Customer" type="SeqActor" name="Customer" x="80" y="40" w="40" h="1068" />
+    <node id="ImageUpload" type="Lifeline" name="" x="176" y="40" w="111" h="1068" classifier="ImageUpload" />
+    <node id="SearchUI" type="Lifeline" name="" x="455" y="40" w="100" h="1068" classifier="SearchUI" />
+    <node id="SearchController" type="Lifeline" name="" x="616" y="40" w="130" h="1068" classifier="SearchController" />
+    <node id="SearchService" type="Lifeline" name="" x="805" y="40" w="113" h="1068" classifier="SearchService" />
+    <node id="ImageService" type="Lifeline" name="" x="984" y="40" w="111" h="1068" classifier="ImageService" />
+    <node id="GemmaClient" type="Lifeline" name="" x="1219" y="40" w="113" h="1068" classifier="GemmaClient" />
+    <node id="VectorIndex" type="Lifeline" name="" x="1372" y="40" w="105" h="1068" classifier="VectorIndex" />
+    <node id="RankingService" type="Lifeline" name="" x="1517" y="40" w="121" h="1068" classifier="RankingService" />
+    <activation on="GemmaClient" y1="452" y2="492" />
+    <activation on="VectorIndex" y1="532" y2="572" />
+    <activation on="ImageService" y1="348" y2="758" />
+    <activation on="VectorIndex" y1="798" y2="838" />
+    <activation on="RankingService" y1="878" y2="918" />
+    <activation on="SearchService" y1="308" y2="958" />
+    <activation on="SearchController" y1="268" y2="998" />
+    <activation on="SearchUI" y1="228" y2="1038" />
+    <activation on="ImageUpload" y1="130" y2="256" />
+    <node id="frag6" type="Fragment" name="" x="892" y="378" w="562" h="340" operator="alt" covers="ImageService,GemmaClient,VectorIndex">
+      <operand guard="Gemma 4 replies" y="395" h="221" />
+      <operand guard="error or timeout" y="616" h="102" />
+    </node>
+    <edge type="Message" from="Customer" to="ImageUpload" name="choose(file)" labelX="115" labelY="103" labelW="101" labelH="20">
+      <pt x="100" y="130" />
+      <pt x="231" y="130" />
+    </edge>
+    <edge type="Message" from="ImageUpload" to="ImageUpload" name="validate(file)" labelX="275" labelY="169" labelW="104" labelH="20" self="true">
+      <pt x="231" y="170" />
+      <pt x="265" y="170" />
+      <pt x="265" y="188" />
+      <pt x="231" y="188" />
+    </edge>
+    <edge type="Message" from="ImageUpload" to="SearchUI" name="submitImage(file)" labelX="302" labelY="201" labelW="133" labelH="20">
+      <pt x="231" y="228" />
+      <pt x="505" y="228" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="SearchController" name="searchImage(image)" labelX="520" labelY="241" labelW="146" labelH="20">
+      <pt x="505" y="268" />
+      <pt x="681" y="268" />
+    </edge>
+    <edge type="Message" from="SearchController" to="SearchService" name="searchImage(image)" labelX="698" labelY="281" labelW="146" labelH="20">
+      <pt x="681" y="308" />
+      <pt x="862" y="308" />
+    </edge>
+    <edge type="Message" from="SearchService" to="ImageService" name="embed(image)" labelX="893" labelY="321" labelW="115" labelH="20">
+      <pt x="862" y="348" />
+      <pt x="1039" y="348" />
+    </edge>
+    <edge type="Message" from="ImageService" to="GemmaClient" name="chat(messages, tools)" labelX="1080" labelY="425" labelW="155" labelH="20">
+      <pt x="1039" y="452" />
+      <pt x="1275" y="452" />
+    </edge>
+    <edge type="Message" from="GemmaClient" to="ImageService" name="LlmReply: style, subject, colour" return="true" labelX="1054" labelY="465" labelW="206" labelH="20">
+      <pt x="1275" y="492" />
+      <pt x="1039" y="492" />
+    </edge>
+    <edge type="Message" from="ImageService" to="VectorIndex" name="toVector(style, subject, color)" labelX="1059" labelY="505" labelW="196" labelH="20">
+      <pt x="1039" y="532" />
+      <pt x="1424" y="532" />
+    </edge>
+    <edge type="Message" from="VectorIndex" to="ImageService" name="double[]" return="true" labelX="1305" labelY="545" labelW="90" labelH="20">
+      <pt x="1424" y="572" />
+      <pt x="1039" y="572" />
+    </edge>
+    <edge type="Message" from="ImageService" to="ImageService" name="empty vector (NFR02)" labelX="1083" labelY="673" labelW="161" labelH="20" self="true">
+      <pt x="1039" y="674" />
+      <pt x="1073" y="674" />
+      <pt x="1073" y="692" />
+      <pt x="1039" y="692" />
+    </edge>
+    <edge type="Message" from="ImageService" to="SearchService" name="embedding" return="true" labelX="897" labelY="731" labelW="107" labelH="20">
+      <pt x="1039" y="758" />
+      <pt x="862" y="758" />
+    </edge>
+    <edge type="Message" from="SearchService" to="VectorIndex" name="nearest(queryEmbedding, k)" labelX="1059" labelY="771" labelW="196" labelH="20">
+      <pt x="862" y="798" />
+      <pt x="1424" y="798" />
+    </edge>
+    <edge type="Message" from="VectorIndex" to="SearchService" name="Map&lt;String, Double&gt;" return="true" labelX="1076" labelY="811" labelW="163" labelH="20">
+      <pt x="1424" y="838" />
+      <pt x="862" y="838" />
+    </edge>
+    <edge type="Message" from="SearchService" to="RankingService" name="rank(query, candidates, limit)" labelX="1056" labelY="851" labelW="203" labelH="20">
+      <pt x="862" y="878" />
+      <pt x="1578" y="878" />
+    </edge>
+    <edge type="Message" from="RankingService" to="SearchService" name="List&lt;SearchResult&gt;" return="true" labelX="1082" labelY="891" labelW="151" labelH="20">
+      <pt x="1578" y="918" />
+      <pt x="862" y="918" />
+    </edge>
+    <edge type="Message" from="SearchService" to="SearchController" name="List&lt;SearchResult&gt;" return="true" labelX="696" labelY="931" labelW="151" labelH="20">
+      <pt x="862" y="958" />
+      <pt x="681" y="958" />
+    </edge>
+    <edge type="Message" from="SearchController" to="SearchUI" name="JSON" return="true" labelX="557" labelY="971" labelW="72" labelH="20">
+      <pt x="681" y="998" />
+      <pt x="505" y="998" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="Customer" name="show the paintings and their reasons" return="true" labelX="246" labelY="1011" labelW="244" labelH="20">
+      <pt x="505" y="1038" />
+      <pt x="100" y="1038" />
+    </edge>
+  </diagram>
+  <diagram id="c3_seq_assistant" name="3.3 Sequence - Shopping Assistant (tool calling)" kind="sequence" scope="design" scopeName="4.3-4.5 Design model" numbers="true">
+    <node id="Customer" type="SeqActor" name="Customer" x="80" y="40" w="40" h="886" />
+    <node id="AssistantView" type="Lifeline" name="" x="285" y="40" w="115" h="886" classifier="AssistantView" />
+    <node id="AssistantController" type="Lifeline" name="" x="478" y="40" w="143" h="886" classifier="AssistantController" />
+    <node id="AssistantService" type="Lifeline" name="" x="705" y="40" w="127" h="886" classifier="AssistantService" />
+    <node id="GemmaClient" type="Lifeline" name="" x="981" y="40" w="113" h="886" classifier="GemmaClient" />
+    <node id="OrderService" type="Lifeline" name="" x="1133" y="40" w="109" h="886" classifier="OrderService" />
+    <node id="OrderRepository" type="Lifeline" name="" x="1388" y="40" w="128" h="886" classifier="OrderRepository" />
+    <activation on="GemmaClient" y1="250" y2="290" />
+    <activation on="OrderRepository" y1="492" y2="532" />
+    <activation on="OrderService" y1="452" y2="630" />
+    <activation on="GemmaClient" y1="670" y2="710" />
+    <activation on="AssistantService" y1="210" y2="776" />
+    <activation on="AssistantController" y1="170" y2="816" />
+    <activation on="AssistantView" y1="130" y2="856" />
+    <node id="frag5" type="Fragment" name="" x="580" y="320" w="902" h="416" operator="opt" covers="AssistantService,GemmaClient,OrderService,OrderRepository">
+      <operand guard="Gemma 4 asks for a tool" y="337" h="399" />
+    </node>
+    <edge type="Message" from="Customer" to="AssistantView" name="send(&quot;find my order 20261001&quot;)" labelX="115" labelY="103" labelW="212" labelH="20">
+      <pt x="100" y="130" />
+      <pt x="342" y="130" />
+    </edge>
+    <edge type="Message" from="AssistantView" to="AssistantController" name="ask(customerId, message)" labelX="357" labelY="143" labelW="178" labelH="20">
+      <pt x="342" y="170" />
+      <pt x="550" y="170" />
+    </edge>
+    <edge type="Message" from="AssistantController" to="AssistantService" name="ask(customerId, message)" labelX="570" labelY="183" labelW="178" labelH="20">
+      <pt x="550" y="210" />
+      <pt x="768" y="210" />
+    </edge>
+    <edge type="Message" from="AssistantService" to="GemmaClient" name="chat(messages, tools())" labelX="822" labelY="223" labelW="162" labelH="20">
+      <pt x="768" y="250" />
+      <pt x="1037" y="250" />
+    </edge>
+    <edge type="Message" from="GemmaClient" to="AssistantService" name="LlmReply with toolCalls" return="true" labelX="821" labelY="263" labelW="164" labelH="20">
+      <pt x="1037" y="290" />
+      <pt x="768" y="290" />
+    </edge>
+    <edge type="Message" from="AssistantService" to="AssistantService" name="runTool(customerId, call)" labelX="812" labelY="393" labelW="173" labelH="20" self="true">
+      <pt x="768" y="394" />
+      <pt x="802" y="394" />
+      <pt x="802" y="412" />
+      <pt x="768" y="412" />
+    </edge>
+    <edge type="Message" from="AssistantService" to="OrderService" name="getOrder(customerId, orderId)" labelX="803" labelY="425" labelW="200" labelH="20">
+      <pt x="768" y="452" />
+      <pt x="1188" y="452" />
+    </edge>
+    <edge type="Message" from="OrderService" to="OrderRepository" name="findOrder(orderId)" labelX="1251" labelY="465" labelW="137" labelH="20">
+      <pt x="1188" y="492" />
+      <pt x="1452" y="492" />
+    </edge>
+    <edge type="Message" from="OrderRepository" to="OrderService" name="Order" return="true" labelX="1285" labelY="505" labelW="70" labelH="20">
+      <pt x="1452" y="532" />
+      <pt x="1188" y="532" />
+    </edge>
+    <edge type="Message" from="OrderService" to="OrderService" name="order.isOwnedBy(customerId)" labelX="1232" labelY="571" labelW="204" labelH="20" self="true">
+      <pt x="1188" y="572" />
+      <pt x="1222" y="572" />
+      <pt x="1222" y="590" />
+      <pt x="1188" y="590" />
+    </edge>
+    <edge type="Message" from="OrderService" to="AssistantService" name="Order" return="true" labelX="1074" labelY="603" labelW="77" labelH="20">
+      <pt x="1188" y="630" />
+      <pt x="768" y="630" />
+    </edge>
+    <edge type="Message" from="AssistantService" to="GemmaClient" name="chat(messages + tool result, tools())" labelX="783" labelY="643" labelW="239" labelH="20">
+      <pt x="768" y="670" />
+      <pt x="1037" y="670" />
+    </edge>
+    <edge type="Message" from="GemmaClient" to="AssistantService" name="LlmReply with content" return="true" labelX="820" labelY="683" labelW="165" labelH="20">
+      <pt x="1037" y="710" />
+      <pt x="768" y="710" />
+    </edge>
+    <edge type="Message" from="AssistantService" to="AssistantController" name="AssistantReply" return="true" labelX="597" labelY="749" labelW="124" labelH="20">
+      <pt x="768" y="776" />
+      <pt x="550" y="776" />
+    </edge>
+    <edge type="Message" from="AssistantController" to="AssistantView" name="JSON" return="true" labelX="410" labelY="789" labelW="72" labelH="20">
+      <pt x="550" y="816" />
+      <pt x="342" y="816" />
+    </edge>
+    <edge type="Message" from="AssistantView" to="Customer" name="render(reply)" return="true" labelX="164" labelY="829" labelW="115" labelH="20">
+      <pt x="342" y="856" />
+      <pt x="100" y="856" />
+    </edge>
+  </diagram>
+  <diagram id="c41_analysis" name="4.1 Class Diagram in Analysis" kind="class" scope="analysis" scopeName="4.1 Analysis model">
+    <node id="FullName" type="Class" name="FullName" x="382" y="40" w="139" h="67" hideOperations="true">
+      <attr name="firstName" type="String" />
+      <attr name="middleName" type="String" />
+      <attr name="lastName" type="String" />
+    </node>
+    <node id="Customer" type="Class" name="Customer" x="385" y="228" w="132" h="81" hideOperations="true">
+      <attr name="customerId" type="String" />
+      <attr name="email" type="String" />
+      <attr name="phone" type="String" />
+      <attr name="dateOfBirth" type="Date" />
+    </node>
+    <node id="Address" type="Class" name="Address" x="48" y="834" w="147" h="81" hideOperations="true">
+      <attr name="houseNumber" type="String" />
+      <attr name="street" type="String" />
+      <attr name="district" type="String" />
+      <attr name="city" type="String" />
+    </node>
+    <node id="CustomerVIP" type="Class" name="CustomerVIP" x="54" y="40" w="134" h="67" hideOperations="true">
+      <attr name="vipLevel" type="int" />
+      <attr name="discountRate" type="float" />
+      <attr name="rewardPoints" type="int" />
+    </node>
+    <node id="CustomerNew" type="Class" name="CustomerNew" x="40" y="458" w="162" h="53" hideOperations="true">
+      <attr name="registeredDate" type="Date" />
+      <attr name="welcomeVoucher" type="String" />
+    </node>
+    <node id="Cart" type="Class" name="Cart" x="700" y="235" w="133" h="67" hideOperations="true">
+      <attr name="cartId" type="String" />
+      <attr name="createdDate" type="Date" />
+      <attr name="updatedDate" type="Date" />
+    </node>
+    <node id="CartItem" type="Class" name="CartItem" x="1016" y="242" w="110" h="53" hideOperations="true">
+      <attr name="quantity" type="int" />
+      <attr name="cartPrice" type="float" />
+    </node>
+    <node id="Order" type="Class" name="Order" x="701" y="639" w="131" h="81" hideOperations="true">
+      <attr name="orderId" type="String" />
+      <attr name="orderDate" type="Date" />
+      <attr name="status" type="String" />
+      <attr name="totalAmount" type="float" />
+    </node>
+    <node id="OrderItem" type="Class" name="OrderItem" x="1016" y="653" w="111" h="53" hideOperations="true">
+      <attr name="quantity" type="int" />
+      <attr name="unitPrice" type="float" />
+    </node>
+    <node id="Shipping" type="Class" name="Shipping" x="372" y="820" w="158" h="109" hideOperations="true">
+      <attr name="shippingId" type="String" />
+      <attr name="carrier" type="String" />
+      <attr name="trackingNumber" type="String" />
+      <attr name="shippingFee" type="float" />
+      <attr name="status" type="String" />
+      <attr name="deliveredDate" type="Date" />
+    </node>
+    <node id="Payment" type="Class" name="Payment" x="1003" y="834" w="136" h="81" abstract="true" hideOperations="true">
+      <attr name="paymentId" type="String" />
+      <attr name="amount" type="float" />
+      <attr name="paymentDate" type="Date" />
+      <attr name="status" type="String" />
+    </node>
+    <node id="PayCash" type="Class" name="PayCash" x="828" y="1043" w="145" h="53" hideOperations="true">
+      <attr name="cashReceived" type="float" />
+      <attr name="changeAmount" type="float" />
+    </node>
+    <node id="PayCredit" type="Class" name="PayCredit" x="1156" y="1029" w="171" h="81" hideOperations="true">
+      <attr name="cardHolder" type="String" />
+      <attr name="bankName" type="String" />
+      <attr name="cardLast4" type="String" />
+      <attr name="authorizationCode" type="String" />
+    </node>
+    <node id="Product" type="Class" name="Product" x="1006" y="430" w="131" h="109" abstract="true" hideOperations="true">
+      <attr name="productId" type="String" />
+      <attr name="name" type="String" />
+      <attr name="price" type="float" />
+      <attr name="stockQuantity" type="int" />
+      <attr name="imageUrl" type="String" />
+      <attr name="description" type="String" />
+    </node>
+    <node id="Artist" type="Class" name="Artist" x="1631" y="228" w="128" h="81" hideOperations="true">
+      <attr name="artistId" type="String" />
+      <attr name="name" type="String" />
+      <attr name="nationality" type="String" />
+      <attr name="lifeYears" type="String" />
+    </node>
+    <node id="Painting" type="Class" name="Painting" x="1309" y="207" w="152" h="123" hideOperations="true">
+      <attr name="style" type="String" />
+      <attr name="subject" type="String" />
+      <attr name="dominantColor" type="String" />
+      <attr name="medium" type="String" />
+      <attr name="yearCreated" type="int" />
+      <attr name="widthCm" type="int" />
+      <attr name="heightCm" type="int" />
+    </node>
+    <node id="Frame" type="Class" name="Frame" x="1324" y="646" w="121" h="67" hideOperations="true">
+      <attr name="material" type="String" />
+      <attr name="color" type="String" />
+      <attr name="sizeLabel" type="String" />
+    </node>
+    <edge type="Association" from="Customer" to="FullName" name="has" fromMult="1" toMult="1" aggregation="composite" labelX="399" labelY="158" labelW="44" labelH="20" fromMultX="459" fromMultY="200" fromMultW="17" fromMultH="18" toMultX="459" toMultY="117" toMultW="17" toMultH="18">
+      <pt x="451" y="228" />
+      <pt x="451" y="107" />
+    </edge>
+    <edge type="Association" from="Customer" to="Address" name="has" fromMult="1" toMult="1..*" aggregation="shared" labelX="252" labelY="743" labelW="44" labelH="20" fromMultX="402" fromMultY="319" fromMultW="17" fromMultH="18" toMultX="129" toMultY="806" toMultW="29" toMultH="18">
+      <pt x="427" y="309" />
+      <pt x="427" y="770" />
+      <pt x="121" y="770" />
+      <pt x="121" y="834" />
+    </edge>
+    <edge type="Association" from="Customer" to="Cart" name="owns" fromMult="1" toMult="0..1" labelX="582" labelY="242" labelW="53" labelH="20" fromMultX="527" fromMultY="276" fromMultW="17" fromMultH="18" toMultX="659" toMultY="276" toMultW="31" toMultH="18">
+      <pt x="517" y="268" />
+      <pt x="700" y="268" />
+    </edge>
+    <edge type="Association" from="Customer" to="Order" name="places" fromMult="1" toMult="0..*" labelX="558" labelY="652" labelW="59" labelH="20" fromMultX="483" fromMultY="319" fromMultW="17" fromMultH="18" toMultX="662" toMultY="686" toMultW="29" toMultH="18">
+      <pt x="475" y="309" />
+      <pt x="475" y="680" />
+      <pt x="701" y="680" />
+    </edge>
+    <edge type="Association" from="Cart" to="CartItem" name="contains" fromMult="1" toMult="0..*" aggregation="composite" labelX="889" labelY="242" labelW="71" labelH="20" fromMultX="843" fromMultY="276" fromMultW="17" fromMultH="18" toMultX="977" toMultY="276" toMultW="29" toMultH="18">
+      <pt x="833" y="268" />
+      <pt x="1016" y="268" />
+    </edge>
+    <edge type="Association" from="Order" to="OrderItem" name="contains" fromMult="1" toMult="1..*" aggregation="composite" labelX="888" labelY="652" labelW="71" labelH="20" fromMultX="842" fromMultY="686" fromMultW="17" fromMultH="18" toMultX="976" toMultY="686" toMultW="29" toMultH="18">
+      <pt x="832" y="680" />
+      <pt x="1016" y="680" />
+    </edge>
+    <edge type="Association" from="CartItem" to="Product" name="refers to" fromMult="0..*" toMult="1" labelX="992" labelY="352" labelW="71" labelH="20" fromMultX="1079" fromMultY="305" fromMultW="29" fromMultH="18" toMultX="1079" toMultY="402" toMultW="17" toMultH="18">
+      <pt x="1071" y="295" />
+      <pt x="1071" y="430" />
+    </edge>
+    <edge type="Association" from="OrderItem" to="Product" name="refers to" fromMult="0..*" toMult="1" labelX="992" labelY="586" labelW="71" labelH="20" fromMultX="1079" fromMultY="625" fromMultW="29" fromMultH="18" toMultX="1079" toMultY="549" toMultW="17" toMultH="18">
+      <pt x="1071" y="653" />
+      <pt x="1071" y="539" />
+    </edge>
+    <edge type="Association" from="Order" to="Shipping" name="is delivered by" fromMult="1" toMult="0..1" labelX="585" labelY="848" labelW="103" labelH="20" fromMultX="718" fromMultY="730" fromMultW="17" fromMultH="18" toMultX="540" toMultY="882" toMultW="31" toMultH="18">
+      <pt x="742" y="720" />
+      <pt x="742" y="874" />
+      <pt x="530" y="874" />
+    </edge>
+    <edge type="Association" from="Shipping" to="Address" name="ships to" fromMult="0..*" toMult="1" labelX="249" labelY="848" labelW="68" labelH="20" fromMultX="333" fromMultY="882" fromMultW="29" fromMultH="18" toMultX="204" toMultY="882" toMultW="17" toMultH="18">
+      <pt x="372" y="874" />
+      <pt x="194" y="874" />
+    </edge>
+    <edge type="Association" from="Order" to="Payment" name="is paid by" fromMult="1" toMult="0..*" labelX="858" labelY="848" labelW="77" labelH="20" fromMultX="798" fromMultY="730" fromMultW="17" fromMultH="18" toMultX="964" toMultY="882" toMultW="29" toMultH="18">
+      <pt x="790" y="720" />
+      <pt x="790" y="874" />
+      <pt x="1003" y="874" />
+    </edge>
+    <edge type="Association" from="Artist" to="Painting" name="paints" fromMult="1" toMult="0..*" labelX="1517" labelY="242" labelW="58" labelH="20" fromMultX="1604" fromMultY="276" fromMultW="17" fromMultH="18" toMultX="1471" toMultY="276" toMultW="29" toMultH="18">
+      <pt x="1631" y="268" />
+      <pt x="1461" y="268" />
+    </edge>
+    <edge type="Generalization" from="CustomerVIP" to="Customer">
+      <pt x="188" y="74" />
+      <pt x="286" y="74" />
+      <pt x="286" y="268" />
+      <pt x="385" y="268" />
+    </edge>
+    <edge type="Generalization" from="CustomerNew" to="Customer">
+      <pt x="202" y="484" />
+      <pt x="286" y="484" />
+      <pt x="286" y="268" />
+      <pt x="385" y="268" />
+    </edge>
+    <edge type="Generalization" from="Painting" to="Product">
+      <pt x="1309" y="268" />
+      <pt x="1223" y="268" />
+      <pt x="1223" y="484" />
+      <pt x="1136" y="484" />
+    </edge>
+    <edge type="Generalization" from="Frame" to="Product">
+      <pt x="1324" y="680" />
+      <pt x="1223" y="680" />
+      <pt x="1223" y="484" />
+      <pt x="1136" y="484" />
+    </edge>
+    <edge type="Generalization" from="PayCash" to="Payment">
+      <pt x="900" y="1043" />
+      <pt x="900" y="979" />
+      <pt x="1071" y="979" />
+      <pt x="1071" y="915" />
+    </edge>
+    <edge type="Generalization" from="PayCredit" to="Payment">
+      <pt x="1242" y="1029" />
+      <pt x="1242" y="979" />
+      <pt x="1071" y="979" />
+      <pt x="1071" y="915" />
+    </edge>
+    <edge type="Dependency" from="Cart" to="Order" stereotype="create" name="checkout" labelX="774" labelY="454" labelW="93" labelH="34">
+      <pt x="766" y="302" />
+      <pt x="766" y="639" />
+    </edge>
+  </diagram>
+  <diagram id="c42_orm" name="4.2a Data Model (ORM-Persistable)" kind="class" scope="datamodel" scopeName="4.2 Data model">
+    <node id="FullName" type="Class" name="FullName" x="398" y="40" w="147" h="81" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="firstName" type="String" />
+      <attr name="middleName" type="String" />
+      <attr name="lastName" type="String" />
+    </node>
+    <node id="Customer" type="Class" name="Customer" x="398" y="252" w="147" h="95" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="customerId" type="String" />
+      <attr name="email" type="String" />
+      <attr name="phone" type="String" />
+      <attr name="dateOfBirth" type="Date" />
+    </node>
+    <node id="Address" type="Class" name="Address" x="48" y="930" w="147" h="95" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="houseNumber" type="String" />
+      <attr name="street" type="String" />
+      <attr name="district" type="String" />
+      <attr name="city" type="String" />
+    </node>
+    <node id="CustomerVIP" type="Class" name="CustomerVIP" x="48" y="40" w="147" h="81" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="vipLevel" type="int" />
+      <attr name="discountRate" type="float" />
+      <attr name="rewardPoints" type="int" />
+    </node>
+    <node id="CustomerNew" type="Class" name="CustomerNew" x="40" y="506" w="162" h="67" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="registeredDate" type="Date" />
+      <attr name="welcomeVoucher" type="String" />
+    </node>
+    <node id="Cart" type="Class" name="Cart" x="740" y="259" w="147" h="81" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="cartId" type="String" />
+      <attr name="createdDate" type="Date" />
+      <attr name="updatedDate" type="Date" />
+    </node>
+    <node id="CartItem" type="Class" name="CartItem" x="1077" y="266" w="147" h="67" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="quantity" type="int" />
+      <attr name="cartPrice" type="float" />
+    </node>
+    <node id="Order" type="Class" name="Order" x="740" y="711" w="147" h="95" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="orderId" type="String" />
+      <attr name="orderDate" type="Date" />
+      <attr name="status" type="String" />
+      <attr name="totalAmount" type="float" />
+    </node>
+    <node id="OrderItem" type="Class" name="OrderItem" x="1077" y="725" w="147" h="67" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="quantity" type="int" />
+      <attr name="unitPrice" type="float" />
+    </node>
+    <node id="Shipping" type="Class" name="Shipping" x="392" y="916" w="158" h="123" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="shippingId" type="String" />
+      <attr name="carrier" type="String" />
+      <attr name="trackingNumber" type="String" />
+      <attr name="shippingFee" type="float" />
+      <attr name="status" type="String" />
+      <attr name="deliveredDate" type="Date" />
+    </node>
+    <node id="Payment" type="Class" name="Payment" x="1077" y="930" w="147" h="95" stereotype="ORM-Persistable" abstract="true" hideOperations="true">
+      <attr name="paymentId" type="String" />
+      <attr name="amount" type="float" />
+      <attr name="paymentDate" type="Date" />
+      <attr name="status" type="String" />
+    </node>
+    <node id="PayCash" type="Class" name="PayCash" x="896" y="1163" w="147" h="67" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="cashReceived" type="float" />
+      <attr name="changeAmount" type="float" />
+    </node>
+    <node id="PayCredit" type="Class" name="PayCredit" x="1246" y="1149" w="171" h="95" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="cardHolder" type="String" />
+      <attr name="bankName" type="String" />
+      <attr name="cardLast4" type="String" />
+      <attr name="authorizationCode" type="String" />
+    </node>
+    <node id="Product" type="Class" name="Product" x="1077" y="478" w="147" h="123" stereotype="ORM-Persistable" abstract="true" hideOperations="true">
+      <attr name="productId" type="String" />
+      <attr name="name" type="String" />
+      <attr name="price" type="float" />
+      <attr name="stockQuantity" type="int" />
+      <attr name="imageUrl" type="String" />
+      <attr name="description" type="String" />
+    </node>
+    <node id="Artist" type="Class" name="Artist" x="1756" y="252" w="147" h="95" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="artistId" type="String" />
+      <attr name="name" type="String" />
+      <attr name="nationality" type="String" />
+      <attr name="lifeYears" type="String" />
+    </node>
+    <node id="Painting" type="Class" name="Painting" x="1414" y="231" w="152" h="137" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="style" type="String" />
+      <attr name="subject" type="String" />
+      <attr name="dominantColor" type="String" />
+      <attr name="medium" type="String" />
+      <attr name="yearCreated" type="int" />
+      <attr name="widthCm" type="int" />
+      <attr name="heightCm" type="int" />
+    </node>
+    <node id="Frame" type="Class" name="Frame" x="1416" y="718" w="147" h="81" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="material" type="String" />
+      <attr name="color" type="String" />
+      <attr name="sizeLabel" type="String" />
+    </node>
+    <edge type="Association" from="Customer" to="FullName" name="has" fromMult="1" toMult="1" aggregation="composite" labelX="419" labelY="176" labelW="44" labelH="20" fromMultX="479" fromMultY="224" fromMultW="17" fromMultH="18" toMultX="479" toMultY="131" toMultW="17" toMultH="18">
+      <pt x="471" y="252" />
+      <pt x="471" y="121" />
+    </edge>
+    <edge type="Association" from="Customer" to="Address" name="has" fromMult="1" toMult="1..*" aggregation="shared" labelX="262" labelY="834" labelW="44" labelH="20" fromMultX="422" fromMultY="357" fromMultW="17" fromMultH="18" toMultX="129" toMultY="902" toMultW="29" toMultH="18">
+      <pt x="447" y="347" />
+      <pt x="447" y="861" />
+      <pt x="121" y="861" />
+      <pt x="121" y="930" />
+    </edge>
+    <edge type="Association" from="Customer" to="Cart" name="owns" fromMult="1" toMult="0..1" labelX="616" labelY="272" labelW="53" labelH="20" fromMultX="554" fromMultY="306" fromMultW="17" fromMultH="18" toMultX="699" toMultY="306" toMultW="31" toMultH="18">
+      <pt x="544" y="300" />
+      <pt x="740" y="300" />
+    </edge>
+    <edge type="Association" from="Customer" to="Order" name="places" fromMult="1" toMult="0..*" labelX="588" labelY="732" labelW="59" labelH="20" fromMultX="503" fromMultY="357" fromMultW="17" fromMultH="18" toMultX="701" toMultY="766" toMultW="29" toMultH="18">
+      <pt x="495" y="347" />
+      <pt x="495" y="758" />
+      <pt x="740" y="758" />
+    </edge>
+    <edge type="Association" from="Cart" to="CartItem" name="contains" fromMult="1" toMult="0..*" aggregation="composite" labelX="946" labelY="272" labelW="71" labelH="20" fromMultX="897" fromMultY="306" fromMultW="17" fromMultH="18" toMultX="1038" toMultY="306" toMultW="29" toMultH="18">
+      <pt x="887" y="300" />
+      <pt x="1077" y="300" />
+    </edge>
+    <edge type="Association" from="Order" to="OrderItem" name="contains" fromMult="1" toMult="1..*" aggregation="composite" labelX="946" labelY="732" labelW="71" labelH="20" fromMultX="897" fromMultY="766" fromMultW="17" fromMultH="18" toMultX="1038" toMultY="766" toMultW="29" toMultH="18">
+      <pt x="887" y="758" />
+      <pt x="1077" y="758" />
+    </edge>
+    <edge type="Association" from="CartItem" to="Product" name="refers to" fromMult="0..*" toMult="1" labelX="1072" labelY="396" labelW="71" labelH="20" fromMultX="1158" fromMultY="343" fromMultW="29" fromMultH="18" toMultX="1158" toMultY="450" toMultW="17" toMultH="18">
+      <pt x="1150" y="333" />
+      <pt x="1150" y="478" />
+    </edge>
+    <edge type="Association" from="OrderItem" to="Product" name="refers to" fromMult="0..*" toMult="1" labelX="1072" labelY="653" labelW="71" labelH="20" fromMultX="1158" fromMultY="697" fromMultW="29" fromMultH="18" toMultX="1158" toMultY="611" toMultW="17" toMultH="18">
+      <pt x="1150" y="725" />
+      <pt x="1150" y="601" />
+    </edge>
+    <edge type="Association" from="Order" to="Shipping" name="is delivered by" fromMult="1" toMult="0..1" labelX="618" labelY="950" labelW="103" labelH="20" fromMultX="765" fromMultY="816" fromMultW="17" fromMultH="18" toMultX="560" toMultY="984" toMultW="31" toMultH="18">
+      <pt x="790" y="806" />
+      <pt x="790" y="978" />
+      <pt x="550" y="978" />
+    </edge>
+    <edge type="Association" from="Shipping" to="Address" name="ships to" fromMult="0..*" toMult="1" labelX="259" labelY="950" labelW="68" labelH="20" fromMultX="353" fromMultY="984" fromMultW="29" fromMultH="18" toMultX="204" toMultY="984" toMultW="17" toMultH="18">
+      <pt x="392" y="978" />
+      <pt x="194" y="978" />
+    </edge>
+    <edge type="Association" from="Order" to="Payment" name="is paid by" fromMult="1" toMult="0..*" labelX="919" labelY="950" labelW="77" labelH="20" fromMultX="846" fromMultY="816" fromMultW="17" fromMultH="18" toMultX="1038" toMultY="984" toMultW="29" toMultH="18">
+      <pt x="838" y="806" />
+      <pt x="838" y="978" />
+      <pt x="1077" y="978" />
+    </edge>
+    <edge type="Association" from="Artist" to="Painting" name="paints" fromMult="1" toMult="0..*" labelX="1632" labelY="272" labelW="58" labelH="20" fromMultX="1729" fromMultY="306" fromMultW="17" fromMultH="18" toMultX="1576" toMultY="306" toMultW="29" toMultH="18">
+      <pt x="1756" y="300" />
+      <pt x="1566" y="300" />
+    </edge>
+    <edge type="Association" from="Customer" to="CustomerVIP" name="is a" fromMult="1" toMult="0..1" labelX="232" labelY="165" labelW="44" labelH="20" fromMultX="371" fromMultY="277" fromMultW="17" fromMultH="18" toMultX="204" toMultY="56" toMultW="31" toMultH="18">
+      <pt x="398" y="270" />
+      <pt x="284" y="270" />
+      <pt x="284" y="80" />
+      <pt x="194" y="80" />
+    </edge>
+    <edge type="Association" from="Customer" to="CustomerNew" name="is a" fromMult="1" toMult="0..1" labelX="256" labelY="424" labelW="44" labelH="20" fromMultX="371" fromMultY="304" fromMultW="17" fromMultH="18" toMultX="212" toMultY="546" toMultW="31" toMultH="18">
+      <pt x="398" y="329" />
+      <pt x="308" y="329" />
+      <pt x="308" y="540" />
+      <pt x="202" y="540" />
+    </edge>
+    <edge type="Association" from="Product" to="Painting" name="is a" fromMult="1" toMult="0..1" labelX="1327" labelY="388" labelW="44" labelH="20" fromMultX="1234" fromMultY="471" fromMultW="17" fromMultH="18" toMultX="1373" toMultY="306" toMultW="31" toMultH="18">
+      <pt x="1224" y="496" />
+      <pt x="1319" y="496" />
+      <pt x="1319" y="300" />
+      <pt x="1414" y="300" />
+    </edge>
+    <edge type="Association" from="Product" to="Frame" name="is a" fromMult="1" toMult="0..1" labelX="1327" labelY="661" labelW="44" labelH="20" fromMultX="1234" fromMultY="590" fromMultW="17" fromMultH="18" toMultX="1376" toMultY="766" toMultW="31" toMultH="18">
+      <pt x="1224" y="583" />
+      <pt x="1319" y="583" />
+      <pt x="1319" y="758" />
+      <pt x="1416" y="758" />
+    </edge>
+    <edge type="Association" from="Payment" to="PayCash" name="is a" fromMult="1" toMult="0..1" labelX="1030" labelY="1067" labelW="44" labelH="20" fromMultX="1110" fromMultY="1035" fromMultW="17" fromMultH="18" toMultX="931" toMultY="1135" toMultW="31" toMultH="18">
+      <pt x="1134" y="1025" />
+      <pt x="1134" y="1094" />
+      <pt x="970" y="1094" />
+      <pt x="970" y="1163" />
+    </edge>
+    <edge type="Association" from="Payment" to="PayCredit" name="is a" fromMult="1" toMult="0..1" labelX="1227" labelY="1067" labelW="44" labelH="20" fromMultX="1174" fromMultY="1035" fromMultW="17" fromMultH="18" toMultX="1339" toMultY="1121" toMultW="31" toMultH="18">
+      <pt x="1166" y="1025" />
+      <pt x="1166" y="1094" />
+      <pt x="1331" y="1094" />
+      <pt x="1331" y="1149" />
+    </edge>
+  </diagram>
+  <diagram id="c42_tables" name="4.2b Database - tables, keys and foreign keys" kind="class" scope="tables" scopeName="4.2 Database (tables)">
+    <node id="Customer" type="Class" name="customer" x="486" y="259" w="213" h="137" stereotype="table" hideOperations="true">
+      <attr name="customer_id" type="varchar(20) {PK}" vis="public" />
+      <attr name="first_name" type="varchar(50)" vis="public" />
+      <attr name="middle_name" type="varchar(50) {NULL}" vis="public" />
+      <attr name="last_name" type="varchar(50)" vis="public" />
+      <attr name="email" type="varchar(120) {U}" vis="public" />
+      <attr name="phone" type="varchar(20) {NULL}" vis="public" />
+      <attr name="date_of_birth" type="date {NULL}" vis="public" />
+    </node>
+    <node id="CustomerVIP" type="Class" name="customer_vip" x="52" y="40" w="212" h="95" stereotype="table" hideOperations="true">
+      <attr name="customer_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="vip_level" type="integer" vis="public" />
+      <attr name="discount_rate" type="numeric(4,3)" vis="public" />
+      <attr name="reward_points" type="integer" vis="public" />
+    </node>
+    <node id="CustomerNew" type="Class" name="customer_new" x="40" y="548" w="236" h="81" stereotype="table" hideOperations="true">
+      <attr name="customer_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="registered_date" type="date" vis="public" />
+      <attr name="welcome_voucher" type="varchar(30) {NULL}" vis="public" />
+    </node>
+    <node id="Address" type="Class" name="address" x="62" y="1000" w="192" h="123" stereotype="table" hideOperations="true">
+      <attr name="address_id" type="varchar(20) {PK}" vis="public" />
+      <attr name="customer_id" type="varchar(20) {FK}" vis="public" />
+      <attr name="house_number" type="varchar(20)" vis="public" />
+      <attr name="street" type="varchar(100)" vis="public" />
+      <attr name="district" type="varchar(60)" vis="public" />
+      <attr name="city" type="varchar(60)" vis="public" />
+    </node>
+    <node id="Product" type="Class" name="product" x="1317" y="520" w="208" h="137" stereotype="table" hideOperations="true">
+      <attr name="product_id" type="varchar(20) {PK}" vis="public" />
+      <attr name="product_type" type="varchar(12)" vis="public" />
+      <attr name="name" type="varchar(200)" vis="public" />
+      <attr name="price" type="numeric(12,2)" vis="public" />
+      <attr name="stock_quantity" type="integer" vis="public" />
+      <attr name="image_url" type="varchar(255) {NULL}" vis="public" />
+      <attr name="description" type="varchar(500) {NULL}" vis="public" />
+    </node>
+    <node id="Artist" type="Class" name="artist" x="2131" y="280" w="197" h="95" stereotype="table" hideOperations="true">
+      <attr name="artist_id" type="varchar(20) {PK}" vis="public" />
+      <attr name="name" type="varchar(120)" vis="public" />
+      <attr name="nationality" type="varchar(60) {NULL}" vis="public" />
+      <attr name="life_years" type="varchar(20) {NULL}" vis="public" />
+    </node>
+    <node id="Painting" type="Class" name="painting" x="1727" y="245" w="204" h="165" stereotype="table" hideOperations="true">
+      <attr name="product_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="artist_id" type="varchar(20) {FK}" vis="public" />
+      <attr name="style" type="varchar(40)" vis="public" />
+      <attr name="subject" type="varchar(40)" vis="public" />
+      <attr name="dominant_color" type="varchar(20)" vis="public" />
+      <attr name="medium" type="varchar(60)" vis="public" />
+      <attr name="year_created" type="integer" vis="public" />
+      <attr name="width_cm" type="integer" vis="public" />
+      <attr name="height_cm" type="integer" vis="public" />
+    </node>
+    <node id="Frame" type="Class" name="frame" x="1727" y="774" w="204" h="95" stereotype="table" hideOperations="true">
+      <attr name="product_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="material" type="varchar(40)" vis="public" />
+      <attr name="color" type="varchar(20)" vis="public" />
+      <attr name="size_label" type="varchar(20)" vis="public" />
+    </node>
+    <node id="Feature" type="Class" name="product_feature" x="1727" y="541" w="204" h="95" stereotype="table" hideOperations="true">
+      <attr name="product_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="model_version" type="varchar(40)" vis="public" />
+      <attr name="feature_vector" type="bytea" vis="public" />
+      <attr name="updated_at" type="timestamp" vis="public" />
+    </node>
+    <node id="Cart" type="Class" name="cart" x="908" y="280" w="207" h="95" stereotype="table" hideOperations="true">
+      <attr name="cart_id" type="varchar(20) {PK}" vis="public" />
+      <attr name="customer_id" type="varchar(20) {FK, U}" vis="public" />
+      <attr name="created_date" type="timestamp" vis="public" />
+      <attr name="updated_date" type="timestamp" vis="public" />
+    </node>
+    <node id="CartItem" type="Class" name="cart_item" x="1319" y="280" w="204" h="95" stereotype="table" hideOperations="true">
+      <attr name="cart_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="product_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="quantity" type="integer" vis="public" />
+      <attr name="cart_price" type="numeric(12,2)" vis="public" />
+    </node>
+    <node id="Order" type="Class" name="orders" x="916" y="767" w="192" h="109" stereotype="table" hideOperations="true">
+      <attr name="order_id" type="varchar(20) {PK}" vis="public" />
+      <attr name="customer_id" type="varchar(20) {FK}" vis="public" />
+      <attr name="order_date" type="timestamp" vis="public" />
+      <attr name="status" type="varchar(12)" vis="public" />
+      <attr name="total_amount" type="numeric(12,2)" vis="public" />
+    </node>
+    <node id="OrderItem" type="Class" name="order_item" x="1319" y="774" w="204" h="95" stereotype="table" hideOperations="true">
+      <attr name="order_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="product_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="quantity" type="integer" vis="public" />
+      <attr name="unit_price" type="numeric(12,2)" vis="public" />
+    </node>
+    <node id="Shipping" type="Class" name="shipping" x="476" y="986" w="232" h="151" stereotype="table" hideOperations="true">
+      <attr name="shipping_id" type="varchar(20) {PK}" vis="public" />
+      <attr name="order_id" type="varchar(20) {FK, U}" vis="public" />
+      <attr name="address_id" type="varchar(20) {FK}" vis="public" />
+      <attr name="carrier" type="varchar(60) {NULL}" vis="public" />
+      <attr name="tracking_number" type="varchar(40) {NULL}" vis="public" />
+      <attr name="shipping_fee" type="numeric(12,2)" vis="public" />
+      <attr name="status" type="varchar(12)" vis="public" />
+      <attr name="delivered_date" type="date {NULL}" vis="public" />
+    </node>
+    <node id="Payment" type="Class" name="payment" x="1315" y="1000" w="212" h="123" stereotype="table" hideOperations="true">
+      <attr name="payment_id" type="varchar(20) {PK}" vis="public" />
+      <attr name="order_id" type="varchar(20) {FK}" vis="public" />
+      <attr name="method" type="varchar(6)" vis="public" />
+      <attr name="amount" type="numeric(12,2)" vis="public" />
+      <attr name="payment_date" type="timestamp {NULL}" vis="public" />
+      <attr name="status" type="varchar(10)" vis="public" />
+    </node>
+    <node id="PayCash" type="Class" name="pay_cash" x="1079" y="1261" w="240" h="81" stereotype="table" hideOperations="true">
+      <attr name="payment_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="cash_received" type="numeric(12,2) {NULL}" vis="public" />
+      <attr name="change_amount" type="numeric(12,2) {NULL}" vis="public" />
+    </node>
+    <node id="PayCredit" type="Class" name="pay_credit" x="1521" y="1247" w="244" h="109" stereotype="table" hideOperations="true">
+      <attr name="payment_id" type="varchar(20) {PK, FK}" vis="public" />
+      <attr name="card_holder" type="varchar(100)" vis="public" />
+      <attr name="bank_name" type="varchar(60)" vis="public" />
+      <attr name="card_last4" type="char(4)" vis="public" />
+      <attr name="authorization_code" type="varchar(40) {NULL}" vis="public" />
+    </node>
+    <edge type="Association" from="Customer" to="Address" name="has (customer_id)" fromMult="1" toMult="1..*" labelX="303" labelY="904" labelW="120" labelH="20" fromMultX="543" fromMultY="406" fromMultW="17" fromMultH="18" toMultX="166" toMultY="972" toMultW="29" toMultH="18">
+      <pt x="568" y="396" />
+      <pt x="568" y="931" />
+      <pt x="158" y="931" />
+      <pt x="158" y="1000" />
+    </edge>
+    <edge type="Association" from="Artist" to="Painting" name="paints (artist_id)" fromMult="1" toMult="0..*" labelX="1975" labelY="300" labelW="112" labelH="20" fromMultX="2104" fromMultY="334" fromMultW="17" fromMultH="18" toMultX="1941" toMultY="334" toMultW="29" toMultH="18">
+      <pt x="2131" y="328" />
+      <pt x="1931" y="328" />
+    </edge>
+    <edge type="Association" from="Product" to="Feature" name="indexed by (product_id)" fromMult="1" toMult="0..1" labelX="1550" labelY="562" labelW="152" labelH="20" fromMultX="1535" fromMultY="596" fromMultW="17" fromMultH="18" toMultX="1686" toMultY="596" toMultW="31" toMultH="18">
+      <pt x="1525" y="588" />
+      <pt x="1727" y="588" />
+    </edge>
+    <edge type="Association" from="Customer" to="Cart" name="owns (customer_id)" fromMult="1" toMult="0..1" labelX="739" labelY="300" labelW="129" labelH="20" fromMultX="708" fromMultY="334" fromMultW="17" fromMultH="18" toMultX="867" toMultY="334" toMultW="31" toMultH="18">
+      <pt x="698" y="328" />
+      <pt x="908" y="328" />
+    </edge>
+    <edge type="Association" from="Cart" to="CartItem" name="contains (cart_id)" fromMult="1" toMult="0..*" labelX="1158" labelY="300" labelW="117" labelH="20" fromMultX="1125" fromMultY="334" fromMultW="17" fromMultH="18" toMultX="1280" toMultY="334" toMultW="29" toMultH="18">
+      <pt x="1115" y="328" />
+      <pt x="1319" y="328" />
+    </edge>
+    <edge type="Association" from="Product" to="CartItem" name="refers to (product_id)" fromMult="1" toMult="0..*" labelX="1274" labelY="438" labelW="139" labelH="20" fromMultX="1429" fromMultY="492" fromMultW="17" fromMultH="18" toMultX="1429" toMultY="385" toMultW="29" toMultH="18">
+      <pt x="1421" y="520" />
+      <pt x="1421" y="375" />
+    </edge>
+    <edge type="Association" from="Customer" to="Order" name="places (customer_id)" fromMult="1" toMult="0..*" labelX="698" labelY="794" labelW="135" labelH="20" fromMultX="624" fromMultY="406" fromMultW="17" fromMultH="18" toMultX="876" toMultY="828" toMultW="29" toMultH="18">
+      <pt x="616" y="396" />
+      <pt x="616" y="822" />
+      <pt x="916" y="822" />
+    </edge>
+    <edge type="Association" from="Order" to="OrderItem" name="contains (order_id)" fromMult="1" toMult="1..*" labelX="1150" labelY="794" labelW="126" labelH="20" fromMultX="1118" fromMultY="828" fromMultW="17" fromMultH="18" toMultX="1280" toMultY="828" toMultW="29" toMultH="18">
+      <pt x="1108" y="822" />
+      <pt x="1319" y="822" />
+    </edge>
+    <edge type="Association" from="Product" to="OrderItem" name="refers to (product_id)" fromMult="1" toMult="0..*" labelX="1274" labelY="706" labelW="139" labelH="20" fromMultX="1429" fromMultY="667" fromMultW="17" fromMultH="18" toMultX="1429" toMultY="746" toMultW="29" toMultH="18">
+      <pt x="1421" y="657" />
+      <pt x="1421" y="774" />
+    </edge>
+    <edge type="Association" from="Order" to="Shipping" name="is delivered by (order_id)" fromMult="1" toMult="0..1" labelX="769" labelY="1034" labelW="158" labelH="20" fromMultX="963" fromMultY="886" fromMultW="17" fromMultH="18" toMultX="718" toMultY="1068" toMultW="31" toMultH="18">
+      <pt x="988" y="876" />
+      <pt x="988" y="1062" />
+      <pt x="708" y="1062" />
+    </edge>
+    <edge type="Association" from="Address" to="Shipping" name="ships to (address_id)" fromMult="1" toMult="0..*" labelX="297" labelY="1034" labelW="136" labelH="20" fromMultX="264" fromMultY="1068" fromMultW="17" fromMultH="18" toMultX="437" toMultY="1068" toMultW="29" toMultH="18">
+      <pt x="254" y="1062" />
+      <pt x="476" y="1062" />
+    </edge>
+    <edge type="Association" from="Order" to="Payment" name="is paid by (order_id)" fromMult="1" toMult="0..*" labelX="1109" labelY="1034" labelW="132" labelH="20" fromMultX="1044" fromMultY="886" fromMultW="17" fromMultH="18" toMultX="1276" toMultY="1068" toMultW="29" toMultH="18">
+      <pt x="1036" y="876" />
+      <pt x="1036" y="1062" />
+      <pt x="1315" y="1062" />
+    </edge>
+    <edge type="Association" from="Customer" to="CustomerVIP" name="is a (customer_id)" fromMult="1" toMult="0..1" labelX="235" labelY="172" labelW="120" labelH="20" fromMultX="459" fromMultY="284" fromMultW="17" fromMultH="18" toMultX="274" toMultY="62" toMultW="31" toMultH="18">
+      <pt x="486" y="277" />
+      <pt x="363" y="277" />
+      <pt x="363" y="88" />
+      <pt x="264" y="88" />
+    </edge>
+    <edge type="Association" from="Customer" to="CustomerNew" name="is a (customer_id)" fromMult="1" toMult="0..1" labelX="259" labelY="473" labelW="120" labelH="20" fromMultX="459" fromMultY="353" fromMultW="17" fromMultH="18" toMultX="286" toMultY="596" toMultW="31" toMultH="18">
+      <pt x="486" y="378" />
+      <pt x="387" y="378" />
+      <pt x="387" y="588" />
+      <pt x="276" y="588" />
+    </edge>
+    <edge type="Association" from="Product" to="Painting" name="is a (product_id)" fromMult="1" toMult="0..1" labelX="1634" labelY="423" labelW="112" labelH="20" fromMultX="1535" fromMultY="513" fromMultW="17" fromMultH="18" toMultX="1686" toMultY="334" toMultW="31" toMultH="18">
+      <pt x="1525" y="538" />
+      <pt x="1626" y="538" />
+      <pt x="1626" y="328" />
+      <pt x="1727" y="328" />
+    </edge>
+    <edge type="Association" from="Product" to="Frame" name="is a (product_id)" fromMult="1" toMult="0..1" labelX="1634" labelY="720" labelW="112" labelH="20" fromMultX="1535" fromMultY="646" fromMultW="17" fromMultH="18" toMultX="1686" toMultY="828" toMultW="31" toMultH="18">
+      <pt x="1525" y="639" />
+      <pt x="1626" y="639" />
+      <pt x="1626" y="822" />
+      <pt x="1727" y="822" />
+    </edge>
+    <edge type="Association" from="Payment" to="PayCash" name="is a (payment_id)" fromMult="1" toMult="0..1" labelX="1244" labelY="1165" labelW="116" labelH="20" fromMultX="1380" fromMultY="1133" fromMultW="17" fromMultH="18" toMultX="1160" toMultY="1233" toMultW="31" toMultH="18">
+      <pt x="1405" y="1123" />
+      <pt x="1405" y="1192" />
+      <pt x="1199" y="1192" />
+      <pt x="1199" y="1261" />
+    </edge>
+    <edge type="Association" from="Payment" to="PayCredit" name="is a (payment_id)" fromMult="1" toMult="0..1" labelX="1482" labelY="1165" labelW="116" labelH="20" fromMultX="1445" fromMultY="1133" fromMultW="17" fromMultH="18" toMultX="1651" toMultY="1219" toMultW="31" toMultH="18">
+      <pt x="1437" y="1123" />
+      <pt x="1437" y="1192" />
+      <pt x="1643" y="1192" />
+      <pt x="1643" y="1247" />
+    </edge>
+  </diagram>
+  <diagram id="c42_erd" name="4.2c Database (VP entity relationship diagram)" kind="erd" scope="database" scopeName="4.2 Database" export="false">
+    <node id="customer" type="DBTable" name="customer" x="476" y="259" w="253" h="167">
+      <column name="customer_id" type="varchar" length="20" pk="true" />
+      <column name="first_name" type="varchar" length="50" />
+      <column name="middle_name" type="varchar" length="50" nullable="true" />
+      <column name="last_name" type="varchar" length="50" />
+      <column name="email" type="varchar" length="120" unique="true" />
+      <column name="phone" type="varchar" length="20" nullable="true" />
+      <column name="date_of_birth" type="date" nullable="true" />
+    </node>
+    <node id="customer_vip" type="DBTable" name="customer_vip" x="52" y="40" w="252" h="110">
+      <column name="customer_id" type="varchar" length="20" pk="true" fk="customer.customer_id" />
+      <column name="vip_level" type="integer" />
+      <column name="discount_rate" type="numeric" length="4" scale="3" />
+      <column name="reward_points" type="integer" />
+    </node>
+    <node id="customer_new" type="DBTable" name="customer_new" x="40" y="548" w="276" h="91">
+      <column name="customer_id" type="varchar" length="20" pk="true" fk="customer.customer_id" />
+      <column name="registered_date" type="date" />
+      <column name="welcome_voucher" type="varchar" length="30" nullable="true" />
+    </node>
+    <node id="address" type="DBTable" name="address" x="62" y="1000" w="232" h="148">
+      <column name="address_id" type="varchar" length="20" pk="true" />
+      <column name="customer_id" type="varchar" length="20" fk="customer.customer_id" />
+      <column name="house_number" type="varchar" length="20" />
+      <column name="street" type="varchar" length="100" />
+      <column name="district" type="varchar" length="60" />
+      <column name="city" type="varchar" length="60" />
+    </node>
+    <node id="product" type="DBTable" name="product" x="1287" y="520" w="248" h="167">
+      <column name="product_id" type="varchar" length="20" pk="true" />
+      <column name="product_type" type="varchar" length="12" />
+      <column name="name" type="varchar" length="200" />
+      <column name="price" type="numeric" length="12" scale="2" />
+      <column name="stock_quantity" type="integer" />
+      <column name="image_url" type="varchar" length="255" nullable="true" />
+      <column name="description" type="varchar" length="500" nullable="true" />
+    </node>
+    <node id="artist" type="DBTable" name="artist" x="2081" y="280" w="237" h="110">
+      <column name="artist_id" type="varchar" length="20" pk="true" />
+      <column name="name" type="varchar" length="120" />
+      <column name="nationality" type="varchar" length="60" nullable="true" />
+      <column name="life_years" type="varchar" length="20" nullable="true" />
+    </node>
+    <node id="painting" type="DBTable" name="painting" x="1687" y="245" w="244" h="205">
+      <column name="product_id" type="varchar" length="20" pk="true" fk="product.product_id" />
+      <column name="artist_id" type="varchar" length="20" fk="artist.artist_id" />
+      <column name="style" type="varchar" length="40" />
+      <column name="subject" type="varchar" length="40" />
+      <column name="dominant_color" type="varchar" length="20" />
+      <column name="medium" type="varchar" length="60" />
+      <column name="year_created" type="integer" />
+      <column name="width_cm" type="integer" />
+      <column name="height_cm" type="integer" />
+    </node>
+    <node id="frame" type="DBTable" name="frame" x="1687" y="774" w="244" h="110">
+      <column name="product_id" type="varchar" length="20" pk="true" fk="product.product_id" />
+      <column name="material" type="varchar" length="40" />
+      <column name="color" type="varchar" length="20" />
+      <column name="size_label" type="varchar" length="20" />
+    </node>
+    <node id="product_feature" type="DBTable" name="product_feature" x="1687" y="541" w="244" h="110">
+      <column name="product_id" type="varchar" length="20" pk="true" fk="product.product_id" />
+      <column name="model_version" type="varchar" length="40" />
+      <column name="feature_vector" type="bytea" />
+      <column name="updated_at" type="timestamp" />
+    </node>
+    <node id="cart" type="DBTable" name="cart" x="888" y="280" w="247" h="110">
+      <column name="cart_id" type="varchar" length="20" pk="true" />
+      <column name="customer_id" type="varchar" length="20" unique="true" fk="customer.customer_id" />
+      <column name="created_date" type="timestamp" />
+      <column name="updated_date" type="timestamp" />
+    </node>
+    <node id="cart_item" type="DBTable" name="cart_item" x="1289" y="280" w="244" h="110">
+      <column name="cart_id" type="varchar" length="20" pk="true" fk="cart.cart_id" />
+      <column name="product_id" type="varchar" length="20" pk="true" fk="product.product_id" />
+      <column name="quantity" type="integer" />
+      <column name="cart_price" type="numeric" length="12" scale="2" />
+    </node>
+    <node id="orders" type="DBTable" name="orders" x="896" y="767" w="232" h="129">
+      <column name="order_id" type="varchar" length="20" pk="true" />
+      <column name="customer_id" type="varchar" length="20" fk="customer.customer_id" />
+      <column name="order_date" type="timestamp" />
+      <column name="status" type="varchar" length="12" />
+      <column name="total_amount" type="numeric" length="12" scale="2" />
+    </node>
+    <node id="order_item" type="DBTable" name="order_item" x="1289" y="774" w="244" h="110">
+      <column name="order_id" type="varchar" length="20" pk="true" fk="orders.order_id" />
+      <column name="product_id" type="varchar" length="20" pk="true" fk="product.product_id" />
+      <column name="quantity" type="integer" />
+      <column name="unit_price" type="numeric" length="12" scale="2" />
+    </node>
+    <node id="shipping" type="DBTable" name="shipping" x="466" y="986" w="272" h="186">
+      <column name="shipping_id" type="varchar" length="20" pk="true" />
+      <column name="order_id" type="varchar" length="20" unique="true" fk="orders.order_id" />
+      <column name="address_id" type="varchar" length="20" fk="address.address_id" />
+      <column name="carrier" type="varchar" length="60" nullable="true" />
+      <column name="tracking_number" type="varchar" length="40" nullable="true" />
+      <column name="shipping_fee" type="numeric" length="12" scale="2" />
+      <column name="status" type="varchar" length="12" />
+      <column name="delivered_date" type="date" nullable="true" />
+    </node>
+    <node id="payment" type="DBTable" name="payment" x="1285" y="1000" w="252" h="148">
+      <column name="payment_id" type="varchar" length="20" pk="true" />
+      <column name="order_id" type="varchar" length="20" fk="orders.order_id" />
+      <column name="method" type="varchar" length="6" />
+      <column name="amount" type="numeric" length="12" scale="2" />
+      <column name="payment_date" type="timestamp" nullable="true" />
+      <column name="status" type="varchar" length="10" />
+    </node>
+    <node id="pay_cash" type="DBTable" name="pay_cash" x="1054" y="1261" w="280" h="91">
+      <column name="payment_id" type="varchar" length="20" pk="true" fk="payment.payment_id" />
+      <column name="cash_received" type="numeric" length="12" scale="2" nullable="true" />
+      <column name="change_amount" type="numeric" length="12" scale="2" nullable="true" />
+    </node>
+    <node id="pay_credit" type="DBTable" name="pay_credit" x="1486" y="1247" w="284" h="129">
+      <column name="payment_id" type="varchar" length="20" pk="true" fk="payment.payment_id" />
+      <column name="card_holder" type="varchar" length="100" />
+      <column name="bank_name" type="varchar" length="60" />
+      <column name="card_last4" type="char" length="4" />
+      <column name="authorization_code" type="varchar" length="40" nullable="true" />
+    </node>
+    <edge type="DBForeignKey" from="customer" to="customer_vip" name="is a" fromMult="1" toMult="0..1" toColumn="customer_id" identifying="true" />
+    <edge type="DBForeignKey" from="customer" to="customer_new" name="is a" fromMult="1" toMult="0..1" toColumn="customer_id" identifying="true" />
+    <edge type="DBForeignKey" from="customer" to="address" name="has" fromMult="1" toMult="1..*" toColumn="customer_id" />
+    <edge type="DBForeignKey" from="product" to="painting" name="is a" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" />
+    <edge type="DBForeignKey" from="artist" to="painting" name="paints" fromMult="1" toMult="0..*" toColumn="artist_id" />
+    <edge type="DBForeignKey" from="product" to="frame" name="is a" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" />
+    <edge type="DBForeignKey" from="product" to="product_feature" name="indexed by" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" />
+    <edge type="DBForeignKey" from="customer" to="cart" name="owns" fromMult="1" toMult="0..1" toColumn="customer_id" />
+    <edge type="DBForeignKey" from="cart" to="cart_item" name="contains" fromMult="1" toMult="0..*" toColumn="cart_id" identifying="true" />
+    <edge type="DBForeignKey" from="product" to="cart_item" name="refers to" fromMult="1" toMult="0..*" toColumn="product_id" identifying="true" />
+    <edge type="DBForeignKey" from="customer" to="orders" name="places" fromMult="1" toMult="0..*" toColumn="customer_id" />
+    <edge type="DBForeignKey" from="orders" to="order_item" name="contains" fromMult="1" toMult="1..*" toColumn="order_id" identifying="true" />
+    <edge type="DBForeignKey" from="product" to="order_item" name="refers to" fromMult="1" toMult="0..*" toColumn="product_id" identifying="true" />
+    <edge type="DBForeignKey" from="orders" to="shipping" name="is delivered by" fromMult="1" toMult="0..1" toColumn="order_id" />
+    <edge type="DBForeignKey" from="address" to="shipping" name="ships to" fromMult="1" toMult="0..*" toColumn="address_id" />
+    <edge type="DBForeignKey" from="orders" to="payment" name="is paid by" fromMult="1" toMult="0..*" toColumn="order_id" />
+    <edge type="DBForeignKey" from="payment" to="pay_cash" name="is a" fromMult="1" toMult="0..1" toColumn="payment_id" identifying="true" />
+    <edge type="DBForeignKey" from="payment" to="pay_credit" name="is a" fromMult="1" toMult="0..1" toColumn="payment_id" identifying="true" />
+  </diagram>
+  <diagram id="c43_design" name="4.3 Class Diagram in Design" kind="class" scope="design" scopeName="4.3-4.5 Design model">
+    <node id="FullName" type="Class" name="FullName" x="501" y="47" w="168" h="86">
+      <attr name="firstName" type="String" vis="private" />
+      <attr name="middleName" type="String" vis="private" />
+      <attr name="lastName" type="String" vis="private" />
+      <op name="getDisplayName" vis="public" params="" ret="String" />
+    </node>
+    <node id="Customer" type="Class" name="Customer" x="460" y="264" w="251" h="142">
+      <attr name="customerId" type="String" vis="private" />
+      <attr name="email" type="String" vis="private" />
+      <attr name="phone" type="String" vis="private" />
+      <attr name="dateOfBirth" type="LocalDate" vis="private" />
+      <op name="getDisplayName" vis="public" params="" ret="String" />
+      <op name="getDiscountRate" vis="public" params="" ret="BigDecimal" />
+      <op name="addAddress" vis="public" params="address: Address" ret="void" />
+      <op name="findAddress" vis="public" params="addressId: String" ret="Address" />
+    </node>
+    <node id="Address" type="Class" name="Address" x="68" y="1104" w="147" h="114">
+      <attr name="addressId" type="String" vis="private" />
+      <attr name="houseNumber" type="String" vis="private" />
+      <attr name="street" type="String" vis="private" />
+      <attr name="district" type="String" vis="private" />
+      <attr name="city" type="String" vis="private" />
+      <op name="format" vis="public" params="" ret="String" />
+    </node>
+    <node id="CustomerVIP" type="Class" name="CustomerVIP" x="43" y="40" w="196" h="100">
+      <attr name="vipLevel" type="int" vis="private" />
+      <attr name="discountRate" type="BigDecimal" vis="private" />
+      <attr name="rewardPoints" type="int" vis="private" />
+      <op name="getDiscountRate" vis="public" params="" ret="BigDecimal" />
+      <op name="addPoints" vis="public" params="points: int" ret="void" />
+    </node>
+    <node id="CustomerNew" type="Class" name="CustomerNew" x="40" y="579" w="202" h="72">
+      <attr name="registeredDate" type="LocalDate" vis="private" />
+      <attr name="welcomeVoucher" type="String" vis="private" />
+      <op name="hasWelcomeVoucher" vis="public" params="" ret="boolean" />
+    </node>
+    <node id="Cart" type="Class" name="Cart" x="928" y="257" w="324" h="156">
+      <attr name="cartId" type="String" vis="private" />
+      <attr name="createdDate" type="LocalDateTime" vis="private" />
+      <attr name="updatedDate" type="LocalDateTime" vis="private" />
+      <op name="addItem" vis="public" params="product: Product; quantity: int" ret="void" />
+      <op name="updateQuantity" vis="public" params="productId: String; quantity: int" ret="void" />
+      <op name="removeItem" vis="public" params="productId: String" ret="void" />
+      <op name="calculateTotal" vis="public" params="" ret="BigDecimal" />
+      <op name="isEmpty" vis="public" params="" ret="boolean" />
+      <op name="clear" vis="public" params="" ret="void" />
+    </node>
+    <node id="CartItem" type="Class" name="CartItem" x="1536" y="292" w="185" h="86" hideOps="CartItem">
+      <attr name="quantity" type="int" vis="private" />
+      <attr name="cartPrice" type="BigDecimal" vis="private" />
+      <op name="CartItem" vis="public" params="product: Product; quantity: int" />
+      <op name="getSubtotal" vis="public" params="" ret="BigDecimal" />
+      <op name="increase" vis="public" params="quantity: int" ret="void" />
+    </node>
+    <node id="Order" type="Class" name="Order" x="929" y="810" w="322" h="170">
+      <attr name="orderId" type="String" vis="private" />
+      <attr name="orderDate" type="LocalDateTime" vis="private" />
+      <attr name="status" type="OrderStatus" vis="private" />
+      <attr name="totalAmount" type="BigDecimal" vis="private" />
+      <op name="addItem" vis="public" params="item: OrderItem" ret="void" />
+      <op name="addPayment" vis="public" params="payment: Payment" ret="void" />
+      <op name="calculateTotal" vis="public" params="discountRate: BigDecimal" ret="BigDecimal" />
+      <op name="cancel" vis="public" params="" ret="void" />
+      <op name="advanceTo" vis="public" params="next: OrderStatus" ret="void" />
+      <op name="isOwnedBy" vis="public" params="customerId: String" ret="boolean" />
+    </node>
+    <node id="OrderItem" type="Class" name="OrderItem" x="1452" y="852" w="353" h="86">
+      <attr name="quantity" type="int" vis="private" />
+      <attr name="unitPrice" type="BigDecimal" vis="private" />
+      <op name="fromCartItem" vis="public" params="item: CartItem; current: Product" ret="OrderItem" static="true" />
+      <op name="getSubtotal" vis="public" params="" ret="BigDecimal" />
+    </node>
+    <node id="Shipping" type="Class" name="Shipping" x="442" y="1090" w="286" h="142">
+      <attr name="shippingId" type="String" vis="private" />
+      <attr name="carrier" type="String" vis="private" />
+      <attr name="trackingNumber" type="String" vis="private" />
+      <attr name="shippingFee" type="BigDecimal" vis="private" />
+      <attr name="status" type="ShippingStatus" vis="private" />
+      <attr name="deliveredDate" type="LocalDate" vis="private" />
+      <op name="updateStatus" vis="public" params="newStatus: ShippingStatus" ret="void" />
+      <op name="markDelivered" vis="public" params="date: LocalDate" ret="void" />
+    </node>
+    <node id="Payment" type="Class" name="Payment" x="1534" y="1097" w="190" h="128" abstract="true">
+      <attr name="paymentId" type="String" vis="private" />
+      <attr name="amount" type="BigDecimal" vis="private" />
+      <attr name="paymentDate" type="LocalDateTime" vis="private" />
+      <attr name="status" type="PaymentStatus" vis="private" />
+      <op name="process" vis="public" params="" ret="boolean" abstract="true" />
+      <op name="markSucceeded" vis="public" params="" ret="void" />
+      <op name="markFailed" vis="public" params="" ret="void" />
+    </node>
+    <node id="PayCash" type="Class" name="PayCash" x="1348" y="1363" w="180" h="72">
+      <attr name="cashReceived" type="BigDecimal" vis="private" />
+      <attr name="changeAmount" type="BigDecimal" vis="private" />
+      <op name="process" vis="public" params="" ret="boolean" />
+    </node>
+    <node id="PayCredit" type="Class" name="PayCredit" x="1733" y="1342" w="171" h="114">
+      <attr name="cardHolder" type="String" vis="private" />
+      <attr name="bankName" type="String" vis="private" />
+      <attr name="cardLast4" type="String" vis="private" />
+      <attr name="authorizationCode" type="String" vis="private" />
+      <op name="process" vis="public" params="" ret="boolean" />
+      <op name="maskedCard" vis="public" params="" ret="String" />
+    </node>
+    <node id="Product" type="Class" name="Product" x="1520" y="530" w="218" h="170" abstract="true">
+      <attr name="productId" type="String" vis="private" />
+      <attr name="name" type="String" vis="private" />
+      <attr name="price" type="BigDecimal" vis="private" />
+      <attr name="stockQuantity" type="int" vis="private" />
+      <attr name="imageUrl" type="String" vis="private" />
+      <attr name="description" type="String" vis="private" />
+      <op name="isAvailable" vis="public" params="quantity: int" ret="boolean" />
+      <op name="decreaseStock" vis="public" params="quantity: int" ret="void" />
+      <op name="getCategory" vis="public" params="" ret="String" abstract="true" />
+      <op name="keywords" vis="public" params="" ret="String" />
+    </node>
+    <node id="Artist" type="Class" name="Artist" x="2357" y="285" w="168" h="100">
+      <attr name="artistId" type="String" vis="private" />
+      <attr name="name" type="String" vis="private" />
+      <attr name="nationality" type="String" vis="private" />
+      <attr name="lifeYears" type="String" vis="private" />
+      <op name="getDisplayName" vis="public" params="" ret="String" />
+    </node>
+    <node id="Painting" type="Class" name="Painting" x="2005" y="250" w="152" h="170">
+      <attr name="style" type="String" vis="private" />
+      <attr name="subject" type="String" vis="private" />
+      <attr name="dominantColor" type="String" vis="private" />
+      <attr name="medium" type="String" vis="private" />
+      <attr name="yearCreated" type="int" vis="private" />
+      <attr name="widthCm" type="int" vis="private" />
+      <attr name="heightCm" type="int" vis="private" />
+      <op name="getCategory" vis="public" params="" ret="String" />
+      <op name="keywords" vis="public" params="" ret="String" />
+      <op name="sizeLabel" vis="public" params="" ret="String" />
+    </node>
+    <node id="Frame" type="Class" name="Frame" x="2008" y="845" w="146" h="100">
+      <attr name="material" type="String" vis="private" />
+      <attr name="color" type="String" vis="private" />
+      <attr name="sizeLabel" type="String" vis="private" />
+      <op name="getCategory" vis="public" params="" ret="String" />
+      <op name="keywords" vis="public" params="" ret="String" />
+    </node>
+    <node id="OrderStatus" type="Class" name="OrderStatus" x="1027" y="558" w="126" h="109" stereotype="enumeration">
+      <literal name="PLACED" />
+      <literal name="PROCESSING" />
+      <literal name="SHIPPED" />
+      <literal name="DELIVERED" />
+      <literal name="CANCELLED" />
+    </node>
+    <node id="ShippingStatus" type="Class" name="ShippingStatus" x="522" y="1356" w="126" h="81" stereotype="enumeration">
+      <literal name="PREPARING" />
+      <literal name="IN_TRANSIT" />
+      <literal name="DELIVERED" />
+    </node>
+    <node id="PaymentStatus" type="Class" name="PaymentStatus" x="2018" y="1118" w="126" h="81" stereotype="enumeration">
+      <literal name="PENDING" />
+      <literal name="SUCCEEDED" />
+      <literal name="FAILED" />
+    </node>
+    <edge type="Association" from="Customer" to="FullName" name="has" fromMult="1" toMult="1" navigable="true" fromNav="non" toRole="fullName" aggregation="composite" labelX="533" labelY="188" labelW="44" labelH="20" toRoleBoxX="593" toRoleBoxY="169" toRoleBoxW="58" toRoleBoxH="18" fromMultX="593" fromMultY="236" fromMultW="17" fromMultH="18" toMultX="593" toMultY="143" toMultW="17" toMultH="18">
+      <pt x="585" y="264" />
+      <pt x="585" y="133" />
+    </edge>
+    <edge type="Association" from="Customer" to="Address" name="has" fromMult="1" toMult="1..*" navigable="true" fromNav="non" toRole="addresses" aggregation="shared" labelX="329" labelY="1008" labelW="44" labelH="20" toRoleBoxX="149" toRoleBoxY="1050" toRoleBoxW="64" toRoleBoxH="18" fromMultX="536" fromMultY="416" fromMultW="17" fromMultH="18" toMultX="149" toMultY="1076" toMultW="29" toMultH="18">
+      <pt x="561" y="406" />
+      <pt x="561" y="1035" />
+      <pt x="141" y="1035" />
+      <pt x="141" y="1104" />
+    </edge>
+    <edge type="Association" from="Cart" to="Customer" name="owned by" fromMult="0..1" toMult="1" navigable="true" fromNav="non" toRole="owner" labelX="781" labelY="308" labelW="77" labelH="20" toRoleBoxX="745" toRoleBoxY="342" toRoleBoxW="43" toRoleBoxH="18" fromMultX="887" fromMultY="342" fromMultW="31" fromMultH="18" toMultX="720" toMultY="342" toMultW="17" toMultH="18">
+      <pt x="928" y="335" />
+      <pt x="710" y="335" />
+    </edge>
+    <edge type="Association" from="Cart" to="CartItem" name="contains" fromMult="1" toMult="0..*" navigable="true" fromNav="non" toRole="items" aggregation="composite" labelX="1358" labelY="308" labelW="71" labelH="20" toRoleBoxX="1449" toRoleBoxY="342" toRoleBoxW="39" toRoleBoxH="18" fromMultX="1262" fromMultY="342" fromMultW="17" fromMultH="18" toMultX="1497" toMultY="342" toMultW="29" toMultH="18">
+      <pt x="1252" y="335" />
+      <pt x="1536" y="335" />
+    </edge>
+    <edge type="Association" from="CartItem" to="Product" name="refers to" fromMult="0..*" toMult="1" navigable="true" fromNav="non" toRole="product" labelX="1550" labelY="444" labelW="71" labelH="20" toRoleBoxX="1636" toRoleBoxY="476" toRoleBoxW="52" toRoleBoxH="18" fromMultX="1636" fromMultY="388" fromMultW="29" fromMultH="18" toMultX="1636" toMultY="502" toMultW="17" toMultH="18">
+      <pt x="1628" y="378" />
+      <pt x="1628" y="530" />
+    </edge>
+    <edge type="Association" from="Order" to="Customer" name="placed by" fromMult="0..*" toMult="1" navigable="true" fromNav="non" toRole="customer" labelX="730" labelY="868" labelW="77" labelH="20" toRoleBoxX="617" toRoleBoxY="442" toRoleBoxW="60" toRoleBoxH="18" fromMultX="890" fromMultY="902" fromMultW="29" fromMultH="18" toMultX="617" toMultY="416" toMultW="17" toMultH="18">
+      <pt x="929" y="895" />
+      <pt x="609" y="895" />
+      <pt x="609" y="406" />
+    </edge>
+    <edge type="Association" from="Order" to="OrderItem" name="contains" fromMult="1" toMult="1..*" navigable="true" fromNav="non" toRole="items" aggregation="composite" labelX="1316" labelY="868" labelW="71" labelH="20" toRoleBoxX="1365" toRoleBoxY="902" toRoleBoxW="39" toRoleBoxH="18" fromMultX="1261" fromMultY="902" fromMultW="17" fromMultH="18" toMultX="1413" toMultY="902" toMultW="29" toMultH="18">
+      <pt x="1251" y="895" />
+      <pt x="1452" y="895" />
+    </edge>
+    <edge type="Association" from="OrderItem" to="Product" name="refers to" fromMult="0..*" toMult="1" navigable="true" fromNav="non" toRole="product" labelX="1550" labelY="766" labelW="71" labelH="20" toRoleBoxX="1636" toRoleBoxY="736" toRoleBoxW="52" toRoleBoxH="18" fromMultX="1636" fromMultY="824" fromMultW="29" fromMultH="18" toMultX="1636" toMultY="710" toMultW="17" toMultH="18">
+      <pt x="1628" y="852" />
+      <pt x="1628" y="700" />
+    </edge>
+    <edge type="Association" from="Order" to="Shipping" name="delivered by" fromMult="1" toMult="0..1" navigable="true" fromNav="non" toRole="shipping" labelX="852" labelY="1134" labelW="90" labelH="20" toRoleBoxX="777" toRoleBoxY="1168" toRoleBoxW="56" toRoleBoxH="18" fromMultX="1041" fromMultY="990" fromMultW="17" fromMultH="18" toMultX="738" toMultY="1168" toMultW="31" toMultH="18">
+      <pt x="1066" y="980" />
+      <pt x="1066" y="1161" />
+      <pt x="728" y="1161" />
+    </edge>
+    <edge type="Association" from="Shipping" to="Address" name="ships to" fromMult="0..*" toMult="1" navigable="true" fromNav="non" toRole="address" labelX="294" labelY="1134" labelW="68" labelH="20" toRoleBoxX="249" toRoleBoxY="1168" toRoleBoxW="52" toRoleBoxH="18" fromMultX="403" fromMultY="1168" fromMultW="29" fromMultH="18" toMultX="224" toMultY="1168" toMultW="17" toMultH="18">
+      <pt x="442" y="1161" />
+      <pt x="214" y="1161" />
+    </edge>
+    <edge type="Association" from="Order" to="Payment" name="paid by" fromMult="1" toMult="0..*" navigable="true" fromNav="non" toRole="payments" labelX="1291" labelY="1134" labelW="65" labelH="20" toRoleBoxX="1425" toRoleBoxY="1168" toRoleBoxW="62" toRoleBoxH="18" fromMultX="1122" fromMultY="990" fromMultW="17" fromMultH="18" toMultX="1494" toMultY="1168" toMultW="29" toMultH="18">
+      <pt x="1114" y="980" />
+      <pt x="1114" y="1161" />
+      <pt x="1534" y="1161" />
+    </edge>
+    <edge type="Association" from="Painting" to="Artist" name="painted by" fromMult="0..*" toMult="1" navigable="true" fromNav="non" toRole="artist" labelX="2216" labelY="308" labelW="82" labelH="20" toRoleBoxX="2284" toRoleBoxY="342" toRoleBoxW="38" toRoleBoxH="18" fromMultX="2167" fromMultY="342" fromMultW="29" fromMultH="18" toMultX="2330" toMultY="342" toMultW="17" toMultH="18">
+      <pt x="2157" y="335" />
+      <pt x="2357" y="335" />
+    </edge>
+    <edge type="Generalization" from="CustomerVIP" to="Customer">
+      <pt x="239" y="90" />
+      <pt x="349" y="90" />
+      <pt x="349" y="335" />
+      <pt x="460" y="335" />
+    </edge>
+    <edge type="Generalization" from="CustomerNew" to="Customer">
+      <pt x="242" y="615" />
+      <pt x="349" y="615" />
+      <pt x="349" y="335" />
+      <pt x="460" y="335" />
+    </edge>
+    <edge type="Generalization" from="Painting" to="Product">
+      <pt x="2005" y="335" />
+      <pt x="1871" y="335" />
+      <pt x="1871" y="615" />
+      <pt x="1738" y="615" />
+    </edge>
+    <edge type="Generalization" from="Frame" to="Product">
+      <pt x="2008" y="895" />
+      <pt x="1871" y="895" />
+      <pt x="1871" y="615" />
+      <pt x="1738" y="615" />
+    </edge>
+    <edge type="Generalization" from="PayCash" to="Payment">
+      <pt x="1438" y="1363" />
+      <pt x="1438" y="1294" />
+      <pt x="1628" y="1294" />
+      <pt x="1628" y="1225" />
+    </edge>
+    <edge type="Generalization" from="PayCredit" to="Payment">
+      <pt x="1818" y="1342" />
+      <pt x="1818" y="1294" />
+      <pt x="1628" y="1294" />
+      <pt x="1628" y="1225" />
+    </edge>
+    <edge type="Dependency" from="OrderItem" to="CartItem" stereotype="use" labelX="1360" labelY="605" labelW="79" labelH="20">
+      <pt x="1468" y="852" />
+      <pt x="1468" y="828" />
+      <pt x="1352" y="828" />
+      <pt x="1352" y="402" />
+      <pt x="1552" y="402" />
+      <pt x="1552" y="378" />
+    </edge>
+  </diagram>
+  <diagram id="c44_classes" name="4.4b Classes per Layer - presentation to application" kind="class" scope="design" scopeName="4.3-4.5 Design model">
+    <node id="VoiceInput" type="Class" name="VoiceInput" x="130" y="40" w="90" h="40" stereotype="view" hideMembers="true">
+      <op name="start" vis="public" params="" ret="void" />
+      <op name="stop" vis="public" params="" ret="void" />
+      <op name="upload" vis="public" params="audio: Blob" ret="void" />
+      <op name="onTranscript" vis="public" params="callback: Function" ret="void" />
+    </node>
+    <node id="ImageUpload" type="Class" name="ImageUpload" x="260" y="40" w="98" h="40" stereotype="view" hideMembers="true">
+      <op name="choose" vis="public" params="file: File" ret="void" />
+      <op name="validate" vis="public" params="file: File" ret="boolean" />
+      <op name="preview" vis="public" params="" ret="void" />
+    </node>
+    <node id="SearchResultView" type="Class" name="SearchResultView" x="398" y="40" w="123" h="40" stereotype="view" hideMembers="true">
+      <op name="render" vis="public" params="results: List&lt;SearchResult&gt;" ret="void" />
+      <op name="renderEmpty" vis="public" params="message: String" ret="void" />
+    </node>
+    <node id="RoomPreview" type="Class" name="RoomPreview" x="60" y="170" w="99" h="40" stereotype="view" hideMembers="true">
+      <op name="chooseRoom" vis="public" params="file: File" ret="void" />
+      <op name="placePainting" vis="public" params="product: Product" ret="void" />
+      <op name="renderSuggestions" vis="public" params="results: List&lt;SearchResult&gt;" ret="void" />
+    </node>
+    <node id="SearchUI" type="Class" name="SearchUI" x="280" y="170" w="90" h="40" stereotype="view" hideMembers="true">
+      <op name="submitText" vis="public" params="text: String" ret="void" />
+      <op name="submitVoice" vis="public" params="transcript: String" ret="void" />
+      <op name="submitImage" vis="public" params="file: File" ret="void" />
+      <op name="submitMultimodal" vis="public" params="text: String; file: File" ret="void" />
+    </node>
+    <node id="CartView" type="Class" name="CartView" x="495" y="170" w="90" h="40" stereotype="view" hideMembers="true">
+      <op name="render" vis="public" params="cart: Cart" ret="void" />
+      <op name="checkout" vis="public" params="" ret="void" />
+    </node>
+    <node id="OrderView" type="Class" name="OrderView" x="925" y="170" w="90" h="40" stereotype="view" hideMembers="true">
+      <op name="render" vis="public" params="orders: List&lt;Order&gt;" ret="void" />
+      <op name="lookup" vis="public" params="orderId: String" ret="void" />
+    </node>
+    <node id="AdminView" type="Class" name="AdminView" x="1140" y="170" w="90" h="40" stereotype="view" hideMembers="true">
+      <op name="renderProducts" vis="public" params="products: List&lt;Product&gt;" ret="void" />
+      <op name="saveProduct" vis="public" params="productId: String" ret="void" />
+      <op name="renderOrders" vis="public" params="orders: List&lt;Order&gt;" ret="void" />
+      <op name="updateStatus" vis="public" params="orderId: String; status: String" ret="void" />
+    </node>
+    <node id="AssistantView" type="Class" name="AssistantView" x="1349" y="170" w="102" h="40" stereotype="view" hideMembers="true">
+      <op name="send" vis="public" params="message: String" ret="void" />
+      <op name="render" vis="public" params="reply: AssistantReply" ret="void" />
+    </node>
+    <node id="EcomApplication" type="Class" name="EcomApplication" x="1556" y="170" w="119" h="26" hideMembers="true">
+      <op name="main" vis="public" params="args: String[]" ret="void" static="true" />
+    </node>
+    <node id="SearchController" type="Class" name="SearchController" x="266" y="320" w="118" h="26" hideMembers="true">
+      <attr name="searchService" type="SearchService" vis="private" />
+      <attr name="speechService" type="SpeechService" vis="private" />
+      <op name="SearchController" vis="public" params="searchService: SearchService; speechService: SpeechService" />
+      <op name="search" vis="public" params="text: String" ret="List&lt;SearchResult&gt;" />
+      <op name="transcribe" vis="public" params="audioInput: byte[]" ret="String" />
+      <op name="searchVoice" vis="public" params="transcript: String" ret="List&lt;SearchResult&gt;" />
+      <op name="searchImage" vis="public" params="image: byte[]" ret="List&lt;SearchResult&gt;" />
+      <op name="searchRoom" vis="public" params="image: byte[]" ret="List&lt;SearchResult&gt;" />
+      <op name="describeRoom" vis="public" params="image: byte[]" ret="Map&lt;String, String&gt;" />
+      <op name="searchMultimodal" vis="public" params="text: String; image: byte[]" ret="List&lt;SearchResult&gt;" />
+    </node>
+    <node id="CartController" type="Class" name="CartController" x="488" y="320" w="105" h="26" hideMembers="true">
+      <attr name="cartService" type="CartService" vis="private" />
+      <op name="CartController" vis="public" params="cartService: CartService" />
+      <op name="addItem" vis="public" params="customerId: String; productId: String; quantity: int" ret="Cart" />
+      <op name="updateQuantity" vis="public" params="customerId: String; productId: String; quantity: int" ret="Cart" />
+      <op name="removeItem" vis="public" params="customerId: String; productId: String" ret="Cart" />
+      <op name="viewCart" vis="public" params="customerId: String" ret="Cart" />
+    </node>
+    <node id="CheckoutController" type="Class" name="CheckoutController" x="688" y="320" w="135" h="26" hideMembers="true">
+      <attr name="checkoutService" type="CheckoutService" vis="private" />
+      <op name="CheckoutController" vis="public" params="checkoutService: CheckoutService" />
+      <op name="checkout" vis="public" params="customerId: String; cartId: String; addressId: String; paymentMethod: String" ret="Order" />
+    </node>
+    <node id="OrderController" type="Class" name="OrderController" x="913" y="320" w="114" h="26" hideMembers="true">
+      <attr name="orderService" type="OrderService" vis="private" />
+      <op name="OrderController" vis="public" params="orderService: OrderService" />
+      <op name="viewOrder" vis="public" params="customerId: String; orderId: String" ret="Order" />
+      <op name="listOrders" vis="public" params="customerId: String" ret="List&lt;Order&gt;" />
+      <op name="cancelOrder" vis="public" params="customerId: String; orderId: String" ret="void" />
+    </node>
+    <node id="AdminController" type="Class" name="AdminController" x="1126" y="320" w="118" h="26" hideMembers="true">
+      <attr name="productService" type="ProductService" vis="private" />
+      <attr name="orderService" type="OrderService" vis="private" />
+      <op name="AdminController" vis="public" params="productService: ProductService; orderService: OrderService" />
+      <op name="listProducts" vis="public" params="" ret="List&lt;Product&gt;" />
+      <op name="updateProduct" vis="public" params="productId: String; price: BigDecimal; stockQuantity: int" ret="Product" />
+      <op name="addPainting" vis="public" params="painting: Painting" ret="Painting" />
+      <op name="listAllOrders" vis="public" params="" ret="List&lt;Order&gt;" />
+      <op name="updateOrderStatus" vis="public" params="orderId: String; status: String" ret="Order" />
+    </node>
+    <node id="AssistantController" type="Class" name="AssistantController" x="1334" y="320" w="133" h="26" hideMembers="true">
+      <attr name="assistantService" type="AssistantService" vis="private" />
+      <op name="AssistantController" vis="public" params="assistantService: AssistantService" />
+      <op name="ask" vis="public" params="customerId: String; message: String" ret="AssistantReply" />
+    </node>
+    <node id="WebServer" type="Class" name="WebServer" x="1570" y="320" w="90" h="26" hideMembers="true">
+      <attr name="port" type="int" vis="private" />
+      <attr name="sessionManager" type="SessionManager" vis="private" />
+      <attr name="searchController" type="SearchController" vis="private" />
+      <attr name="cartController" type="CartController" vis="private" />
+      <attr name="checkoutController" type="CheckoutController" vis="private" />
+      <attr name="orderController" type="OrderController" vis="private" />
+      <attr name="assistantController" type="AssistantController" vis="private" />
+      <attr name="adminController" type="AdminController" vis="private" />
+      <op name="WebServer" vis="public" params="port: int; sessionManager: SessionManager; searchController: SearchController; cartController: CartController; checkoutController: CheckoutController; orderController: OrderController; assistantController: AssistantController; adminController: AdminController" />
+      <op name="start" vis="public" params="" ret="void" />
+      <op name="stop" vis="public" params="" ret="void" />
+    </node>
+    <node id="SpeechService" type="Class" name="SpeechService" x="217" y="470" w="103" h="26" hideMembers="true">
+      <attr name="speechClient" type="SpeechClient" vis="private" />
+      <op name="SpeechService" vis="public" params="speechClient: SpeechClient" />
+      <op name="transcribe" vis="public" params="audioInput: byte[]" ret="String" />
+    </node>
+    <node id="SearchService" type="Class" name="SearchService" x="330" y="470" w="101" h="26" hideMembers="true">
+      <attr name="repository" type="ProductRepository" vis="private" />
+      <attr name="queryService" type="QueryService" vis="private" />
+      <attr name="imageService" type="ImageService" vis="private" />
+      <attr name="vectorIndex" type="VectorIndex" vis="private" />
+      <attr name="rankingService" type="RankingService" vis="private" />
+      <op name="SearchService" vis="public" params="repository: ProductRepository; queryService: QueryService; imageService: ImageService; vectorIndex: VectorIndex; rankingService: RankingService" />
+      <op name="searchText" vis="public" params="text: String" ret="List&lt;SearchResult&gt;" />
+      <op name="searchVoice" vis="public" params="transcript: String" ret="List&lt;SearchResult&gt;" />
+      <op name="searchImage" vis="public" params="image: byte[]" ret="List&lt;SearchResult&gt;" />
+      <op name="searchRoom" vis="public" params="image: byte[]" ret="List&lt;SearchResult&gt;" />
+      <op name="describeRoom" vis="public" params="image: byte[]" ret="Map&lt;String, String&gt;" />
+      <op name="searchMultimodal" vis="public" params="text: String; image: byte[]" ret="List&lt;SearchResult&gt;" />
+      <op name="retrieve" vis="private" params="query: CommonQuery" ret="List&lt;SearchResult&gt;" />
+    </node>
+    <node id="CartService" type="Class" name="CartService" x="495" y="470" w="90" h="26" hideMembers="true">
+      <attr name="cartRepository" type="CartRepository" vis="private" />
+      <attr name="productRepository" type="ProductRepository" vis="private" />
+      <op name="CartService" vis="public" params="cartRepository: CartRepository; productRepository: ProductRepository" />
+      <op name="addToCart" vis="public" params="customerId: String; productId: String; quantity: int" ret="Cart" />
+      <op name="updateQuantity" vis="public" params="customerId: String; productId: String; quantity: int" ret="Cart" />
+      <op name="removeItem" vis="public" params="customerId: String; productId: String" ret="Cart" />
+      <op name="viewCart" vis="public" params="customerId: String" ret="Cart" />
+    </node>
+    <node id="CheckoutService" type="Class" name="CheckoutService" x="696" y="470" w="117" h="26" hideMembers="true">
+      <attr name="cartRepository" type="CartRepository" vis="private" />
+      <attr name="orderRepository" type="OrderRepository" vis="private" />
+      <attr name="productRepository" type="ProductRepository" vis="private" />
+      <attr name="customerRepository" type="CustomerRepository" vis="private" />
+      <op name="CheckoutService" vis="public" params="cartRepository: CartRepository; orderRepository: OrderRepository; productRepository: ProductRepository; customerRepository: CustomerRepository" />
+      <op name="checkout" vis="public" params="cartId: String; customerId: String; addressId: String; payment: Payment" ret="Order" />
+    </node>
+    <node id="OrderService" type="Class" name="OrderService" x="922" y="470" w="96" h="26" hideMembers="true">
+      <attr name="orderRepository" type="OrderRepository" vis="private" />
+      <op name="OrderService" vis="public" params="orderRepository: OrderRepository" />
+      <op name="getOrder" vis="public" params="customerId: String; orderId: String" ret="Order" />
+      <op name="listOrders" vis="public" params="customerId: String" ret="List&lt;Order&gt;" />
+      <op name="latestOrder" vis="public" params="customerId: String" ret="Order" />
+      <op name="cancelOrder" vis="public" params="customerId: String; orderId: String" ret="void" />
+      <op name="listAllOrders" vis="public" params="" ret="List&lt;Order&gt;" />
+      <op name="updateStatus" vis="public" params="orderId: String; status: OrderStatus" ret="Order" />
+    </node>
+    <node id="ProductService" type="Class" name="ProductService" x="1185" y="470" w="107" h="26" hideMembers="true">
+      <attr name="productRepository" type="ProductRepository" vis="private" />
+      <op name="ProductService" vis="public" params="productRepository: ProductRepository" />
+      <op name="listProducts" vis="public" params="" ret="List&lt;Product&gt;" />
+      <op name="updatePriceAndStock" vis="public" params="productId: String; price: BigDecimal; stockQuantity: int" ret="Product" />
+      <op name="addPainting" vis="public" params="painting: Painting" ret="Painting" />
+    </node>
+    <node id="AssistantService" type="Class" name="AssistantService" x="1342" y="470" w="115" h="26" hideMembers="true">
+      <attr name="llmClient" type="LlmClient" vis="private" />
+      <attr name="searchService" type="SearchService" vis="private" />
+      <attr name="orderService" type="OrderService" vis="private" />
+      <op name="AssistantService" vis="public" params="llmClient: LlmClient; searchService: SearchService; orderService: OrderService" />
+      <op name="ask" vis="public" params="customerId: String; message: String" ret="AssistantReply" />
+      <op name="tools" vis="private" params="" ret="List&lt;Map&lt;String, Object&gt;&gt;" />
+      <op name="runTool" vis="private" params="customerId: String; call: ToolCall" ret="String" />
+    </node>
+    <node id="SessionManager" type="Class" name="SessionManager" x="1557" y="470" w="116" h="26" hideMembers="true">
+      <attr name="sessions" type="Map&lt;String, String&gt;" vis="private" />
+      <op name="login" vis="public" params="customerId: String" ret="String" />
+      <op name="customerOf" vis="public" params="token: String" ret="String" />
+      <op name="isAdmin" vis="public" params="token: String" ret="boolean" />
+    </node>
+    <node id="Cart" type="Class" name="Cart" x="495" y="620" w="90" h="26" hideMembers="true">
+      <attr name="cartId" type="String" vis="private" />
+      <attr name="createdDate" type="LocalDateTime" vis="private" />
+      <attr name="updatedDate" type="LocalDateTime" vis="private" />
+      <op name="addItem" vis="public" params="product: Product; quantity: int" ret="void" />
+      <op name="updateQuantity" vis="public" params="productId: String; quantity: int" ret="void" />
+      <op name="removeItem" vis="public" params="productId: String" ret="void" />
+      <op name="calculateTotal" vis="public" params="" ret="BigDecimal" />
+      <op name="isEmpty" vis="public" params="" ret="boolean" />
+      <op name="clear" vis="public" params="" ret="void" />
+    </node>
+    <node id="Order" type="Class" name="Order" x="710" y="620" w="90" h="26" hideMembers="true">
+      <attr name="orderId" type="String" vis="private" />
+      <attr name="orderDate" type="LocalDateTime" vis="private" />
+      <attr name="status" type="OrderStatus" vis="private" />
+      <attr name="totalAmount" type="BigDecimal" vis="private" />
+      <op name="addItem" vis="public" params="item: OrderItem" ret="void" />
+      <op name="addPayment" vis="public" params="payment: Payment" ret="void" />
+      <op name="calculateTotal" vis="public" params="discountRate: BigDecimal" ret="BigDecimal" />
+      <op name="cancel" vis="public" params="" ret="void" />
+      <op name="advanceTo" vis="public" params="next: OrderStatus" ret="void" />
+      <op name="isOwnedBy" vis="public" params="customerId: String" ret="boolean" />
+    </node>
+    <edge type="Dependency" from="SearchUI" to="VoiceInput" stereotype="use" caption="false">
+      <pt x="325" y="170" />
+      <pt x="325" y="126" />
+      <pt x="174" y="126" />
+      <pt x="174" y="80" />
+    </edge>
+    <edge type="Dependency" from="SearchUI" to="ImageUpload" stereotype="use" labelX="333" labelY="138" labelW="79" labelH="20">
+      <pt x="325" y="170" />
+      <pt x="325" y="126" />
+      <pt x="308" y="126" />
+      <pt x="308" y="80" />
+    </edge>
+    <edge type="Dependency" from="SearchUI" to="SearchResultView" stereotype="use" caption="false">
+      <pt x="325" y="170" />
+      <pt x="325" y="126" />
+      <pt x="459" y="126" />
+      <pt x="459" y="80" />
+    </edge>
+    <edge type="Dependency" from="SearchUI" to="SearchController" stereotype="use" labelX="333" labelY="255" labelW="79" labelH="20">
+      <pt x="325" y="210" />
+      <pt x="325" y="320" />
+    </edge>
+    <edge type="Dependency" from="RoomPreview" to="SearchController" stereotype="use" labelX="23" labelY="262" labelW="79" labelH="20">
+      <pt x="110" y="210" />
+      <pt x="110" y="333" />
+      <pt x="266" y="333" />
+    </edge>
+    <edge type="Dependency" from="CartView" to="CartController" stereotype="use" labelX="548" labelY="255" labelW="79" labelH="20">
+      <pt x="540" y="210" />
+      <pt x="540" y="320" />
+    </edge>
+    <edge type="Dependency" from="CartView" to="CheckoutController" stereotype="use" labelX="763" labelY="245" labelW="79" labelH="20">
+      <pt x="585" y="190" />
+      <pt x="755" y="190" />
+      <pt x="755" y="320" />
+    </edge>
+    <edge type="Dependency" from="OrderView" to="OrderController" stereotype="use" labelX="978" labelY="255" labelW="79" labelH="20">
+      <pt x="970" y="210" />
+      <pt x="970" y="320" />
+    </edge>
+    <edge type="Dependency" from="AdminView" to="AdminController" stereotype="use" labelX="1193" labelY="255" labelW="79" labelH="20">
+      <pt x="1185" y="210" />
+      <pt x="1185" y="320" />
+    </edge>
+    <edge type="Dependency" from="AssistantView" to="AssistantController" stereotype="use" labelX="1408" labelY="255" labelW="79" labelH="20">
+      <pt x="1400" y="210" />
+      <pt x="1400" y="320" />
+    </edge>
+    <edge type="Dependency" from="WebServer" to="SessionManager" stereotype="use" labelX="1623" labelY="398" labelW="79" labelH="20">
+      <pt x="1615" y="346" />
+      <pt x="1615" y="470" />
+    </edge>
+    <edge type="Dependency" from="SearchController" to="SpeechService" stereotype="use" labelX="223" labelY="398" labelW="79" labelH="20">
+      <pt x="310" y="346" />
+      <pt x="310" y="470" />
+    </edge>
+    <edge type="Dependency" from="SearchController" to="SearchService" stereotype="use" labelX="348" labelY="398" labelW="79" labelH="20">
+      <pt x="340" y="346" />
+      <pt x="340" y="470" />
+    </edge>
+    <edge type="Dependency" from="CartController" to="CartService" stereotype="use" labelX="548" labelY="398" labelW="79" labelH="20">
+      <pt x="540" y="346" />
+      <pt x="540" y="470" />
+    </edge>
+    <edge type="Dependency" from="CheckoutController" to="CheckoutService" stereotype="use" labelX="763" labelY="398" labelW="79" labelH="20">
+      <pt x="755" y="346" />
+      <pt x="755" y="470" />
+    </edge>
+    <edge type="Dependency" from="OrderController" to="OrderService" stereotype="use" labelX="978" labelY="398" labelW="79" labelH="20">
+      <pt x="970" y="346" />
+      <pt x="970" y="470" />
+    </edge>
+    <edge type="Dependency" from="AssistantController" to="AssistantService" stereotype="use" labelX="1408" labelY="398" labelW="79" labelH="20">
+      <pt x="1400" y="346" />
+      <pt x="1400" y="470" />
+    </edge>
+    <edge type="Dependency" from="AdminController" to="OrderService" stereotype="use" labelX="1083" labelY="404" labelW="79" labelH="20">
+      <pt x="1170" y="346" />
+      <pt x="1170" y="483" />
+      <pt x="1018" y="483" />
+    </edge>
+    <edge type="Dependency" from="AdminController" to="ProductService" stereotype="use" labelX="1208" labelY="398" labelW="79" labelH="20">
+      <pt x="1200" y="346" />
+      <pt x="1200" y="470" />
+    </edge>
+    <edge type="Dependency" from="CartService" to="Cart" stereotype="use" labelX="548" labelY="548" labelW="79" labelH="20">
+      <pt x="540" y="496" />
+      <pt x="540" y="620" />
+    </edge>
+    <edge type="Dependency" from="CheckoutService" to="Order" stereotype="create" labelX="763" labelY="548" labelW="93" labelH="20">
+      <pt x="755" y="496" />
+      <pt x="755" y="620" />
+    </edge>
+    <node id="web_note" type="Note" name="WebServer passes every HTTP request to the&#10;controller of the page; the customer id&#10;always comes from SessionManager." x="930" y="610" w="300" h="66" />
+  </diagram>
+  <diagram id="c44_classes_backend" name="4.4c Classes per Layer - application to infrastructure" kind="class" scope="design" scopeName="4.3-4.5 Design model">
+    <node id="ProductRepository" type="Class" name="ProductRepository" x="76" y="260" w="128" h="40" stereotype="Interface" hideMembers="true">
+      <op name="allProducts" vis="public" params="" ret="List&lt;Product&gt;" abstract="true" />
+      <op name="findById" vis="public" params="productId: String" ret="Product" abstract="true" />
+      <op name="decreaseStock" vis="public" params="productId: String; quantity: int" ret="void" abstract="true" />
+      <op name="save" vis="public" params="product: Product" ret="void" abstract="true" />
+    </node>
+    <node id="SqliteProductRepository" type="Class" name="SqliteProductRepository" x="60" y="420" w="159" h="26" hideMembers="true">
+      <attr name="database" type="Database" vis="private" />
+      <op name="SqliteProductRepository" vis="public" params="database: Database" />
+      <op name="allProducts" vis="public" params="" ret="List&lt;Product&gt;" />
+      <op name="findById" vis="public" params="productId: String" ret="Product" />
+      <op name="decreaseStock" vis="public" params="productId: String; quantity: int" ret="void" />
+      <op name="save" vis="public" params="product: Product" ret="void" />
+    </node>
+    <node id="CartRepository" type="Class" name="CartRepository" x="366" y="260" w="108" h="40" stereotype="Interface" hideMembers="true">
+      <op name="findById" vis="public" params="cartId: String" ret="Cart" abstract="true" />
+      <op name="findByCustomerId" vis="public" params="customerId: String" ret="Cart" abstract="true" />
+      <op name="save" vis="public" params="cart: Cart" ret="void" abstract="true" />
+      <op name="clear" vis="public" params="cartId: String" ret="void" abstract="true" />
+    </node>
+    <node id="SqliteCartRepository" type="Class" name="SqliteCartRepository" x="350" y="420" w="140" h="26" hideMembers="true">
+      <attr name="database" type="Database" vis="private" />
+      <op name="SqliteCartRepository" vis="public" params="database: Database" />
+      <op name="findById" vis="public" params="cartId: String" ret="Cart" />
+      <op name="findByCustomerId" vis="public" params="customerId: String" ret="Cart" />
+      <op name="save" vis="public" params="cart: Cart" ret="void" />
+      <op name="clear" vis="public" params="cartId: String" ret="void" />
+    </node>
+    <node id="CustomerRepository" type="Class" name="CustomerRepository" x="630" y="260" w="140" h="40" stereotype="Interface" hideMembers="true">
+      <op name="findById" vis="public" params="customerId: String" ret="Customer" abstract="true" />
+      <op name="allCustomers" vis="public" params="" ret="List&lt;Customer&gt;" abstract="true" />
+    </node>
+    <node id="SqliteCustomerRepository" type="Class" name="SqliteCustomerRepository" x="614" y="420" w="171" h="26" hideMembers="true">
+      <attr name="database" type="Database" vis="private" />
+      <op name="SqliteCustomerRepository" vis="public" params="database: Database" />
+      <op name="findById" vis="public" params="customerId: String" ret="Customer" />
+      <op name="allCustomers" vis="public" params="" ret="List&lt;Customer&gt;" />
+    </node>
+    <node id="OrderRepository" type="Class" name="OrderRepository" x="922" y="260" w="117" h="40" stereotype="Interface" hideMembers="true">
+      <op name="findOrder" vis="public" params="orderId: String" ret="Order" abstract="true" />
+      <op name="findByCustomer" vis="public" params="customerId: String" ret="List&lt;Order&gt;" abstract="true" />
+      <op name="allOrders" vis="public" params="" ret="List&lt;Order&gt;" abstract="true" />
+      <op name="save" vis="public" params="order: Order" ret="void" abstract="true" />
+      <op name="updateStatus" vis="public" params="orderId: String; status: OrderStatus" ret="void" abstract="true" />
+    </node>
+    <node id="SqliteOrderRepository" type="Class" name="SqliteOrderRepository" x="906" y="420" w="148" h="26" hideMembers="true">
+      <attr name="database" type="Database" vis="private" />
+      <op name="SqliteOrderRepository" vis="public" params="database: Database" />
+      <op name="findOrder" vis="public" params="orderId: String" ret="Order" />
+      <op name="findByCustomer" vis="public" params="customerId: String" ret="List&lt;Order&gt;" />
+      <op name="allOrders" vis="public" params="" ret="List&lt;Order&gt;" />
+      <op name="save" vis="public" params="order: Order" ret="void" />
+      <op name="updateStatus" vis="public" params="orderId: String; status: OrderStatus" ret="void" />
+    </node>
+    <node id="ProductService" type="Class" name="ProductService" x="86" y="40" w="107" h="26" hideMembers="true">
+      <attr name="productRepository" type="ProductRepository" vis="private" />
+      <op name="ProductService" vis="public" params="productRepository: ProductRepository" />
+      <op name="listProducts" vis="public" params="" ret="List&lt;Product&gt;" />
+      <op name="updatePriceAndStock" vis="public" params="productId: String; price: BigDecimal; stockQuantity: int" ret="Product" />
+      <op name="addPainting" vis="public" params="painting: Painting" ret="Painting" />
+    </node>
+    <node id="CartService" type="Class" name="CartService" x="375" y="40" w="90" h="26" hideMembers="true">
+      <attr name="cartRepository" type="CartRepository" vis="private" />
+      <attr name="productRepository" type="ProductRepository" vis="private" />
+      <op name="CartService" vis="public" params="cartRepository: CartRepository; productRepository: ProductRepository" />
+      <op name="addToCart" vis="public" params="customerId: String; productId: String; quantity: int" ret="Cart" />
+      <op name="updateQuantity" vis="public" params="customerId: String; productId: String; quantity: int" ret="Cart" />
+      <op name="removeItem" vis="public" params="customerId: String; productId: String" ret="Cart" />
+      <op name="viewCart" vis="public" params="customerId: String" ret="Cart" />
+    </node>
+    <node id="CheckoutService" type="Class" name="CheckoutService" x="642" y="40" w="117" h="26" hideMembers="true">
+      <attr name="cartRepository" type="CartRepository" vis="private" />
+      <attr name="orderRepository" type="OrderRepository" vis="private" />
+      <attr name="productRepository" type="ProductRepository" vis="private" />
+      <attr name="customerRepository" type="CustomerRepository" vis="private" />
+      <op name="CheckoutService" vis="public" params="cartRepository: CartRepository; orderRepository: OrderRepository; productRepository: ProductRepository; customerRepository: CustomerRepository" />
+      <op name="checkout" vis="public" params="cartId: String; customerId: String; addressId: String; payment: Payment" ret="Order" />
+    </node>
+    <node id="OrderService" type="Class" name="OrderService" x="932" y="40" w="96" h="26" hideMembers="true">
+      <attr name="orderRepository" type="OrderRepository" vis="private" />
+      <op name="OrderService" vis="public" params="orderRepository: OrderRepository" />
+      <op name="getOrder" vis="public" params="customerId: String; orderId: String" ret="Order" />
+      <op name="listOrders" vis="public" params="customerId: String" ret="List&lt;Order&gt;" />
+      <op name="latestOrder" vis="public" params="customerId: String" ret="Order" />
+      <op name="cancelOrder" vis="public" params="customerId: String; orderId: String" ret="void" />
+      <op name="listAllOrders" vis="public" params="" ret="List&lt;Order&gt;" />
+      <op name="updateStatus" vis="public" params="orderId: String; status: OrderStatus" ret="Order" />
+    </node>
+    <node id="Database" type="Class" name="Database" x="515" y="570" w="90" h="26" hideMembers="true">
+      <attr name="url" type="String" vis="private" />
+      <op name="Database" vis="public" params="url: String" />
+      <op name="getConnection" vis="public" params="" ret="Connection" />
+      <op name="initialize" vis="public" params="schemaSql: String; seedSql: String" ret="void" />
+    </node>
+    <edge type="Dependency" from="ProductService" to="ProductRepository" stereotype="use" labelX="23" labelY="153" labelW="79" labelH="20">
+      <pt x="110" y="66" />
+      <pt x="110" y="260" />
+    </edge>
+    <edge type="Dependency" from="CartService" to="CartRepository" stereotype="use" labelX="438" labelY="131" labelW="79" labelH="20">
+      <pt x="430" y="66" />
+      <pt x="430" y="260" />
+    </edge>
+    <edge type="Dependency" from="CartService" to="ProductRepository" stereotype="use" labelX="230" labelY="89" labelW="79" labelH="20">
+      <pt x="390" y="66" />
+      <pt x="390" y="116" />
+      <pt x="150" y="116" />
+      <pt x="150" y="260" />
+    </edge>
+    <edge type="Dependency" from="CheckoutService" to="ProductRepository" stereotype="use" labelX="266" labelY="139" labelW="79" labelH="20">
+      <pt x="652" y="66" />
+      <pt x="652" y="166" />
+      <pt x="180" y="166" />
+      <pt x="180" y="260" />
+    </edge>
+    <edge type="Dependency" from="CheckoutService" to="CartRepository" stereotype="use" labelX="468" labelY="228" labelW="79" labelH="20">
+      <pt x="675" y="66" />
+      <pt x="675" y="216" />
+      <pt x="460" y="216" />
+      <pt x="460" y="260" />
+    </edge>
+    <edge type="Dependency" from="CheckoutService" to="CustomerRepository" stereotype="use" labelX="708" labelY="228" labelW="79" labelH="20">
+      <pt x="700" y="66" />
+      <pt x="700" y="260" />
+    </edge>
+    <edge type="Dependency" from="CheckoutService" to="OrderRepository" stereotype="use" labelX="798" labelY="189" labelW="79" labelH="20">
+      <pt x="725" y="66" />
+      <pt x="725" y="216" />
+      <pt x="950" y="216" />
+      <pt x="950" y="260" />
+    </edge>
+    <edge type="Dependency" from="OrderService" to="OrderRepository" stereotype="use" labelX="1008" labelY="153" labelW="79" labelH="20">
+      <pt x="1000" y="66" />
+      <pt x="1000" y="260" />
+    </edge>
+    <edge type="Realization" from="SqliteProductRepository" to="ProductRepository">
+      <pt x="140" y="420" />
+      <pt x="140" y="300" />
+    </edge>
+    <edge type="Realization" from="SqliteCartRepository" to="CartRepository">
+      <pt x="420" y="420" />
+      <pt x="420" y="300" />
+    </edge>
+    <edge type="Realization" from="SqliteCustomerRepository" to="CustomerRepository">
+      <pt x="700" y="420" />
+      <pt x="700" y="300" />
+    </edge>
+    <edge type="Realization" from="SqliteOrderRepository" to="OrderRepository">
+      <pt x="980" y="420" />
+      <pt x="980" y="300" />
+    </edge>
+    <edge type="Dependency" from="SqliteProductRepository" to="Database" stereotype="use" caption="false">
+      <pt x="140" y="446" />
+      <pt x="140" y="530" />
+      <pt x="560" y="530" />
+      <pt x="560" y="570" />
+    </edge>
+    <edge type="Dependency" from="SqliteCartRepository" to="Database" stereotype="use" labelX="568" labelY="540" labelW="79" labelH="20">
+      <pt x="420" y="446" />
+      <pt x="420" y="530" />
+      <pt x="560" y="530" />
+      <pt x="560" y="570" />
+    </edge>
+    <edge type="Dependency" from="SqliteCustomerRepository" to="Database" stereotype="use" caption="false">
+      <pt x="700" y="446" />
+      <pt x="700" y="530" />
+      <pt x="560" y="530" />
+      <pt x="560" y="570" />
+    </edge>
+    <edge type="Dependency" from="SqliteOrderRepository" to="Database" stereotype="use" caption="false">
+      <pt x="980" y="446" />
+      <pt x="980" y="530" />
+      <pt x="560" y="530" />
+      <pt x="560" y="570" />
+    </edge>
+  </diagram>
+  <diagram id="c44_checkout_seq" name="4.4d Checkout across the layers (design sequence)" kind="sequence" scope="design" scopeName="4.3-4.5 Design model" numbers="true">
+    <node id="Customer" type="SeqActor" name="Customer" x="80" y="40" w="40" h="850" />
+    <node id="CheckoutController" type="Lifeline" name="" x="402" y="40" w="145" h="850" classifier="CheckoutController" />
+    <node id="CheckoutService" type="Lifeline" name="" x="744" y="40" w="128" h="850" classifier="CheckoutService" />
+    <node id="Order" type="Lifeline" name="" x="1091" y="40" w="100" h="850" classifier="Order" />
+    <node id="CartRepository" type="Lifeline" name="" x="1231" y="40" w="120" h="850" classifier="CartRepository" />
+    <node id="CustomerRepository" type="Lifeline" name="" x="1391" y="40" w="149" h="850" classifier="CustomerRepository" />
+    <node id="ProductRepository" type="Lifeline" name="" x="1580" y="40" w="138" h="850" classifier="ProductRepository" />
+    <node id="OrderRepository" type="Lifeline" name="" x="1759" y="40" w="128" h="850" classifier="OrderRepository" />
+    <activation on="CartRepository" y1="210" y2="250" />
+    <activation on="CustomerRepository" y1="290" y2="330" />
+    <activation on="Order" y1="370" y2="388" />
+    <activation on="ProductRepository" y1="474" y2="514" />
+    <activation on="Order" y1="554" y2="572" />
+    <activation on="Order" y1="620" y2="638" />
+    <activation on="OrderRepository" y1="660" y2="678" />
+    <activation on="ProductRepository" y1="700" y2="718" />
+    <activation on="CartRepository" y1="740" y2="758" />
+    <activation on="CheckoutService" y1="170" y2="780" />
+    <activation on="CheckoutController" y1="130" y2="820" />
+    <node id="frag7" type="Fragment" name="" x="656" y="400" w="1023" h="180" operator="loop" covers="CheckoutService,Order,CartRepository,CustomerRepository,ProductRepository">
+      <operand guard="for each cart item" y="417" h="163" />
+    </node>
+    <edge type="Message" from="Customer" to="CheckoutController" name="checkout(customerId, cartId, addressId, paymentMethod)" labelX="115" labelY="103" labelW="344" labelH="20">
+      <pt x="100" y="130" />
+      <pt x="474" y="130" />
+    </edge>
+    <edge type="Message" from="CheckoutController" to="CheckoutService" name="checkout(cartId, customerId, addressId, payment)" labelX="489" labelY="143" labelW="304" labelH="20">
+      <pt x="474" y="170" />
+      <pt x="808" y="170" />
+    </edge>
+    <edge type="Message" from="CheckoutService" to="CartRepository" name="findById(cartId)" labelX="914" labelY="183" labelW="120" labelH="20">
+      <pt x="808" y="210" />
+      <pt x="1291" y="210" />
+    </edge>
+    <edge type="Message" from="CartRepository" to="CheckoutService" name="Cart" return="true" labelX="1185" labelY="223" labelW="62" labelH="20">
+      <pt x="1291" y="250" />
+      <pt x="808" y="250" />
+    </edge>
+    <edge type="Message" from="CheckoutService" to="CustomerRepository" name="findById(customerId)" labelX="900" labelY="263" labelW="150" labelH="20">
+      <pt x="808" y="290" />
+      <pt x="1466" y="290" />
+    </edge>
+    <edge type="Message" from="CustomerRepository" to="CheckoutService" name="Customer" return="true" labelX="1333" labelY="303" labelW="91" labelH="20">
+      <pt x="1466" y="330" />
+      <pt x="808" y="330" />
+    </edge>
+    <edge type="Message" from="CheckoutService" to="Order" name="&lt;&lt;create&gt;&gt;" labelX="921" labelY="343" labelW="107" labelH="20">
+      <pt x="808" y="370" />
+      <pt x="1141" y="370" />
+    </edge>
+    <edge type="Message" from="CheckoutService" to="ProductRepository" name="findById(productId)" labelX="904" labelY="447" labelW="141" labelH="20">
+      <pt x="808" y="474" />
+      <pt x="1650" y="474" />
+    </edge>
+    <edge type="Message" from="ProductRepository" to="CheckoutService" name="Product" return="true" labelX="1518" labelY="487" labelW="80" labelH="20">
+      <pt x="1650" y="514" />
+      <pt x="808" y="514" />
+    </edge>
+    <edge type="Message" from="CheckoutService" to="Order" name="addItem(OrderItem.fromCartItem(item, current))" labelX="823" labelY="527" labelW="303" labelH="20">
+      <pt x="808" y="554" />
+      <pt x="1141" y="554" />
+    </edge>
+    <edge type="Message" from="CheckoutService" to="Order" name="calculateTotal(discountRate)" labelX="876" labelY="593" labelW="197" labelH="20">
+      <pt x="808" y="620" />
+      <pt x="1141" y="620" />
+    </edge>
+    <edge type="Message" from="CheckoutService" to="OrderRepository" name="save(order)" labelX="922" labelY="633" labelW="106" labelH="20">
+      <pt x="808" y="660" />
+      <pt x="1823" y="660" />
+    </edge>
+    <edge type="Message" from="CheckoutService" to="ProductRepository" name="decreaseStock(productId, quantity)" labelX="858" labelY="673" labelW="232" labelH="20">
+      <pt x="808" y="700" />
+      <pt x="1650" y="700" />
+    </edge>
+    <edge type="Message" from="CheckoutService" to="CartRepository" name="clear(cartId)" labelX="920" labelY="713" labelW="109" labelH="20">
+      <pt x="808" y="740" />
+      <pt x="1291" y="740" />
+    </edge>
+    <edge type="Message" from="CheckoutService" to="CheckoutController" name="Order" return="true" labelX="602" labelY="753" labelW="77" labelH="20">
+      <pt x="808" y="780" />
+      <pt x="474" y="780" />
+    </edge>
+    <edge type="Message" from="CheckoutController" to="Customer" name="Order (PLACED)" return="true" labelX="222" labelY="793" labelW="129" labelH="20">
+      <pt x="474" y="820" />
+      <pt x="100" y="820" />
+    </edge>
+  </diagram>
+  <diagram id="c44_layers" name="4.4a Layers and Packages" kind="class" scope="design" scopeName="4.3-4.5 Design model">
+    <node id="pkg_presentation" type="Package" name="presentation" x="40" y="40" w="1000" h="150" />
+    <node id="pkg_presentation_view" type="Package" name="view" x="70" y="95" w="293" h="70" parent="pkg_presentation" />
+    <node id="pkg_presentation_controller" type="Package" name="controller" x="393" y="95" w="293" h="70" parent="pkg_presentation" />
+    <node id="pkg_presentation_web" type="Package" name="web" x="717" y="95" w="293" h="70" parent="pkg_presentation" />
+    <node id="pkg_application" type="Package" name="application" x="40" y="280" w="1000" h="150" />
+    <node id="pkg_application_service" type="Package" name="service" x="70" y="335" w="455" h="70" parent="pkg_application" />
+    <node id="pkg_application_search" type="Package" name="search" x="555" y="335" w="455" h="70" parent="pkg_application" />
+    <node id="pkg_domain" type="Package" name="domain" x="40" y="520" w="1000" h="150" />
+    <node id="pkg_domain_customer" type="Package" name="customer" x="70" y="575" w="164" h="70" parent="pkg_domain" />
+    <node id="pkg_domain_product" type="Package" name="product" x="264" y="575" w="164" h="70" parent="pkg_domain" />
+    <node id="pkg_domain_cart" type="Package" name="cart" x="458" y="575" w="164" h="70" parent="pkg_domain" />
+    <node id="pkg_domain_order" type="Package" name="order" x="652" y="575" w="164" h="70" parent="pkg_domain" />
+    <node id="pkg_domain_payment" type="Package" name="payment" x="846" y="575" w="164" h="70" parent="pkg_domain" />
+    <node id="pkg_infrastructure" type="Package" name="infrastructure" x="40" y="760" w="1000" h="150" />
+    <node id="pkg_infrastructure_repository" type="Package" name="repository" x="70" y="815" w="212" h="70" parent="pkg_infrastructure" />
+    <node id="pkg_infrastructure_repository_sqlite" type="Package" name="repository.sqlite" x="312" y="815" w="212" h="70" parent="pkg_infrastructure" />
+    <node id="pkg_infrastructure_search" type="Package" name="search" x="555" y="815" w="212" h="70" parent="pkg_infrastructure" />
+    <node id="pkg_infrastructure_ai" type="Package" name="ai" x="798" y="815" w="212" h="70" parent="pkg_infrastructure" />
+    <edge type="Dependency" from="pkg_presentation" to="pkg_application" stereotype="use" labelX="348" labelY="235" labelW="79" labelH="20">
+      <pt x="340" y="190" />
+      <pt x="340" y="300" />
+    </edge>
+    <edge type="Dependency" from="pkg_application" to="pkg_domain" stereotype="use" labelX="348" labelY="475" labelW="79" labelH="20">
+      <pt x="340" y="430" />
+      <pt x="340" y="540" />
+    </edge>
+    <edge type="Dependency" from="pkg_application" to="pkg_infrastructure" stereotype="use" labelX="1118" labelY="585" labelW="79" labelH="20">
+      <pt x="1040" y="355" />
+      <pt x="1110" y="355" />
+      <pt x="1110" y="835" />
+      <pt x="1040" y="835" />
+    </edge>
+    <edge type="Dependency" from="pkg_infrastructure" to="pkg_domain" stereotype="use" labelX="748" labelY="715" labelW="79" labelH="20">
+      <pt x="740" y="780" />
+      <pt x="740" y="670" />
+    </edge>
+    <contain package="pkg_domain_customer" class="FullName" />
+    <contain package="pkg_domain_customer" class="Address" />
+    <contain package="pkg_domain_customer" class="Customer" />
+    <contain package="pkg_domain_customer" class="CustomerVIP" />
+    <contain package="pkg_domain_customer" class="CustomerNew" />
+    <contain package="pkg_domain_product" class="Product" />
+    <contain package="pkg_domain_product" class="Artist" />
+    <contain package="pkg_domain_product" class="Painting" />
+    <contain package="pkg_domain_product" class="Frame" />
+    <contain package="pkg_domain_cart" class="Cart" />
+    <contain package="pkg_domain_cart" class="CartItem" />
+    <contain package="pkg_domain_order" class="OrderStatus" />
+    <contain package="pkg_domain_order" class="Order" />
+    <contain package="pkg_domain_order" class="OrderItem" />
+    <contain package="pkg_domain_order" class="ShippingStatus" />
+    <contain package="pkg_domain_order" class="Shipping" />
+    <contain package="pkg_domain_payment" class="PaymentStatus" />
+    <contain package="pkg_domain_payment" class="Payment" />
+    <contain package="pkg_domain_payment" class="PayCash" />
+    <contain package="pkg_domain_payment" class="PayCredit" />
+    <contain package="pkg_infrastructure_repository" class="CustomerRepository" />
+    <contain package="pkg_infrastructure_repository" class="ProductRepository" />
+    <contain package="pkg_infrastructure_repository" class="CartRepository" />
+    <contain package="pkg_infrastructure_repository" class="OrderRepository" />
+    <contain package="pkg_infrastructure_repository_sqlite" class="Database" />
+    <contain package="pkg_infrastructure_repository_sqlite" class="SqliteCustomerRepository" />
+    <contain package="pkg_infrastructure_repository_sqlite" class="SqliteProductRepository" />
+    <contain package="pkg_infrastructure_repository_sqlite" class="SqliteCartRepository" />
+    <contain package="pkg_infrastructure_repository_sqlite" class="SqliteOrderRepository" />
+    <contain package="pkg_infrastructure_search" class="VectorIndex" />
+    <contain package="pkg_infrastructure_ai" class="ToolCall" />
+    <contain package="pkg_infrastructure_ai" class="LlmReply" />
+    <contain package="pkg_infrastructure_ai" class="LlmClient" />
+    <contain package="pkg_infrastructure_ai" class="SpeechClient" />
+    <contain package="pkg_infrastructure_ai" class="WhisperClient" />
+    <contain package="pkg_infrastructure_ai" class="GemmaClient" />
+    <contain package="pkg_application_search" class="QueryService" />
+    <contain package="pkg_application_search" class="SpeechService" />
+    <contain package="pkg_application_search" class="ImageService" />
+    <contain package="pkg_application_search" class="RankingService" />
+    <contain package="pkg_application_search" class="SearchService" />
+    <contain package="pkg_application_service" class="CartService" />
+    <contain package="pkg_application_service" class="CheckoutService" />
+    <contain package="pkg_application_service" class="OrderService" />
+    <contain package="pkg_application_service" class="ProductService" />
+    <contain package="pkg_application_service" class="AssistantService" />
+    <contain package="pkg_presentation_controller" class="SearchController" />
+    <contain package="pkg_presentation_controller" class="CartController" />
+    <contain package="pkg_presentation_controller" class="CheckoutController" />
+    <contain package="pkg_presentation_controller" class="OrderController" />
+    <contain package="pkg_presentation_controller" class="AdminController" />
+    <contain package="pkg_presentation_controller" class="AssistantController" />
+    <contain package="pkg_presentation_web" class="SessionManager" />
+    <contain package="pkg_presentation_web" class="WebServer" />
+    <contain package="pkg_presentation_web" class="EcomApplication" />
+    <contain package="pkg_presentation_view" class="SearchUI" />
+    <contain package="pkg_presentation_view" class="VoiceInput" />
+    <contain package="pkg_presentation_view" class="RoomPreview" />
+    <contain package="pkg_presentation_view" class="ImageUpload" />
+    <contain package="pkg_presentation_view" class="SearchResultView" />
+    <contain package="pkg_presentation_view" class="CartView" />
+    <contain package="pkg_presentation_view" class="OrderView" />
+    <contain package="pkg_presentation_view" class="AssistantView" />
+    <contain package="pkg_presentation_view" class="AdminView" />
+  </diagram>
+  <diagram id="c5_deployment" name="5.1 Deployment - offline demo, Whisper and Gemma 4 server" kind="deployment" scope="deployment" scopeName="5 Deployment">
+    <node id="laptop" type="Node" name="Demo laptop (macOS)" x="40" y="40" w="860" h="470" stereotype="device" />
+    <node id="browser" type="Node" name="Web browser" x="70" y="110" w="280" h="170" stereotype="executionEnvironment" parent="laptop" />
+    <node id="ui" type="Artifact" name="web UI (index.html, js)" x="100" y="190" w="220" h="60" parent="browser" />
+    <node id="jvm" type="Node" name="Java 17 runtime" x="550" y="110" w="320" h="170" stereotype="executionEnvironment" parent="laptop" />
+    <node id="app" type="Artifact" name="hoa-demo (EcomApplication, :8686)" x="580" y="190" w="260" h="60" parent="jvm" />
+    <node id="db" type="Artifact" name="ecom.db (SQLite)" x="700" y="380" w="170" h="60" parent="laptop" />
+    <node id="python" type="Node" name="Python voice server 127.0.0.1:9000" x="70" y="340" w="280" h="140" stereotype="executionEnvironment" parent="laptop" />
+    <node id="whisper" type="Artifact" name="faster-whisper (small)" x="100" y="406" w="220" h="56" parent="python" />
+    <node id="server" type="Node" name="L40S GPU server 171.226.10.121" x="1200" y="40" w="340" h="470" stereotype="device" />
+    <node id="nginx" type="Node" name="Nginx :8000 (/llm/v1/)" x="1230" y="110" w="280" h="90" stereotype="executionEnvironment" parent="server" />
+    <node id="vllm" type="Node" name="vLLM" x="1230" y="290" w="280" h="180" stereotype="executionEnvironment" parent="server" />
+    <node id="gemma" type="Artifact" name="Gemma 4 (model gemma-4)" x="1260" y="370" w="220" h="60" parent="vllm" />
+    <edge type="Association" from="browser" to="jvm" name="HTTP localhost:8686" labelX="382" labelY="123" labelW="137" labelH="20">
+      <pt x="350" y="150" />
+      <pt x="550" y="150" />
+    </edge>
+    <edge type="Dependency" from="app" to="db" name="JDBC (sqlite-jdbc)" labelX="768" labelY="320" labelW="120" labelH="20">
+      <pt x="760" y="250" />
+      <pt x="760" y="380" />
+    </edge>
+    <edge type="Association" from="jvm" to="python" name="HTTP POST /transcribe" labelX="396" labelY="383" labelW="147" labelH="20">
+      <pt x="590" y="280" />
+      <pt x="590" y="410" />
+      <pt x="350" y="410" />
+    </edge>
+    <edge type="Association" from="jvm" to="nginx" name="HTTP + API key: /llm/v1/chat/completions" labelX="922" labelY="128" labelW="255" labelH="20">
+      <pt x="870" y="155" />
+      <pt x="1230" y="155" />
+    </edge>
+    <edge type="Association" from="nginx" to="vllm" name="reverse proxy" labelX="1378" labelY="235" labelW="98" labelH="20">
+      <pt x="1370" y="200" />
+      <pt x="1370" y="290" />
+    </edge>
+  </diagram>
+</diagrams>

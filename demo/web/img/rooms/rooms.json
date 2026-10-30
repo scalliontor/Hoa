@@ -1,0 +1,50 @@
+[
+  {
+    "roomId": "room1",
+    "label": "Bright living room, pale blue sofa",
+    "imageUrl": "/img/rooms/room1.jpg",
+    "wallBox": [
+      0.3,
+      0.1,
+      0.4,
+      0.42
+    ],
+    "source": {
+      "file": "File:At Home (Unsplash).jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:At_Home_(Unsplash).jpg",
+      "licence": "CC0"
+    }
+  },
+  {
+    "roomId": "room2",
+    "label": "Brick-wall apartment, warm tones",
+    "imageUrl": "/img/rooms/room2.jpg",
+    "wallBox": [
+      0.5,
+      0.1,
+      0.3,
+      0.42
+    ],
+    "source": {
+      "file": "File:Budapest Apartment (Unsplash).jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Budapest_Apartment_(Unsplash).jpg",
+      "licence": "CC0"
+    }
+  },
+  {
+    "roomId": "room3",
+    "label": "Living room in afternoon light",
+    "imageUrl": "/img/rooms/room3.jpg",
+    "wallBox": [
+      0.4,
+      0.08,
+      0.45,
+      0.38
+    ],
+    "source": {
+      "file": "File:Afternoon light (Unsplash).jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Afternoon_light_(Unsplash).jpg",
+      "licence": "CC0"
+    }
+  }
+]

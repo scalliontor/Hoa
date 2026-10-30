@@ -1,0 +1,60 @@
+\begin{longtable}{@{}P{2.6cm}P{7.0cm}P{5.4cm}@{}}
+\caption{Methods of the domain classes at design level}\label{tab:ops43}\\
+\toprule
+\footnotesize \textbf{Class} & \footnotesize \textbf{Method} & \footnotesize \textbf{Responsibility}\\
+\midrule
+\endfirsthead
+\toprule
+\footnotesize \textbf{Class} & \footnotesize \textbf{Method} & \footnotesize \textbf{Responsibility}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\footnotesize \code{FullName} & \footnotesize \code{+getDisplayName(): String} & \footnotesize Joins first, middle and last name for display\\
+\footnotesize \code{Address} & \footnotesize \code{+format(): String} & \footnotesize Address on one line, printed on the order\\
+\footnotesize \code{Customer} & \footnotesize \code{+getDisplayName(): String} & \footnotesize Display name taken from FullName\\
+\footnotesize \code{Customer} & \footnotesize \code{+getDiscountRate(): BigDecimal} & \footnotesize Default discount 0, overridden by subclasses\\
+\footnotesize \code{Customer} & \footnotesize \code{+addAddress(address: Address): void} & \footnotesize Adds a delivery address\\
+\footnotesize \code{Customer} & \footnotesize \code{+findAddress(addressId: String): Address} & \footnotesize Finds an address by id; fails when it is not the customer's\\
+\footnotesize \code{CustomerVIP} & \footnotesize \code{+getDiscountRate(): BigDecimal} & \footnotesize Discount rate of the VIP tier (polymorphism)\\
+\footnotesize \code{CustomerVIP} & \footnotesize \code{+addPoints(points: int): void} & \footnotesize Adds reward points, refuses negative values\\
+\footnotesize \code{CustomerNew} & \footnotesize \code{+hasWelcomeVoucher(): boolean} & \footnotesize Tells whether the new customer still has a voucher\\
+\footnotesize \code{Product} & \footnotesize \code{+isAvailable(quantity: int): boolean} & \footnotesize Checks that enough stock is left for a quantity\\
+\footnotesize \code{Product} & \footnotesize \code{+decreaseStock(quantity: int): void} & \footnotesize Decreases stock when ordered; refuses to oversell\\
+\footnotesize \code{Product} & \footnotesize \code{+getCategory(): String} \{abstract\} & \footnotesize Kind of product, decided by the subclass (abstract)\\
+\footnotesize \code{Product} & \footnotesize \code{+keywords(): String} & \footnotesize Keywords used by text search\\
+\footnotesize \code{Artist} & \footnotesize \code{+getDisplayName(): String} & \footnotesize Artist name with years of birth and death\\
+\footnotesize \code{Painting} & \footnotesize \code{+getCategory(): String} & \footnotesize Returns PAINTING\\
+\footnotesize \code{Painting} & \footnotesize \code{+keywords(): String} & \footnotesize Adds style, subject, colour, medium and artist name to the keywords\\
+\footnotesize \code{Painting} & \footnotesize \code{+sizeLabel(): String} & \footnotesize Print size as "width x height cm"\\
+\footnotesize \code{Frame} & \footnotesize \code{+getCategory(): String} & \footnotesize Returns FRAME\\
+\footnotesize \code{Frame} & \footnotesize \code{+keywords(): String} & \footnotesize Adds frame material and colour to the keywords\\
+\footnotesize \code{Cart} & \footnotesize \code{+addItem(product: Product, quantity: int): void} & \footnotesize Adds a product; merges with an existing line of the same product\\
+\footnotesize \code{Cart} & \footnotesize \code{+updateQuantity(productId: String, quantity: int): void} & \footnotesize Changes a quantity; 0 removes the line\\
+\footnotesize \code{Cart} & \footnotesize \code{+removeItem(productId: String): void} & \footnotesize Removes one line\\
+\footnotesize \code{Cart} & \footnotesize \code{+calculateTotal(): BigDecimal} & \footnotesize Provisional total of the cart\\
+\footnotesize \code{Cart} & \footnotesize \code{+isEmpty(): boolean} & \footnotesize Whether the cart is empty (checkout refuses an empty cart)\\
+\footnotesize \code{Cart} & \footnotesize \code{+clear(): void} & \footnotesize Empties the cart after a successful checkout\\
+\footnotesize \code{CartItem} & \footnotesize \code{+CartItem(product: Product, quantity: int)} & \footnotesize Creates a line and records the price when added\\
+\footnotesize \code{CartItem} & \footnotesize \code{+getSubtotal(): BigDecimal} & \footnotesize Amount of the cart line\\
+\footnotesize \code{CartItem} & \footnotesize \code{+increase(quantity: int): void} & \footnotesize Increases the quantity when the same product is added again\\
+\footnotesize \code{OrderStatus}\newline\emph{«enumeration»} & \footnotesize \code{PLACED}, \code{PROCESSING}, \code{SHIPPED}, \code{DELIVERED}, \code{CANCELLED} & \footnotesize Valid status values\\
+\footnotesize \code{Order} & \footnotesize \code{+addItem(item: OrderItem): void} & \footnotesize Adds an order line\\
+\footnotesize \code{Order} & \footnotesize \code{+addPayment(payment: Payment): void} & \footnotesize Attaches a payment attempt\\
+\footnotesize \code{Order} & \footnotesize \code{+calculateTotal(discountRate: BigDecimal): BigDecimal} & \footnotesize Total = subtotal - discount + shipping fee, never negative\\
+\footnotesize \code{Order} & \footnotesize \code{+cancel(): void} & \footnotesize Cancels the order; allowed only when PLACED or PROCESSING\\
+\footnotesize \code{Order} & \footnotesize \code{+advanceTo(next: OrderStatus): void} & \footnotesize Moves the status in the order PLACED, PROCESSING, SHIPPED, DELIVERED\\
+\footnotesize \code{Order} & \footnotesize \code{+isOwnedBy(customerId: String): boolean} & \footnotesize Checks that the order belongs to the signed-in customer\\
+\footnotesize \code{OrderItem} & \footnotesize \code{+fromCartItem(item: CartItem, current: Product): OrderItem} \{static\} & \footnotesize Turns a cart line into an order line at the current catalogue price\\
+\footnotesize \code{OrderItem} & \footnotesize \code{+getSubtotal(): BigDecimal} & \footnotesize Amount of the order line at the frozen price\\
+\footnotesize \code{ShippingStatus}\newline\emph{«enumeration»} & \footnotesize \code{PREPARING}, \code{IN_TRANSIT}, \code{DELIVERED} & \footnotesize Valid status values\\
+\footnotesize \code{Shipping} & \footnotesize \code{+updateStatus(newStatus: ShippingStatus): void} & \footnotesize Changes the delivery status\\
+\footnotesize \code{Shipping} & \footnotesize \code{+markDelivered(date: LocalDate): void} & \footnotesize Records the delivery date and DELIVERED\\
+\footnotesize \code{PaymentStatus}\newline\emph{«enumeration»} & \footnotesize \code{PENDING}, \code{SUCCEEDED}, \code{FAILED} & \footnotesize Valid status values\\
+\footnotesize \code{Payment} & \footnotesize \code{+process(): boolean} \{abstract\} & \footnotesize Processes the payment, each method in its own way (abstract)\\
+\footnotesize \code{Payment} & \footnotesize \code{+markSucceeded(): void} & \footnotesize Marks success and records the time\\
+\footnotesize \code{Payment} & \footnotesize \code{+markFailed(): void} & \footnotesize Marks failure\\
+\footnotesize \code{PayCash} & \footnotesize \code{+process(): boolean} & \footnotesize Checks the cash received and computes the change\\
+\footnotesize \code{PayCredit} & \footnotesize \code{+process(): boolean} & \footnotesize Succeeds only with an authorisation code from the payment service\\
+\footnotesize \code{PayCredit} & \footnotesize \code{+maskedCard(): String} & \footnotesize Shows the card as **** **** **** 1234\\
+\end{longtable}

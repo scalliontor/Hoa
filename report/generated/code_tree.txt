@@ -1,0 +1,29 @@
+demo/
+  config/                              app.properties, read by EcomApplication
+  db/                                  SQLite schema and seed data
+  data/                                catalogue, image credits, ecom.db (created at the first start)
+  lib/                                 Gson, sqlite-jdbc, slf4j
+  scripts/                             build.sh, run.sh
+  voice-server/                        self-hosted Whisper server (Python)
+  web/                                 README.md, css/, fonts/, img/, index.html, js/
+  generated/src/                       skeleton generated from the 4.4 model
+  src/main/java/com/ptit/ecom/
+    application/search/                CommonQuery, ImageService, QueryService, RankingService,
+                                       SearchResult, SearchService, SpeechService
+    application/service/               AssistantReply, AssistantService, CartService, CheckoutService,
+                                       OrderService, ProductService
+    domain/cart/                       Cart, CartItem
+    domain/customer/                   Address, Customer, CustomerNew, CustomerVIP, FullName
+    domain/order/                      Order, OrderItem, OrderStatus, Shipping, ShippingStatus
+    domain/payment/                    PayCash, PayCredit, Payment, PaymentStatus
+    domain/product/                    Artist, Frame, Painting, Product
+    infrastructure/ai/                 GemmaClient, LlmClient, LlmReply, SpeechClient, ToolCall,
+                                       WhisperClient
+    infrastructure/repository/         CartRepository, CustomerRepository, OrderRepository,
+                                       ProductRepository
+    infrastructure/repository/sqlite/  Database, SqliteCartRepository, SqliteCustomerRepository,
+                                       SqliteOrderRepository, SqliteProductRepository
+    infrastructure/search/             VectorIndex
+    presentation/controller/           AdminController, AssistantController, CartController,
+                                       CheckoutController, OrderController, SearchController
+    presentation/web/                  EcomApplication, SessionManager, WebServer

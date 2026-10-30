@@ -1,0 +1,750 @@
+{
+  "en/base": {
+    "language": "en",
+    "model": "base",
+    "compute_type": "int8",
+    "cpu_threads": 8,
+    "load_seconds": 0.2,
+    "mean_seconds": 0.259,
+    "max_seconds": 0.349,
+    "mean_duration": 2.14,
+    "wer": 0.06,
+    "cer": 0.0199,
+    "exact": 15,
+    "n": 20,
+    "rows": [
+      {
+        "id": "e01",
+        "seconds": 0.327,
+        "duration": 1.61,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "blue landscape paintings",
+        "text": "blue landscape paintings."
+      },
+      {
+        "id": "e02",
+        "seconds": 0.241,
+        "duration": 2.49,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "Monet paintings under 100 dollars",
+        "text": "Monet paintings under $100."
+      },
+      {
+        "id": "e03",
+        "seconds": 0.248,
+        "duration": 2.37,
+        "wer": 0.1429,
+        "cer": 0.0256,
+        "reference": "show me paintings similar to this image",
+        "text": "Show me painting similar to this image."
+      },
+      {
+        "id": "e04",
+        "seconds": 0.243,
+        "duration": 3.62,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "find my order 20261001",
+        "text": "Find my order 20261001"
+      },
+      {
+        "id": "e05",
+        "seconds": 0.255,
+        "duration": 1.62,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "where is my latest order",
+        "text": "Where is my latest order?"
+      },
+      {
+        "id": "e06",
+        "seconds": 0.242,
+        "duration": 1.61,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "Van Gogh sunflowers",
+        "text": "Van Gogh Sunflowers"
+      },
+      {
+        "id": "e07",
+        "seconds": 0.248,
+        "duration": 1.72,
+        "wer": 0.4,
+        "cer": 0.08,
+        "reference": "the Great Wave by Hokusai",
+        "text": "the great wave by Hocus-I."
+      },
+      {
+        "id": "e08",
+        "seconds": 0.229,
+        "duration": 1.64,
+        "wer": 0.25,
+        "cer": 0.16,
+        "reference": "Klimt paintings with gold",
+        "text": "flimped paintings with gold."
+      },
+      {
+        "id": "e09",
+        "seconds": 0.243,
+        "duration": 2.54,
+        "wer": 0.125,
+        "cer": 0.0465,
+        "reference": "a red abstract painting for the living room",
+        "text": "Red Abstract Painting for the Living Room."
+      },
+      {
+        "id": "e10",
+        "seconds": 0.281,
+        "duration": 1.78,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "yellow still life with fruit",
+        "text": "Yellow still life with fruit."
+      },
+      {
+        "id": "e11",
+        "seconds": 0.283,
+        "duration": 3.42,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "impressionist paintings under 150 dollars",
+        "text": "Impressionist paintings under $150."
+      },
+      {
+        "id": "e12",
+        "seconds": 0.302,
+        "duration": 1.37,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "a black oak frame",
+        "text": "A black oak frame."
+      },
+      {
+        "id": "e13",
+        "seconds": 0.28,
+        "duration": 1.79,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "winter landscape with snow",
+        "text": "Winter landscape with snow."
+      },
+      {
+        "id": "e14",
+        "seconds": 0.349,
+        "duration": 2.55,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "Japanese woodblock print of Mount Fuji",
+        "text": "Japanese woodblock print of Mount Fuji."
+      },
+      {
+        "id": "e15",
+        "seconds": 0.245,
+        "duration": 1.22,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "the Starry Night",
+        "text": "the starry night."
+      },
+      {
+        "id": "e16",
+        "seconds": 0.23,
+        "duration": 2.04,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "a large painting for my bedroom",
+        "text": "a large painting for my bedroom."
+      },
+      {
+        "id": "e17",
+        "seconds": 0.246,
+        "duration": 3.74,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "cancel order 20261003",
+        "text": "cancel order 20261003"
+      },
+      {
+        "id": "e18",
+        "seconds": 0.225,
+        "duration": 1.46,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "sunset over the sea",
+        "text": "Sunset over the sea."
+      },
+      {
+        "id": "e19",
+        "seconds": 0.238,
+        "duration": 1.95,
+        "wer": 0.125,
+        "cer": 0.0857,
+        "reference": "portrait of a woman in a blue dress",
+        "text": "Hortrid of a woman in a blue dress"
+      },
+      {
+        "id": "e20",
+        "seconds": 0.234,
+        "duration": 2.27,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "what is the status of my last order",
+        "text": "What is the status of my last order?"
+      }
+    ]
+  },
+  "en/small": {
+    "language": "en",
+    "model": "small",
+    "compute_type": "int8",
+    "cpu_threads": 8,
+    "load_seconds": 0.4,
+    "mean_seconds": 0.713,
+    "max_seconds": 0.901,
+    "mean_duration": 2.14,
+    "wer": 0.02,
+    "cer": 0.0093,
+    "exact": 18,
+    "n": 20,
+    "rows": [
+      {
+        "id": "e01",
+        "seconds": 0.733,
+        "duration": 1.61,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "blue landscape paintings",
+        "text": "blue landscape paintings."
+      },
+      {
+        "id": "e02",
+        "seconds": 0.899,
+        "duration": 2.49,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "Monet paintings under 100 dollars",
+        "text": "Monet paintings under $100."
+      },
+      {
+        "id": "e03",
+        "seconds": 0.901,
+        "duration": 2.37,
+        "wer": 0.1429,
+        "cer": 0.0256,
+        "reference": "show me paintings similar to this image",
+        "text": "Show me painting similar to this image."
+      },
+      {
+        "id": "e04",
+        "seconds": 0.815,
+        "duration": 3.62,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "find my order 20261001",
+        "text": "Find my order 20261001"
+      },
+      {
+        "id": "e05",
+        "seconds": 0.68,
+        "duration": 1.62,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "where is my latest order",
+        "text": "Where is my latest order?"
+      },
+      {
+        "id": "e06",
+        "seconds": 0.692,
+        "duration": 1.61,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "Van Gogh sunflowers",
+        "text": "Van Gogh Sunflowers"
+      },
+      {
+        "id": "e07",
+        "seconds": 0.722,
+        "duration": 1.72,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "the Great Wave by Hokusai",
+        "text": "The Great Wave by Hokusai"
+      },
+      {
+        "id": "e08",
+        "seconds": 0.67,
+        "duration": 1.64,
+        "wer": 0.25,
+        "cer": 0.16,
+        "reference": "Klimt paintings with gold",
+        "text": "Climbed paintings with gold."
+      },
+      {
+        "id": "e09",
+        "seconds": 0.749,
+        "duration": 2.54,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "a red abstract painting for the living room",
+        "text": "a red abstract painting for the living room."
+      },
+      {
+        "id": "e10",
+        "seconds": 0.688,
+        "duration": 1.78,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "yellow still life with fruit",
+        "text": "Yellow still life with fruit."
+      },
+      {
+        "id": "e11",
+        "seconds": 0.671,
+        "duration": 3.42,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "impressionist paintings under 150 dollars",
+        "text": "Impressionist paintings under $150."
+      },
+      {
+        "id": "e12",
+        "seconds": 0.63,
+        "duration": 1.37,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "a black oak frame",
+        "text": "A black oak frame."
+      },
+      {
+        "id": "e13",
+        "seconds": 0.664,
+        "duration": 1.79,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "winter landscape with snow",
+        "text": "Winter landscape with snow."
+      },
+      {
+        "id": "e14",
+        "seconds": 0.671,
+        "duration": 2.55,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "Japanese woodblock print of Mount Fuji",
+        "text": "Japanese woodblock print of Mount Fuji."
+      },
+      {
+        "id": "e15",
+        "seconds": 0.609,
+        "duration": 1.22,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "the Starry Night",
+        "text": "The Starry Night"
+      },
+      {
+        "id": "e16",
+        "seconds": 0.694,
+        "duration": 2.04,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "a large painting for my bedroom",
+        "text": "A large painting for my bedroom."
+      },
+      {
+        "id": "e17",
+        "seconds": 0.7,
+        "duration": 3.74,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "cancel order 20261003",
+        "text": "cancel order 20261003."
+      },
+      {
+        "id": "e18",
+        "seconds": 0.709,
+        "duration": 1.46,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "sunset over the sea",
+        "text": "Sunset over the sea."
+      },
+      {
+        "id": "e19",
+        "seconds": 0.687,
+        "duration": 1.95,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "portrait of a woman in a blue dress",
+        "text": "portrait of a woman in a blue dress."
+      },
+      {
+        "id": "e20",
+        "seconds": 0.667,
+        "duration": 2.27,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "what is the status of my last order",
+        "text": "What is the status of my last order?"
+      }
+    ]
+  },
+  "vi/base": {
+    "language": "vi",
+    "model": "base",
+    "compute_type": "int8",
+    "cpu_threads": 8,
+    "load_seconds": 0.2,
+    "mean_seconds": 0.329,
+    "max_seconds": 0.614,
+    "mean_duration": 2.35,
+    "wer": 0.4348,
+    "cer": 0.2255,
+    "exact": 1,
+    "n": 18,
+    "rows": [
+      {
+        "id": "q01",
+        "seconds": 0.305,
+        "duration": 1.69,
+        "wer": 0.8,
+        "cer": 0.3462,
+        "reference": "tranh phong cảnh tông xanh",
+        "text": "chân phong cạnh tôn sân."
+      },
+      {
+        "id": "q02",
+        "seconds": 0.262,
+        "duration": 2.18,
+        "wer": 0.6667,
+        "cer": 0.4286,
+        "reference": "tranh của Monet dưới 2 triệu",
+        "text": "Chân của Mao Nghét dưới 2 chiều."
+      },
+      {
+        "id": "q03",
+        "seconds": 0.24,
+        "duration": 1.65,
+        "wer": 0.8,
+        "cer": 0.5652,
+        "reference": "tìm tranh giống ảnh này",
+        "text": "để điểm chân dông ảnh này."
+      },
+      {
+        "id": "q04",
+        "seconds": 0.26,
+        "duration": 3.55,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "tìm đơn 20261001 của tôi",
+        "text": "tìm đơn hai không hai sáu một không không một của tôi."
+      },
+      {
+        "id": "q05",
+        "seconds": 0.236,
+        "duration": 2.4,
+        "wer": 0.125,
+        "cer": 0.0323,
+        "reference": "đơn mới nhất của tôi đang ở đâu",
+        "text": "đơn mời nhất của tôi đang ở đâu."
+      },
+      {
+        "id": "q06",
+        "seconds": 0.268,
+        "duration": 2.34,
+        "wer": 0.5714,
+        "cer": 0.2647,
+        "reference": "tranh hoa hướng dương của Van Gogh",
+        "text": "Xanh hòa hướng dân của Van Gau"
+      },
+      {
+        "id": "q07",
+        "seconds": 0.614,
+        "duration": 3.49,
+        "wer": 0.7143,
+        "cer": 0.2,
+        "reference": "sóng lớn ngoài khơi Kanagawa của Hokusai",
+        "text": "Sống lửa ngoài khơi Kanagawa của Hoa Kuo Sae."
+      },
+      {
+        "id": "q08",
+        "seconds": 0.264,
+        "duration": 2.39,
+        "wer": 0.375,
+        "cer": 0.2564,
+        "reference": "tranh trừu tượng màu đỏ cho phòng khách",
+        "text": "chân trử tượng màu đỏ cho phòng hết."
+      },
+      {
+        "id": "q09",
+        "seconds": 0.285,
+        "duration": 2.19,
+        "wer": 0.5714,
+        "cer": 0.2903,
+        "reference": "tranh tĩnh vật hoa quả màu vàng",
+        "text": "chân tĩnh vật hoa qua mảo văn"
+      },
+      {
+        "id": "q10",
+        "seconds": 0.26,
+        "duration": 1.68,
+        "wer": 0.6,
+        "cer": 0.2917,
+        "reference": "tranh chân dung thiếu nữ",
+        "text": "chẳng chân dôn thiếu nữa."
+      },
+      {
+        "id": "q11",
+        "seconds": 0.32,
+        "duration": 3.33,
+        "wer": 0.1818,
+        "cer": 0.1373,
+        "reference": "cho tôi xem tranh trường phái ấn tượng dưới 1 triệu",
+        "text": "cho tôi xem chân trường phái ấn tượng dưới một chiều."
+      },
+      {
+        "id": "q12",
+        "seconds": 0.353,
+        "duration": 1.7,
+        "wer": 0.4,
+        "cer": 0.3,
+        "reference": "khung gỗ sồi màu đen",
+        "text": "không gỗ sụi màu đen."
+      },
+      {
+        "id": "q13",
+        "seconds": 0.61,
+        "duration": 2.18,
+        "wer": 0.2857,
+        "cer": 0.0588,
+        "reference": "tranh phong cảnh mùa đông có tuyết",
+        "text": "Trang phong cảnh mua đông có tuyết."
+      },
+      {
+        "id": "q14",
+        "seconds": 0.442,
+        "duration": 2.27,
+        "wer": 0.4286,
+        "cer": 0.2143,
+        "reference": "tranh Nhật Bản vẽ núi Phú Sĩ",
+        "text": "chân nhật bản vẽ nổi phủ sĩ."
+      },
+      {
+        "id": "q15",
+        "seconds": 0.396,
+        "duration": 1.47,
+        "wer": 0.25,
+        "cer": 0.2353,
+        "reference": "tranh đêm đầy sao",
+        "text": "chẳng đêm đầy sao?"
+      },
+      {
+        "id": "q16",
+        "seconds": 0.327,
+        "duration": 2.81,
+        "wer": 0.3333,
+        "cer": 0.1463,
+        "reference": "tôi muốn mua tranh khổ lớn treo phòng ngủ",
+        "text": "Tôi muốn mô tranh khủ lớn chào phòng ngủ."
+      },
+      {
+        "id": "q17",
+        "seconds": 0.24,
+        "duration": 3.09,
+        "wer": 1.0,
+        "cer": 0.1875,
+        "reference": "hủy đơn 20261003",
+        "text": "hủy nơn 2 không 2 6 1 không 3"
+      },
+      {
+        "id": "q18",
+        "seconds": 0.235,
+        "duration": 1.96,
+        "wer": 0.3333,
+        "cer": 0.1034,
+        "reference": "tranh biển xanh lúc hoàng hôn",
+        "text": "Trành biển sang lúc hoàng hôn."
+      }
+    ]
+  },
+  "vi/small": {
+    "language": "vi",
+    "model": "small",
+    "compute_type": "int8",
+    "cpu_threads": 8,
+    "load_seconds": 0.4,
+    "mean_seconds": 0.779,
+    "max_seconds": 0.891,
+    "mean_duration": 2.35,
+    "wer": 0.2261,
+    "cer": 0.0915,
+    "exact": 3,
+    "n": 18,
+    "rows": [
+      {
+        "id": "q01",
+        "seconds": 0.753,
+        "duration": 1.69,
+        "wer": 0.6,
+        "cer": 0.2692,
+        "reference": "tranh phong cảnh tông xanh",
+        "text": "Chân phong cạnh tông sinh."
+      },
+      {
+        "id": "q02",
+        "seconds": 0.709,
+        "duration": 2.18,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "tranh của Monet dưới 2 triệu",
+        "text": "Tranh của Monet dưới 2 triệu."
+      },
+      {
+        "id": "q03",
+        "seconds": 0.771,
+        "duration": 1.65,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "tìm tranh giống ảnh này",
+        "text": "tìm tranh giống ảnh này."
+      },
+      {
+        "id": "q04",
+        "seconds": 0.825,
+        "duration": 3.55,
+        "wer": 0.2,
+        "cer": 0.0833,
+        "reference": "tìm đơn 20261001 của tôi",
+        "text": "Tìm đơn 2020-261001 của tôi."
+      },
+      {
+        "id": "q05",
+        "seconds": 0.72,
+        "duration": 2.4,
+        "wer": 0.125,
+        "cer": 0.0323,
+        "reference": "đơn mới nhất của tôi đang ở đâu",
+        "text": "Đơn mưới nhất của tôi đang ở đâu?"
+      },
+      {
+        "id": "q06",
+        "seconds": 0.77,
+        "duration": 2.34,
+        "wer": 0.1429,
+        "cer": 0.0588,
+        "reference": "tranh hoa hướng dương của Van Gogh",
+        "text": "Chanh Hoa Hướng Dương của Van Gogh"
+      },
+      {
+        "id": "q07",
+        "seconds": 0.745,
+        "duration": 3.49,
+        "wer": 0.4286,
+        "cer": 0.075,
+        "reference": "sóng lớn ngoài khơi Kanagawa của Hokusai",
+        "text": "Sống lớn ngoài khơi Kanna Gawa của Hokusai."
+      },
+      {
+        "id": "q08",
+        "seconds": 0.802,
+        "duration": 2.39,
+        "wer": 0.25,
+        "cer": 0.0769,
+        "reference": "tranh trừu tượng màu đỏ cho phòng khách",
+        "text": "chanh trừ tượng màu đỏ cho phòng khách."
+      },
+      {
+        "id": "q09",
+        "seconds": 0.891,
+        "duration": 2.19,
+        "wer": 0.2857,
+        "cer": 0.1613,
+        "reference": "tranh tĩnh vật hoa quả màu vàng",
+        "text": "chanh tiếng vật hoa quả màu vàng."
+      },
+      {
+        "id": "q10",
+        "seconds": 0.813,
+        "duration": 1.68,
+        "wer": 0.4,
+        "cer": 0.1667,
+        "reference": "tranh chân dung thiếu nữ",
+        "text": "chanh chân dung thiếu nứa."
+      },
+      {
+        "id": "q11",
+        "seconds": 0.848,
+        "duration": 3.33,
+        "wer": 0.0,
+        "cer": 0.0,
+        "reference": "cho tôi xem tranh trường phái ấn tượng dưới 1 triệu",
+        "text": "cho tôi xem tranh trường phái ấn tượng dưới 1 triệu."
+      },
+      {
+        "id": "q12",
+        "seconds": 0.779,
+        "duration": 1.7,
+        "wer": 0.4,
+        "cer": 0.3,
+        "reference": "khung gỗ sồi màu đen",
+        "text": "Không gỗ sổi màu đen."
+      },
+      {
+        "id": "q13",
+        "seconds": 0.768,
+        "duration": 2.18,
+        "wer": 0.1429,
+        "cer": 0.0294,
+        "reference": "tranh phong cảnh mùa đông có tuyết",
+        "text": "Trang phong cảnh mùa đông có tuyết."
+      },
+      {
+        "id": "q14",
+        "seconds": 0.802,
+        "duration": 2.27,
+        "wer": 0.2857,
+        "cer": 0.0714,
+        "reference": "tranh Nhật Bản vẽ núi Phú Sĩ",
+        "text": "Trang Nhật Bản Vẽ Núi Phụ Sĩ."
+      },
+      {
+        "id": "q15",
+        "seconds": 0.686,
+        "duration": 1.47,
+        "wer": 0.5,
+        "cer": 0.1765,
+        "reference": "tranh đêm đầy sao",
+        "text": "Trang đêm đời sao?"
+      },
+      {
+        "id": "q16",
+        "seconds": 0.83,
+        "duration": 2.81,
+        "wer": 0.2222,
+        "cer": 0.0488,
+        "reference": "tôi muốn mua tranh khổ lớn treo phòng ngủ",
+        "text": "Tôi muốn mua tranh khủ lớn trèo phòng ngủ."
+      },
+      {
+        "id": "q17",
+        "seconds": 0.736,
+        "duration": 3.09,
+        "wer": 0.3333,
+        "cer": 0.0625,
+        "reference": "hủy đơn 20261003",
+        "text": "Hủy đơn 2002-61003"
+      },
+      {
+        "id": "q18",
+        "seconds": 0.782,
+        "duration": 1.96,
+        "wer": 0.1667,
+        "cer": 0.0345,
+        "reference": "tranh biển xanh lúc hoàng hôn",
+        "text": "Tranh Biển Sanh Lúc Hoàng Hôn"
+      }
+    ]
+  }
+}

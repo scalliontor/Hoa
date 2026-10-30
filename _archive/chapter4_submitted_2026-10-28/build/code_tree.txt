@@ -1,0 +1,60 @@
+com/ptit/ecom/
+├── application/
+│   ├── search/
+│   │   ├── CommonQuery.java
+│   │   ├── QueryService.java
+│   │   ├── RankingService.java
+│   │   ├── SearchResult.java
+│   │   └── SearchService.java
+│   └── service/
+│       ├── CartService.java
+│       ├── CheckoutService.java
+│       └── OrderService.java
+├── domain/
+│   ├── cart/
+│   │   ├── Cart.java
+│   │   └── CartItem.java
+│   ├── customer/
+│   │   ├── Address.java
+│   │   ├── Customer.java
+│   │   ├── CustomerNew.java
+│   │   ├── CustomerVIP.java
+│   │   └── FullName.java
+│   ├── order/
+│   │   ├── Order.java
+│   │   ├── OrderItem.java
+│   │   ├── OrderStatus.java
+│   │   ├── Shipping.java
+│   │   └── ShippingStatus.java
+│   ├── payment/
+│   │   ├── PayCash.java
+│   │   ├── PayCredit.java
+│   │   ├── Payment.java
+│   │   └── PaymentStatus.java
+│   └── product/
+│       ├── Book.java
+│       ├── Clothes.java
+│       ├── Electronics.java
+│       ├── Laptop.java
+│       ├── Mobile.java
+│       ├── Product.java
+│       └── Shoes.java
+├── infrastructure/
+│   ├── dao/
+│   │   ├── jdbc/
+│   │   │   ├── JdbcCartDAO.java
+│   │   │   ├── JdbcCustomerDAO.java
+│   │   │   ├── JdbcOrderDAO.java
+│   │   │   └── JdbcProductDAO.java
+│   │   ├── CartDAO.java
+│   │   ├── CustomerDAO.java
+│   │   ├── OrderDAO.java
+│   │   └── ProductDAO.java
+│   └── search/
+│       └── VectorIndex.java
+└── presentation/
+    └── controller/
+        ├── CartController.java
+        ├── CheckoutController.java
+        ├── OrderController.java
+        └── SearchController.java

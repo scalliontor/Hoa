@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="ptit.tieuluan.v1" name="PTIT Tieu Luan V1 Builder"
+        description="Creates the essay's editable UML diagrams via the Visual Paradigm Open API"
+        provider="Local coursework" class="TieuLuanBuilder">
+  <runtime><library path="classes" relativePath="true"/></runtime>
+</plugin>

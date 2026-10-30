@@ -1,0 +1,217 @@
+% Appendices are numbered A, B, ... and headed "APPENDIX A".
+\titleformat{\chapter}[display]{\centering\normalfont\bfseries}{\Large APPENDIX \thechapter}{6pt}{\LARGE}
+\renewcommand{\chaptermark}[1]{\markboth{Appendix \thechapter}{}}% short: the long titles collide with the left header
+
+\chapter{Folder Map}\label{app:foldermap}\label{app:A}
+
+This appendix tells a reader where to find, in the project folder \code{tieuluan/}, every part of the work that
+this essay describes. All paths are relative to that folder. The tables are generated when the essay is built
+(\code{report/build.sh}), so they always match the files that exist; a figure marked ``missing'' has not been
+exported yet.
+
+\section{Chapters and their sources}\label{sec:A.1}
+
+\begin{longtable}{@{}P{5.0cm}P{6.2cm}P{3.8cm}@{}}
+\caption{Chapters of the essay and their LaTeX sources}\label{tab:mapchapters}\\
+\toprule
+\textbf{Part of the essay} & \textbf{LaTeX source} & \textbf{Main inputs}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Part of the essay} & \textbf{LaTeX source} & \textbf{Main inputs}\\
+\midrule
+\endhead
+\small Cover, contents, lists & \small \code{report/main.tex}, \code{report/chapters/cover.tex}, \code{report/members.tex} & \small Group information\\
+\small Abbreviations, Introduction & \small \code{report/chapters/front.tex} & \small \code{tools/model.py}\\
+\small Chapter 1 Requirement Determination & \small \code{report/chapters/ch1_requirements.tex} & \small \code{tools/model.py}, \code{figures/vp/}\\
+\small Chapter 2 Analysis & \small \code{report/chapters/ch2_analysis.tex} & \small \code{tools/model.py}, \code{figures/vp/}\\
+\small Chapter 3 AI in E-commerce & \small \code{report/chapters/ch3_ai.tex} & \small \code{build/eval/}, \code{figures/}\\
+\small Chapter 4 Design & \small \code{report/chapters/ch4_design.tex} & \small \code{tools/model.py}, \code{demo/db/}, \code{demo/generated/}\\
+\small Chapter 5 Code & \small \code{report/chapters/ch5_code.tex} & \small \code{demo/}, \code{figures/demo/}\\
+\small Conclusion, References & \small \code{report/chapters/conclusion.tex}, \code{report/chapters/references.tex} & \small --\\
+\small Appendix A Folder Map & \small \code{report/chapters/appendix.tex} & \small \code{report/gen_tables.py}\\
+\small Preamble, build & \small \code{report/preamble.tex}, \code{report/build.sh}, \code{report/gen_tables.py} & \small --\\
+\bottomrule
+\end{longtable}
+
+\section{Figures, code excerpts, folders and generated tables}\label{sec:A.2}
+
+Table~\ref{tab:mapfigs} lists every figure with the file it is taken from; diagrams are exported from the Visual
+Paradigm project in \code{vp/}, screenshots are taken from the running demo. Table~\ref{tab:maplists} gives the real
+source file of every code excerpt, Table~\ref{tab:mapfolders} the main folders of the project, and
+Table~\ref{tab:mapgen} the tables that are generated from the shared specification and the code.
+
+\input{generated/folder_map}
+
+\section{Full file tree of the demo}\label{sec:A.3}
+
+The tree below, written by the demo build (\code{build/code_tree5.txt}), lists every file of \code{demo}; the package
+map is explained in \code{demo/README.md}, and the changes to \code{tools/model.py} proposed while coding, with their
+reasons, are recorded in \code{build/MODEL_CHANGES.md}.
+
+\txtfile{../build/code_tree5.txt}
+
+\chapter{Design Reference Tables}\label{app:designtables}\label{app:B}
+
+The tables of this appendix complete Chapter~4. They are reference lists rather than explanations: the chapter
+shows the diagrams and explains the decisions, and the complete lists are kept here. Like every table that names a
+class, a method, a table or a column, they are generated from \code{tools/model.py} when the essay is built.
+
+\section{Classes and relationships of the analysis model}\label{sec:B.1}
+
+Table~\ref{tab:classes41} gives the business meaning and the attributes of the \nAnalysisClasses{} classes of
+Figure~\ref{fig:c41_analysis} (Section~4.1), and Table~\ref{tab:rel41} explains each of their relationships.
+
+\input{generated/analysis_classes}
+
+\input{generated/analysis_rel}
+
+\section{Tables and foreign keys of the database}\label{sec:B.2}
+
+Table~\ref{tab:tables} lists the \nTables{} tables of the physical model (Figure~\ref{fig:c42_tables}) with their
+primary keys, their foreign keys and the class each table comes from; Table~\ref{tab:fks} gives the name and the
+multiplicity of each of the \nFks{} foreign keys (Section~4.2).
+
+\input{generated/tables_list}
+
+\input{generated/fks}
+
+\section{Methods and directed relationships of the domain classes}\label{sec:B.3}
+
+Table~\ref{tab:ops43} lists every method of the domain classes of Figure~\ref{fig:c43_design} with its full
+signature and its responsibility, and the values of the three enumerations; Table~\ref{tab:nav43} gives the
+direction and the role name of every association (Section~4.3).
+
+\input{generated/design_ops}
+
+\input{generated/design_nav}
+
+\section{Layers, packages and classes}\label{sec:B.4}
+
+Table~\ref{tab:layers} lists the packages of each layer of Figure~\ref{fig:c44_layers} with their classes
+(Section~4.4).
+
+\input{generated/layers}
+
+\section{Traceability from requirements to design, data and code}\label{sec:B.5}
+
+Table~\ref{tab:trace46} follows the main requirements of Chapter~\ref{ch:req} through the artefacts of Chapter~4 --
+analysis classes, tables, design classes and methods, packages -- to the code (Section~4.6).
+
+\begin{longtable}{@{}P{1.4cm}P{3.0cm}P{2.6cm}P{4.6cm}P{3.4cm}@{}}
+\caption{Traceability from requirements to design, data and code}\label{tab:trace46}\\
+\toprule
+\textbf{Req.} & \textbf{Analysis classes} & \textbf{Tables} & \textbf{Design classes and methods} & \textbf{Package}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Req.} & \textbf{Analysis classes} & \textbf{Tables} & \textbf{Design classes and methods} & \textbf{Package}\\
+\midrule
+\endhead
+\small FR01 & \small \code{Product}, \code{Painting}, \code{Artist} & \small \code{product}, \code{painting}, \code{artist} & \small \code{QueryService.textQuery}, \code{SearchService.searchText}, \code{RankingService.rank} & \small \code{application.search}\\
+\small FR03 & \small \code{Painting} & \small \code{painting}, \code{product_feature} & \small \code{ImageService.embed}, \code{VectorIndex.cosineSimilarity} & \small \code{application.search}, \code{infrastructure.search}\\
+\small FR06 & \small \code{Cart}, \code{CartItem} & \small \code{cart}, \code{cart_item} & \small \code{Cart.addItem}, \code{CartService.addToCart} & \small \code{domain.cart}, \code{application.service}\\
+\small FR07 & \small \code{Cart}, \code{Order}, \code{OrderItem}, \code{Shipping}, \code{Payment} & \small \code{orders}, \code{order_item}, \code{shipping}, \code{payment} & \small \code{CheckoutService.checkout}, \code{OrderItem.fromCartItem}, \code{Order.calculateTotal} & \small \code{application.service}, \code{domain.order}\\
+\small FR09 & \small \code{Order}, \code{Customer} & \small \code{orders.customer_id} & \small \code{OrderService.getOrder}, \code{Order.isOwnedBy}, \code{OrderRepository.findOrder} & \small \code{application.service}, \code{infrastructure.repository}\\
+\small FR11 & \small \code{Order} & \small \code{orders.status} & \small \code{Order.cancel}, \code{OrderService.cancelOrder} & \small \code{domain.order}\\
+\small FR12 & \small \code{Product}, \code{Painting} & \small \code{product}, \code{painting} & \small \code{ProductService.updatePriceAndStock}, \code{ProductService.addPainting} & \small \code{application.service}\\
+\small FR13 & \small \code{Order} & \small \code{orders.status} & \small \code{Order.advanceTo}, \code{OrderService.updateStatus} & \small \code{domain.order}\\
+\small FR14 & \small \code{Painting} & \small \code{painting} & \small \code{SearchService.describeRoom}, \code{SearchService.searchRoom} & \small \code{application.search}\\
+\small NFR05 & \small \code{PayCredit} & \small \code{pay_credit.card_last4} & \small \code{PayCredit.maskedCard} & \small \code{domain.payment}\\
+\bottomrule
+\end{longtable}
+
+\section{Mapping from the UML model to Java}\label{sec:B.6}
+
+Table~\ref{tab:uml2java} lists how each element of the design model of Sections~4.3 and~4.4 becomes Java code in the
+skeleton generated by \code{tools/gen_java.py} (Section~4.5).
+
+\begin{longtable}{@{}P{4.4cm}P{5.3cm}P{5.3cm}@{}}
+\caption{Mapping from the UML model to Java}\label{tab:uml2java}\\
+\toprule
+\textbf{UML element (4.3, 4.4)} & \textbf{Java} & \textbf{Example}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{UML element (4.3, 4.4)} & \textbf{Java} & \textbf{Example}\\
+\midrule
+\endhead
+\small Layer package and sub-package & \small Package \code{com.ptit.ecom.<layer>.<area>} & \small \code{com.ptit.ecom.domain.order}\\
+\small Class, abstract class & \small \code{public class}, \code{public abstract class} & \small \code{Product}, \code{Payment}\\
+\small Interface & \small \code{public interface} & \small \code{OrderRepository}, \code{LlmClient}\\
+\small Enumeration & \small \code{public enum} & \small \code{OrderStatus}\\
+\small Private attribute & \small Private field with the same name and type & \small \code{-totalAmount: BigDecimal}\\
+\small Association end with role & \small Field named after the role; \code{List} for an upper bound * & \small \code{Order.items}, \code{Painting.artist}\\
+\small Generalization & \small \code{extends} & \small \code{Painting extends Product}\\
+\small Realization & \small \code{implements} & \small \code{SqliteOrderRepository implements OrderRepository}\\
+\small «use» dependency & \small Field set by the constructor & \small \code{cartRepository} of \code{CheckoutService}\\
+\small Operation & \small Method with the same name, parameters and return type & \small \code{OrderService.getOrder}\\
+\bottomrule
+\end{longtable}
+
+\section{Report of the code-model check}\label{sec:B.7}
+
+The report of \code{tools/check_code_model.py} (the second part of \code{build/test_results.txt}) compares the Java
+classes, the JavaScript views, the real database and the SQL of the repositories with \code{tools/model.py}. The runs
+of per-class ``OK'' lines are shortened to one counted line; every other line is reproduced unchanged.
+
+\txtfileor{generated/model_check.txt}{../build/test_results.txt}
+
+\section{Mapping of design concepts to technology}\label{sec:B.8}
+
+Table~\ref{tab:techmap} records the technology chosen for each design concept of Section~4.4 (Lecture~05).
+
+\begin{longtable}{@{}P{3.2cm}P{5.6cm}P{6.2cm}@{}}
+\caption{Mapping of design concepts to technology}\label{tab:techmap}\\
+\toprule
+\textbf{Design concept} & \textbf{Technology} & \textbf{Where}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Design concept} & \textbf{Technology} & \textbf{Where}\\
+\midrule
+\endhead
+\small View & \small HTML, CSS and one JavaScript module per view class & \small \code{demo/web}\\
+\small Web server, session & \small Java HTTP server of the JDK, JSON & \small \code{WebServer}, \code{SessionManager}\\
+\small Controller & \small Plain Java class called by \code{WebServer} & \small \code{presentation.controller}\\
+\small Service & \small Plain Java class & \small \code{application.service}, \code{application.search}\\
+\small Domain entity & \small Plain Java object (no framework annotations) & \small \code{domain.*}\\
+\small Repository & \small Java interface + JDBC implementation & \small \code{infrastructure.repository}, \code{.sqlite}\\
+\small Database & \small SQLite file & \small \code{demo/data/ecom.db}\\
+\small Language model & \small Gemma~4 through the OpenAI-compatible HTTP API & \small \code{GemmaClient}\\
+\small Speech-to-text & \small Self-hosted faster-whisper server (Python) & \small \code{WhisperClient}, \code{demo/voice-server}\\
+\bottomrule
+\end{longtable}
+
+\chapter{Requirement Reference Tables}\label{app:reqtables}\label{app:C}
+
+The tables of this appendix complete Chapter~1: how each non-functional requirement is verified (Section~1.9), the
+full traceability matrix between requirements and use cases (Section~1.12) and the relationships of the use case
+diagram (Section~1.10). Both are generated from
+\code{tools/model.py}.
+
+\section{Verification of the non-functional requirements}\label{sec:C.1}
+
+\input{generated/nfr_check}
+
+\section{Requirement -- use case traceability matrix}\label{sec:C.2}
+
+\input{generated/trace_req_uc}
+
+\section{Relationships between use cases}\label{sec:C.3}
+
+\input{generated/uc_links}
+
+\chapter{Implementation Reference Tables}\label{app:impltables}\label{app:D}
+
+The two tables of this appendix complete Chapter~5. They are generated from the code when the essay is built: the
+HTTP endpoints from \code{WebServer.java} (Section~5.5) and the settings from \code{demo/config/app.properties}
+(Section~5.2), whose API key is never printed.
+
+\section{HTTP endpoints}\label{sec:D.1}
+
+\input{generated/endpoints}
+
+\section{Configuration}\label{sec:D.2}
+
+\input{generated/config}

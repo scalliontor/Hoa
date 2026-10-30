@@ -1,0 +1,37 @@
+\chapter*{Conclusion}\label{ch:conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
+\markboth{Conclusion}{}
+
+\textbf{What the group built.} This essay followed one product, the online gallery Họa., through the five steps of
+the course. Chapter~1 investigated the business and turned five concrete problems into \nFR{} functional and
+\nNFR{} non-functional requirements, four actors and \nUseCases{} use cases, each requirement written as ``The
+system shall\dots'' with a priority and a source. Chapter~2 specified the main use cases with their alternative
+flows, derived every decision of the activity diagrams from a business rule, checked that the rule ``cancel before
+shipment'' reads the same in every model, and built the domain model in which a cart line and an order line are
+different things and checkout is a transformation. Chapter~3 placed five AI features -- understanding sentences,
+self-hosted speech recognition, image search, suggestions for a customer's room and a curator assistant with tool
+calling -- inside that model, each with a fallback and a measurement. Chapter~4 followed the lecturer's outline
+4.1--4.6 from the analysis class diagram to the database, the design classes, the four layers and the generated
+code. Chapter~5 showed the running system and followed every business rule to the line of code that enforces it.
+
+\textbf{What made it consistent.} The decision that paid off most was to declare every name once. Requirements,
+use cases, classes, methods, tables and columns live in \code{tools/model.py}; the Visual Paradigm diagrams, the SQL
+schema, the Java skeleton and the tables of this essay are generated from it, and a checker compares the finished
+code and database with it. When the product changed during the work -- paintings instead of general goods, a voice
+server on the laptop instead of a cloud service, English and US dollars everywhere, a new use case for the
+customer's room -- each change was made once and appeared everywhere, and the traceability tables were regenerated
+rather than edited by hand.
+
+\textbf{What the group learned about AI in an information system.} The AI features were useful only because the
+analysis came first. Gemma~4 understands ``Monet paintings under 100 dollars'' far better than keyword rules, but the
+price limit is still applied by \code{SearchService}, the order is still checked by \code{OrderService}, and the
+assistant still receives the customer id from the session, not from the model. Every AI call can fail, so every AI
+feature has a path without AI, and the essay reports measured behaviour instead of promises. Self-hosting the speech
+model showed that a non-functional requirement -- the customer's voice must not leave the machine -- can decide an
+architecture as strongly as any functional one.
+
+\textbf{Limits and next steps.} The demo is a study project: payment and delivery are simulated, the image vectors
+encode attributes rather than appearance, and the evaluation uses the group's own data. The next steps follow
+directly from the models: learned image embeddings behind the same \code{VectorIndex} interface, one transaction
+around the whole checkout, a decision of the owner on stock and refunds when an order is cancelled, and an
+evaluation with real customers and real rooms.

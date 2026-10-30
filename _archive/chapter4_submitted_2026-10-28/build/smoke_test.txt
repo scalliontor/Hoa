@@ -1,0 +1,12 @@
+PASS Cart.addItem merges the same product into one line
+PASS Cart.calculateTotal = 3 x 150000 + 1 x 30000000 = 30450000
+PASS OrderItem.fromCartItem snapshots the current price 160000 (cart price was 150000)
+PASS Order.calculateTotal: 30480000 - 10% + 30000 = 27462000 (got 27462000.00)
+PASS Order.cancel moves a PLACED order to CANCELLED
+PASS Order.cancel rejects a SHIPPED order
+PASS PayCash.process with 600000 for 500000 succeeds, change 100000
+PASS PayCash.process with 400000 for 500000 fails
+PASS Product.decreaseStock(2) leaves 0 laptops
+PASS Product.decreaseStock(1) on empty stock is rejected
+PASS FullName.getDisplayName = "Vũ Hùng Anh"
+ALL CHECKS PASSED (11/11)

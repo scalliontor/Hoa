@@ -1,0 +1,27 @@
+\begin{longtable}{@{}P{2.1cm}P{4.4cm}P{4.8cm}P{3.7cm}@{}}
+\caption{Layers, packages and classes of Họa.}\label{tab:layers}\\
+\toprule
+\footnotesize \textbf{Layer} & \footnotesize \textbf{Package} & \footnotesize \textbf{Classes} & \footnotesize \textbf{Responsibility}\\
+\midrule
+\endfirsthead
+\toprule
+\footnotesize \textbf{Layer} & \footnotesize \textbf{Package} & \footnotesize \textbf{Classes} & \footnotesize \textbf{Responsibility}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\footnotesize Presentation & \footnotesize \code{com.ptit.ecom.presentation.view} & \footnotesize \code{SearchUI}, \code{VoiceInput}, \code{RoomPreview}, \code{ImageUpload}, \code{SearchResultView}, \code{CartView}, \code{OrderView}, \code{AssistantView}, \code{AdminView} & \footnotesize Browser components (HTML, CSS, JS) named after the A06 presentation layer\\
+\footnotesize Presentation & \footnotesize \code{com.ptit.ecom.presentation.controller} & \footnotesize \code{SearchController}, \code{CartController}, \code{CheckoutController}, \code{OrderController}, \code{AdminController}, \code{AssistantController} & \footnotesize Receive decoded requests, call services, return results\\
+\footnotesize Presentation & \footnotesize \code{com.ptit.ecom.presentation.web} & \footnotesize \code{SessionManager}, \code{WebServer}, \code{EcomApplication} & \footnotesize HTTP server, sessions, composition root\\
+\footnotesize Application & \footnotesize \code{com.ptit.ecom.application.service} & \footnotesize \code{CartService}, \code{CheckoutService}, \code{OrderService}, \code{ProductService}, \code{AssistantReply}, \code{AssistantService} & \footnotesize Coordinate the cart, checkout, order, product and assistant use cases\\
+\footnotesize Application & \footnotesize \code{com.ptit.ecom.application.search} & \footnotesize \code{CommonQuery}, \code{SearchResult}, \code{QueryService}, \code{SpeechService}, \code{ImageService}, \code{RankingService}, \code{SearchService} & \footnotesize Multimodal search: common query, speech, image, ranking\\
+\footnotesize Domain & \footnotesize \code{com.ptit.ecom.domain.customer} & \footnotesize \code{FullName}, \code{Address}, \code{Customer}, \code{CustomerVIP}, \code{CustomerNew} & \footnotesize Customer, name, address, customer tiers\\
+\footnotesize Domain & \footnotesize \code{com.ptit.ecom.domain.product} & \footnotesize \code{Product}, \code{Artist}, \code{Painting}, \code{Frame} & \footnotesize Product, painting, frame, artist\\
+\footnotesize Domain & \footnotesize \code{com.ptit.ecom.domain.cart} & \footnotesize \code{Cart}, \code{CartItem} & \footnotesize Cart and cart lines\\
+\footnotesize Domain & \footnotesize \code{com.ptit.ecom.domain.order} & \footnotesize \code{OrderStatus}, \code{Order}, \code{OrderItem}, \code{ShippingStatus}, \code{Shipping} & \footnotesize Order, order lines, shipping and their statuses\\
+\footnotesize Domain & \footnotesize \code{com.ptit.ecom.domain.payment} & \footnotesize \code{PaymentStatus}, \code{Payment}, \code{PayCash}, \code{PayCredit} & \footnotesize Payments and payment status\\
+\footnotesize Infrastructure & \footnotesize \code{com.ptit.ecom.infrastructure.repository} & \footnotesize \code{CustomerRepository}, \code{ProductRepository}, \code{CartRepository}, \code{OrderRepository} & \footnotesize Repository interfaces used by the application layer\\
+\footnotesize Infrastructure & \footnotesize \code{com.ptit.ecom.infrastructure.repository.sqlite} & \footnotesize \code{Database}, \code{SqliteCustomerRepository}, \code{SqliteProductRepository}, \code{SqliteCartRepository}, \code{SqliteOrderRepository} & \footnotesize JDBC implementations of the repositories on a SQLite file\\
+\footnotesize Infrastructure & \footnotesize \code{com.ptit.ecom.infrastructure.search} & \footnotesize \code{VectorIndex} & \footnotesize Vector index and cosine similarity\\
+\footnotesize Infrastructure & \footnotesize \code{com.ptit.ecom.infrastructure.ai} & \footnotesize \code{ToolCall}, \code{LlmReply}, \code{LlmClient}, \code{SpeechClient}, \code{WhisperClient}, \code{GemmaClient} & \footnotesize Clients of Gemma 4 (OpenAI-compatible) and of the Whisper voice server\\
+\end{longtable}

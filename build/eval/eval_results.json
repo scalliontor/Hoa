@@ -1,0 +1,2004 @@
+{
+  "date": "2026-10-30 16:09",
+  "summary": {
+    "text/Gemma 4/direct": {
+      "n": 14,
+      "hit1": 0.929,
+      "p5": 0.929,
+      "mrr": 0.941,
+      "seconds": 0.437
+    },
+    "text/Gemma 4/paraphrased": {
+      "n": 6,
+      "hit1": 0.667,
+      "p5": 0.667,
+      "mrr": 0.695,
+      "seconds": 0.405
+    },
+    "text/keyword rules/direct": {
+      "n": 14,
+      "hit1": 0.929,
+      "p5": 0.929,
+      "mrr": 0.941,
+      "seconds": 0.006
+    },
+    "text/keyword rules/paraphrased": {
+      "n": 6,
+      "hit1": 0.667,
+      "p5": 0.667,
+      "mrr": 0.667,
+      "seconds": 0.0
+    },
+    "voice/Whisper + Gemma 4": {
+      "n": 12,
+      "hit1": 0.833,
+      "p5": 0.833,
+      "mrr": 0.847,
+      "seconds": 1.186,
+      "wer": 0.041,
+      "utterances": 16,
+      "transcribe_seconds": 0.779,
+      "order_numbers_kept": 4
+    },
+    "image/Gemma 4 vision": {
+      "n": 8,
+      "hit1": 0.75,
+      "hit3": 0.875,
+      "mrr": 0.844,
+      "seconds": 0.611
+    },
+    "image/local colour": {
+      "n": 8,
+      "hit1": 0.125,
+      "hit3": 0.375,
+      "mrr": 0.229,
+      "seconds": 0.041
+    },
+    "assistant/Gemma 4 tools": {
+      "n": 7,
+      "correct": 7,
+      "tool_ok": 7,
+      "leaks": 0,
+      "seconds": 0.66
+    },
+    "assistant/rules": {
+      "n": 7,
+      "correct": 7,
+      "tool_ok": 7,
+      "leaks": 0,
+      "seconds": 0.001
+    },
+    "room/Gemma 4": {
+      "rooms": 3,
+      "picks": 13,
+      "non_empty": 3,
+      "reasons_present": 13,
+      "length_ok": 13,
+      "concrete": 12,
+      "seconds": 2.933
+    },
+    "room/vector fallback": {
+      "rooms": 3,
+      "picks": 24,
+      "non_empty": 3,
+      "reasons_present": 24,
+      "length_ok": 24,
+      "concrete": 24,
+      "seconds": 0.083
+    }
+  },
+  "text": [
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "blue landscape paintings",
+      "relevant": [
+        "P03",
+        "P05",
+        "P21"
+      ],
+      "top5": [
+        "P03",
+        "P05",
+        "P21",
+        "P01",
+        "P08"
+      ],
+      "reason": "Gemma 4 ▪ landscape ▪ blue",
+      "seconds": 0.42,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "Monet paintings under 100 dollars",
+      "relevant": [
+        "P01",
+        "P02",
+        "P03"
+      ],
+      "top5": [
+        "P01",
+        "P02",
+        "P03",
+        "P28",
+        "P29"
+      ],
+      "reason": "Gemma 4 ▪ Impressionism ▪ Claude Monet ▪ under $100",
+      "seconds": 0.45,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "Van Gogh sunflowers",
+      "relevant": [
+        "P06"
+      ],
+      "top5": [
+        "P06",
+        "P09",
+        "P05",
+        "P07",
+        "P08"
+      ],
+      "reason": "Gemma 4 ▪ Post-Impressionism ▪ flowers ▪ Vincent van Gogh",
+      "seconds": 0.46,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "the Great Wave by Hokusai",
+      "relevant": [
+        "P10"
+      ],
+      "top5": [
+        "P10",
+        "P11",
+        "P01",
+        "P12",
+        "P13"
+      ],
+      "reason": "Gemma 4 ▪ Ukiyo-e ▪ seascape ▪ Katsushika Hokusai",
+      "seconds": 0.46,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "Klimt paintings with gold",
+      "relevant": [
+        "P14",
+        "P15"
+      ],
+      "top5": [
+        "P14",
+        "P15",
+        "F04"
+      ],
+      "reason": "Gemma 4 ▪ Art Nouveau ▪ Gustav Klimt",
+      "seconds": 0.45,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "a red abstract painting for the living room",
+      "relevant": [
+        "P26"
+      ],
+      "top5": [
+        "P26",
+        "P11",
+        "P13"
+      ],
+      "reason": "Gemma 4 ▪ Abstract ▪ abstract ▪ red",
+      "seconds": 0.42,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "yellow still life with fruit",
+      "relevant": [
+        "P23"
+      ],
+      "top5": [
+        "P23",
+        "P19",
+        "P06",
+        "P07",
+        "P08"
+      ],
+      "reason": "Gemma 4 ▪ still life",
+      "seconds": 0.42,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "impressionist paintings under 150 dollars",
+      "relevant": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P17",
+        "P28",
+        "P29",
+        "P30",
+        "P32"
+      ],
+      "top5": [
+        "P01",
+        "P02",
+        "P03",
+        "P28",
+        "P29"
+      ],
+      "reason": "Gemma 4 ▪ Impressionism ▪ under $150",
+      "seconds": 0.43,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "Japanese woodblock print of Mount Fuji",
+      "relevant": [
+        "P11"
+      ],
+      "top5": [
+        "P11",
+        "P32",
+        "P03",
+        "P05",
+        "P08"
+      ],
+      "reason": "Gemma 4 ▪ Ukiyo-e ▪ landscape",
+      "seconds": 0.44,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "the Starry Night",
+      "relevant": [
+        "P05"
+      ],
+      "top5": [
+        "P05",
+        "P07",
+        "P08",
+        "P06",
+        "P09"
+      ],
+      "reason": "Gemma 4 ▪ Post-Impressionism ▪ landscape ▪ Vincent van Gogh",
+      "seconds": 0.46,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "sunset over the sea",
+      "relevant": [
+        "P01",
+        "P10",
+        "P20"
+      ],
+      "top5": [
+        "P01",
+        "P10",
+        "P20",
+        "P12",
+        "P21"
+      ],
+      "reason": "Gemma 4 ▪ seascape",
+      "seconds": 0.41,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "portrait of a woman in a blue dress",
+      "relevant": [
+        "P14",
+        "P15",
+        "P18",
+        "P24",
+        "P25",
+        "P27",
+        "P30"
+      ],
+      "top5": [
+        "P03",
+        "P01",
+        "P05",
+        "P10",
+        "P12"
+      ],
+      "reason": "Gemma 4 ▪ blue",
+      "seconds": 0.4,
+      "hit1": 0,
+      "p5": 0.0,
+      "rr": 0.167
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "green landscape under 100 dollars",
+      "relevant": [
+        "P22"
+      ],
+      "top5": [
+        "P22",
+        "P02",
+        "P03",
+        "P08",
+        "P11"
+      ],
+      "reason": "Gemma 4 ▪ landscape ▪ green ▪ under $100",
+      "seconds": 0.46,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "direct",
+      "request": "Japanese prints of the sea",
+      "relevant": [
+        "P10"
+      ],
+      "top5": [
+        "P10",
+        "P01",
+        "P20",
+        "P11",
+        "P12"
+      ],
+      "reason": "Gemma 4 ▪ Ukiyo-e ▪ seascape",
+      "seconds": 0.44,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "paraphrased",
+      "request": "a painting of a mountain in Provence",
+      "relevant": [
+        "P22"
+      ],
+      "top5": [
+        "P03",
+        "P05",
+        "P08",
+        "P11",
+        "P21"
+      ],
+      "reason": "Gemma 4 ▪ landscape",
+      "seconds": 0.39,
+      "hit1": 0,
+      "p5": 0.0,
+      "rr": 0.167
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "paraphrased",
+      "request": "artworks by the Dutch master of light",
+      "relevant": [
+        "P18",
+        "P19"
+      ],
+      "top5": [],
+      "reason": "",
+      "seconds": 0.39,
+      "hit1": 0,
+      "p5": 0.0,
+      "rr": 0.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "paraphrased",
+      "request": "flower paintings under a hundred bucks",
+      "relevant": [
+        "P02",
+        "P09",
+        "P13"
+      ],
+      "top5": [
+        "P02",
+        "P09",
+        "P13"
+      ],
+      "reason": "Gemma 4 ▪ flowers ▪ under $100",
+      "seconds": 0.42,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "paraphrased",
+      "request": "something from Tahiti",
+      "relevant": [
+        "P24"
+      ],
+      "top5": [
+        "P24"
+      ],
+      "reason": "Gemma 4",
+      "seconds": 0.41,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "paraphrased",
+      "request": "the painter of The Scream",
+      "relevant": [
+        "P25"
+      ],
+      "top5": [
+        "P25",
+        "P26"
+      ],
+      "reason": "Gemma 4 ▪ Expressionism ▪ Edvard Munch",
+      "seconds": 0.43,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "Gemma 4",
+      "group": "paraphrased",
+      "request": "a night sky full of stars",
+      "relevant": [
+        "P05"
+      ],
+      "top5": [
+        "P05",
+        "P03",
+        "P08",
+        "P11",
+        "P21"
+      ],
+      "reason": "Gemma 4 ▪ landscape",
+      "seconds": 0.39,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "blue landscape paintings",
+      "relevant": [
+        "P03",
+        "P05",
+        "P21"
+      ],
+      "top5": [
+        "P03",
+        "P05",
+        "P21",
+        "P01",
+        "P08"
+      ],
+      "reason": "Keyword rules ▪ landscape ▪ blue",
+      "seconds": 0.03,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "Monet paintings under 100 dollars",
+      "relevant": [
+        "P01",
+        "P02",
+        "P03"
+      ],
+      "top5": [
+        "P01",
+        "P02",
+        "P03"
+      ],
+      "reason": "Keyword rules ▪ under $100",
+      "seconds": 0.01,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "Van Gogh sunflowers",
+      "relevant": [
+        "P06"
+      ],
+      "top5": [
+        "P06",
+        "P05",
+        "P07",
+        "P08",
+        "P09"
+      ],
+      "reason": "Keyword rules",
+      "seconds": 0.01,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "the Great Wave by Hokusai",
+      "relevant": [
+        "P10"
+      ],
+      "top5": [
+        "P10",
+        "P01",
+        "P20",
+        "P11"
+      ],
+      "reason": "Keyword rules ▪ seascape",
+      "seconds": 0.01,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "Klimt paintings with gold",
+      "relevant": [
+        "P14",
+        "P15"
+      ],
+      "top5": [
+        "P14",
+        "P15",
+        "P06",
+        "P07",
+        "P08"
+      ],
+      "reason": "Keyword rules ▪ yellow",
+      "seconds": 0.01,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "a red abstract painting for the living room",
+      "relevant": [
+        "P26"
+      ],
+      "top5": [
+        "P26",
+        "P11",
+        "P13"
+      ],
+      "reason": "Keyword rules ▪ Abstract ▪ abstract ▪ red",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "yellow still life with fruit",
+      "relevant": [
+        "P23"
+      ],
+      "top5": [
+        "P23",
+        "P19",
+        "P06",
+        "P07",
+        "P08"
+      ],
+      "reason": "Keyword rules ▪ still life",
+      "seconds": 0.01,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "impressionist paintings under 150 dollars",
+      "relevant": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P17",
+        "P28",
+        "P29",
+        "P30",
+        "P32"
+      ],
+      "top5": [
+        "P01",
+        "P02",
+        "P03",
+        "P28",
+        "P29"
+      ],
+      "reason": "Keyword rules ▪ Impressionism ▪ under $150",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "Japanese woodblock print of Mount Fuji",
+      "relevant": [
+        "P11"
+      ],
+      "top5": [
+        "P11",
+        "P10",
+        "P12",
+        "P13",
+        "P32"
+      ],
+      "reason": "Keyword rules ▪ Ukiyo-e",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "the Starry Night",
+      "relevant": [
+        "P05"
+      ],
+      "top5": [
+        "P05",
+        "P07"
+      ],
+      "reason": "Keyword rules",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "sunset over the sea",
+      "relevant": [
+        "P01",
+        "P10",
+        "P20"
+      ],
+      "top5": [
+        "P01",
+        "P10",
+        "P20",
+        "P12",
+        "P21"
+      ],
+      "reason": "Keyword rules ▪ seascape",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "portrait of a woman in a blue dress",
+      "relevant": [
+        "P14",
+        "P15",
+        "P18",
+        "P24",
+        "P25",
+        "P27",
+        "P30"
+      ],
+      "top5": [
+        "P03",
+        "P01",
+        "P05",
+        "P10",
+        "P12"
+      ],
+      "reason": "Keyword rules ▪ blue",
+      "seconds": 0.0,
+      "hit1": 0,
+      "p5": 0.0,
+      "rr": 0.167
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "green landscape under 100 dollars",
+      "relevant": [
+        "P22"
+      ],
+      "top5": [
+        "P22",
+        "P02",
+        "P03",
+        "P08",
+        "P11"
+      ],
+      "reason": "Keyword rules ▪ landscape ▪ green ▪ under $100",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "direct",
+      "request": "Japanese prints of the sea",
+      "relevant": [
+        "P10"
+      ],
+      "top5": [
+        "P10",
+        "P01",
+        "P20",
+        "P11",
+        "P12"
+      ],
+      "reason": "Keyword rules ▪ Ukiyo-e ▪ seascape",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "paraphrased",
+      "request": "a painting of a mountain in Provence",
+      "relevant": [
+        "P22"
+      ],
+      "top5": [],
+      "reason": "",
+      "seconds": 0.0,
+      "hit1": 0,
+      "p5": 0.0,
+      "rr": 0.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "paraphrased",
+      "request": "artworks by the Dutch master of light",
+      "relevant": [
+        "P18",
+        "P19"
+      ],
+      "top5": [],
+      "reason": "",
+      "seconds": 0.0,
+      "hit1": 0,
+      "p5": 0.0,
+      "rr": 0.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "paraphrased",
+      "request": "flower paintings under a hundred bucks",
+      "relevant": [
+        "P02",
+        "P09",
+        "P13"
+      ],
+      "top5": [
+        "P02",
+        "P06",
+        "P09",
+        "P13"
+      ],
+      "reason": "Keyword rules ▪ flowers",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "paraphrased",
+      "request": "something from Tahiti",
+      "relevant": [
+        "P24"
+      ],
+      "top5": [
+        "P24"
+      ],
+      "reason": "Keyword rules",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "paraphrased",
+      "request": "the painter of The Scream",
+      "relevant": [
+        "P25"
+      ],
+      "top5": [
+        "P25"
+      ],
+      "reason": "Keyword rules",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "mode": "keyword rules",
+      "group": "paraphrased",
+      "request": "a night sky full of stars",
+      "relevant": [
+        "P05"
+      ],
+      "top5": [
+        "P05",
+        "P07",
+        "P26"
+      ],
+      "reason": "Keyword rules",
+      "seconds": 0.0,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    }
+  ],
+  "voice": [
+    {
+      "sample": "e01",
+      "reference": "blue landscape paintings",
+      "transcript": "blue landscape paintings",
+      "wer": 0.0,
+      "transcribe_seconds": 0.64,
+      "relevant": [
+        "P03",
+        "P05",
+        "P21"
+      ],
+      "top5": [
+        "P03",
+        "P05",
+        "P21",
+        "P01",
+        "P08"
+      ],
+      "search_seconds": 0.4,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "sample": "e02",
+      "reference": "Monet paintings under 100 dollars",
+      "transcript": "Monet paintings under $100",
+      "wer": 0.2,
+      "transcribe_seconds": 0.72,
+      "relevant": [
+        "P01",
+        "P02",
+        "P03"
+      ],
+      "top5": [
+        "P01",
+        "P02",
+        "P03",
+        "P28",
+        "P29"
+      ],
+      "search_seconds": 0.45,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "sample": "e06",
+      "reference": "Van Gogh sunflowers",
+      "transcript": "Van Gogh Sunflowers",
+      "wer": 0.0,
+      "transcribe_seconds": 0.83,
+      "relevant": [
+        "P06"
+      ],
+      "top5": [
+        "P06",
+        "P09",
+        "P05",
+        "P07",
+        "P08"
+      ],
+      "search_seconds": 0.44,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "sample": "e07",
+      "reference": "the Great Wave by Hokusai",
+      "transcript": "The Great Wave by Hokusai",
+      "wer": 0.0,
+      "transcribe_seconds": 0.78,
+      "relevant": [
+        "P10"
+      ],
+      "top5": [
+        "P10",
+        "P11",
+        "P01",
+        "P12",
+        "P13"
+      ],
+      "search_seconds": 0.44,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "sample": "e08",
+      "reference": "Klimt paintings with gold",
+      "transcript": "Climbed paintings with gold",
+      "wer": 0.25,
+      "transcribe_seconds": 0.81,
+      "relevant": [
+        "P14",
+        "P15"
+      ],
+      "top5": [
+        "F04"
+      ],
+      "search_seconds": 0.38,
+      "hit1": 0,
+      "p5": 0.0,
+      "rr": 0.0
+    },
+    {
+      "sample": "e09",
+      "reference": "a red abstract painting for the living room",
+      "transcript": "a red abstract painting for the living room",
+      "wer": 0.0,
+      "transcribe_seconds": 0.81,
+      "relevant": [
+        "P26"
+      ],
+      "top5": [
+        "P26",
+        "P11",
+        "P13"
+      ],
+      "search_seconds": 0.39,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "sample": "e10",
+      "reference": "yellow still life with fruit",
+      "transcript": "Yellow still life with fruit",
+      "wer": 0.0,
+      "transcribe_seconds": 0.77,
+      "relevant": [
+        "P23"
+      ],
+      "top5": [
+        "P23",
+        "P19",
+        "P06",
+        "P07",
+        "P08"
+      ],
+      "search_seconds": 0.39,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "sample": "e11",
+      "reference": "impressionist paintings under 150 dollars",
+      "transcript": "Impressionist paintings under $150",
+      "wer": 0.2,
+      "transcribe_seconds": 0.79,
+      "relevant": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P17",
+        "P28",
+        "P29",
+        "P30",
+        "P32"
+      ],
+      "top5": [
+        "P01",
+        "P02",
+        "P03",
+        "P28",
+        "P29"
+      ],
+      "search_seconds": 0.44,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "sample": "e14",
+      "reference": "Japanese woodblock print of Mount Fuji",
+      "transcript": "Japanese woodblock print of Mount Fuji",
+      "wer": 0.0,
+      "transcribe_seconds": 0.83,
+      "relevant": [
+        "P11"
+      ],
+      "top5": [
+        "P11",
+        "P32",
+        "P03",
+        "P05",
+        "P08"
+      ],
+      "search_seconds": 0.42,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "sample": "e15",
+      "reference": "the Starry Night",
+      "transcript": "The Starry Night",
+      "wer": 0.0,
+      "transcribe_seconds": 0.73,
+      "relevant": [
+        "P05"
+      ],
+      "top5": [
+        "P05",
+        "P07",
+        "P08",
+        "P06",
+        "P09"
+      ],
+      "search_seconds": 0.44,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "sample": "e18",
+      "reference": "sunset over the sea",
+      "transcript": "Sunset over the sea",
+      "wer": 0.0,
+      "transcribe_seconds": 0.75,
+      "relevant": [
+        "P01",
+        "P10",
+        "P20"
+      ],
+      "top5": [
+        "P01",
+        "P10",
+        "P20",
+        "P12",
+        "P21"
+      ],
+      "search_seconds": 0.38,
+      "hit1": 1,
+      "p5": 1.0,
+      "rr": 1.0
+    },
+    {
+      "sample": "e19",
+      "reference": "portrait of a woman in a blue dress",
+      "transcript": "portrait of a woman in a blue dress",
+      "wer": 0.0,
+      "transcribe_seconds": 0.81,
+      "relevant": [
+        "P14",
+        "P15",
+        "P18",
+        "P24",
+        "P25",
+        "P27",
+        "P30"
+      ],
+      "top5": [
+        "P03",
+        "P01",
+        "P05",
+        "P10",
+        "P12"
+      ],
+      "search_seconds": 0.39,
+      "hit1": 0,
+      "p5": 0.0,
+      "rr": 0.167
+    },
+    {
+      "sample": "e04",
+      "reference": "find my order 20261001",
+      "transcript": "Find my order 20261001",
+      "wer": 0.0,
+      "transcribe_seconds": 0.83,
+      "order_number_kept": true
+    },
+    {
+      "sample": "e05",
+      "reference": "where is my latest order",
+      "transcript": "Where is my latest order?",
+      "wer": 0.0,
+      "transcribe_seconds": 0.79,
+      "order_number_kept": true
+    },
+    {
+      "sample": "e17",
+      "reference": "cancel order 20261003",
+      "transcript": "cancel order 20261003",
+      "wer": 0.0,
+      "transcribe_seconds": 0.8,
+      "order_number_kept": true
+    },
+    {
+      "sample": "e20",
+      "reference": "what is the status of my last order",
+      "transcript": "What is the status of my last order?",
+      "wer": 0.0,
+      "transcribe_seconds": 0.77,
+      "order_number_kept": true
+    }
+  ],
+  "image": [
+    {
+      "mode": "Gemma 4 vision",
+      "query": "Q01",
+      "expected": "P06",
+      "top3": [
+        "P06",
+        "P07",
+        "P08"
+      ],
+      "rank": 1,
+      "hit1": 1,
+      "hit3": 1,
+      "rr": 1.0,
+      "seconds": 0.55,
+      "reason": "Gemma 4 vision ▪ Post-Impressionism ▪ flowers ▪ yellow ▪ Vincent van Gogh ▪ 100% visual match"
+    },
+    {
+      "mode": "Gemma 4 vision",
+      "query": "Q02",
+      "expected": "P10",
+      "top3": [
+        "P10",
+        "P01",
+        "P12"
+      ],
+      "rank": 1,
+      "hit1": 1,
+      "hit3": 1,
+      "rr": 1.0,
+      "seconds": 0.63,
+      "reason": "Gemma 4 vision ▪ Ukiyo-e ▪ seascape ▪ blue ▪ Katsushika Hokusai ▪ 100% visual match"
+    },
+    {
+      "mode": "Gemma 4 vision",
+      "query": "Q03",
+      "expected": "P22",
+      "top3": [
+        "P22",
+        "P05",
+        "P08"
+      ],
+      "rank": 1,
+      "hit1": 1,
+      "hit3": 1,
+      "rr": 1.0,
+      "seconds": 0.67,
+      "reason": "Gemma 4 vision ▪ Post-Impressionism ▪ landscape ▪ green ▪ Paul Cézanne ▪ 100% visual match"
+    },
+    {
+      "mode": "Gemma 4 vision",
+      "query": "Q04",
+      "expected": "P02",
+      "top3": [
+        "P01",
+        "P03",
+        "P17"
+      ],
+      "rank": 4,
+      "hit1": 0,
+      "hit3": 0,
+      "rr": 0.25,
+      "seconds": 0.55,
+      "reason": "Gemma 4 vision ▪ Impressionism ▪ blue ▪ Claude Monet ▪ 82% visual match"
+    },
+    {
+      "mode": "Gemma 4 vision",
+      "query": "Q05",
+      "expected": "P05",
+      "top3": [
+        "P05",
+        "P08",
+        "P03"
+      ],
+      "rank": 1,
+      "hit1": 1,
+      "hit3": 1,
+      "rr": 1.0,
+      "seconds": 0.61,
+      "reason": "Gemma 4 vision ▪ Post-Impressionism ▪ landscape ▪ blue ▪ Vincent van Gogh ▪ 100% visual match"
+    },
+    {
+      "mode": "Gemma 4 vision",
+      "query": "Q06",
+      "expected": "P14",
+      "top3": [
+        "P14",
+        "P15",
+        "P18"
+      ],
+      "rank": 1,
+      "hit1": 1,
+      "hit3": 1,
+      "rr": 1.0,
+      "seconds": 0.65,
+      "reason": "Gemma 4 vision ▪ Art Nouveau ▪ portrait ▪ Gustav Klimt ▪ 82% visual match"
+    },
+    {
+      "mode": "Gemma 4 vision",
+      "query": "Q07",
+      "expected": "P25",
+      "top3": [
+        "P25",
+        "P01",
+        "P03"
+      ],
+      "rank": 1,
+      "hit1": 1,
+      "hit3": 1,
+      "rr": 1.0,
+      "seconds": 0.62,
+      "reason": "Gemma 4 vision ▪ Expressionism ▪ portrait ▪ Edvard Munch ▪ 67% visual match"
+    },
+    {
+      "mode": "Gemma 4 vision",
+      "query": "Q08",
+      "expected": "P18",
+      "top3": [
+        "P27",
+        "P18",
+        "P23"
+      ],
+      "rank": 2,
+      "hit1": 0,
+      "hit3": 1,
+      "rr": 0.5,
+      "seconds": 0.61,
+      "reason": "Gemma 4 vision ▪ Realism ▪ portrait ▪ 67% visual match"
+    },
+    {
+      "mode": "local colour",
+      "query": "Q01",
+      "expected": "P06",
+      "top3": [
+        "P06",
+        "P07",
+        "P08"
+      ],
+      "rank": 1,
+      "hit1": 1,
+      "hit3": 1,
+      "rr": 1.0,
+      "seconds": 0.1,
+      "reason": "Local colour reading ▪ yellow ▪ 58% visual match"
+    },
+    {
+      "mode": "local colour",
+      "query": "Q02",
+      "expected": "P10",
+      "top3": [
+        "P30"
+      ],
+      "rank": null,
+      "hit1": 0,
+      "hit3": 0,
+      "rr": 0.0,
+      "seconds": 0.02,
+      "reason": "Local colour reading ▪ pink ▪ 58% visual match"
+    },
+    {
+      "mode": "local colour",
+      "query": "Q03",
+      "expected": "P22",
+      "top3": [
+        "P02",
+        "P22",
+        "P29"
+      ],
+      "rank": 2,
+      "hit1": 0,
+      "hit3": 1,
+      "rr": 0.5,
+      "seconds": 0.02,
+      "reason": "Local colour reading ▪ green ▪ 58% visual match"
+    },
+    {
+      "mode": "local colour",
+      "query": "Q04",
+      "expected": "P02",
+      "top3": [
+        "P23",
+        "P28"
+      ],
+      "rank": null,
+      "hit1": 0,
+      "hit3": 0,
+      "rr": 0.0,
+      "seconds": 0.03,
+      "reason": "Local colour reading ▪ brown ▪ 58% visual match"
+    },
+    {
+      "mode": "local colour",
+      "query": "Q05",
+      "expected": "P05",
+      "top3": [
+        "P01",
+        "P03",
+        "P05"
+      ],
+      "rank": 3,
+      "hit1": 0,
+      "hit3": 1,
+      "rr": 0.333,
+      "seconds": 0.04,
+      "reason": "Local colour reading ▪ blue ▪ 58% visual match"
+    },
+    {
+      "mode": "local colour",
+      "query": "Q06",
+      "expected": "P14",
+      "top3": [
+        "P23",
+        "P28"
+      ],
+      "rank": null,
+      "hit1": 0,
+      "hit3": 0,
+      "rr": 0.0,
+      "seconds": 0.05,
+      "reason": "Local colour reading ▪ brown ▪ 58% visual match"
+    },
+    {
+      "mode": "local colour",
+      "query": "Q07",
+      "expected": "P25",
+      "top3": [
+        "P23",
+        "P28"
+      ],
+      "rank": null,
+      "hit1": 0,
+      "hit3": 0,
+      "rr": 0.0,
+      "seconds": 0.03,
+      "reason": "Local colour reading ▪ brown ▪ 58% visual match"
+    },
+    {
+      "mode": "local colour",
+      "query": "Q08",
+      "expected": "P18",
+      "top3": [
+        "P23",
+        "P28"
+      ],
+      "rank": null,
+      "hit1": 0,
+      "hit3": 0,
+      "rr": 0.0,
+      "seconds": 0.04,
+      "reason": "Local colour reading ▪ brown ▪ 58% visual match"
+    }
+  ],
+  "assistant": [
+    {
+      "mode": "Gemma 4 tools",
+      "account": "C001",
+      "question": "find my order 20261001",
+      "answer": "Your order 20261001 has been shipped and is currently in transit via GHN Express. It includes \"The Great Wave off Kanagawa\" with a matte black aluminium frame. Your tracking number is GHN26102001.",
+      "tools": [
+        "find_order"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": true,
+      "seconds": 0.81
+    },
+    {
+      "mode": "Gemma 4 tools",
+      "account": "C001",
+      "question": "where is my latest order?",
+      "answer": "Your latest order (#20261001) has been shipped and is currently in transit via GHN Express. You can track your package using the tracking number GHN26102001.",
+      "tools": [
+        "latest_order"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": true,
+      "seconds": 0.49
+    },
+    {
+      "mode": "Gemma 4 tools",
+      "account": "C002",
+      "question": "where is my latest order?",
+      "answer": "Your latest order (#20261003) is currently being prepared for shipment. It includes a \"Composition VII\" print and a matte white frame. Once it's ready, it will be delivered to your address in Hanoi via GHN Express.",
+      "tools": [
+        "latest_order"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": true,
+      "seconds": 0.57
+    },
+    {
+      "mode": "Gemma 4 tools",
+      "account": "C001",
+      "question": "find my order 20261003",
+      "answer": "I'm sorry, but I couldn't find an order with the number 20261003 in your account. Please double-check the number and try again.",
+      "tools": [
+        "find_order"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": true,
+      "seconds": 0.56
+    },
+    {
+      "mode": "Gemma 4 tools",
+      "account": "C001",
+      "question": "list my orders",
+      "answer": "You have two orders:\n1. Order #20261001: Currently in transit via GHN Express (Total: $107.00).\n2. Order #20261002: Delivered (Total: $115.10).",
+      "tools": [
+        "list_orders"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": true,
+      "seconds": 0.65
+    },
+    {
+      "mode": "Gemma 4 tools",
+      "account": "C002",
+      "question": "what is the status of my last order",
+      "answer": "Your last order (number 20261003) is currently in the \"PLACED\" status. It is being prepared for shipment via GHN Express.",
+      "tools": [
+        "latest_order"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": true,
+      "seconds": 0.43
+    },
+    {
+      "mode": "Gemma 4 tools",
+      "account": "C001",
+      "question": "Monet paintings under 100 dollars",
+      "answer": "I found a few Claude Monet paintings under $100 for you. You can choose from \"Impression, Sunrise\" for $79, \"Water Lilies\" for $69, or \"Woman with a Parasol\" for $89.",
+      "tools": [
+        "search_paintings"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": true,
+      "seconds": 1.11
+    },
+    {
+      "mode": "rules",
+      "account": "C001",
+      "question": "find my order 20261001",
+      "answer": "(Gemma 4 is offline) Order 20261001 is shipped, total $107, tracking GHN Express GHN26102001.",
+      "tools": [
+        "find_order"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": false,
+      "seconds": 0.01
+    },
+    {
+      "mode": "rules",
+      "account": "C001",
+      "question": "where is my latest order?",
+      "answer": "(Gemma 4 is offline) Order 20261001 is shipped, total $107, tracking GHN Express GHN26102001.",
+      "tools": [
+        "latest_order"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": false,
+      "seconds": 0.0
+    },
+    {
+      "mode": "rules",
+      "account": "C002",
+      "question": "where is my latest order?",
+      "answer": "(Gemma 4 is offline) Order 20261003 is placed, total $172.",
+      "tools": [
+        "latest_order"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": false,
+      "seconds": 0.0
+    },
+    {
+      "mode": "rules",
+      "account": "C001",
+      "question": "find my order 20261003",
+      "answer": "(Gemma 4 is offline) Order 20261003 was not found in your account",
+      "tools": [
+        "find_order"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": false,
+      "seconds": 0.0
+    },
+    {
+      "mode": "rules",
+      "account": "C001",
+      "question": "list my orders",
+      "answer": "(Gemma 4 is offline) You have 2 orders: 20261001 (shipped), 20261002 (delivered).",
+      "tools": [
+        "list_orders"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": false,
+      "seconds": 0.0
+    },
+    {
+      "mode": "rules",
+      "account": "C002",
+      "question": "what is the status of my last order",
+      "answer": "(Gemma 4 is offline) Order 20261003 is placed, total $172.",
+      "tools": [
+        "latest_order"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": false,
+      "seconds": 0.0
+    },
+    {
+      "mode": "rules",
+      "account": "C001",
+      "question": "Monet paintings under 100 dollars",
+      "answer": "(Gemma 4 is offline) You may like: Impression, Sunrise ($79); Water Lilies ($69); Woman with a Parasol ($89).",
+      "tools": [
+        "search_paintings"
+      ],
+      "tool_ok": true,
+      "correct": true,
+      "leaks": [],
+      "ai": false,
+      "seconds": 0.0
+    }
+  ],
+  "room": [
+    {
+      "mode": "Gemma 4",
+      "room": "room1",
+      "reading": {
+        "ai": "gemma",
+        "room": "Living room",
+        "style": "Impressionism",
+        "subject": "cityscape",
+        "color": "blue",
+        "mood": "Serene, Sophisticated",
+        "light": "bright"
+      },
+      "describe_seconds": 1.76,
+      "search_seconds": 1.32,
+      "picks": [
+        {
+          "productId": "P01",
+          "reason": "The soft blue tones of this seascape beautifully complement your light grey sofa and the bright, airy atmosphere of the room.",
+          "words": 21,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P03",
+          "reason": "This blue impressionist landscape enhances the serene mood of your living space while matching the cool tones of your grey sofa.",
+          "words": 21,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P12",
+          "reason": "The blue hues in this cityscape create a sophisticated look that harmonizes perfectly with your grey upholstery and white walls.",
+          "words": 20,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P17",
+          "reason": "The blue and light colors in this painting add a touch of elegance to your modern interior and grey seating area.",
+          "words": 21,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P21",
+          "reason": "Its deep blue palette brings a sense of calm and depth to your bright room and light grey sofa setup.",
+          "words": 20,
+          "length_ok": true,
+          "concrete": true
+        }
+      ]
+    },
+    {
+      "mode": "Gemma 4",
+      "room": "room2",
+      "reading": {
+        "ai": "gemma",
+        "room": "living room",
+        "style": "Realism",
+        "subject": "landscape",
+        "color": "brown",
+        "mood": "cozy, rustic",
+        "light": "soft"
+      },
+      "describe_seconds": 1.79,
+      "search_seconds": 1.09,
+      "picks": [
+        {
+          "productId": "P08",
+          "reason": "The vibrant yellow tones of this wheat field beautifully complement your mustard yellow armchair and the warm brick wall.",
+          "words": 19,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P23",
+          "reason": "The earthy brown shades in this still life harmonize perfectly with your wooden floor and the rustic brick texture.",
+          "words": 19,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P28",
+          "reason": "The warm brown palette of this impressionist scene matches the natural tones of your wooden floor and brick interior.",
+          "words": 19,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P31",
+          "reason": "The lush green colors of this tropical landscape add a refreshing touch to your neutral grey sofa and brick walls.",
+          "words": 20,
+          "length_ok": true,
+          "concrete": true
+        }
+      ]
+    },
+    {
+      "mode": "Gemma 4",
+      "room": "room3",
+      "reading": {
+        "ai": "gemma",
+        "room": "living room",
+        "style": "Impressionism",
+        "subject": "flowers",
+        "color": "pink",
+        "mood": "serene",
+        "light": "soft"
+      },
+      "describe_seconds": 1.75,
+      "search_seconds": 1.09,
+      "picks": [
+        {
+          "productId": "P06",
+          "reason": "The vibrant yellow sunflowers will complement the warm sunlight hitting your white walls and the dark wooden coffee table.",
+          "words": 19,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P30",
+          "reason": "Soft pink tones in this portrait will beautifully harmonize with the warm light and the cozy, natural interior mood.",
+          "words": 19,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P13",
+          "reason": "The striking red accents in this artwork will add a sophisticated pop of color against your neutral grey sofa.",
+          "words": 19,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P02",
+          "reason": "Its lush green hues will bring a refreshing, natural feel to your bright room and enhance the organic atmosphere.",
+          "words": 19,
+          "length_ok": true,
+          "concrete": false
+        }
+      ]
+    },
+    {
+      "mode": "vector fallback",
+      "room": "room1",
+      "reading": {
+        "ai": "local",
+        "room": null,
+        "style": null,
+        "subject": null,
+        "color": "pink",
+        "mood": null,
+        "light": null
+      },
+      "describe_seconds": 0.04,
+      "search_seconds": 0.04,
+      "picks": [
+        {
+          "productId": "P30",
+          "reason": "Its pink tones and impressionist portrait work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P01",
+          "reason": "Its blue tones and impressionist seascape work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P02",
+          "reason": "Its green tones and impressionist flower piece work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P03",
+          "reason": "Its blue tones and impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P05",
+          "reason": "Its blue tones and post-impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P06",
+          "reason": "Its yellow tones and post-impressionist flower piece work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P07",
+          "reason": "Its yellow tones and post-impressionist city view work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P08",
+          "reason": "Its yellow tones and post-impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        }
+      ]
+    },
+    {
+      "mode": "vector fallback",
+      "room": "room2",
+      "reading": {
+        "ai": "local",
+        "room": null,
+        "style": null,
+        "subject": null,
+        "color": "brown",
+        "mood": null,
+        "light": null
+      },
+      "describe_seconds": 0.05,
+      "search_seconds": 0.05,
+      "picks": [
+        {
+          "productId": "P23",
+          "reason": "Its brown tones and post-impressionist still life work with the brown colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P28",
+          "reason": "Its brown tones and impressionist everyday scene work with the brown colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P01",
+          "reason": "Its blue tones and impressionist seascape work with the brown colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P02",
+          "reason": "Its green tones and impressionist flower piece work with the brown colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P03",
+          "reason": "Its blue tones and impressionist landscape work with the brown colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P05",
+          "reason": "Its blue tones and post-impressionist landscape work with the brown colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P06",
+          "reason": "Its yellow tones and post-impressionist flower piece work with the brown colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P07",
+          "reason": "Its yellow tones and post-impressionist city view work with the brown colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        }
+      ]
+    },
+    {
+      "mode": "vector fallback",
+      "room": "room3",
+      "reading": {
+        "ai": "local",
+        "room": null,
+        "style": null,
+        "subject": null,
+        "color": "pink",
+        "mood": null,
+        "light": null
+      },
+      "describe_seconds": 0.03,
+      "search_seconds": 0.04,
+      "picks": [
+        {
+          "productId": "P30",
+          "reason": "Its pink tones and impressionist portrait work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P01",
+          "reason": "Its blue tones and impressionist seascape work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P02",
+          "reason": "Its green tones and impressionist flower piece work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P03",
+          "reason": "Its blue tones and impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P05",
+          "reason": "Its blue tones and post-impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P06",
+          "reason": "Its yellow tones and post-impressionist flower piece work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P07",
+          "reason": "Its yellow tones and post-impressionist city view work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 23,
+          "length_ok": true,
+          "concrete": true
+        },
+        {
+          "productId": "P08",
+          "reason": "Its yellow tones and post-impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple.",
+          "words": 22,
+          "length_ok": true,
+          "concrete": true
+        }
+      ]
+    }
+  ]
+}

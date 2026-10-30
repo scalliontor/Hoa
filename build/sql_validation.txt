@@ -1,0 +1,27 @@
+SQLite 3.53.4, PRAGMA foreign_keys = ON
+17 tables created; 152 sample rows
+
+  address            3 rows
+  artist            19 rows
+  cart               2 rows
+  cart_item          1 rows
+  customer           2 rows
+  customer_new       1 rows
+  customer_vip       1 rows
+  frame              5 rows
+  order_item         5 rows
+  orders             3 rows
+  painting          32 rows
+  pay_cash           2 rows
+  pay_credit         1 rows
+  payment            3 rows
+  product           37 rows
+  product_feature   32 rows
+  shipping           3 rows
+
+  Rejected as expected (quantity 0 in cart_item): CHECK constraint failed: quantity > 0
+  Rejected as expected (unknown product in order_item): FOREIGN KEY constraint failed
+  Rejected as expected (second cart for C001): UNIQUE constraint failed: cart.customer_id
+  Rejected as expected (unknown order status): CHECK constraint failed: status IN ('PLACED','PROCESSING','SHIPPED','DELIVERED','CANCELLED')
+
+4/4 statements that break a constraint were rejected

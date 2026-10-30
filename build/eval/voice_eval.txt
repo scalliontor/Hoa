@@ -1,0 +1,23 @@
+Voice recognition evaluation (self-hosted Whisper, demo/voice-server)
+English (primary - the product language)
+  Model: small | device: cpu (int8) | language=en
+  Test set: 20 utterances spoken by macOS voices Daniel, Karen, Samantha; 26 requests in formats aiff, m4a, wav, webm
+  Audio length: mean 2.14 s, max 3.74 s
+  Transcription time: mean 0.701 s, max 1.43 s (NFR08 <= 3 s: met)
+  WER 2.0% | CER 0.9% | exact sentences 18/20
+  Worst sentences:
+    e08: "Klimt paintings with gold" -> "Climbed paintings with gold." (WER 25%)
+    e03: "show me paintings similar to this image" -> "Show me painting similar to this image." (WER 14%)
+Vietnamese (secondary)
+  Model: small | device: cpu (int8) | language=vi
+  Test set: 18 utterances spoken by macOS voices Linh; 24 requests in formats aiff, m4a, wav, webm
+  Audio length: mean 2.35 s, max 3.55 s
+  Transcription time: mean 0.756 s, max 1.047 s (NFR08 <= 3 s: met)
+  WER 22.6% | CER 9.2% | exact sentences 3/18
+  Worst sentences:
+    q01: "tranh phong cảnh tông xanh" -> "Chân phong cạnh tông sinh." (WER 60%)
+    q15: "tranh đêm đầy sao" -> "Trang đêm đời sao?" (WER 50%)
+    q07: "sóng lớn ngoài khơi Kanagawa của Hokusai" -> "Sống lớn ngoài khơi Kanna Gawa của Hokusai." (WER 43%)
+    q12: "khung gỗ sồi màu đen" -> "Không gỗ sổi màu đen." (WER 40%)
+    q10: "tranh chân dung thiếu nữ" -> "chanh chân dung thiếu nứa." (WER 40%)
+Note: synthetic voices are cleaner than a real customer in a noisy room, so these numbers are an upper bound; the live demo uses a real microphone.

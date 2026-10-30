@@ -1,0 +1,21 @@
+\begin{longtable}{@{}P{1.3cm}P{5.0cm}P{8.7cm}@{}}
+\caption{How the non-functional requirements are verified}\label{tab:nfrcheck}\\
+\toprule
+\small \textbf{ID} & \small \textbf{Short statement} & \small \textbf{Verification}\\
+\midrule
+\endfirsthead
+\toprule
+\small \textbf{ID} & \small \textbf{Short statement} & \small \textbf{Verification}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\small \textbf{NFR01} & \small Security: the customer id comes from the session and order ownership is checked on the server & \small Customer C002 asks for order 20261001 of C001 and is refused; the customer id is never read from the request body.\\
+\small \textbf{NFR02} & \small Fallback: when Gemma fails or times out, search falls back to keyword rules & \small With a wrong Gemma address the search still returns results from keyword rules and the page says that the fallback is used.\\
+\small \textbf{NFR03} & \small Uploaded images: JPEG, PNG or WebP only, at most 5 MB & \small A file that is not an image, or is larger than 5 MB, is rejected before Gemma is called.\\
+\small \textbf{NFR04} & \small Layered architecture: the UI never accesses the database, AI sits behind the LlmClient interface & \small Views call controllers only; repositories, GemmaClient and WhisperClient are created only in the composition root.\\
+\small \textbf{NFR05} & \small Payment data: never store the full card number, only the last four digits and the authorisation code & \small Table pay\_credit has card\_last4 and authorization\_code and no column for the full card number.\\
+\small \textbf{NFR06} & \small Runs offline on one machine: SQLite database, network only for the Gemma server & \small The application runs on one machine with a SQLite file; its only outside connection is the Gemma 4 server.\\
+\small \textbf{NFR07} & \small Performance: text search answers within 2 seconds on the demo data; an AI call waits at most 15 seconds & \small searchText is timed on the demo data; a Gemma call is cut after the timeoutSeconds of GemmaClient.\\
+\small \textbf{NFR08} & \small Voice privacy: audio is processed only on the machine by self-hosted Whisper; a 5-second sentence is transcribed within 3 seconds & \small Audio is sent only to the Whisper server on 127.0.0.1; the time to transcribe a 5-second sentence is measured (build/eval/voice\_eval.txt).\\
+\end{longtable}

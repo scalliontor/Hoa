@@ -1,0 +1,25 @@
+\begin{longtable}{@{}P{4.4cm}P{6.6cm}P{4.0cm}@{}}
+\caption{Settings in demo/config/app.properties and the class that reads them}\label{tab:config}\\
+\toprule
+\footnotesize \textbf{Key} & \footnotesize \textbf{Value} & \footnotesize \textbf{Read by}\\
+\midrule
+\endfirsthead
+\toprule
+\footnotesize \textbf{Key} & \footnotesize \textbf{Value} & \footnotesize \textbf{Read by}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\footnotesize \code{server.port} & \footnotesize \code{8686} & \footnotesize \code{WebServer}\\
+\footnotesize \code{db.path} & \footnotesize \code{data/ecom.db} & \footnotesize \code{Database}\\
+\footnotesize \code{gemma.baseUrl} & \footnotesize \code{http://171.226.10.121:8000/llm/v1/} & \footnotesize \code{GemmaClient}\\
+\footnotesize \code{gemma.apiKey} & \footnotesize \emph{(read at start-up, not printed)} & \footnotesize \code{GemmaClient}\\
+\footnotesize \code{gemma.model} & \footnotesize \code{gemma-4} & \footnotesize \code{GemmaClient}\\
+\footnotesize \code{gemma.timeoutSeconds} & \footnotesize \code{15} & \footnotesize \code{GemmaClient}\\
+\footnotesize \code{whisper.baseUrl} & \footnotesize \code{http://127.0.0.1:9000} & \footnotesize \code{WhisperClient}\\
+\footnotesize \code{whisper.model} & \footnotesize \code{small} & \footnotesize \code{WhisperClient}\\
+\footnotesize \code{whisper.timeoutSeconds} & \footnotesize \code{15} & \footnotesize \code{WhisperClient}\\
+\footnotesize \code{ranking.alpha} & \footnotesize \code{0.45} & \footnotesize \code{RankingService}\\
+\footnotesize \code{ranking.beta} & \footnotesize \code{0.45} & \footnotesize \code{RankingService}\\
+\footnotesize \code{ranking.gamma} & \footnotesize \code{0.10} & \footnotesize \code{RankingService}\\
+\end{longtable}

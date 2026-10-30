@@ -1,0 +1,23 @@
+# Secrets (Gemma API key)
+demo/config/app.local.properties
+
+# Python environments and caches
+.venv/
+__pycache__/
+*.pyc
+
+# Generated at build or run time
+demo/build/
+demo/data/ecom.db
+demo/data/*.db
+*.log
+slides/.cache/
+slides/qa/
+build/report/*
+!build/report/tieuluan_V2_*.pdf
+
+# Visual Paradigm backups
+*.bak_*
+
+# OS files
+.DS_Store

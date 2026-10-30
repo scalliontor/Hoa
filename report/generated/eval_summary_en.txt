@@ -1,0 +1,154 @@
+Họa. demo — experimental evaluation (2026-10-30 16:09)
+Two copies of the shop on fresh databases: Gemma 4 online, and Gemma 4 unreachable (NFR02 fallbacks).
+Relevance of a search result is judged from the catalogue attributes (data/catalog.json).
+Hit@1 = top result relevant; P@5 = relevant results in the top 5 / min(5, relevant); MRR = mean reciprocal rank.
+
+1. Search
+Input                               n   Hit@1     P@5     MRR  s/query
+Text, Gemma 4                      14    0.93    0.93    0.94     0.44
+Text, keyword rules (offline)      14    0.93    0.93    0.94     0.01
+Paraphrased text, Gemma 4           6    0.67    0.67    0.69     0.41
+Paraphrased text, keyword rules     6    0.67    0.67    0.67     0.00
+Voice, Whisper small + Gemma 4     12    0.83    0.83    0.85     1.19
+   Whisper: 16 recordings, mean WER 0.041, 0.78 s per recording, order numbers kept 4/4
+
+2. Image search (8 photos that differ from the shop images)
+Reader                              n   Hit@1   Hit@3     MRR  s/query
+Gemma 4 vision                      8    0.75    0.88    0.84     0.61
+Local average colour (offline)      8    0.12    0.38    0.23     0.04
+
+3. Assistant (orders and search)
+Mode                                n  correct  tool ok  leaks      s
+Gemma 4 tool calling                7        7        7      0   0.66
+Rules (offline)                     7        7        7      0   0.00
+
+4. Room picks (Try it in your room, 3 sample rooms)
+Mode                               picks  reasons  15-25 w  concrete  s/room
+Gemma 4 reads + picks                 13       13       13        12    2.93
+Vector ranking (offline)              24       24       24        24    0.08
+
+Details per query
+
+[text/Gemma 4/direct] 'blue landscape paintings': top5 ['P03', 'P05', 'P21', 'P01', 'P08'] relevant ['P03', 'P05', 'P21'] hit1=1 p5=1.0 (0.42 s)
+[text/Gemma 4/direct] 'Monet paintings under 100 dollars': top5 ['P01', 'P02', 'P03', 'P28', 'P29'] relevant ['P01', 'P02', 'P03'] hit1=1 p5=1.0 (0.45 s)
+[text/Gemma 4/direct] 'Van Gogh sunflowers': top5 ['P06', 'P09', 'P05', 'P07', 'P08'] relevant ['P06'] hit1=1 p5=1.0 (0.46 s)
+[text/Gemma 4/direct] 'the Great Wave by Hokusai': top5 ['P10', 'P11', 'P01', 'P12', 'P13'] relevant ['P10'] hit1=1 p5=1.0 (0.46 s)
+[text/Gemma 4/direct] 'Klimt paintings with gold': top5 ['P14', 'P15', 'F04'] relevant ['P14', 'P15'] hit1=1 p5=1.0 (0.45 s)
+[text/Gemma 4/direct] 'a red abstract painting for the living room': top5 ['P26', 'P11', 'P13'] relevant ['P26'] hit1=1 p5=1.0 (0.42 s)
+[text/Gemma 4/direct] 'yellow still life with fruit': top5 ['P23', 'P19', 'P06', 'P07', 'P08'] relevant ['P23'] hit1=1 p5=1.0 (0.42 s)
+[text/Gemma 4/direct] 'impressionist paintings under 150 dollars': top5 ['P01', 'P02', 'P03', 'P28', 'P29'] relevant ['P01', 'P02', 'P03', 'P04', 'P17', 'P28'] hit1=1 p5=1.0 (0.43 s)
+[text/Gemma 4/direct] 'Japanese woodblock print of Mount Fuji': top5 ['P11', 'P32', 'P03', 'P05', 'P08'] relevant ['P11'] hit1=1 p5=1.0 (0.44 s)
+[text/Gemma 4/direct] 'the Starry Night': top5 ['P05', 'P07', 'P08', 'P06', 'P09'] relevant ['P05'] hit1=1 p5=1.0 (0.46 s)
+[text/Gemma 4/direct] 'sunset over the sea': top5 ['P01', 'P10', 'P20', 'P12', 'P21'] relevant ['P01', 'P10', 'P20'] hit1=1 p5=1.0 (0.41 s)
+[text/Gemma 4/direct] 'portrait of a woman in a blue dress': top5 ['P03', 'P01', 'P05', 'P10', 'P12'] relevant ['P14', 'P15', 'P18', 'P24', 'P25', 'P27'] hit1=0 p5=0.0 (0.4 s)
+[text/Gemma 4/direct] 'green landscape under 100 dollars': top5 ['P22', 'P02', 'P03', 'P08', 'P11'] relevant ['P22'] hit1=1 p5=1.0 (0.46 s)
+[text/Gemma 4/direct] 'Japanese prints of the sea': top5 ['P10', 'P01', 'P20', 'P11', 'P12'] relevant ['P10'] hit1=1 p5=1.0 (0.44 s)
+[text/Gemma 4/paraphrased] 'a painting of a mountain in Provence': top5 ['P03', 'P05', 'P08', 'P11', 'P21'] relevant ['P22'] hit1=0 p5=0.0 (0.39 s)
+[text/Gemma 4/paraphrased] 'artworks by the Dutch master of light': top5 [] relevant ['P18', 'P19'] hit1=0 p5=0.0 (0.39 s)
+[text/Gemma 4/paraphrased] 'flower paintings under a hundred bucks': top5 ['P02', 'P09', 'P13'] relevant ['P02', 'P09', 'P13'] hit1=1 p5=1.0 (0.42 s)
+[text/Gemma 4/paraphrased] 'something from Tahiti': top5 ['P24'] relevant ['P24'] hit1=1 p5=1.0 (0.41 s)
+[text/Gemma 4/paraphrased] 'the painter of The Scream': top5 ['P25', 'P26'] relevant ['P25'] hit1=1 p5=1.0 (0.43 s)
+[text/Gemma 4/paraphrased] 'a night sky full of stars': top5 ['P05', 'P03', 'P08', 'P11', 'P21'] relevant ['P05'] hit1=1 p5=1.0 (0.39 s)
+[text/keyword rules/direct] 'blue landscape paintings': top5 ['P03', 'P05', 'P21', 'P01', 'P08'] relevant ['P03', 'P05', 'P21'] hit1=1 p5=1.0 (0.03 s)
+[text/keyword rules/direct] 'Monet paintings under 100 dollars': top5 ['P01', 'P02', 'P03'] relevant ['P01', 'P02', 'P03'] hit1=1 p5=1.0 (0.01 s)
+[text/keyword rules/direct] 'Van Gogh sunflowers': top5 ['P06', 'P05', 'P07', 'P08', 'P09'] relevant ['P06'] hit1=1 p5=1.0 (0.01 s)
+[text/keyword rules/direct] 'the Great Wave by Hokusai': top5 ['P10', 'P01', 'P20', 'P11'] relevant ['P10'] hit1=1 p5=1.0 (0.01 s)
+[text/keyword rules/direct] 'Klimt paintings with gold': top5 ['P14', 'P15', 'P06', 'P07', 'P08'] relevant ['P14', 'P15'] hit1=1 p5=1.0 (0.01 s)
+[text/keyword rules/direct] 'a red abstract painting for the living room': top5 ['P26', 'P11', 'P13'] relevant ['P26'] hit1=1 p5=1.0 (0.0 s)
+[text/keyword rules/direct] 'yellow still life with fruit': top5 ['P23', 'P19', 'P06', 'P07', 'P08'] relevant ['P23'] hit1=1 p5=1.0 (0.01 s)
+[text/keyword rules/direct] 'impressionist paintings under 150 dollars': top5 ['P01', 'P02', 'P03', 'P28', 'P29'] relevant ['P01', 'P02', 'P03', 'P04', 'P17', 'P28'] hit1=1 p5=1.0 (0.0 s)
+[text/keyword rules/direct] 'Japanese woodblock print of Mount Fuji': top5 ['P11', 'P10', 'P12', 'P13', 'P32'] relevant ['P11'] hit1=1 p5=1.0 (0.0 s)
+[text/keyword rules/direct] 'the Starry Night': top5 ['P05', 'P07'] relevant ['P05'] hit1=1 p5=1.0 (0.0 s)
+[text/keyword rules/direct] 'sunset over the sea': top5 ['P01', 'P10', 'P20', 'P12', 'P21'] relevant ['P01', 'P10', 'P20'] hit1=1 p5=1.0 (0.0 s)
+[text/keyword rules/direct] 'portrait of a woman in a blue dress': top5 ['P03', 'P01', 'P05', 'P10', 'P12'] relevant ['P14', 'P15', 'P18', 'P24', 'P25', 'P27'] hit1=0 p5=0.0 (0.0 s)
+[text/keyword rules/direct] 'green landscape under 100 dollars': top5 ['P22', 'P02', 'P03', 'P08', 'P11'] relevant ['P22'] hit1=1 p5=1.0 (0.0 s)
+[text/keyword rules/direct] 'Japanese prints of the sea': top5 ['P10', 'P01', 'P20', 'P11', 'P12'] relevant ['P10'] hit1=1 p5=1.0 (0.0 s)
+[text/keyword rules/paraphrased] 'a painting of a mountain in Provence': top5 [] relevant ['P22'] hit1=0 p5=0.0 (0.0 s)
+[text/keyword rules/paraphrased] 'artworks by the Dutch master of light': top5 [] relevant ['P18', 'P19'] hit1=0 p5=0.0 (0.0 s)
+[text/keyword rules/paraphrased] 'flower paintings under a hundred bucks': top5 ['P02', 'P06', 'P09', 'P13'] relevant ['P02', 'P09', 'P13'] hit1=1 p5=1.0 (0.0 s)
+[text/keyword rules/paraphrased] 'something from Tahiti': top5 ['P24'] relevant ['P24'] hit1=1 p5=1.0 (0.0 s)
+[text/keyword rules/paraphrased] 'the painter of The Scream': top5 ['P25'] relevant ['P25'] hit1=1 p5=1.0 (0.0 s)
+[text/keyword rules/paraphrased] 'a night sky full of stars': top5 ['P05', 'P07', 'P26'] relevant ['P05'] hit1=1 p5=1.0 (0.0 s)
+[voice] e01 heard 'blue landscape paintings' (ref 'blue landscape paintings', WER 0.0) top5 ['P03', 'P05', 'P21', 'P01', 'P08'] hit1=1
+[voice] e02 heard 'Monet paintings under $100' (ref 'Monet paintings under 100 dollars', WER 0.2) top5 ['P01', 'P02', 'P03', 'P28', 'P29'] hit1=1
+[voice] e06 heard 'Van Gogh Sunflowers' (ref 'Van Gogh sunflowers', WER 0.0) top5 ['P06', 'P09', 'P05', 'P07', 'P08'] hit1=1
+[voice] e07 heard 'The Great Wave by Hokusai' (ref 'the Great Wave by Hokusai', WER 0.0) top5 ['P10', 'P11', 'P01', 'P12', 'P13'] hit1=1
+[voice] e08 heard 'Climbed paintings with gold' (ref 'Klimt paintings with gold', WER 0.25) top5 ['F04'] hit1=0
+[voice] e09 heard 'a red abstract painting for the living room' (ref 'a red abstract painting for the living room', WER 0.0) top5 ['P26', 'P11', 'P13'] hit1=1
+[voice] e10 heard 'Yellow still life with fruit' (ref 'yellow still life with fruit', WER 0.0) top5 ['P23', 'P19', 'P06', 'P07', 'P08'] hit1=1
+[voice] e11 heard 'Impressionist paintings under $150' (ref 'impressionist paintings under 150 dollars', WER 0.2) top5 ['P01', 'P02', 'P03', 'P28', 'P29'] hit1=1
+[voice] e14 heard 'Japanese woodblock print of Mount Fuji' (ref 'Japanese woodblock print of Mount Fuji', WER 0.0) top5 ['P11', 'P32', 'P03', 'P05', 'P08'] hit1=1
+[voice] e15 heard 'The Starry Night' (ref 'the Starry Night', WER 0.0) top5 ['P05', 'P07', 'P08', 'P06', 'P09'] hit1=1
+[voice] e18 heard 'Sunset over the sea' (ref 'sunset over the sea', WER 0.0) top5 ['P01', 'P10', 'P20', 'P12', 'P21'] hit1=1
+[voice] e19 heard 'portrait of a woman in a blue dress' (ref 'portrait of a woman in a blue dress', WER 0.0) top5 ['P03', 'P01', 'P05', 'P10', 'P12'] hit1=0
+[voice] e04 heard 'Find my order 20261001' (ref 'find my order 20261001', WER 0.0)
+[voice] e05 heard 'Where is my latest order?' (ref 'where is my latest order', WER 0.0)
+[voice] e17 heard 'cancel order 20261003' (ref 'cancel order 20261003', WER 0.0)
+[voice] e20 heard 'What is the status of my last order?' (ref 'what is the status of my last order', WER 0.0)
+[image/Gemma 4 vision] Q01 expected P06 rank 1 top3 ['P06', 'P07', 'P08']
+[image/Gemma 4 vision] Q02 expected P10 rank 1 top3 ['P10', 'P01', 'P12']
+[image/Gemma 4 vision] Q03 expected P22 rank 1 top3 ['P22', 'P05', 'P08']
+[image/Gemma 4 vision] Q04 expected P02 rank 4 top3 ['P01', 'P03', 'P17']
+[image/Gemma 4 vision] Q05 expected P05 rank 1 top3 ['P05', 'P08', 'P03']
+[image/Gemma 4 vision] Q06 expected P14 rank 1 top3 ['P14', 'P15', 'P18']
+[image/Gemma 4 vision] Q07 expected P25 rank 1 top3 ['P25', 'P01', 'P03']
+[image/Gemma 4 vision] Q08 expected P18 rank 2 top3 ['P27', 'P18', 'P23']
+[image/local colour] Q01 expected P06 rank 1 top3 ['P06', 'P07', 'P08']
+[image/local colour] Q02 expected P10 rank None top3 ['P30']
+[image/local colour] Q03 expected P22 rank 2 top3 ['P02', 'P22', 'P29']
+[image/local colour] Q04 expected P02 rank None top3 ['P23', 'P28']
+[image/local colour] Q05 expected P05 rank 3 top3 ['P01', 'P03', 'P05']
+[image/local colour] Q06 expected P14 rank None top3 ['P23', 'P28']
+[image/local colour] Q07 expected P25 rank None top3 ['P23', 'P28']
+[image/local colour] Q08 expected P18 rank None top3 ['P23', 'P28']
+[assistant/Gemma 4 tools] C001 'find my order 20261001' -> 'Your order 20261001 has been shipped and is currently in transit via GHN Express. It includes "The Great Wave off Kanagawa" with a matte black alumini' tools ['find_order'] correct=True leaks=[]
+[assistant/Gemma 4 tools] C001 'where is my latest order?' -> 'Your latest order (#20261001) has been shipped and is currently in transit via GHN Express. You can track your package using the tracking number GHN26' tools ['latest_order'] correct=True leaks=[]
+[assistant/Gemma 4 tools] C002 'where is my latest order?' -> 'Your latest order (#20261003) is currently being prepared for shipment. It includes a "Composition VII" print and a matte white frame. Once it\'s ready' tools ['latest_order'] correct=True leaks=[]
+[assistant/Gemma 4 tools] C001 'find my order 20261003' -> "I'm sorry, but I couldn't find an order with the number 20261003 in your account. Please double-check the number and try again." tools ['find_order'] correct=True leaks=[]
+[assistant/Gemma 4 tools] C001 'list my orders' -> 'You have two orders:\n1. Order #20261001: Currently in transit via GHN Express (Total: $107.00).\n2. Order #20261002: Delivered (Total: $115.10).' tools ['list_orders'] correct=True leaks=[]
+[assistant/Gemma 4 tools] C002 'what is the status of my last order' -> 'Your last order (number 20261003) is currently in the "PLACED" status. It is being prepared for shipment via GHN Express.' tools ['latest_order'] correct=True leaks=[]
+[assistant/Gemma 4 tools] C001 'Monet paintings under 100 dollars' -> 'I found a few Claude Monet paintings under $100 for you. You can choose from "Impression, Sunrise" for $79, "Water Lilies" for $69, or "Woman with a P' tools ['search_paintings'] correct=True leaks=[]
+[assistant/rules] C001 'find my order 20261001' -> '(Gemma 4 is offline) Order 20261001 is shipped, total $107, tracking GHN Express GHN26102001.' tools ['find_order'] correct=True leaks=[]
+[assistant/rules] C001 'where is my latest order?' -> '(Gemma 4 is offline) Order 20261001 is shipped, total $107, tracking GHN Express GHN26102001.' tools ['latest_order'] correct=True leaks=[]
+[assistant/rules] C002 'where is my latest order?' -> '(Gemma 4 is offline) Order 20261003 is placed, total $172.' tools ['latest_order'] correct=True leaks=[]
+[assistant/rules] C001 'find my order 20261003' -> '(Gemma 4 is offline) Order 20261003 was not found in your account' tools ['find_order'] correct=True leaks=[]
+[assistant/rules] C001 'list my orders' -> '(Gemma 4 is offline) You have 2 orders: 20261001 (shipped), 20261002 (delivered).' tools ['list_orders'] correct=True leaks=[]
+[assistant/rules] C002 'what is the status of my last order' -> '(Gemma 4 is offline) Order 20261003 is placed, total $172.' tools ['latest_order'] correct=True leaks=[]
+[assistant/rules] C001 'Monet paintings under 100 dollars' -> '(Gemma 4 is offline) You may like: Impression, Sunrise ($79); Water Lilies ($69); Woman with a Parasol ($89).' tools ['search_paintings'] correct=True leaks=[]
+[room/Gemma 4] room1 P01: The soft blue tones of this seascape beautifully complement your light grey sofa and the bright, airy atmosphere of the room. (21 words)
+[room/Gemma 4] room1 P03: This blue impressionist landscape enhances the serene mood of your living space while matching the cool tones of your grey sofa. (21 words)
+[room/Gemma 4] room1 P12: The blue hues in this cityscape create a sophisticated look that harmonizes perfectly with your grey upholstery and white walls. (20 words)
+[room/Gemma 4] room1 P17: The blue and light colors in this painting add a touch of elegance to your modern interior and grey seating area. (21 words)
+[room/Gemma 4] room1 P21: Its deep blue palette brings a sense of calm and depth to your bright room and light grey sofa setup. (20 words)
+[room/Gemma 4] room2 P08: The vibrant yellow tones of this wheat field beautifully complement your mustard yellow armchair and the warm brick wall. (19 words)
+[room/Gemma 4] room2 P23: The earthy brown shades in this still life harmonize perfectly with your wooden floor and the rustic brick texture. (19 words)
+[room/Gemma 4] room2 P28: The warm brown palette of this impressionist scene matches the natural tones of your wooden floor and brick interior. (19 words)
+[room/Gemma 4] room2 P31: The lush green colors of this tropical landscape add a refreshing touch to your neutral grey sofa and brick walls. (20 words)
+[room/Gemma 4] room3 P06: The vibrant yellow sunflowers will complement the warm sunlight hitting your white walls and the dark wooden coffee table. (19 words)
+[room/Gemma 4] room3 P30: Soft pink tones in this portrait will beautifully harmonize with the warm light and the cozy, natural interior mood. (19 words)
+[room/Gemma 4] room3 P13: The striking red accents in this artwork will add a sophisticated pop of color against your neutral grey sofa. (19 words)
+[room/Gemma 4] room3 P02: Its lush green hues will bring a refreshing, natural feel to your bright room and enhance the organic atmosphere. (19 words)
+[room/vector fallback] room1 P30: Its pink tones and impressionist portrait work with the pink colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room1 P01: Its blue tones and impressionist seascape work with the pink colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room1 P02: Its green tones and impressionist flower piece work with the pink colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room1 P03: Its blue tones and impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room1 P05: Its blue tones and post-impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room1 P06: Its yellow tones and post-impressionist flower piece work with the pink colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room1 P07: Its yellow tones and post-impressionist city view work with the pink colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room1 P08: Its yellow tones and post-impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room2 P23: Its brown tones and post-impressionist still life work with the brown colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room2 P28: Its brown tones and impressionist everyday scene work with the brown colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room2 P01: Its blue tones and impressionist seascape work with the brown colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room2 P02: Its green tones and impressionist flower piece work with the brown colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room2 P03: Its blue tones and impressionist landscape work with the brown colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room2 P05: Its blue tones and post-impressionist landscape work with the brown colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room2 P06: Its yellow tones and post-impressionist flower piece work with the brown colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room2 P07: Its yellow tones and post-impressionist city view work with the brown colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room3 P30: Its pink tones and impressionist portrait work with the pink colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room3 P01: Its blue tones and impressionist seascape work with the pink colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room3 P02: Its green tones and impressionist flower piece work with the pink colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room3 P03: Its blue tones and impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room3 P05: Its blue tones and post-impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple. (22 words)
+[room/vector fallback] room3 P06: Its yellow tones and post-impressionist flower piece work with the pink colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room3 P07: Its yellow tones and post-impressionist city view work with the pink colour read from your photo, and keep the wall calm and simple. (23 words)
+[room/vector fallback] room3 P08: Its yellow tones and post-impressionist landscape work with the pink colour read from your photo, and keep the wall calm and simple. (22 words)

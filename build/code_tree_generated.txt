@@ -1,0 +1,76 @@
+com/ptit/ecom/
+├── application/
+│   ├── search/
+│   │   ├── CommonQuery.java
+│   │   ├── ImageService.java
+│   │   ├── QueryService.java
+│   │   ├── RankingService.java
+│   │   ├── SearchResult.java
+│   │   ├── SearchService.java
+│   │   └── SpeechService.java
+│   └── service/
+│       ├── AssistantReply.java
+│       ├── AssistantService.java
+│       ├── CartService.java
+│       ├── CheckoutService.java
+│       ├── OrderService.java
+│       └── ProductService.java
+├── domain/
+│   ├── cart/
+│   │   ├── Cart.java
+│   │   └── CartItem.java
+│   ├── customer/
+│   │   ├── Address.java
+│   │   ├── Customer.java
+│   │   ├── CustomerNew.java
+│   │   ├── CustomerVIP.java
+│   │   └── FullName.java
+│   ├── order/
+│   │   ├── Order.java
+│   │   ├── OrderItem.java
+│   │   ├── OrderStatus.java
+│   │   ├── Shipping.java
+│   │   └── ShippingStatus.java
+│   ├── payment/
+│   │   ├── PayCash.java
+│   │   ├── PayCredit.java
+│   │   ├── Payment.java
+│   │   └── PaymentStatus.java
+│   └── product/
+│       ├── Artist.java
+│       ├── Frame.java
+│       ├── Painting.java
+│       └── Product.java
+├── infrastructure/
+│   ├── ai/
+│   │   ├── GemmaClient.java
+│   │   ├── LlmClient.java
+│   │   ├── LlmReply.java
+│   │   ├── SpeechClient.java
+│   │   ├── ToolCall.java
+│   │   └── WhisperClient.java
+│   ├── repository/
+│   │   ├── sqlite/
+│   │   │   ├── Database.java
+│   │   │   ├── SqliteCartRepository.java
+│   │   │   ├── SqliteCustomerRepository.java
+│   │   │   ├── SqliteOrderRepository.java
+│   │   │   └── SqliteProductRepository.java
+│   │   ├── CartRepository.java
+│   │   ├── CustomerRepository.java
+│   │   ├── OrderRepository.java
+│   │   └── ProductRepository.java
+│   └── search/
+│       └── VectorIndex.java
+└── presentation/
+    ├── controller/
+    │   ├── AdminController.java
+    │   ├── AssistantController.java
+    │   ├── CartController.java
+    │   ├── CheckoutController.java
+    │   ├── OrderController.java
+    │   └── SearchController.java
+    └── web/
+        ├── EcomApplication.java
+        ├── SessionManager.java
+        └── WebServer.java

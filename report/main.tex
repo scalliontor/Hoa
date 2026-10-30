@@ -1,0 +1,41 @@
+% Group course essay "Họa." (one PDF): five chapters as on the instructor's board. Build with report/build.sh
+% (it regenerates the tables from tools/model.py, then runs tectonic).
+% Names of classes, methods, tables and requirements come from tools/model.py (report/generated);
+% figures, screenshots, code excerpts and numbers come from the VP project and the demo build.
+\documentclass[12pt,a4paper,oneside,openany]{report}
+\input{preamble}
+\input{members}
+\input{generated/paths}
+\input{generated/schema}
+\input{generated/config_values}
+\input{generated/listings}
+\input{generated/voice_values}
+\input{generated/eval_values}
+
+\hypersetup{pdftitle={Hoa. -- An Online Painting Gallery with Multimodal Search},
+  pdfauthor={Group \groupNumber{} -- Class 04}, pdfsubject={Information System Analysis and Design -- Group Course Essay}}
+
+\begin{document}
+\pagenumbering{roman}
+\input{chapters/cover}
+
+{\setlength{\parskip}{0pt}\setstretch{1.1}\tableofcontents}
+\clearpage
+{\setlength{\parskip}{0pt}\setstretch{1.05}\listoffigures}
+\clearpage
+{\setlength{\parskip}{0pt}\setstretch{1.05}\listoftables}
+\clearpage
+\input{chapters/front}
+
+\clearpage
+\pagenumbering{arabic}
+\input{chapters/ch1_requirements}
+\input{chapters/ch2_analysis}
+\input{chapters/ch3_ai}
+\input{chapters/ch4_design}
+\input{chapters/ch5_code}
+\input{chapters/conclusion}
+\input{chapters/references}
+\appendix
+\input{chapters/appendix}
+\end{document}

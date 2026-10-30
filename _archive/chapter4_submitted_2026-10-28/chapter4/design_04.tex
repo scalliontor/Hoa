@@ -1,0 +1,963 @@
+% Chapter 4 (Design) of the essay. Compile from the infor_sys folder with:
+%   tectonic -X compile tieuluan/chapter4/design_04.tex --outdir tieuluan/build
+% Every fact about classes, tables and packages comes from tieuluan/tools/model.py;
+% figures come from the Visual Paradigm project, numbers from files in tieuluan/build.
+\documentclass[12pt,a4paper]{article}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Arial}{\setsansfont{Arial}}{\setsansfont{TeX Gyre Heros}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}[Scale=0.80]}{\setmonofont{TeX Gyre Cursor}[Scale=0.85]}
+\usepackage[left=2.6cm,right=1.8cm,top=2.4cm,bottom=2.4cm,headheight=16pt]{geometry}
+\usepackage{setspace,titlesec,tikz}
+\setstretch{1.2}
+\usepackage{graphicx,array,booktabs,longtable,tabularx,multirow}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem,float,caption,needspace,pdflscape}
+\usepackage{listings,fancyvrb}
+\usepackage{xcolor}
+\definecolor{ptitred}{HTML}{A51C30}
+\definecolor{codegray}{HTML}{F6F6F6}
+\usepackage[obeyspaces,spaces]{url}
+\usepackage[unicode,hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape Tiểu luận Phân tích và thiết kế hệ thống thông tin}
+\fancyhead[R]{\small\itshape Chương 4. Thiết kế (Design)}
+\fancyfoot[C]{\thepage}
+\fancypagestyle{plain}{\fancyhf{}\fancyhead[L]{\small\itshape Tiểu luận Phân tích và thiết kế hệ thống thông tin}%
+  \fancyhead[R]{\small\itshape Chương 4. Thiết kế (Design)}\fancyfoot[C]{\thepage}}
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\listfigurename}{Danh mục hình vẽ}
+\renewcommand{\listtablename}{Danh mục bảng}
+\renewcommand{\thesection}{4.\arabic{section}}
+\renewcommand{\thefigure}{4.\arabic{figure}}
+\renewcommand{\thetable}{4.\arabic{table}}
+\setlength{\parindent}{0.8cm}
+\setlength{\parskip}{4pt}
+% Numbered headings in the usual Vietnamese style: "4.1." and "4.1.1." in black bold.
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{14pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+\setlength{\emergencystretch}{3em}
+\renewcommand{\arraystretch}{1.18}
+\setlength{\tabcolsep}{4.6pt}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\renewcommand{\tabularxcolumn}[1]{>{\raggedright\arraybackslash}p{#1}}
+\setlist{topsep=3pt,itemsep=2pt,parsep=0pt}
+\captionsetup{font=small,labelfont=bf,labelsep=period}
+\captionsetup[figure]{textfont=it}
+\setlength{\LTpre}{4pt}
+\setlength{\LTpost}{6pt}
+
+% Identifiers and signatures: monospaced and breakable after . , ( ) : < > _
+\makeatletter
+\def\UrlBreaks{\do\.\do\,\do\(\do\)\do\:\do\<\do\>\do\_\do\/\do\[\do\]}
+\makeatother
+\DeclareUrlCommand\code{\urlstyle{tt}}
+
+\lstdefinestyle{ecom}{basicstyle=\ttfamily\scriptsize,breaklines=true,frame=single,
+  backgroundcolor=\color{codegray},columns=fullflexible,keepspaces=true,showstringspaces=false,
+  numbers=left,numberstyle=\tiny\color{gray},xleftmargin=2em,framexleftmargin=1.6em,tabsize=4,
+  keywordstyle=\bfseries,commentstyle=\itshape\color{black!65}}
+\lstset{style=ecom}
+\fvset{fontsize=\scriptsize,frame=single,framesep=6pt}
+
+% Figure exported from the Visual Paradigm project; a placeholder keeps drafts compiling.
+\newcommand{\vpimage}[2]{%
+  \IfFileExists{../figures/vp/#1}%
+    {\includegraphics[width=\linewidth,height=#2,keepaspectratio]{../figures/vp/#1}}%
+    {\fbox{\parbox[c][5cm][c]{0.85\linewidth}{\centering Hình đang được dựng từ Visual Paradigm\\[3pt]
+      \small\texttt{\detokenize{#1}}}}}}
+\newcommand{\txtfile}[1]{\IfFileExists{#1}{\VerbatimInput{#1}}{\fbox{Chưa có tệp \texttt{\detokenize{#1}}}}}
+\newcommand{\codefile}[2]{\IfFileExists{#2}{\lstinputlisting[language=#1]{#2}}{\fbox{Chưa có tệp \texttt{\detokenize{#2}}}}}
+
+% Code and SQL statistics are written by tools/gen_java.py and tools/gen_sql.py.
+\IfFileExists{../build/code_stats.tex}{\input{../build/code_stats.tex}}{}
+\providecommand{\javaFileCount}{?}
+\providecommand{\javaLineCount}{?}
+\providecommand{\javaPackageCount}{?}
+\providecommand{\sqlTableCount}{?}
+\providecommand{\sqlLineCount}{?}
+
+\begin{document}
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+  \draw[line width=1.6pt] ([xshift=1.6cm,yshift=-1.4cm]current page.north west)
+    rectangle ([xshift=-1.2cm,yshift=1.4cm]current page.south east);
+  \draw[line width=0.5pt] ([xshift=1.75cm,yshift=-1.55cm]current page.north west)
+    rectangle ([xshift=-1.35cm,yshift=1.55cm]current page.south east);
+\end{tikzpicture}
+\centering
+\setstretch{1.15}
+{\large\bfseries HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG\par}
+\vspace{2pt}\rule{0.35\linewidth}{0.6pt}\par
+\vspace{2.6cm}
+{\Large\bfseries TIỂU LUẬN MÔN HỌC\par}
+\vspace{0.25cm}
+{\Large\bfseries PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG THÔNG TIN\par}
+\vspace{0.9cm}
+\rule{0.55\linewidth}{0.6pt}\par
+\vspace{0.9cm}
+{\large\bfseries ĐỀ TÀI\par}
+\vspace{0.4cm}
+{\LARGE\bfseries TỪ YÊU CẦU ĐẾN LẬP TRÌNH\par}
+\vspace{0.3cm}
+{\large\itshape Phân tích và thiết kế ứng dụng thương mại điện tử\\ có tìm kiếm đa phương thức\par}
+\vspace{1.4cm}
+{\Large\bfseries CHƯƠNG 4. THIẾT KẾ HỆ THỐNG (DESIGN)\par}
+\vspace{2.4cm}
+{\large
+\begin{tabular}{@{}ll@{}}
+Sinh viên thực hiện: & Vũ Hùng Anh\\[0.25cm]
+Mã sinh viên: & B23DCDT022\\[0.25cm]
+Lớp: & 04
+\end{tabular}\par}
+\vfill
+{\large Hà Nội, tháng 10 năm 2026\par}
+\vspace{0.6cm}
+\end{titlepage}
+
+{\setlength{\parskip}{0pt}\setstretch{1.1}\tableofcontents}
+\clearpage
+{\setlength{\parskip}{0pt}\setstretch{1.1}\listoffigures\vspace{0.6cm}\listoftables}
+\clearpage
+
+%% ===================================================================== intro
+\begin{center}{\Large\bfseries CHƯƠNG 4. THIẾT KẾ HỆ THỐNG (DESIGN)}\end{center}
+\addcontentsline{toc}{section}{Chương 4. Thiết kế hệ thống (Design)}
+
+Chương này được viết lại theo dàn ý 4.1--4.6 mà giảng viên giao cho phần Design, thay cho chương
+Design của bản tiểu luận V1. Bản V1 trình bày nguyên tắc thiết kế bằng lời và chưa có sơ đồ thiết kế;
+bản này đi qua một chuỗi sản phẩm cụ thể: sơ đồ lớp phân tích được cập nhật, mô hình dữ liệu và cơ sở
+dữ liệu sinh từ nó, sơ đồ lớp thiết kế, kiến trúc phân tầng, và mã nguồn Java sinh từ mô hình phân tầng.
+
+Nguồn đầu vào gồm: mô hình 19 lớp của Bài kiểm tra 01 (ba project Visual Paradigm
+\code{ecomAnalysis}, \code{eComDataModel}, \code{eComDesign}); slide A03 \emph{Domain Model and
+Analysis Class Diagram} (Cart, CartItem, Order, OrderItem và phép biến đổi checkout); slide A05
+\emph{From Analysis to Design} (Controller -- Service -- Domain -- Repository, layer và package);
+và prototype tìm kiếm đa phương thức Assignment 06. Toàn bộ sơ đồ được dựng trong Visual Paradigm 18.1
+Community Edition qua Open API thành một project chỉnh sửa được; hình trong bài là ảnh xuất trực tiếp
+từ project đó. Lớp, thuộc tính, phương thức, bảng và khóa đều lấy từ một tệp đặc tả chung
+(\code{tools/model.py}), nên sơ đồ, câu lệnh SQL và mã Java dùng đúng cùng một tên gọi.
+
+\begin{table}[H]
+\centering\small
+\caption{Luồng sản phẩm của chương Design}\label{tab:flow}
+\begin{tabular}{@{}P{1.0cm}P{3.6cm}P{4.4cm}P{6.2cm}@{}}
+\toprule
+Mục & Câu hỏi trả lời & Đầu vào & Sản phẩm\\
+\midrule
+4.1 & Hệ thống cần những khái niệm nào? & 19 lớp Bài kiểm tra 01, slide A03 & Sơ đồ lớp phân tích 20 lớp (Hình~\ref{fig:analysis})\\
+4.2 & Dữ liệu được lưu như thế nào? & Sơ đồ 4.1 & Data model ORM (Hình~\ref{fig:orm}), mô hình CSDL 20 bảng (Hình~\ref{fig:erd}), tệp \code{db/ecom_schema.sql}\\
+4.3 & Mỗi lớp giữ dữ liệu và hành vi gì? & Sơ đồ 4.1, slide A05 & Sơ đồ lớp thiết kế có kiểu, phương thức, điều hướng (Hình~\ref{fig:design})\\
+4.4 & Phần mềm chia thành tầng nào, lớp nào gọi lớp nào? & Sơ đồ 4.3, prototype A6 & Sơ đồ layer (Hình~\ref{fig:layers}), sơ đồ lớp theo tầng (Hình~\ref{fig:layerclasses}), sequence checkout (Hình~\ref{fig:seq})\\
+4.5 & Mã nguồn tương ứng ra sao? & Mô hình 4.4 & Mã Java trong \code{code/src}, chia theo package của 4.4\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ===================================================================== 4.1
+\section{Sơ đồ lớp phân tích (Class Diagram in Analysis)}\label{sec:41}
+
+Sơ đồ lớp phân tích trả lời câu hỏi \emph{hệ thống cần biểu diễn những khái niệm nào và chúng liên hệ
+với nhau ra sao}. Theo slide A03, ở mức này chưa đưa vào Controller, Service, Repository hay bảng dữ
+liệu; mỗi lớp là một khái niệm nghiệp vụ, mỗi quan hệ là một ràng buộc nghiệp vụ có bội số.
+
+\subsection{Cập nhật sơ đồ so với Bài kiểm tra 01 (Update)}
+
+Sơ đồ của Bài kiểm tra 01 dùng đúng 19 lớp do đề cho. Khi dùng nó làm đầu vào cho thiết kế, có một số
+điểm làm phần sau phức tạp không cần thiết, nên sơ đồ được cập nhật như Bảng~\ref{tab:changes}. Kết quả
+có 20 lớp: 19 lớp cũ và lớp trừu tượng \code{Product}.
+
+\begin{longtable}{@{}P{2.6cm}P{3.8cm}P{4.4cm}P{4.7cm}@{}}
+\caption{Các thay đổi của sơ đồ phân tích so với Bài kiểm tra 01}\label{tab:changes}\\
+\toprule
+Điểm thay đổi & Bài kiểm tra 01 & Bản cập nhật & Lý do\\
+\midrule
+\endfirsthead
+\toprule
+Điểm thay đổi & Bài kiểm tra 01 & Bản cập nhật & Lý do\\
+\midrule
+\endhead
+\small Lớp cha của hàng hóa & \small Không có \code{Product}; \code{CartItem} và \code{OrderItem} mỗi lớp có bốn liên kết tới \code{Book}, \code{Clothes}, \code{Shoes}, \code{Electronics} với ràng buộc \{xor\} &
+\small Thêm lớp trừu tượng \code{Product}, là lớp cha của \code{Book}, \code{Clothes}, \code{Shoes}, \code{Electronics}. \code{CartItem} và \code{OrderItem} chỉ còn một liên kết \emph{refers to} tới \code{Product}, bội số 0..* -- 1 &
+\small Một dòng hàng luôn chỉ tới đúng một sản phẩm mà không cần ràng buộc \{xor\}; khớp mô hình Cart $\to$ CartItem $\to$ Product của slide A03; khi lưu trữ chỉ cần một khóa ngoại \code{product_id}\\
+\small Thuộc tính chung của hàng hóa & \small \code{productId}, \code{price}, \code{stockQuantity} và tên hàng lặp lại ở bốn lớp; \code{Book} dùng \code{title} &
+\small Chuyển \code{productId}, \code{name}, \code{price}, \code{stockQuantity} lên \code{Product}; \code{Book.title} thành \code{Product.name}; thêm \code{Product.imageUrl} &
+\small Bỏ trùng lặp; \code{imageUrl} cần cho chức năng tìm kiếm bằng ảnh ở Chương 3\\
+\small Thẻ thanh toán & \small \code{PayCredit} có \code{cardNumber}, \code{cardHolder}, \code{bankName}, \code{expiryDate} &
+\small \code{PayCredit} có \code{cardHolder}, \code{bankName}, \code{cardLast4}, \code{authorizationCode} &
+\small Theo quyết định D-01 (Chương 1), hệ thống không lưu số thẻ đầy đủ; chỉ giữ bốn số cuối và mã cấp phép do cổng thanh toán trả về\\
+\small Bội số và tên quan hệ & \small Chỉ bổ sung ở data model (Câu 2) &
+\small Ghi ngay trên sơ đồ phân tích; \code{Order} -- \code{Payment} là 1 -- 0..* &
+\small Slide A03 yêu cầu ghi bội số ở mức phân tích; một đơn có thể có nhiều lần thanh toán khi lần trước thất bại\\
+\small Phụ thuộc checkout & \small \code{Cart} $\dashrightarrow$ \code{Order} «create» \emph{checkout} &
+\small Giữ nguyên &
+\small Slide A03: checkout là một phép biến đổi Cart thành Order, không phải liên kết cố định\\
+\bottomrule
+\end{longtable}
+
+\subsection{Mô tả sơ đồ bằng lời (Describe in words)}
+
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\vpimage{c41_analysis.png}{0.80\textheight}
+\caption[Sơ đồ lớp phân tích (Analysis Class Diagram)]{Sơ đồ lớp phân tích đã cập nhật (20 lớp, Visual Paradigm). Lớp in nghiêng là lớp trừu tượng.}\label{fig:analysis}
+\end{figure}
+\end{landscape}
+
+Hình~\ref{fig:analysis} gồm bốn nhóm lớp.
+
+\textbf{Nhóm khách hàng.} \code{Customer} là người mua, định danh bằng \code{customerId} và có
+\code{email}, \code{phone}, \code{dateOfBirth}. Họ tên được tách thành đối tượng giá trị
+\code{FullName} (\code{firstName}, \code{middleName}, \code{lastName}). Mỗi khách có một hoặc nhiều
+\code{Address} (\code{houseNumber}, \code{street}, \code{district}, \code{city}). Hai hạng khách là
+\code{CustomerVIP} (\code{vipLevel}, \code{discountRate}, \code{rewardPoints}) và \code{CustomerNew}
+(\code{registeredDate}, \code{welcomeVoucher}).
+
+\textbf{Nhóm sản phẩm.} \code{Product} là lớp trừu tượng chứa phần chung của mọi mặt hàng:
+\code{productId}, \code{name}, \code{price}, \code{stockQuantity}, \code{imageUrl}. Bốn nhóm hàng
+chuyên biệt hóa \code{Product}: \code{Book} (\code{author}, \code{publisher}), \code{Clothes}
+(\code{brand}, \code{size}, \code{color}, \code{material}), \code{Shoes} (\code{brand}, \code{size},
+\code{color}) và \code{Electronics} (\code{brand}, \code{warrantyMonths}). \code{Laptop} (\code{cpu},
+\code{ram}, \code{storage}, \code{screenSize}) và \code{Mobile} (\code{os}, \code{camera},
+\code{screenSize}, \code{batteryCapacity}) chuyên biệt hóa tiếp \code{Electronics}.
+
+\textbf{Nhóm giỏ hàng và đơn hàng.} \code{Cart} (\code{cartId}, \code{createdDate},
+\code{updatedDate}) là trạng thái mua sắm tạm thời, gồm các \code{CartItem} (\code{quantity},
+\code{cartPrice}). \code{Order} (\code{orderId}, \code{orderDate}, \code{status}, \code{totalAmount}) là
+giao dịch đã xác nhận, gồm các \code{OrderItem} (\code{quantity}, \code{unitPrice}).
+
+\textbf{Nhóm giao hàng và thanh toán.} \code{Shipping} (\code{shippingId}, \code{carrier},
+\code{trackingNumber}, \code{shippingFee}, \code{status}, \code{deliveredDate}) ghi thông tin giao một
+đơn tới một địa chỉ. \code{Payment} là lớp trừu tượng (\code{paymentId}, \code{amount},
+\code{paymentDate}, \code{status}) với hai hình thức \code{PayCash} (\code{cashReceived},
+\code{changeAmount}) và \code{PayCredit} (\code{cardHolder}, \code{bankName}, \code{cardLast4},
+\code{authorizationCode}).
+
+\begin{longtable}{@{}P{2.6cm}P{6.5cm}P{6.8cm}@{}}
+\caption{Ý nghĩa của 20 lớp phân tích}\label{tab:classes}\\
+\toprule
+Lớp & Ý nghĩa nghiệp vụ & Thuộc tính\\
+\midrule
+\endfirsthead
+\toprule
+Lớp & Ý nghĩa nghiệp vụ & Thuộc tính\\
+\midrule
+\endhead
+\small\code{Customer} & \small Người mua có tài khoản & \small\code{customerId}, \code{email}, \code{phone}, \code{dateOfBirth}\\
+\small\code{FullName} & \small Họ tên của khách, đối tượng giá trị & \small\code{firstName}, \code{middleName}, \code{lastName}\\
+\small\code{Address} & \small Địa chỉ liên hệ và nhận hàng & \small\code{houseNumber}, \code{street}, \code{district}, \code{city}\\
+\small\code{CustomerVIP} & \small Khách hạng VIP, được chiết khấu và tích điểm & \small\code{vipLevel}, \code{discountRate}, \code{rewardPoints}\\
+\small\code{CustomerNew} & \small Khách mới đăng ký, có thể có voucher chào mừng & \small\code{registeredDate}, \code{welcomeVoucher}\\
+\small\code{Product} & \small Mặt hàng được bán (trừu tượng) & \small\code{productId}, \code{name}, \code{price}, \code{stockQuantity}, \code{imageUrl}\\
+\small\code{Book} & \small Sách & \small\code{author}, \code{publisher}\\
+\small\code{Clothes} & \small Quần áo & \small\code{brand}, \code{size}, \code{color}, \code{material}\\
+\small\code{Shoes} & \small Giày & \small\code{brand}, \code{size}, \code{color}\\
+\small\code{Electronics} & \small Hàng điện tử & \small\code{brand}, \code{warrantyMonths}\\
+\small\code{Laptop} & \small Máy tính xách tay & \small\code{cpu}, \code{ram}, \code{storage}, \code{screenSize}\\
+\small\code{Mobile} & \small Điện thoại di động & \small\code{os}, \code{camera}, \code{screenSize}, \code{batteryCapacity}\\
+\small\code{Cart} & \small Giỏ hàng đang mua dở & \small\code{cartId}, \code{createdDate}, \code{updatedDate}\\
+\small\code{CartItem} & \small Một sản phẩm và số lượng định mua trong giỏ & \small\code{quantity}, \code{cartPrice} (giá lúc thêm vào giỏ)\\
+\small\code{Order} & \small Đơn hàng đã xác nhận & \small\code{orderId}, \code{orderDate}, \code{status}, \code{totalAmount}\\
+\small\code{OrderItem} & \small Một sản phẩm đã mua trong đơn & \small\code{quantity}, \code{unitPrice} (giá chốt lúc đặt)\\
+\small\code{Shipping} & \small Thông tin giao hàng của một đơn & \small\code{shippingId}, \code{carrier}, \code{trackingNumber}, \code{shippingFee}, \code{status}, \code{deliveredDate}\\
+\small\code{Payment} & \small Một lần thanh toán (trừu tượng) & \small\code{paymentId}, \code{amount}, \code{paymentDate}, \code{status}\\
+\small\code{PayCash} & \small Thanh toán tiền mặt & \small\code{cashReceived}, \code{changeAmount}\\
+\small\code{PayCredit} & \small Thanh toán thẻ qua cổng thanh toán & \small\code{cardHolder}, \code{bankName}, \code{cardLast4}, \code{authorizationCode}\\
+\bottomrule
+\end{longtable}
+
+\subsection{Giải thích các quan hệ (Explain relationships)}
+
+Bảng~\ref{tab:assoc41} giải thích từng quan hệ trên Hình~\ref{fig:analysis}. Bội số ghi ở một đầu cho
+biết \emph{một} đối tượng ở đầu đối diện liên kết với bao nhiêu đối tượng ở đầu này.
+
+\begin{longtable}{@{}P{4.0cm}P{2.3cm}P{1.8cm}P{7.4cm}@{}}
+\caption{Quan hệ giữa các lớp phân tích}\label{tab:assoc41}\\
+\toprule
+Quan hệ (tên) & Loại & Bội số & Ý nghĩa nghiệp vụ\\
+\midrule
+\endfirsthead
+\toprule
+Quan hệ (tên) & Loại & Bội số & Ý nghĩa nghiệp vụ\\
+\midrule
+\endhead
+\small\code{Customer} -- \code{FullName} (has) & \small Composition & \small 1 -- 1 & \small Mỗi khách có đúng một họ tên; họ tên không tồn tại ngoài khách hàng nên mất cùng khách.\\
+\small\code{Customer} -- \code{Address} (has) & \small Aggregation & \small 1 -- 1..* & \small Khách phải có ít nhất một địa chỉ để nhận hàng. Địa chỉ còn được \code{Shipping} tham chiếu nên không bị xóa theo khách, vì vậy dùng aggregation chứ không dùng composition.\\
+\small\code{Customer} -- \code{Cart} (owns) & \small Association & \small 1 -- 0..1 & \small Mỗi khách có tối đa một giỏ đang hoạt động; khách mới có thể chưa có giỏ.\\
+\small\code{Customer} -- \code{Order} (places) & \small Association & \small 1 -- 0..* & \small Khách đặt nhiều đơn; khách mới chưa có đơn. Đơn tồn tại độc lập để còn đối soát.\\
+\small\code{Cart} -- \code{CartItem} (contains) & \small Composition & \small 1 -- 0..* & \small Dòng giỏ chỉ tồn tại trong giỏ; giỏ rỗng là trạng thái hợp lệ.\\
+\small\code{Order} -- \code{OrderItem} (contains) & \small Composition & \small 1 -- 1..* & \small Dòng đơn là bộ phận của đơn; đơn không có dòng hàng nào là vô nghĩa.\\
+\small\code{CartItem} -- \code{Product} (refers to) & \small Association & \small 0..* -- 1 & \small Mỗi dòng giỏ chỉ tới đúng một sản phẩm; một sản phẩm có thể nằm trong nhiều giỏ.\\
+\small\code{OrderItem} -- \code{Product} (refers to) & \small Association & \small 0..* -- 1 & \small Mỗi dòng đơn chỉ tới đúng một sản phẩm; một sản phẩm có thể có trong nhiều đơn.\\
+\small\code{Order} -- \code{Shipping} (is delivered by) & \small Association & \small 1 -- 0..1 & \small Đơn mới tạo có thể chưa có thông tin giao; khi giao thì có đúng một bản ghi giao hàng.\\
+\small\code{Shipping} -- \code{Address} (ships to) & \small Association & \small 0..* -- 1 & \small Mỗi lần giao tới đúng một địa chỉ; một địa chỉ nhận được nhiều lần giao.\\
+\small\code{Order} -- \code{Payment} (is paid by) & \small Association & \small 1 -- 0..* & \small Đơn có thể chưa thanh toán, hoặc có nhiều lần thanh toán khi lần trước thất bại.\\
+\small\code{CustomerVIP}, \code{CustomerNew} $\to$ \code{Customer} & \small Generalization & & \small Hai hạng khách dùng lại thuộc tính của \code{Customer} và thêm thuộc tính riêng.\\
+\small\code{Book}, \code{Clothes}, \code{Shoes}, \code{Electronics} $\to$ \code{Product} & \small Generalization & & \small Bốn nhóm hàng dùng chung mã, tên, giá, tồn kho, ảnh; mỗi nhóm thêm thuộc tính riêng.\\
+\small\code{Laptop}, \code{Mobile} $\to$ \code{Electronics} & \small Generalization & & \small Hai loại thiết bị kế thừa \code{brand}, \code{warrantyMonths} và phần chung của \code{Product}.\\
+\small\code{PayCash}, \code{PayCredit} $\to$ \code{Payment} & \small Generalization & & \small Hai hình thức thanh toán dùng chung số tiền, thời điểm, trạng thái.\\
+\small\code{Cart} $\dashrightarrow$ \code{Order} (checkout) & \small Dependency «create» & & \small Checkout dùng nội dung giỏ để tạo một đơn mới; sau đó giỏ được làm rỗng.\\
+\bottomrule
+\end{longtable}
+
+\code{Product} và \code{Payment} là lớp trừu tượng (tên in nghiêng) vì không có mặt hàng nào không thuộc
+một nhóm cụ thể và không có lần thanh toán nào không thuộc một hình thức cụ thể.
+
+\textbf{CartItem khác OrderItem, và checkout là một phép biến đổi.} Hai lớp có thuộc tính giống nhau
+nhưng khác ý nghĩa (slide A03). \code{CartItem} là thông tin mua sắm tạm thời: \code{cartPrice} là giá
+lúc khách thêm hàng vào giỏ và có thể thay đổi. \code{OrderItem} là thông tin giao dịch lịch sử:
+\code{unitPrice} là giá được chốt khi tạo đơn và không đổi khi giá catalog thay đổi sau đó. Checkout
+biến giỏ $\{\text{CartItem}_1,\dots,\text{CartItem}_n\}$ thành đơn
+$\{\text{OrderItem}_1,\dots,\text{OrderItem}_n\}$ với cùng sản phẩm và số lượng, sau đó giỏ trở thành
+rỗng. Vì giỏ và đơn là hai trạng thái nghiệp vụ khác nhau, quan hệ giữa \code{Cart} và \code{Order} được
+vẽ là phụ thuộc «create» thay vì một association cố định.
+
+%% ===================================================================== 4.2
+\section{Mô hình dữ liệu và cơ sở dữ liệu (Data Model -- Database)}\label{sec:42}
+
+Mục này chuyển sơ đồ phân tích thành mô hình dữ liệu (data model) rồi sinh cơ sở dữ liệu. Có ba sản
+phẩm: data model dạng lớp ORM trong Visual Paradigm (Hình~\ref{fig:orm}), mô hình cơ sở dữ liệu vật
+lý gồm 20 bảng (Hình~\ref{fig:erd}) và tệp DDL \code{db/ecom_schema.sql}.
+
+\subsection{Mô hình dữ liệu ORM (Data model)}
+
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\vpimage{c42_orm.png}{0.80\textheight}
+\caption[Mô hình dữ liệu ORM-Persistable (Data model)]{Data model: 20 lớp ORM-Persistable, quan hệ kế thừa đã chuyển thành association \emph{is a} 1 -- 0..1.}\label{fig:orm}
+\end{figure}
+\end{landscape}
+
+Data model trong Hình~\ref{fig:orm} được tạo từ Hình~\ref{fig:analysis} theo cùng bốn bước như Câu 2
+của Bài kiểm tra 01:
+\begin{enumerate}
+\item mọi lớp được gắn stereotype \code{<<ORM-Persistable>>}, nghĩa là đối tượng của lớp được lưu thành
+bản ghi;
+\item mọi association có tên và bội số ở hai đầu;
+\item mỗi quan hệ kế thừa được đổi thành association \emph{is a}, đầu lớp cha có bội số 1, đầu lớp con
+có bội số 0..1, vì mô hình quan hệ không có khái niệm kế thừa;
+\item phụ thuộc «create» \emph{checkout} bị bỏ vì nó mô tả một thao tác, không phải dữ liệu cần lưu.
+\end{enumerate}
+
+\subsection{Quy tắc ánh xạ lớp sang bảng (From data model to database)}
+
+\begin{longtable}{@{}P{3.5cm}P{6.6cm}P{5.8cm}@{}}
+\caption{Quy tắc chuyển data model thành bảng}\label{tab:mapping}\\
+\toprule
+Trường hợp & Quy tắc & Ví dụ\\
+\midrule
+\endfirsthead
+\toprule
+Trường hợp & Quy tắc & Ví dụ\\
+\midrule
+\endhead
+\small Lớp thực thể & \small Mỗi lớp thành một bảng, tên viết thường nối bằng gạch dưới. \code{Order} đổi thành \code{orders} vì \code{ORDER} là từ khóa SQL. & \small \code{CartItem} $\to$ \code{cart_item}\\
+\small Định danh & \small Thuộc tính định danh thành khóa chính kiểu \code{varchar(20)}. & \small \code{customer_id}, \code{product_id}, \code{order_id}\\
+\small Đối tượng giá trị 1 -- 1 & \small Composition 1 -- 1 với \code{FullName} được nhúng thành cột của bảng chủ, không tạo bảng riêng. & \small \code{customer.first_name}, \code{middle_name}, \code{last_name}\\
+\small Kế thừa & \small Mỗi lớp một bảng (class table inheritance): bảng con dùng khóa chính đồng thời là khóa ngoại tới bảng cha. & \small \code{book.product_id} $\to$ \code{product}; \code{laptop.product_id} $\to$ \code{electronics}\\
+\small Cột phân loại & \small Bảng cha có cột cho biết bản ghi thuộc lớp con nào. & \small \code{product.product_type}, \code{payment.method}\\
+\small Association 1 -- * & \small Khóa ngoại đặt ở bảng phía nhiều. & \small \code{orders.customer_id}, \code{payment.order_id}\\
+\small Association 1 -- 0..1 & \small Khóa ngoại kèm ràng buộc \code{UNIQUE}. & \small \code{cart.customer_id}, \code{shipping.order_id}\\
+\small Composition có dòng hàng & \small Bảng dòng hàng dùng khóa chính ghép; xóa bản ghi cha thì xóa luôn dòng hàng (\code{ON DELETE CASCADE}). & \small \code{cart_item(cart_id, product_id)}, \code{order_item(order_id, product_id)}\\
+\small Tiền, số lượng, trạng thái & \small Tiền dùng \code{numeric(12,2)}; số lượng là \code{integer} có \code{CHECK}; trạng thái là chuỗi có \code{CHECK ... IN (...)}. & \small \code{order_item.unit_price}, \code{cart_item.quantity > 0}\\
+\small Bảng kỹ thuật & \small Bảng \code{product_feature} lưu vector đặc trưng ảnh cho phân hệ tìm kiếm; không có trong mô hình phân tích, được thêm vì thiết kế gói search (mục 4.4.4). & \small \code{product_feature(product_id, model_version, feature_vector, updated_at)}\\
+\bottomrule
+\end{longtable}
+
+\subsection{Giải thích các bảng (Explain tables)}
+
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\vpimage{c42_tables.png}{0.80\textheight}
+\caption[Mô hình cơ sở dữ liệu vật lý gồm 20 bảng]{Mô hình cơ sở dữ liệu vật lý của eCom (Visual Paradigm): 20 bảng «table»; mỗi cột ghi kiểu SQL và \{PK\} khóa chính, \{FK\} khóa ngoại, \{U\} duy nhất, \{NULL\} cho phép rỗng; mỗi đường nối là một khóa ngoại, ghi tên quan hệ, cột khóa ngoại và bội số.}\label{fig:erd}
+\end{figure}
+\end{landscape}
+
+Hình~\ref{fig:erd} là mô hình cơ sở dữ liệu vật lý dựng trong Visual Paradigm theo các quy tắc ở
+Bảng~\ref{tab:mapping}. Mỗi bảng được vẽ như một lớp có stereotype «table»: tên cột, kiểu SQL và các khóa
+nằm ngay trong hộp, nên đọc được toàn bộ lược đồ trên một hình. Đường nối đi từ bảng cha tới bảng con,
+ghi tên quan hệ và cột khóa ngoại, ví dụ \emph{contains (order\_id)} từ \code{orders} tới
+\code{order_item}. Project VP còn có sơ đồ ERD (4.2c) dựng từ cùng đặc tả bằng phần tử bảng, cột và khóa
+ngoại của VP. Bảng~\ref{tab:tables} liệt kê 20 bảng cùng lớp nguồn của chúng.
+
+\begin{longtable}{@{}P{0.6cm}P{2.8cm}P{3.2cm}P{5.1cm}P{3.4cm}@{}}
+\caption{Danh sách bảng của cơ sở dữ liệu}\label{tab:tables}\\
+\toprule
+\# & Bảng & Khóa chính & Khóa ngoại $\to$ bảng cha & Lớp nguồn\\
+\midrule
+\endfirsthead
+\toprule
+\# & Bảng & Khóa chính & Khóa ngoại $\to$ bảng cha & Lớp nguồn\\
+\midrule
+\endhead
+\small 1 & \small\code{customer} & \small\code{customer_id} & \small -- & \small \code{Customer} + \code{FullName}\\
+\small 2 & \small\code{customer_vip} & \small\code{customer_id} & \small\code{customer_id} $\to$ \code{customer} & \small\code{CustomerVIP}\\
+\small 3 & \small\code{customer_new} & \small\code{customer_id} & \small\code{customer_id} $\to$ \code{customer} & \small\code{CustomerNew}\\
+\small 4 & \small\code{address} & \small\code{address_id} & \small\code{customer_id} $\to$ \code{customer} & \small\code{Address}\\
+\small 5 & \small\code{product} & \small\code{product_id} & \small -- & \small\code{Product}\\
+\small 6 & \small\code{book} & \small\code{product_id} & \small\code{product_id} $\to$ \code{product} & \small\code{Book}\\
+\small 7 & \small\code{clothes} & \small\code{product_id} & \small\code{product_id} $\to$ \code{product} & \small\code{Clothes}\\
+\small 8 & \small\code{shoes} & \small\code{product_id} & \small\code{product_id} $\to$ \code{product} & \small\code{Shoes}\\
+\small 9 & \small\code{electronics} & \small\code{product_id} & \small\code{product_id} $\to$ \code{product} & \small\code{Electronics}\\
+\small 10 & \small\code{laptop} & \small\code{product_id} & \small\code{product_id} $\to$ \code{electronics} & \small\code{Laptop}\\
+\small 11 & \small\code{mobile} & \small\code{product_id} & \small\code{product_id} $\to$ \code{electronics} & \small\code{Mobile}\\
+\small 12 & \small\code{product_feature} & \small\code{product_id} & \small\code{product_id} $\to$ \code{product} & \small \code{VectorIndex} (gói search)\\
+\small 13 & \small\code{cart} & \small\code{cart_id} & \small\code{customer_id} $\to$ \code{customer} (UNIQUE) & \small\code{Cart}\\
+\small 14 & \small\code{cart_item} & \small\code{cart_id}, \code{product_id} & \small\code{cart_id} $\to$ \code{cart}; \code{product_id} $\to$ \code{product} & \small\code{CartItem}\\
+\small 15 & \small\code{orders} & \small\code{order_id} & \small\code{customer_id} $\to$ \code{customer} & \small\code{Order}\\
+\small 16 & \small\code{order_item} & \small\code{order_id}, \code{product_id} & \small\code{order_id} $\to$ \code{orders}; \code{product_id} $\to$ \code{product} & \small\code{OrderItem}\\
+\small 17 & \small\code{shipping} & \small\code{shipping_id} & \small\code{order_id} $\to$ \code{orders} (UNIQUE); \code{address_id} $\to$ \code{address} & \small\code{Shipping}\\
+\small 18 & \small\code{payment} & \small\code{payment_id} & \small\code{order_id} $\to$ \code{orders} & \small\code{Payment}\\
+\small 19 & \small\code{pay_cash} & \small\code{payment_id} & \small\code{payment_id} $\to$ \code{payment} & \small\code{PayCash}\\
+\small 20 & \small\code{pay_credit} & \small\code{payment_id} & \small\code{payment_id} $\to$ \code{payment} & \small\code{PayCredit}\\
+\bottomrule
+\end{longtable}
+
+\subsection{Giải thích quan hệ giữa các bảng (Explain relationships)}
+
+Bảng~\ref{tab:fks} giải thích 21 khóa ngoại. Cột bội số ghi theo thứ tự bảng cha -- bảng con.
+
+\begin{longtable}{@{}P{4.9cm}P{2.4cm}P{1.6cm}P{6.6cm}@{}}
+\caption{Khóa ngoại, tên quan hệ và bội số}\label{tab:fks}\\
+\toprule
+Khóa ngoại (bảng con.cột $\to$ bảng cha) & Tên quan hệ & Bội số & Ý nghĩa\\
+\midrule
+\endfirsthead
+\toprule
+Khóa ngoại (bảng con.cột $\to$ bảng cha) & Tên quan hệ & Bội số & Ý nghĩa\\
+\midrule
+\endhead
+\small\code{customer_vip.customer_id} $\to$ \code{customer} & \small is a & \small 1 -- 0..1 & \small Phần riêng của khách VIP\\
+\small\code{customer_new.customer_id} $\to$ \code{customer} & \small is a & \small 1 -- 0..1 & \small Phần riêng của khách mới\\
+\small\code{address.customer_id} $\to$ \code{customer} & \small has & \small 1 -- 1..* & \small Địa chỉ của khách\\
+\small\code{book.product_id} $\to$ \code{product} & \small is a & \small 1 -- 0..1 & \small Phần riêng của sách\\
+\small\code{clothes.product_id} $\to$ \code{product} & \small is a & \small 1 -- 0..1 & \small Phần riêng của quần áo\\
+\small\code{shoes.product_id} $\to$ \code{product} & \small is a & \small 1 -- 0..1 & \small Phần riêng của giày\\
+\small\code{electronics.product_id} $\to$ \code{product} & \small is a & \small 1 -- 0..1 & \small Phần riêng của hàng điện tử\\
+\small\code{laptop.product_id} $\to$ \code{electronics} & \small is a & \small 1 -- 0..1 & \small Phần riêng của laptop\\
+\small\code{mobile.product_id} $\to$ \code{electronics} & \small is a & \small 1 -- 0..1 & \small Phần riêng của điện thoại\\
+\small\code{product_feature.product_id} $\to$ \code{product} & \small indexed by & \small 1 -- 0..1 & \small Vector đặc trưng ảnh của sản phẩm\\
+\small\code{cart.customer_id} $\to$ \code{customer} & \small owns & \small 1 -- 0..1 & \small Mỗi khách tối đa một giỏ (UNIQUE)\\
+\small\code{cart_item.cart_id} $\to$ \code{cart} & \small contains & \small 1 -- 0..* & \small Dòng của giỏ\\
+\small\code{cart_item.product_id} $\to$ \code{product} & \small refers to & \small 1 -- 0..* & \small Sản phẩm của dòng giỏ\\
+\small\code{orders.customer_id} $\to$ \code{customer} & \small places & \small 1 -- 0..* & \small Người đặt đơn\\
+\small\code{order_item.order_id} $\to$ \code{orders} & \small contains & \small 1 -- 1..* & \small Dòng của đơn\\
+\small\code{order_item.product_id} $\to$ \code{product} & \small refers to & \small 1 -- 0..* & \small Sản phẩm đã mua\\
+\small\code{shipping.order_id} $\to$ \code{orders} & \small is delivered by & \small 1 -- 0..1 & \small Mỗi đơn tối đa một bản ghi giao (UNIQUE)\\
+\small\code{shipping.address_id} $\to$ \code{address} & \small ships to & \small 1 -- 0..* & \small Địa chỉ nhận hàng\\
+\small\code{payment.order_id} $\to$ \code{orders} & \small is paid by & \small 1 -- 0..* & \small Các lần thanh toán của đơn\\
+\small\code{pay_cash.payment_id} $\to$ \code{payment} & \small is a & \small 1 -- 0..1 & \small Phần riêng của thanh toán tiền mặt\\
+\small\code{pay_credit.payment_id} $\to$ \code{payment} & \small is a & \small 1 -- 0..1 & \small Phần riêng của thanh toán thẻ\\
+\bottomrule
+\end{longtable}
+
+Khóa ngoại và \code{UNIQUE} bảo đảm cận trên của bội số, nhưng không tự bảo đảm cận dưới 1 ở các quan
+hệ 1 -- 1..*. Điều kiện ``mỗi đơn có ít nhất một dòng hàng'' và ``mỗi khách có ít nhất một địa chỉ'' được
+kiểm tra ở tầng nghiệp vụ: \code{CheckoutService.checkout} từ chối giỏ rỗng (mục 4.4.3). Tương tự, cột
+phân loại cho biết bản ghi cha phải có đúng một bản ghi con nào; điều này cũng do tầng nghiệp vụ giữ.
+
+\subsection{Sinh cơ sở dữ liệu (Generate DB)}
+
+Tệp \code{db/ecom_schema.sql} (\sqlLineCount{} dòng, \sqlTableCount{} bảng, cú pháp PostgreSQL) được
+sinh bằng \code{tools/gen_sql.py} từ cùng đặc tả bảng đã dùng để dựng Hình~\ref{fig:erd} trong Visual Paradigm. Bảng
+được tạo theo thứ tự phụ thuộc khóa ngoại: bảng cha trước, bảng con sau. Đoạn trích dưới đây gồm bảng
+\code{product} và hai cặp bảng dòng hàng, thể hiện các quy tắc khóa chính ghép, \code{CHECK} và
+\code{ON DELETE CASCADE}.
+
+\codefile{SQL}{../build/excerpts/schema.sql}
+
+Tệp DDL được chạy thử trên SQLite trong bộ nhớ với ràng buộc khóa ngoại bật, nạp dữ liệu mẫu, rồi thử
+các câu lệnh vi phạm ràng buộc. Kết quả do script ghi lại như sau:
+
+\txtfile{../build/sql_validation.txt}
+
+Lần chạy này kiểm tra cú pháp và ràng buộc của lược đồ; nó chưa phải phép thử trên máy chủ PostgreSQL
+thật.
+
+%% ===================================================================== 4.3
+\section{Sơ đồ lớp thiết kế (Class Diagram in Design)}\label{sec:43}
+
+Sơ đồ lớp thiết kế (Hình~\ref{fig:design}) giữ 20 lớp miền của Hình~\ref{fig:analysis} và trả lời câu
+hỏi \emph{mỗi lớp giữ dữ liệu gì, với kiểu nào, và chịu trách nhiệm hành vi nào}. Ba enum trạng thái
+được thêm vào. Thay đổi chia thành ba phần: thuộc tính, phương thức và quan hệ.
+
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\vpimage{c43_design.png}{0.80\textheight}
+\caption[Sơ đồ lớp thiết kế (Design Class Diagram)]{Sơ đồ lớp thiết kế: thuộc tính có kiểu và phạm vi truy cập, phương thức, quan hệ có hướng và tên vai trò.}\label{fig:design}
+\end{figure}
+\end{landscape}
+
+\subsection{Cập nhật thuộc tính (Update attributes)}
+
+\begin{longtable}{@{}P{3.4cm}P{3.8cm}P{8.7cm}@{}}
+\caption{Thuộc tính ở mức phân tích và mức thiết kế}\label{tab:attrs}\\
+\toprule
+Phân tích (4.1) & Thiết kế (4.3) & Lý do\\
+\midrule
+\endfirsthead
+\toprule
+Phân tích (4.1) & Thiết kế (4.3) & Lý do\\
+\midrule
+\endhead
+\small\code{float} cho tiền: \code{price}, \code{amount}, \code{totalAmount}, \code{unitPrice}, \code{cartPrice}, \code{shippingFee}, \code{discountRate}, \code{cashReceived}, \code{changeAmount} & \small\code{BigDecimal} & \small Tiền cần số thập phân chính xác; \code{float} gây sai số làm tròn khi cộng nhiều dòng hàng.\\
+\small\code{Date}: \code{dateOfBirth}, \code{registeredDate}, \code{deliveredDate} & \small\code{LocalDate} & \small Chỉ cần ngày, không cần giờ.\\
+\small\code{Date}: \code{createdDate}, \code{updatedDate}, \code{orderDate}, \code{paymentDate} & \small\code{LocalDateTime} & \small Cần thời điểm chính xác để sắp xếp và đối soát.\\
+\small\code{status: String} của \code{Order}, \code{Payment}, \code{Shipping} & \small Enum \code{OrderStatus}, \code{PaymentStatus}, \code{ShippingStatus} & \small Giới hạn tập giá trị hợp lệ: \code{PLACED}, \code{PROCESSING}, \code{SHIPPED}, \code{DELIVERED}, \code{CANCELLED}; \code{PENDING}, \code{SUCCEEDED}, \code{FAILED}; \code{PREPARING}, \code{IN_TRANSIT}, \code{DELIVERED}. Trình biên dịch phát hiện giá trị sai.\\
+\small\code{screenSize: float} & \small\code{double} & \small Kiểu số thực mặc định của Java.\\
+\small \code{Address} không có định danh & \small \code{addressId: String} & \small Khi checkout, khách chọn địa chỉ giao bằng mã; \code{Customer.findAddress(addressId)} cần định danh này.\\
+\small Phạm vi truy cập chưa xác định & \small Mọi thuộc tính \code{private} (dấu \code{-}) & \small Đóng gói: dữ liệu chỉ được đổi qua phương thức của lớp, nơi kiểm tra quy tắc nghiệp vụ.\\
+\bottomrule
+\end{longtable}
+
+\subsection{Cập nhật phương thức (Update methods)}
+
+Mỗi lớp miền được giao những hành vi gắn với dữ liệu của nó. Bảng~\ref{tab:ops} liệt kê các phương thức
+trên Hình~\ref{fig:design}. Getter và setter không vẽ trên sơ đồ để sơ đồ gọn; chúng được sinh tự động
+ở mục 4.5.
+
+\begin{longtable}{@{}P{2.4cm}P{6.6cm}P{6.9cm}@{}}
+\caption{Phương thức của các lớp miền}\label{tab:ops}\\
+\toprule
+Lớp & Phương thức & Trách nhiệm\\
+\midrule
+\endfirsthead
+\toprule
+Lớp & Phương thức & Trách nhiệm\\
+\midrule
+\endhead
+\small\code{FullName} & \small\code{+getDisplayName(): String} & \small Ghép họ, tên đệm, tên theo thứ tự tiếng Việt, bỏ phần trống.\\
+\small\code{Address} & \small\code{+format(): String} & \small Trả chuỗi địa chỉ để in trên đơn và phiếu giao.\\
+\small\code{Customer} & \small\code{+getDisplayName(): String}\newline\code{+getDiscountRate(): BigDecimal}\newline\code{+addAddress(address: Address): void}\newline\code{+findAddress(addressId: String): Address} & \small Họ tên hiển thị; tỷ lệ chiết khấu mặc định bằng 0; thêm địa chỉ; trả địa chỉ thuộc khách hoặc báo lỗi nếu địa chỉ không thuộc khách.\\
+\small\code{CustomerVIP} & \small\code{+getDiscountRate(): BigDecimal}\newline\code{+addPoints(points: int): void} & \small Ghi đè để trả \code{discountRate} của khách VIP; cộng điểm, từ chối số âm.\\
+\small\code{CustomerNew} & \small\code{+hasWelcomeVoucher(): boolean} & \small Cho biết khách mới còn voucher chào mừng.\\
+\small\code{Product} & \small\code{+isAvailable(quantity: int): boolean}\newline\code{+decreaseStock(quantity: int): void}\newline\code|+getCategory(): String {abstract}| & \small Kiểm tra đủ tồn kho; giảm tồn và từ chối khi không đủ; trả nhóm hàng, do từng lớp con cài đặt.\\
+\small\code{Book}, \code{Clothes}, \code{Shoes}, \code{Electronics}, \code{Laptop}, \code{Mobile} & \small\code{+getCategory(): String} & \small Trả \code{BOOK}, \code{CLOTHES}, \code{SHOES}, \code{ELECTRONICS}, \code{LAPTOP}, \code{MOBILE}, khớp giá trị của cột \code{product.product_type}.\\
+\small\code{Cart} & \small\code{+addItem(product: Product, quantity: int): void}\newline\code{+updateQuantity(productId: String, quantity: int): void}\newline\code{+removeItem(productId: String): void}\newline\code{+calculateTotal(): BigDecimal}\newline\code{+isEmpty(): boolean}\newline\code{+clear(): void} & \small Thêm hàng (cộng dồn nếu sản phẩm đã có trong giỏ); đổi số lượng (số lượng nhỏ hơn hoặc bằng 0 thì xóa dòng); xóa dòng; tính tổng tiền giỏ; kiểm tra giỏ rỗng; làm rỗng giỏ sau checkout.\\
+\small\code{CartItem} & \small\code{+CartItem(product: Product, quantity: int)}\newline\code{+getSubtotal(): BigDecimal}\newline\code{+increase(quantity: int): void} & \small Tạo dòng giỏ và lưu \code{cartPrice} bằng giá hiện tại; tính thành tiền; cộng thêm số lượng.\\
+\small\code{Order} & \small\code{+addItem(item: OrderItem): void}\newline\code{+addPayment(payment: Payment): void}\newline\code{+calculateTotal(discountRate: BigDecimal): BigDecimal}\newline\code{+cancel(): void}\newline\code{+isOwnedBy(customerId: String): boolean} & \small Thêm dòng đơn; thêm lần thanh toán; tính tổng bằng tổng dòng trừ chiết khấu cộng phí giao, không âm; chỉ hủy được đơn \code{PLACED} hoặc \code{PROCESSING}; kiểm tra đơn có thuộc khách hay không.\\
+\small\code{OrderItem} & \small\code|+fromCartItem(item: CartItem, current: Product): OrderItem {static}|\newline\code{+getSubtotal(): BigDecimal} & \small Tạo dòng đơn từ dòng giỏ, chốt \code{unitPrice} bằng giá hiện hành của sản phẩm; tính thành tiền.\\
+\small\code{Shipping} & \small\code{+updateStatus(newStatus: ShippingStatus): void}\newline\code{+markDelivered(date: LocalDate): void} & \small Cập nhật trạng thái giao; ghi nhận đã giao và ngày giao.\\
+\small\code{Payment} & \small\code|+process(): boolean {abstract}|\newline\code{+markSucceeded(): void}\newline\code{+markFailed(): void} & \small Xử lý thanh toán, do lớp con cài đặt; đặt trạng thái thành công (kèm thời điểm) hoặc thất bại.\\
+\small\code{PayCash} & \small\code{+process(): boolean} & \small Đủ tiền thì tính tiền thừa và thành công; thiếu tiền thì thất bại.\\
+\small\code{PayCredit} & \small\code{+process(): boolean}\newline\code{+maskedCard(): String} & \small Thành công khi đã có \code{authorizationCode} từ cổng thanh toán; hiển thị thẻ dạng che số.\\
+\bottomrule
+\end{longtable}
+
+Cách giao phương thức theo nguyên tắc \emph{domain responsibility} của slide A05: hành vi gắn với trạng
+thái của một đối tượng thì đặt trong lớp đó. \code{Cart.addItem} và \code{Order.calculateTotal} nằm
+trong lớp miền, còn lớp service ở mục 4.4 chỉ điều phối quy trình giữa nhiều đối tượng và kho dữ liệu.
+Ba chỗ dùng đa hình:
+\begin{itemize}
+\item \code{Payment.process()} là phương thức trừu tượng; \code{PayCash} và \code{PayCredit} cài đặt theo
+cách riêng, nên service chỉ gọi \code{payment.process()} mà không cần biết hình thức thanh toán.
+\item \code{Customer.getDiscountRate()} trả 0, còn \code{CustomerVIP} ghi đè để trả tỷ lệ chiết khấu của
+mình. \code{Order.calculateTotal(customer.getDiscountRate())} vì thế đúng với mọi hạng khách.
+\item \code{Product.getCategory()} là trừu tượng; mỗi lớp con trả nhóm hàng của mình.
+\end{itemize}
+
+\subsection{Cập nhật và giải thích quan hệ (Update relationships -- explain)}
+
+Ở mức phân tích, association chỉ nói hai lớp có liên hệ. Ở mức thiết kế, mỗi association được quyết định
+thêm \emph{chiều điều hướng} (lớp nào giữ tham chiếu tới lớp nào) và \emph{tên vai trò} (tên field khi cài
+đặt). Bảng~\ref{tab:nav} tóm tắt.
+
+\begin{longtable}{@{}P{3.5cm}P{3.3cm}P{1.9cm}P{6.8cm}@{}}
+\caption{Quan hệ ở mức thiết kế}\label{tab:nav}\\
+\toprule
+Quan hệ & Hướng và vai trò & Bội số & Giải thích\\
+\midrule
+\endfirsthead
+\toprule
+Quan hệ & Hướng và vai trò & Bội số & Giải thích\\
+\midrule
+\endhead
+\small\code{Customer} -- \code{FullName} (composition) & \small\code{Customer} $\to$ \code{fullName} & \small 1 -- 1 & \small Khách giữ đối tượng họ tên của mình.\\
+\small\code{Customer} -- \code{Address} (aggregation) & \small\code{Customer} $\to$ \code{addresses} & \small 1 -- 1..* & \small Khách giữ danh sách địa chỉ để chọn nơi giao.\\
+\small\code{Cart} -- \code{Customer} (owned by) & \small\code{Cart} $\to$ \code{owner} & \small 0..1 -- 1 & \small Đảo chiều so với \emph{owns}: giỏ biết chủ sở hữu để kiểm tra quyền; khách không giữ tham chiếu tới giỏ, giỏ được tìm bằng \code{CartDAO.findByCustomerId}.\\
+\small\code{Cart} -- \code{CartItem} (composition) & \small\code{Cart} $\to$ \code{items} & \small 1 -- 0..* & \small Giỏ quản lý các dòng của nó.\\
+\small\code{CartItem} -- \code{Product} & \small\code{CartItem} $\to$ \code{product} & \small 0..* -- 1 & \small Dòng giỏ biết sản phẩm; sản phẩm không cần biết nó nằm trong giỏ nào.\\
+\small\code{Order} -- \code{Customer} (placed by) & \small\code{Order} $\to$ \code{customer} & \small 0..* -- 1 & \small Đơn biết người đặt (dùng cho \code{isOwnedBy}); danh sách đơn của khách được đọc qua \code{OrderDAO.findByCustomer} thay vì giữ trong \code{Customer}.\\
+\small\code{Order} -- \code{OrderItem} (composition) & \small\code{Order} $\to$ \code{items} & \small 1 -- 1..* & \small Đơn quản lý các dòng của nó.\\
+\small\code{OrderItem} -- \code{Product} & \small\code{OrderItem} $\to$ \code{product} & \small 0..* -- 1 & \small Dòng đơn biết sản phẩm đã mua.\\
+\small\code{Order} -- \code{Shipping} (delivered by) & \small\code{Order} $\to$ \code{shipping} & \small 1 -- 0..1 & \small Đơn giữ thông tin giao hàng.\\
+\small\code{Shipping} -- \code{Address} (ships to) & \small\code{Shipping} $\to$ \code{address} & \small 0..* -- 1 & \small Lần giao biết địa chỉ đích.\\
+\small\code{Order} -- \code{Payment} (paid by) & \small\code{Order} $\to$ \code{payments} & \small 1 -- 0..* & \small Đơn giữ các lần thanh toán.\\
+\small Kế thừa & \small \code{extends} & & \small Giữ nguyên sáu nhánh kế thừa; \code{Product} và \code{Payment} là lớp trừu tượng.\\
+\small\code{OrderItem} $\dashrightarrow$ \code{CartItem} & \small «use» & & \small \code{OrderItem.fromCartItem} đọc dòng giỏ để tạo dòng đơn.\\
+\bottomrule
+\end{longtable}
+
+Điều hướng một chiều giảm phụ thuộc vòng: nếu cả \code{Customer} và \code{Order} giữ tham chiếu tới nhau,
+mỗi lần đọc khách sẽ kéo theo toàn bộ đơn. Phụ thuộc «create» \emph{checkout} \code{Cart}
+$\dashrightarrow$ \code{Order} của mức phân tích không còn nằm giữa hai lớp miền. Ở mức thiết kế, việc
+tạo đơn từ giỏ được tách thành hai phần: \code{OrderItem.fromCartItem} chuyển từng dòng
+(phụ thuộc «use» \code{OrderItem} $\dashrightarrow$ \code{CartItem}), còn \code{CheckoutService} điều
+phối toàn bộ quy trình và tạo \code{Order} (phụ thuộc «create» ở Hình~\ref{fig:layerclasses}).
+
+%% ===================================================================== 4.4
+\section{Tầng, lớp và quan hệ (Layer + Class + Relationship)}\label{sec:44}
+
+\subsection{Bốn tầng và quy tắc phụ thuộc (Layers)}
+
+\begin{figure}[H]
+\centering
+\vpimage{c44_layers.png}{0.42\textheight}
+\caption[Bốn tầng và package của hệ thống]{Bốn layer (package) của hệ thống và phụ thuộc giữa chúng.}\label{fig:layers}
+\end{figure}
+
+Theo slide A05, hệ thống được chia thành bốn tầng Presentation, Application, Domain và Infrastructure
+(Hình~\ref{fig:layers}). Mũi tên nét đứt là phụ thuộc: Presentation dùng Application; Application dùng
+Domain và Infrastructure; Infrastructure dùng Domain để đọc và ghi đối tượng miền. Không có mũi tên từ
+Presentation xuống Infrastructure, nghĩa là giao diện không truy cập cơ sở dữ liệu trực tiếp. Domain
+không phụ thuộc tầng nào, nên quy tắc nghiệp vụ không bị buộc vào framework hay cơ sở dữ liệu. Bên trong
+mỗi layer là các package con trùng với package Java ở mục 4.5: \code{controller}; \code{service},
+\code{search}; \code{customer}, \code{product}, \code{cart}, \code{order}, \code{payment}; \code{dao},
+\code{dao.jdbc}, \code{search}.
+
+\begin{longtable}{@{}P{2.1cm}P{3.5cm}P{3.9cm}P{3.1cm}P{2.5cm}@{}}
+\caption{Trách nhiệm của từng tầng}\label{tab:layers}\\
+\toprule
+Tầng & Package Java & Lớp & Trách nhiệm & Không được làm\\
+\midrule
+\endfirsthead
+\toprule
+Tầng & Package Java & Lớp & Trách nhiệm & Không được làm\\
+\midrule
+\endhead
+\small Presentation & \small\code{com.ptit.ecom.presentation.controller} & \small\code{CartController}, \code{CheckoutController}, \code{OrderController}, \code{SearchController} & \small Nhận yêu cầu, lấy \code{customerId} từ phiên đăng nhập, gọi service, trả kết quả & \small Truy cập CSDL; chứa quy tắc nghiệp vụ\\
+\small Application & \small\code{com.ptit.ecom.application.service}, \code{com.ptit.ecom.application.search} & \small\code{CartService}, \code{CheckoutService}, \code{OrderService}; \code{SearchService}, \code{QueryService}, \code{RankingService}, \code{CommonQuery}, \code{SearchResult} & \small Điều phối use case, xác định ranh giới transaction, gọi DAO & \small Viết SQL; giữ trạng thái giao diện\\
+\small Domain & \small\code{com.ptit.ecom.domain.customer}, \code{.product}, \code{.cart}, \code{.order}, \code{.payment} & \small 20 lớp miền của mục 4.3 và ba enum trạng thái & \small Dữ liệu và quy tắc nghiệp vụ (\code{addItem}, \code{calculateTotal}, \code{cancel}, \code{process}) & \small Phụ thuộc framework, CSDL hay giao diện\\
+\small Infrastructure & \small\code{com.ptit.ecom.infrastructure.dao}, \code{.dao.jdbc}, \code{.search} & \small\code{CustomerDAO}, \code{ProductDAO}, \code{CartDAO}, \code{OrderDAO}; \code{JdbcCustomerDAO}, \code{JdbcProductDAO}, \code{JdbcCartDAO}, \code{JdbcOrderDAO}; \code{VectorIndex} & \small Lưu trữ, câu lệnh SQL, adapter tìm ảnh & \small Quyết định giá, quyền hay trạng thái đơn\\
+\bottomrule
+\end{longtable}
+
+Package không đồng nghĩa với layer (slide A05): layer là trách nhiệm kiến trúc, package là cách tổ chức
+mã. Ở đây mỗi layer là một package gốc, bên trong chia tiếp theo chức năng (\code{service} và
+\code{search}) hoặc theo nhóm miền (\code{cart}, \code{order}, \code{product}, \code{customer},
+\code{payment}). Controller trả về đối tượng miền (\code{Cart}, \code{Order}) cho phía hiển thị, tức
+Presentation có đọc kiểu của Domain; bản hoàn chỉnh có thể thay bằng DTO nếu cần ẩn bớt dữ liệu.
+
+\subsection{Lớp và quan hệ trong từng tầng (Classes and relationships)}
+
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\vpimage{c44_classes.png}{0.80\textheight}
+\caption[Lớp và quan hệ trong từng tầng]{Lớp trong từng tầng và quan hệ \emph{use}, \emph{create}, \emph{realization} giữa chúng.}\label{fig:layerclasses}
+\end{figure}
+\end{landscape}
+
+Hình~\ref{fig:layerclasses} xếp 44 lớp theo bốn tầng: Presentation ở trên, Application ở giữa,
+Infrastructure ở dưới và Domain bên phải. Mỗi nhãn ghi tên tầng hoặc package Java của nhóm lớp ngay dưới
+nó; trong project VP, mỗi lớp nằm đúng package con của Hình~\ref{fig:layers}. Lớp được vẽ thu gọn (chỉ
+tên); thuộc tính và phương thức đầy đủ nằm ở Hình~\ref{fig:design}. Có ba loại quan hệ.
+
+\textbf{Phụ thuộc «use» giữa các tầng.} Mỗi controller dùng đúng một service:
+\code{CartController} $\to$ \code{CartService}, \code{CheckoutController} $\to$ \code{CheckoutService},
+\code{OrderController} $\to$ \code{OrderService}, \code{SearchController} $\to$ \code{SearchService}.
+Service dùng các interface DAO: \code{CartService} dùng \code{CartDAO} và \code{ProductDAO};
+\code{CheckoutService} dùng \code{CartDAO}, \code{OrderDAO}, \code{ProductDAO}, \code{CustomerDAO};
+\code{OrderService} dùng \code{OrderDAO}; \code{SearchService} dùng \code{QueryService},
+\code{RankingService}, \code{ProductDAO} và \code{VectorIndex}. \code{CartService} còn dùng \code{Cart}
+để gọi hành vi miền. Mỗi phụ thuộc được cài đặt bằng một field nhận qua constructor, ví dụ
+\code{CartService(cartDAO: CartDAO, productDAO: ProductDAO)}.
+
+\textbf{Phụ thuộc «create».} \code{CheckoutService} $\dashrightarrow$ \code{Order}: service tạo đơn mới.
+Đây là bản thiết kế của phép biến đổi checkout ở mức phân tích.
+
+\textbf{Realization.} \code{JdbcCustomerDAO}, \code{JdbcProductDAO}, \code{JdbcCartDAO} và
+\code{JdbcOrderDAO} cài đặt bốn interface tương ứng. Service chỉ phụ thuộc interface, không phụ thuộc lớp
+JDBC (nguyên tắc dependency inversion). Nhờ vậy có thể đổi hệ quản trị CSDL, hoặc thay bằng DAO trong bộ
+nhớ khi kiểm thử service, mà không sửa tầng Application.
+
+\subsection{Checkout đi qua các tầng (Explain)}
+
+Phương thức \code{CheckoutService.checkout} là use case trung tâm của slide A05. Trình tự dưới đây bám
+theo thân phương thức trong đặc tả thiết kế.
+\begin{enumerate}
+\item Khách bấm \emph{Đặt hàng}. \code{CheckoutController.checkout(customerId, addressId, paymentMethod)}
+nhận yêu cầu; \code{customerId} lấy từ phiên đăng nhập.
+\item Controller tạo \code{PayCash} hoặc \code{PayCredit} theo \code{paymentMethod}, rồi gọi
+\code{CheckoutService.checkout(customerId, addressId, payment)}.
+\item Service đọc giỏ bằng \code{CartDAO.findByCustomerId(customerId)}; giỏ không có hoặc rỗng thì từ chối.
+\item Service đọc khách bằng \code{CustomerDAO.findById(customerId)}.
+\item Service tạo \code{Order} mới với trạng thái \code{PLACED} và thời điểm đặt hiện tại.
+\item Với mỗi \code{CartItem}, service đọc lại sản phẩm bằng \code{ProductDAO.findById}, kiểm tra
+\code{isAvailable(quantity)}, rồi thêm \code{OrderItem.fromCartItem(item, current)}. Giá được chốt theo
+giá hiện hành của catalog, không lấy giá trong giỏ.
+\item Service tạo \code{Shipping} với địa chỉ \code{customer.findAddress(addressId)} (địa chỉ phải thuộc
+khách), trạng thái \code{PREPARING}, rồi gắn vào đơn.
+\item \code{order.calculateTotal(customer.getDiscountRate())} tính tổng tiền theo hạng khách.
+\item Service gán số tiền cho \code{payment}, đặt trạng thái \code{PENDING} và gọi
+\code{order.addPayment(payment)}.
+\item \code{OrderDAO.save(order)}, \code{ProductDAO.decreaseStock} cho từng dòng và
+\code{CartDAO.clear(cartId)} chạy trong một transaction; service trả \code{Order} cho controller.
+\end{enumerate}
+
+\IfFileExists{../figures/vp/c44_checkout_seq.png}{%
+\begin{figure}[H]
+\centering
+\vpimage{c44_checkout_seq.png}{0.60\textheight}
+\caption[Sequence diagram thiết kế cho checkout]{Sequence diagram thiết kế: checkout đi qua Controller, Service, Domain và DAO.}\label{fig:seq}
+\end{figure}
+Hình~\ref{fig:seq} vẽ lại trình tự trên bằng sequence diagram thiết kế trong Visual Paradigm. Mỗi lifeline
+có kiểu là một lớp của Hình~\ref{fig:layerclasses}, nên mỗi thông điệp là một phương thức đã khai báo ở
+mục 4.3 hoặc 4.4: thông điệp 2 là \code{CheckoutService.checkout}, các thông điệp 3, 5, 8, 12, 13, 14 đi
+xuống interface DAO, còn 7, 10, 11 gọi hành vi của lớp miền \code{Order}. Khung \emph{loop} lặp bước đọc
+lại sản phẩm và tạo \code{OrderItem} cho từng dòng giỏ. Đường trả về nét đứt mang kết quả ngược lên tầng
+trên; không có thông điệp nào đi từ Controller thẳng xuống DAO.}{}
+
+\textbf{Vì sao checkout nhận customerId thay vì cartID.} Slide A05 gợi ý
+\code{CheckoutService.checkout(cartID): Order}. Thiết kế này dùng \code{customerId} lấy từ phiên đăng
+nhập. Mỗi khách có tối đa một giỏ (Customer -- Cart là 1 -- 0..1), nên \code{customerId} vừa xác định
+được giỏ, vừa bảo đảm khách chỉ checkout giỏ của chính mình, thay vì tin một \code{cartId} do trình
+duyệt gửi lên. \code{addressId} chọn địa chỉ giao trong danh sách địa chỉ của khách; \code{payment} là
+hình thức thanh toán khách đã chọn.
+
+\subsection{Gói tìm kiếm search (Explain)}
+
+Gói \code{com.ptit.ecom.application.search} đưa phân hệ tìm kiếm đa phương thức của prototype A6 vào
+kiến trúc chung. \code{SearchController.search(mode, text, image)} chọn một trong ba đường:
+\begin{itemize}
+\item \textbf{Văn bản:} \code{SearchService.searchText} gọi \code{QueryService.buildTextQuery} để chuẩn
+hóa truy vấn thành \code{CommonQuery}, lấy ứng viên bằng \code{ProductDAO.searchByKeyword}, chấm điểm
+khớp tên, rồi gọi \code{RankingService.rank}.
+\item \textbf{Giọng nói:} \code{searchVoice} nhận transcript và đi chung đường văn bản, đúng như cách
+prototype A6 xử lý transcript.
+\item \textbf{Ảnh:} \code{searchImage} gọi \code{VectorIndex.embed} để lấy vector đặc trưng, lấy các sản
+phẩm gần nhất bằng \code{VectorIndex.nearest}, đọc lại sản phẩm từ \code{ProductDAO}, rồi xếp hạng.
+\end{itemize}
+Bước lấy ứng viên (retrieval) và bước xếp hạng (ranking) được tách thành hai lớp. \code{RankingService}
+loại sản phẩm hết hàng, sắp xếp theo điểm và lấy năm kết quả đầu, nên quy tắc tồn kho vẫn do dữ liệu
+catalog quyết định. \code{VectorIndex} là adapter tới engine đặc trưng ảnh (Apple Vision trong
+prototype A6); vector được lưu ở bảng \code{product_feature} kèm \code{model_version}.
+
+%% ===================================================================== 4.5
+\section{Sinh mã nguồn từ mô hình 4.4 (Generate code from 4.4)}\label{sec:45}
+
+\subsection{Cách sinh mã từ mô hình 4.4 (Generate code)}
+
+Mã Java được sinh bằng script \code{tools/gen_java.py}. Script đọc cùng tệp đặc tả \code{tools/model.py}
+đã dùng để dựng các sơ đồ 4.3 và 4.4 trong Visual Paradigm, nên package, lớp, field và chữ ký phương thức
+trùng với sơ đồ. Bài không dùng nút Generate Code của Visual Paradigm; nếu phiên bản VP có chức năng sinh
+mã (Tools $>$ Code), có thể sinh lại từ project để đối chiếu. Kết quả gồm \javaFileCount{} tệp Java
+(\javaLineCount{} dòng) trong \javaPackageCount{} package, đặt tại \code{code/src}.
+
+\begin{longtable}{@{}P{4.5cm}P{5.4cm}P{6.0cm}@{}}
+\caption{Quy tắc ánh xạ từ mô hình UML sang Java}\label{tab:uml2java}\\
+\toprule
+Phần tử UML (mục 4.3, 4.4) & Mã Java & Ví dụ\\
+\midrule
+\endfirsthead
+\toprule
+Phần tử UML (mục 4.3, 4.4) & Mã Java & Ví dụ\\
+\midrule
+\endhead
+\small Package của layer & \small Package \code{com.ptit.ecom.<layer>.<nhóm>} & \small\code{com.ptit.ecom.domain.cart}\\
+\small Lớp / lớp trừu tượng & \small\code{public class} / \code{public abstract class} & \small\code{Product}, \code{Payment} là abstract\\
+\small Lớp «interface» & \small\code{public interface} & \small\code{OrderDAO}\\
+\small Enum & \small\code{public enum} & \small\code{OrderStatus}\\
+\small Thuộc tính \code{-name: Type} & \small Field \code{private Type name;} & \small\code{private BigDecimal unitPrice;}\\
+\small Đầu association có vai trò, bội số 1 hoặc 0..1 & \small Field kiểu lớp đích & \small\code{private Customer owner;}\\
+\small Đầu association bội số 0..* hoặc 1..* & \small Field \code{List} khởi tạo rỗng & \small\code{private List<CartItem> items}\newline\code{= new ArrayList<>();}\\
+\small Generalization & \small\code{extends} & \small\code{CustomerVIP extends Customer}\\
+\small Realization & \small\code{implements} & \small\code{JdbcOrderDAO implements OrderDAO}\\
+\small Phương thức & \small Phương thức \code{public}/\code{private}, cùng chữ ký; \code|{abstract}| và \code|{static}| giữ nguyên & \small\code{public static OrderItem fromCartItem(...)}\\
+\small Phương thức trùng tên lớp & \small Constructor & \small\code{CartItem(Product, int)}\\
+\small Phương thức chưa có thân trong đặc tả & \small Thân tạm {\footnotesize\code{throw new}\newline\code{UnsupportedOperationException(}\newline\code{"TODO: ...")}} & \small\code{JdbcOrderDAO.findByCustomer}\\
+\small Field (không vẽ accessor trên sơ đồ) & \small Getter và setter sinh tự động & \small\code{getItems()}, \code{setStatus(...)}\\
+\bottomrule
+\end{longtable}
+
+\subsection{Giải thích các package (Explain packages)}
+
+Cây thư mục mã nguồn do script sinh ra:
+
+\txtfile{../build/code_tree.txt}
+
+\begin{longtable}{@{}P{5.5cm}P{2.4cm}P{8.0cm}@{}}
+\caption{Nội dung từng package}\label{tab:packages}\\
+\toprule
+Package (\code{com.ptit.ecom.…}) & Tầng & Nội dung\\
+\midrule
+\endfirsthead
+\toprule
+Package (\code{com.ptit.ecom.…}) & Tầng & Nội dung\\
+\midrule
+\endhead
+\small\code{presentation.controller} & \small Presentation & \small Bốn controller nhận yêu cầu của giỏ, checkout, đơn và tìm kiếm.\\
+\small\code{application.service} & \small Application & \small \code{CartService}, \code{CheckoutService}, \code{OrderService}: điều phối use case giỏ, đặt hàng, tra cứu và hủy đơn.\\
+\small\code{application.search} & \small Application & \small \code{SearchService}, \code{QueryService}, \code{RankingService} và hai lớp dữ liệu \code{CommonQuery}, \code{SearchResult}.\\
+\small\code{domain.customer} & \small Domain & \small \code{Customer}, \code{FullName}, \code{Address}, \code{CustomerVIP}, \code{CustomerNew}.\\
+\small\code{domain.product} & \small Domain & \small \code{Product} và sáu lớp con.\\
+\small\code{domain.cart} & \small Domain & \small \code{Cart}, \code{CartItem}.\\
+\small\code{domain.order} & \small Domain & \small \code{Order}, \code{OrderItem}, \code{Shipping} và hai enum \code{OrderStatus}, \code{ShippingStatus}.\\
+\small\code{domain.payment} & \small Domain & \small \code{Payment}, \code{PayCash}, \code{PayCredit}, enum \code{PaymentStatus}.\\
+\small\code{infrastructure.dao} & \small Infrastructure & \small Bốn interface DAO mà tầng Application phụ thuộc.\\
+\small\code{infrastructure.dao.jdbc} & \small Infrastructure & \small Bốn lớp JDBC cài đặt các interface trên.\\
+\small\code{infrastructure.search} & \small Infrastructure & \small \code{VectorIndex}, adapter tới engine đặc trưng ảnh.\\
+\bottomrule
+\end{longtable}
+
+Hướng \code{import} giữa các package đi theo Hình~\ref{fig:layers}: \code{presentation} import
+\code{application}; \code{application} import \code{domain} và \code{infrastructure.dao};
+\code{infrastructure} import \code{domain}; các package \code{domain} chỉ import lẫn nhau và thư viện
+chuẩn của Java.
+
+\subsection{Giải thích mã của các lớp (Class code)}
+
+Các đoạn dưới đây được trích từ mã đã sinh; phần accessor và các thành phần khác được lược bớt.
+
+\textbf{Lớp miền \texttt{Cart}.}
+
+\codefile{Java}{../build/excerpts/cart.java}
+
+Field \code{owner} và \code{items} được sinh từ hai đầu association \code{Cart} $\to$ \code{Customer} và
+composition \code{Cart} $\to$ \code{CartItem}. \code{addItem} cộng dồn số lượng nếu sản phẩm đã có
+trong giỏ, nên mỗi sản phẩm chỉ có một dòng giỏ; điều này khớp với khóa chính ghép
+\code{(cart_id, product_id)} của bảng \code{cart_item}. \code{calculateTotal} cộng tiền bằng
+\code{BigDecimal}.
+
+\textbf{Phương thức tĩnh \texttt{OrderItem.fromCartItem}.}
+
+\codefile{Java}{../build/excerpts/orderitem.java}
+
+Dòng đơn lấy số lượng từ dòng giỏ nhưng lấy giá từ đối tượng \code{current} vừa đọc lại từ catalog.
+\code{unitPrice} vì thế là giá chốt tại thời điểm đặt, đúng ý nghĩa đã phân tích ở mục 4.1.
+
+\textbf{Service \texttt{CheckoutService}.}
+
+\codefile{Java}{../build/excerpts/checkout.java}
+
+Bốn field DAO là các phụ thuộc «use» của Hình~\ref{fig:layerclasses}. Thân phương thức là mười bước của
+mục 4.4.3: service chỉ điều phối, còn việc kiểm tra tồn kho, tạo dòng đơn, tính tổng và quản lý thanh
+toán được giao cho \code{Product}, \code{OrderItem}, \code{Order} và \code{Payment}.
+
+\textbf{DAO \texttt{OrderDAO} và \texttt{JdbcOrderDAO}.}
+
+\codefile{Java}{../build/excerpts/orderdao.java}
+
+Interface \code{OrderDAO} thuộc \code{infrastructure.dao}; lớp \code{JdbcOrderDAO} cài đặt nó
+(realization). \code{findByIdAndCustomer} dùng \code{PreparedStatement} với tham số, nên giá trị đầu vào
+không bị ghép thẳng vào câu SQL. Điều kiện \code{customer_id = ?} chỉ trả đơn thuộc khách đang đăng nhập,
+cài đặt yêu cầu FR-ORDER-02.
+
+\textbf{Lớp trừu tượng \texttt{Payment} và lớp con \texttt{PayCash}.}
+
+\codefile{Java}{../build/excerpts/payment.java}
+
+\code{Payment.process()} là phương thức trừu tượng; \code{PayCash} ghi đè để kiểm tra số tiền nhận và
+tính tiền thừa. Đây là đa hình đã nêu ở mục 4.3.2.
+
+\textbf{Gói search.}
+
+\codefile{Java}{../build/excerpts/search.java}
+
+\code{searchImage} cho thấy phần retrieval (\code{VectorIndex.nearest} và \code{ProductDAO.findById})
+tách khỏi phần ranking (\code{RankingService.rank}). \code{SearchController.search} chỉ chọn đường xử lý
+theo \code{mode}.
+
+\subsection{Biên dịch và kiểm tra nhanh}
+
+Mã sinh ra được biên dịch bằng \code{javac}. Một chương trình kiểm tra nhanh (\code{code/test/DomainSmokeTest.java})
+gọi các phương thức miền có thân cài đặt với dữ liệu mẫu. Kết quả do chương trình in ra:
+
+\txtfile{../build/smoke_test.txt}
+
+Các kiểm tra này chỉ bao phủ lớp miền. Các phương thức JDBC chưa được chạy với cơ sở dữ liệu.
+
+\subsection{Giới hạn của mã sinh ra}
+
+\begin{itemize}
+\item Đây là khung mã từ mô hình thiết kế. Các phương thức chưa có thân trong đặc tả, gồm phần lớn phương
+thức của \code{JdbcCustomerDAO}, \code{JdbcProductDAO}, \code{JdbcCartDAO}, \code{JdbcOrderDAO} và hai
+phương thức của \code{VectorIndex}, còn ném \code{UnsupportedOperationException("TODO: ...")}.
+\item \code{CheckoutService.checkout} cần một transaction bao ba thao tác lưu đơn, giảm tồn và làm rỗng
+giỏ; hiện mỗi DAO tự mở kết nối riêng, nên tầng Infrastructure còn phải cung cấp cơ chế transaction.
+\item Phí giao hàng đang đặt bằng 0; cổng thanh toán thẻ và giao diện người dùng chưa được cài đặt.
+\end{itemize}
+
+Việc tiếp theo cho buổi đánh giá code ngày 05/11: cài đặt các DAO trên lược đồ ở mục 4.2 (hoặc DAO
+trong bộ nhớ cho demo), thêm transaction cho checkout, viết unit test cho \code{Cart}, \code{Order},
+\code{Payment}, và nối \code{VectorIndex} với engine ảnh của prototype A6.
+
+%% ===================================================================== 4.6
+\section{Kết luận chương (Conclusion)}\label{sec:46}
+
+Chương 4 đi một mạch từ mô hình nghiệp vụ tới mã nguồn. Sơ đồ phân tích 20 lớp (4.1) được chuyển thành
+data model và 20 bảng có khóa chính, khóa ngoại và ràng buộc (4.2). Sơ đồ lớp thiết kế bổ sung kiểu dữ
+liệu, phương thức và chiều điều hướng (4.3). Kiến trúc bốn tầng đặt lớp miền cạnh controller, service và
+DAO (4.4). Cuối cùng, mã Java được sinh từ cùng mô hình đó (4.5). Vì sơ đồ, SQL và mã cùng đọc một tệp
+đặc tả, tên lớp, tên bảng và chữ ký phương thức nhất quán giữa các mục.
+
+\begin{longtable}{@{}P{2.9cm}P{6.3cm}P{3.5cm}P{2.8cm}@{}}
+\caption{Truy vết từ yêu cầu tới thiết kế, dữ liệu và mã}\label{tab:trace}\\
+\toprule
+Yêu cầu & Lớp và phương thức & Bảng, cột & Mục\\
+\midrule
+\endfirsthead
+\toprule
+Yêu cầu & Lớp và phương thức & Bảng, cột & Mục\\
+\midrule
+\endhead
+\small FR-CART-01: thêm sản phẩm còn bán vào giỏ & \small\code{CartController.addItem} $\to$ \code{CartService.addToCart} $\to$ \code{Cart.addItem}, \code{Product.isAvailable} & \small\code{cart}, \code{cart_item} (\code{quantity > 0}) & \small 4.3, 4.4, 4.5\\
+\small FR-ORDER-01: tạo đơn từ giỏ hợp lệ, chốt giá & \small\code{CheckoutService.checkout}, \code{OrderItem.fromCartItem}, \code{Order.calculateTotal} & \small\code{orders}, \code{order_item.unit_price} & \small 4.3, 4.4.3, 4.5\\
+\small FR-ORDER-02: khách chỉ xem đơn của mình & \small\code{OrderService.getOrder} $\to$ \code{OrderDAO.findByIdAndCustomer}; \code{Order.isOwnedBy} & \small\code{orders.customer_id} & \small 4.4, 4.5\\
+\small FR-SEARCH-01: tìm theo từ khóa & \small\code{SearchService.searchText}, \code{QueryService.buildTextQuery}, \code{RankingService.rank} & \small\code{product} & \small 4.4.4, 4.5\\
+\small FR-SEARCH-03: tìm bằng ảnh & \small\code{SearchService.searchImage}, \code{VectorIndex.nearest} & \small\code{product_feature} & \small 4.2, 4.4.4\\
+\small D-01: không lưu số thẻ đầy đủ & \small\code{PayCredit.cardLast4}, \code{authorizationCode}, \code{maskedCard} & \small\code{pay_credit.card_last4} & \small 4.1, 4.2, 4.3\\
+\bottomrule
+\end{longtable}
+
+\textbf{Hạn chế.} Mô hình dữ liệu chưa có lịch sử chuyển trạng thái đơn và chưa có tồn kho theo kho
+hàng. Phí giao hàng chưa được thiết kế. Ràng buộc ``đúng một bản ghi con'' của cột phân loại và cận dưới
+1..* vẫn do tầng nghiệp vụ giữ. Mã ở mục 4.5 là khung có một phần thân cài đặt, chưa phải ứng dụng chạy
+được.
+
+\textbf{Kế hoạch.} Ngày 29/10 đánh giá phần thiết kế; ngày 05/11 đánh giá code, với các việc nêu ở cuối
+mục 4.5; ngày 12/11 và 19/11 đánh giá tiểu luận final và demo của từng sinh viên. Khi ghép vào tiểu luận
+final, chương này thay chương Design của bản V1.
+
+%% ================================================================ appendix
+\section*{Phụ lục. Tệp nộp kèm và cách tái tạo}
+\addcontentsline{toc}{section}{Phụ lục. Tệp nộp kèm và cách tái tạo}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}P{5.6cm}P{10.0cm}@{}}
+\toprule
+Tệp, thư mục (trong \code{tieuluan/}) & Nội dung\\
+\midrule
+\code{vp/tieuluan_design.vpp} & Project Visual Paradigm chứa toàn bộ sơ đồ của chương, mở và chỉnh sửa được\\
+\code{figures/vp/*.png}, \code{*.svg} & Ảnh sơ đồ xuất từ project\\
+\code{db/ecom_schema.sql} & DDL PostgreSQL của 20 bảng\\
+\code{code/src} & Mã Java sinh từ mô hình 4.4\\
+\code{tools/model.py} & Đặc tả chung của lớp, quan hệ, bảng\\
+\code{chapter4/design_04.tex} & Mã nguồn LaTeX của chương\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Lệnh tái tạo, chạy trong thư mục \code{tieuluan/}: \code{tools/build_vp.py} dựng project VP và xuất
+hình; \code{tools/gen_sql.py} sinh \code{db/ecom_schema.sql} và kiểm tra trên SQLite;
+\code{tools/gen_java.py} sinh \code{code/src}, biên dịch và chạy kiểm tra nhanh; lệnh cuối biên dịch
+chương này.
+\begin{Verbatim}[fontsize=\small,frame=single]
+python3 tools/build_vp.py
+python3 tools/gen_sql.py
+python3 tools/gen_java.py
+tectonic -X compile chapter4/design_04.tex --outdir build
+\end{Verbatim}
+
+\end{document}

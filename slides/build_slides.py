@@ -18,6 +18,7 @@ import json
 import re
 import shutil
 import subprocess
+import unicodedata
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -44,9 +45,10 @@ import model  # noqa: E402
 CUTOFF = datetime(2026, 10, 29, 16, 28)
 
 W, H, M = 13.333, 7.5, 0.6
-# Menlo (macOS system font, also used by LibreOffice there): same 0.6 em advance as Courier New but
-# much heavier strokes, and it covers Vietnamese. Text at DISPLAY_PT and up is set in bold.
-SANS, MONO = "Arial", "Menlo"
+# Mono text is Courier New Bold: Courier New Regular is too thin on screen, and Menlo, Monaco, PT Mono and
+# SF Mono are not seen by LibreOffice on macOS (it substitutes a serif), while Courier New is installed
+# everywhere, covers Vietnamese and keeps the 0.6 em advance. Text at DISPLAY_PT and up is set in bold.
+SANS, MONO = "Arial", "Courier New"
 DISPLAY_PT, MONO_MIN_PT = 24, 9
 # One palette per theme. WORDMARK is the faint "Họa." on the Q&A slide, ON_IMAGE the credit text on
 # the dark band over paintings.
@@ -263,7 +265,10 @@ def strip_style(shape):
         shape._element.remove(style)
 
 
-def add_run(p, text, size, color, font, bold=False, italic=False, sub=False, tracking=None):
+def add_run(p, text, size, color, font, bold=None, italic=False, sub=False, tracking=None):
+    """bold=None: bold for the mono face (see MONO), regular otherwise."""
+    if bold is None:
+        bold = font == MONO
     run = p.add_run()
     run.text = text
     f = run.font
@@ -301,7 +306,7 @@ def text(slide, x, y, w, h, paras, size=16, color=BODY, font=SANS, bold=None, al
             run_size, run_font = o.get("size", size), o.get("font", font)
             if run_font == MONO:
                 run_size = max(run_size, MONO_MIN_PT)
-            run_bold = o.get("bold", bold if bold is not None else run_size >= DISPLAY_PT)
+            run_bold = o.get("bold", bold if bold is not None else (True if run_size >= DISPLAY_PT else None))
             add_run(p, t, run_size, o.get("color", color), run_font,
                     run_bold, o.get("italic", False), o.get("sub", False), o.get("tracking", tracking))
     return box
@@ -418,7 +423,7 @@ def picture(slide, path, x, y, w, h, alt, label, hint="", panel=False, frame=Fal
     return pic
 
 
-def set_cell(cell, paras, size, color, font, fill=None, bottom=LINE, bold=False):
+def set_cell(cell, paras, size, color, font, fill=None, bottom=LINE, bold=None):
     tc_pr = cell._tc.get_or_add_tcPr()
     for tag in ("a:lnL", "a:lnR", "a:lnT", "a:lnB"):
         ln = etree.SubElement(tc_pr, qn(tag))
@@ -558,7 +563,7 @@ def divider(d, number, title, subtitle, caption, painting, extra=None, notes="")
 
 
 def mono_width(s, size):
-    """Inches taken by one mono line: Menlo advance (0.6 em) plus tracking, sized for the wider
+    """Inches taken by one mono line: Courier New advance (0.6 em) plus tracking, sized for the wider
     Quick Look rendering so a fit there also fits in PowerPoint."""
     return len(s) * (0.6 * size + 1.0) / 72
 
@@ -571,7 +576,7 @@ def mono_fit(s, width, size, floor=MONO_MIN_PT):
 
 
 def brand_runs(s, upper=False):
-    """Runs for s with the brand "Họa." in the sans face: keeps the wordmark in the logo face."""
+    """Runs for s with the brand "Họa." in the sans face: Courier New draws "Ọ" like a "Q"."""
     runs = []
     for i, part in enumerate(s.split("Họa.")):
         if i:
@@ -791,9 +796,170 @@ def s_title(d):
          size=17, color=BODY, line=1.12)
     members = json.loads((HERE / "members.json").read_text(encoding="utf-8"))
     group = f" ▪ GROUP {members['group']}" if members.get("group") else ""
-    people = "   ".join(f"{m['name']} — {m['id']}".upper() for m in members["members"])
-    mono(s, M, 6.25, 6.7, 0.6, [f"INFORMATION SYSTEM ANALYSIS AND DESIGN ▪ CLASS {members['class']}{group}", people],
-         size=10, after=4)
+    names = [(f"{m['name']} — {m['id']}" if m.get("id") else m["name"]).upper() for m in members["members"]]
+    lines = [""]
+    for name in names:
+        joined = f"{lines[-1]}   {name}" if lines[-1] else name
+        if lines[-1] and mono_width(joined, 10) > 6.7:
+            lines.append(name)
+        else:
+            lines[-1] = joined
+    mono(s, M, 6.95 - 0.21 * (len(lines) + 1), 6.7, 0.25 * (len(lines) + 1),
+         [f"INFORMATION SYSTEM ANALYSIS AND DESIGN ▪ CLASS {members['class']}{group}"] + lines, size=10, after=4)
+
+
+# ------------------------------------------------------------------ team
+def slug(name):
+    """'Bế Quốc Khánh' -> 'be-quoc-khanh' (photo file name for a member without a student id)."""
+    plain = unicodedata.normalize("NFD", name.replace("Đ", "D").replace("đ", "d"))
+    plain = "".join(c for c in plain if not unicodedata.combining(c))
+    return re.sub(r"[^a-z0-9]+", "-", plain.lower()).strip("-")
+
+
+def member_photo(m):
+    """members.json "photo" (relative to slides/), else slides/members/<id or name slug>.jpg|jpeg|png."""
+    if m.get("photo"):
+        path = HERE / m["photo"]
+        return path if path.exists() else None
+    key = m.get("id") or slug(m["name"])
+    return next((p for ext in ("jpg", "jpeg", "png", "JPG", "PNG")
+                 if (p := HERE / "members" / f"{key}.{ext}").exists()), None)
+
+
+def portrait_pending():
+    """Neutral 4:5 stand-in for a missing photo: a soft silhouette in the theme's panel tones."""
+    base, ink = (hex_rgb(PANEL), hex_rgb(LINE)) if THEME == "light" else ((30, 30, 29), (52, 52, 50))
+    path = CACHE / f"portrait_pending_{THEME}_{PANEL}.png"
+    if not path.exists():
+        CACHE.mkdir(parents=True, exist_ok=True)
+        w, h = 800, 1000
+        img = Image.new("RGB", (w, h), base)
+        draw = ImageDraw.Draw(img)
+        for y in range(h):  # a gentle vertical light falloff, like a studio backdrop
+            t = y / h
+            draw.line((0, y, w, y), fill=tuple(int(b + (i - b) * 0.25 * t) for b, i in zip(base, ink)))
+        draw.ellipse((w * 0.32, h * 0.2, w * 0.68, h * 0.53), fill=ink)
+        draw.rounded_rectangle((w * 0.16, h * 0.6, w * 0.84, h * 1.15), radius=int(w * 0.3), fill=ink)
+        img.save(path, optimize=True)
+    return path
+
+
+def gradient(shape, stops, angle=90):
+    """Linear gradient fill: stops = [(position 0-100, hex)], angle in degrees."""
+    shape.fill.gradient()
+    grad = shape.fill._xPr.find(qn("a:gradFill"))
+    gs_lst = grad.find(qn("a:gsLst"))
+    for gs in list(gs_lst):
+        gs_lst.remove(gs)
+    for pos, hex_ in stops:
+        gs = etree.SubElement(gs_lst, qn("a:gs"), pos=str(int(pos * 1000)))
+        etree.SubElement(gs, qn("a:srgbClr"), val=hex_)
+    lin = grad.find(qn("a:lin"))
+    if lin is None:
+        lin = etree.SubElement(grad, qn("a:lin"))
+    lin.set("ang", str(int(angle * 60000)))
+    lin.set("scaled", "0")
+    return shape
+
+
+def shadow(shape, blur=0.12, dist=0.05, alpha=0.35, direction=90):
+    """Soft outer drop shadow (a:outerShdw) under a shape."""
+    sp_pr = shape._element.spPr
+    eff = etree.SubElement(sp_pr, qn("a:effectLst"))
+    sh = etree.SubElement(eff, qn("a:outerShdw"), blurRad=str(int(Inches(blur))), dist=str(int(Inches(dist))),
+                          dir=str(direction * 60000), algn="t", rotWithShape="0")
+    clr = etree.SubElement(sh, qn("a:srgbClr"), val="000000")
+    etree.SubElement(clr, qn("a:alpha"), val=str(int(alpha * 100000)))
+    return shape
+
+
+def band(slide, x, y, w, h, fill=None, line=None, grad=None, angle=90, name=None):
+    """Square-cornered layer of a frame."""
+    shape = rect(slide, x, y, w, h, fill=fill, line=line, radius=0, name=name)
+    if grad:
+        gradient(shape, grad, angle)
+    return shape
+
+
+# Four frames, each (border around the 4:5 photo in inches, draw function). Every draw function gets the
+# outer box and returns the photo opening.
+def frame_gilded(s, x, y, w, h):
+    """Gilded frame: light outer lip, wide gold gradient moulding, dark bevel, thin bright inner lip."""
+    shadow(band(s, x, y, w, h, fill="8A6A22", name="Frame gilded"), blur=0.16, dist=0.07, alpha=0.4)
+    band(s, x + 0.03, y + 0.03, w - 0.06, h - 0.06, grad=[(0, "F3DE95"), (35, "C9A13B"), (65, "9C7424"),
+                                                          (100, "E2C26A")], angle=45)
+    band(s, x + 0.12, y + 0.12, w - 0.24, h - 0.24, grad=[(0, "A57E2A"), (50, "E7CB78"), (100, "B38A33")],
+         angle=225)
+    band(s, x + 0.24, y + 0.24, w - 0.48, h - 0.48, fill="5E4513")
+    band(s, x + 0.27, y + 0.27, w - 0.54, h - 0.54, fill="EBD48A")
+    return x + 0.29, y + 0.29
+
+
+def frame_gallery(s, x, y, w, h):
+    """Black gallery frame with a wide white mat and a bevelled window."""
+    edge = "3A3A38" if THEME == "dark" else None
+    shadow(band(s, x, y, w, h, fill="141414", line=edge, name="Frame gallery"), blur=0.14, dist=0.06, alpha=0.4)
+    band(s, x + 0.1, y + 0.1, w - 0.2, h - 0.2, fill="F6F3EC")
+    band(s, x + 0.43, y + 0.43, w - 0.86, h - 0.86, fill="E2DDD1")  # bevel cut of the mat
+    return x + 0.46, y + 0.46
+
+
+def frame_oak(s, x, y, w, h):
+    """Thin natural light-oak frame."""
+    shadow(band(s, x, y, w, h, grad=[(0, "D9BC8C"), (50, "C29D68"), (100, "D3B47F")], angle=0,
+                name="Frame oak"), blur=0.12, dist=0.05, alpha=0.35)
+    for k in range(4):  # a few soft grain lines along the top and bottom rails
+        band(s, x + 0.05 + k * 0.37, y + 0.04 + (k % 2) * 0.04, 0.3 + (k % 3) * 0.12, 0.01, fill="B48F5C")
+        band(s, x + 0.2 + k * 0.4, y + h - 0.07 - (k % 2) * 0.03, 0.26 + (k % 2) * 0.15, 0.01, fill="B48F5C")
+    band(s, x + 0.12, y + 0.12, w - 0.24, h - 0.24, fill="8E6A3D")
+    return x + 0.135, y + 0.135
+
+
+def frame_floating(s, x, y, w, h):
+    """Pewter floating frame: the photo floats in a shadowed gap inside the moulding."""
+    shadow(band(s, x, y, w, h, grad=[(0, "E4E5E3"), (45, "9A9C9B"), (100, "CDCECC")], angle=45,
+                name="Frame floating"), blur=0.13, dist=0.06, alpha=0.35)
+    band(s, x + 0.09, y + 0.09, w - 0.18, h - 0.18, fill="6E706F")
+    band(s, x + 0.1, y + 0.1, w - 0.2, h - 0.2, grad=[(0, "1E1E1D"), (100, "3B3B3A")], angle=90)
+    return x + 0.19, y + 0.19
+
+
+FRAMES = [(0.29, frame_gilded), (0.46, frame_gallery), (0.135, frame_oak), (0.19, frame_floating)]
+
+
+def s_team(d):
+    members = json.loads((HERE / "members.json").read_text(encoding="utf-8"))
+    group = members.get("group")
+    s = d.slide("TEAM", NOTES["team"], dark_grid=True)
+    d.title(s, [[(f"Group {group} — the people behind " if group else "The people behind ", {}),
+                 ("Họa.", {})]])
+    pw, ph = 1.92, 2.4                    # every photo is 4:5 at the same size
+    base = 5.3                            # frames hang on one bottom line
+    slot = (W - 2 * M) / 4
+    for i, m in enumerate(members["members"][:4]):
+        border, draw = FRAMES[i % len(FRAMES)]
+        fw, fh = pw + 2 * border, ph + 2 * border
+        cx = M + slot * (i + 0.5)
+        px, py = draw(s, cx - fw / 2, base - fh, fw, fh)
+        photo = member_photo(m)
+        src = cached(photo, 1200, aspect=4 / 5) if photo else portrait_pending()
+        pic = s.shapes.add_picture(str(src), Inches(px), Inches(py), Inches(pw), Inches(ph))
+        pic.name = f"Portrait {m['name']}"
+        pic._element.nvPicPr.cNvPr.set("descr", f"Portrait of {m['name']}" if photo else "Photo pending")
+        if not photo:
+            mono(s, px, py + 0.16, pw, 0.3, "PHOTO PENDING", size=9, align=PP_ALIGN.CENTER,
+                 color="6E6C66" if THEME == "light" else "8C8C88")
+        # Museum wall label, centred under the frame.
+        lw, lh, ly = 2.35, 0.82, base + 0.38
+        label = rect(s, cx - lw / 2, ly, lw, lh, fill=PANEL, line=LINE, radius=0, name=f"Label {m['name']}")
+        shadow(label, blur=0.06, dist=0.02, alpha=0.18)
+        small = " ▪ ".join(v for v in (m.get("id", ""), m.get("role", "")) if v)
+        paras = [[(m["name"], {"bold": True, "color": TEXT})]]
+        if small:
+            paras.append([(small, {"font": MONO, "size": 9.5, "color": MUTED, "tracking": 40})])
+        text(s, cx - lw / 2 + 0.16, ly, lw - 0.32, lh, paras, size=13, anchor=MSO_ANCHOR.MIDDLE, after=2)
+    mono(s, M, 6.75, W - 2 * M, 0.3, f"INFORMATION SYSTEM ANALYSIS AND DESIGN ▪ CLASS {members['class']}"
+         + (f" ▪ GROUP {group}" if group else ""), size=10, align=PP_ALIGN.CENTER)
 
 
 def s_agenda(d):
@@ -1506,7 +1672,7 @@ def s_folder_map(d):
           row_h=0.38)
 
 
-SLIDES = [s_title, s_agenda, s_product,
+SLIDES = [s_title, s_team, s_agenda, s_product,
           s_ch1, s_business, s_chain, s_fr, s_nfr, s_usecase,
           s_ch2, s_spec, s_activity, s_consistency, s_domain,
           s_ch3, s_pipeline, s_voice, s_image, s_room, s_architecture, s_assistant, s_eval,
@@ -1516,6 +1682,7 @@ SLIDES = [s_title, s_agenda, s_product,
 
 NOTES = {
     "title": """Good morning. Our group presents the term essay for Information System Analysis and Design, titled "From requirements to running code". Throughout the talk we use one concrete product, Họa., an online painting shop with multimodal search: customers find a painting by typing, by speaking or by uploading a photo. It has a shopping assistant powered by Gemma 4 and speech recognition by Whisper running on the laptop itself. The talk follows the content of the course, and every concept is illustrated with an example taken from Họa.""",
+    "team": """We are group 10 of class 04. Before the content, here are the four of us, hung like the paintings our shop sells: Bế Quốc Khánh, Vũ Hùng Anh, Nguyễn Gia Đức Trung and Phạm Tuấn Anh. We built Họa. together, from the requirements and the diagrams to the Java demo you will see at the end of the talk.""",
     "agenda": """The talk has five parts, matching the five chapters of the essay: requirement determination from Lectures 01 and 02, analysis from Lectures 03 and 04, AI in e-commerce from Assignment 06, design from Lecture 05, and finally the code with a live demo. The line at the bottom is the thread our lecturer draws in Lecture 01: from a business problem to a stakeholder need, a requirement, a use case, behaviour, a domain model, a design and finally code. Each part of the talk is one link of that chain.""",
     "product": """Họa. sells prints of public-domain masterpieces, with images from Wikimedia Commons, together with frames, priced in US dollars. Besides the usual e-commerce functions — cart, checkout, order tracking and cancellation — the shop has five AI features that we present in Chapter 3. The numbers at the bottom, requirements, use cases, Java classes and tables, are read directly from the shared specification file of the project, so they always match the report and the code.""",
     "ch1": """Chapter 1 answers the question: what must the system do, and for whom? Lecture 01 says we must understand the business first: its people, processes, information and problems. Lecture 02 turns that understanding into functional and non-functional requirements, actors and use cases.""",

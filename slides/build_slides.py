@@ -667,6 +667,40 @@ def first_lines(rel, n, width=74):
     return [ln if len(ln) <= width else ln[: width - 1] + "…" for ln in lines[:n]]
 
 
+def eval_printout():
+    """The search part of build/eval/eval_summary.txt, verbatim, as lines short enough for the slide-22 panel:
+    the heading, the text/voice and image search tables, and the metric definitions. Long prose lines are
+    broken at a clause, never cut."""
+    path = ASSETS.file("build/eval/eval_summary.txt")
+    if not path:
+        return None
+    lines = [ln.rstrip() for ln in path.read_text(encoding="utf-8", errors="replace").splitlines()]
+    blocks, cur = [], []
+    for ln in lines:
+        if ln.strip():
+            cur.append(ln)
+        elif cur:
+            blocks.append(cur)
+            cur = []
+    if cur:
+        blocks.append(cur)
+    out = [lines[0], ""]
+    for head in ("1. Search", "2. Image search"):
+        block = next((b for b in blocks if b[0].startswith(head)), None)
+        if block:
+            for ln in block:
+                if ln.lstrip().startswith("Whisper:") and ", order" in ln:
+                    a, b = ln.split(", order", 1)
+                    out += [a + ",", "   order" + b]
+                else:
+                    out.append(ln)
+            out.append("")
+    defs = next((ln for ln in lines if ln.startswith("Hit@1 =")), None)
+    if defs:
+        out += [part.strip() + (";" if i < defs.count(";") else "") for i, part in enumerate(defs.split(";"))]
+    return out
+
+
 def code_stats():
     path = ASSETS.file("build/code_stats5.tex")
     stats = {}
@@ -1208,10 +1242,22 @@ def s_eval(d):
         bar_chart(s, M, 1.95, 6.6, 4.3, [f"{lab} ({ok}/{tot})" for lab, _, ok, tot in rates],
                   [r for _, r, _, _ in rates])
     else:
-        summary = first_lines("build/eval/eval_summary.txt", 12, 70)
+        summary = eval_printout()
         if summary:
+            # A printout, not a label: no letter-spacing, largest size (<= 10 pt) that keeps every row on
+            # one line with 5 % slack for Quick Look's wider rendering.
+            size = 10.0
+            while size > 7.5 and max(map(len, summary)) * 0.6 * size / 72 * 1.05 > 6.2:
+                size -= 0.5
             rect(s, M, 1.95, 6.6, 4.3)
-            mono(s, M + 0.2, 2.1, 6.2, 4.0, "\n".join(summary), size=10, color=BODY)
+            def style(ln):
+                if re.match(r"\d\. ", ln):
+                    return {"color": ACCENT}
+                if ln.startswith(("Input ", "Reader ")):
+                    return {"color": MUTED}
+                return {}
+            text(s, M + 0.2, 2.15, 6.2, 4.0, [[(ln or "\u00a0", style(ln))] for ln in summary], size=size,
+                 color=BODY, font=MONO, line=1.1)
         else:
             picture(s, None, M, 1.95, 6.6, 4.3, alt="", label="build/eval/eval_results.json",
                     hint="Success rate per search mode")

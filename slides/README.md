@@ -4,12 +4,16 @@
 
 ## Rebuild
 
-From `tieuluan/`:
+Two decks come from the same script: a light one (default) and a dark one. From the repo root:
 
 ```
-slides/.venv/bin/python slides/build_slides.py        # writes slides/thuyettrinh_Hoa.pptx
-slides/.venv/bin/python slides/build_slides.py --qa   # also renders slides/qa/slide-NN.png + contact.png (macOS Quick Look)
+slides/.venv/bin/python slides/build_slides.py                    # light: slides/thuyettrinh_Hoa.pptx
+slides/.venv/bin/python slides/build_slides.py --theme dark       # dark:  slides/thuyettrinh_Hoa_dark.pptx
+slides/.venv/bin/python slides/build_slides.py --qa               # light + renders in slides/qa/ (slide-NN.png, contact.png)
+slides/.venv/bin/python slides/build_slides.py --theme dark --qa  # dark + renders in slides/qa-dark/
 ```
+
+QA renders use macOS Quick Look. Both palettes are in `THEMES` at the top of `build_slides.py`.
 
 The venv needs `python-pptx`, `Pillow` and `lxml`.
 

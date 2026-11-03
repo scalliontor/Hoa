@@ -8,8 +8,9 @@ model stops the build, so the deck cannot drift from the code.
 Figures come from figures/vp and figures/demo while other agents produce them:
 a missing or stale image becomes a placeholder frame, so re-running fills it in.
 
-    slides/.venv/bin/python slides/build_slides.py          # build the deck
-    slides/.venv/bin/python slides/build_slides.py --qa     # also render slides/qa/*.png
+    slides/.venv/bin/python slides/build_slides.py                  # light deck
+    slides/.venv/bin/python slides/build_slides.py --theme dark     # dark deck (_dark.pptx)
+    add --qa to also render slides/qa/*.png (slides/qa-dark/ for the dark theme)
 """
 import argparse
 import hashlib
@@ -36,7 +37,6 @@ from pptx.util import Emu, Inches, Pt
 ROOT = Path(__file__).resolve().parents[1]
 HERE = ROOT / "slides"
 CACHE = HERE / ".cache"
-OUT = HERE / "thuyettrinh_Hoa.pptx"
 sys.path.insert(0, str(ROOT / "tools"))
 import model  # noqa: E402
 
@@ -44,10 +44,40 @@ import model  # noqa: E402
 CUTOFF = datetime(2026, 10, 29, 16, 28)
 
 W, H, M = 13.333, 7.5, 0.6
-SANS, MONO = "Arial", "Courier New"
-BG, PANEL, LINE = "0B0B0B", "171717", "2E2E2E"
-TEXT, BODY, MUTED, ACCENT = "F2F2EE", "CFCFCB", "8C8C88", "E5482E"
-WHITE, WORDMARK = "FFFFFF", "222222"
+# Menlo (macOS system font, also used by LibreOffice there): same 0.6 em advance as Courier New but
+# much heavier strokes, and it covers Vietnamese. Text at DISPLAY_PT and up is set in bold.
+SANS, MONO = "Arial", "Menlo"
+DISPLAY_PT, MONO_MIN_PT = 24, 9
+# One palette per theme. WORDMARK is the faint "Họa." on the Q&A slide, ON_IMAGE the credit text on
+# the dark band over paintings.
+THEMES = {
+    # Warm off-white page, near-black text. Contrast on BG / PANEL: TEXT 18.3 / 16.5, BODY 15.3 / 13.7,
+    # MUTED 8.3 / 7.4, ACCENT (darkened from E5482E) 5.6 / 5.1.
+    "light": dict(BG="F7F6F2", PANEL="ECEAE4", LINE="B9B6AD", TEXT="0A0A0A", BODY="1F1F1C", MUTED="4A4A44",
+                  ACCENT="B5331A", WORDMARK="E6E4DD", GRID_DOT="DCDAD3", LOGO_INK="0A0A0A",
+                  out="thuyettrinh_Hoa.pptx", qa="qa"),
+    # The original dark palette, except MUTED lifted from 8C8C88 (5.3:1 on PANEL) to A3A39E (7.1:1).
+    # Contrast on BG / PANEL: TEXT 17.5 / 16.0, BODY 12.6 / 11.5, MUTED 7.8 / 7.1, ACCENT 5.0 / 4.5.
+    "dark": dict(BG="0B0B0B", PANEL="171717", LINE="2E2E2E", TEXT="F2F2EE", BODY="CFCFCB", MUTED="A3A39E",
+                 ACCENT="E5482E", WORDMARK="222222", GRID_DOT="2B2B2B", LOGO_INK="EDEDE9",
+                 out="thuyettrinh_Hoa_dark.pptx", qa="qa-dark"),
+}
+# Read --theme before the drawing helpers below bind the palette as default arguments.
+_pre = argparse.ArgumentParser(add_help=False)
+_pre.add_argument("--theme", choices=THEMES, default="light")
+THEME = _pre.parse_known_args()[0].theme
+_P = THEMES[THEME]
+BG, PANEL, LINE = _P["BG"], _P["PANEL"], _P["LINE"]
+TEXT, BODY, MUTED, ACCENT = _P["TEXT"], _P["BODY"], _P["MUTED"], _P["ACCENT"]
+WHITE, WORDMARK = "FFFFFF", _P["WORDMARK"]
+ON_IMAGE = "F2F2EE"
+GRID_DOT, LOGO_INK = _P["GRID_DOT"], _P["LOGO_INK"]
+OUT = HERE / _P["out"]
+QA_DIR = HERE / _P["qa"]
+
+
+def hex_rgb(hex_):
+    return tuple(int(hex_[i:i + 2], 16) for i in (0, 2, 4))
 
 
 def rgb(hex_):
@@ -196,21 +226,21 @@ def cached(path, max_px=2600, aspect=None, trim=False):
 
 
 def dot_grid():
-    path = CACHE / "dotgrid.png"
+    path = CACHE / f"dotgrid_{BG}_{GRID_DOT}.png"
     if not path.exists():
         CACHE.mkdir(parents=True, exist_ok=True)
-        img = Image.new("RGB", (2667, 1500), (11, 11, 11))
+        img = Image.new("RGB", (2667, 1500), hex_rgb(BG))
         draw = ImageDraw.Draw(img)
         for x in range(15, 2667, 30):
             for y in range(15, 1500, 30):
-                draw.ellipse((x - 1.6, y - 1.6, x + 1.6, y + 1.6), fill=(43, 43, 43))
+                draw.ellipse((x - 1.6, y - 1.6, x + 1.6, y + 1.6), fill=hex_rgb(GRID_DOT))
         img.save(path, optimize=True)
     return path
 
 
 def logo():
     """A dotted sphere, the Hoa. mark (after the fustic.studio logo)."""
-    path = CACHE / "logo.png"
+    path = CACHE / f"logo_{LOGO_INK}.png"
     if not path.exists():
         CACHE.mkdir(parents=True, exist_ok=True)
         img = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
@@ -221,7 +251,7 @@ def logo():
                 d = ((x - 128) ** 2 + (y - 128) ** 2) ** 0.5
                 if d <= 112:
                     r = 9 * (1 - d / 140)
-                    draw.ellipse((x - r, y - r, x + r, y + r), fill=(237, 237, 233, 255))
+                    draw.ellipse((x - r, y - r, x + r, y + r), fill=hex_rgb(LOGO_INK) + (255,))
         img.save(path)
     return path
 
@@ -247,10 +277,11 @@ def add_run(p, text, size, color, font, bold=False, italic=False, sub=False, tra
     return run
 
 
-def text(slide, x, y, w, h, paras, size=16, color=BODY, font=SANS, bold=False, align=PP_ALIGN.LEFT,
+def text(slide, x, y, w, h, paras, size=16, color=BODY, font=SANS, bold=None, align=PP_ALIGN.LEFT,
          anchor=MSO_ANCHOR.TOP, line=None, after=0, tracking=None, name=None):
     """paras: str (lines split on \\n) or a list of paragraphs; a paragraph is a str or a list of
-    (text, opts) runs where opts may set size, color, font, bold, italic, sub."""
+    (text, opts) runs where opts may set size, color, font, bold, italic, sub.
+    bold=None: bold from DISPLAY_PT up; mono text is never smaller than MONO_MIN_PT."""
     box = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
     if name:
         box.name = name
@@ -267,8 +298,12 @@ def text(slide, x, y, w, h, paras, size=16, color=BODY, font=SANS, bold=False, a
         if after:
             p.space_after = Pt(after)
         for t, o in (para if isinstance(para, list) else [(para, {})]):
-            add_run(p, t, o.get("size", size), o.get("color", color), o.get("font", font),
-                    o.get("bold", bold), o.get("italic", False), o.get("sub", False), o.get("tracking", tracking))
+            run_size, run_font = o.get("size", size), o.get("font", font)
+            if run_font == MONO:
+                run_size = max(run_size, MONO_MIN_PT)
+            run_bold = o.get("bold", bold if bold is not None else run_size >= DISPLAY_PT)
+            add_run(p, t, run_size, o.get("color", color), run_font,
+                    run_bold, o.get("italic", False), o.get("sub", False), o.get("tracking", tracking))
     return box
 
 
@@ -372,7 +407,7 @@ def picture(slide, path, x, y, w, h, alt, label, hint="", panel=False, frame=Fal
             w, h = pw + 2 * pad, ph + 2 * pad
             bw, bh = pw, ph
         if panel:
-            rect(slide, x, y, w, h, fill=WHITE, radius=0.015, name="Panel " + label)
+            rect(slide, x, y, w, h, fill=WHITE, line=LINE, radius=0.015, name="Panel " + label)
         px, py = x + pad + (bw - pw) / 2, y + pad + (bh - ph) / 2
         pic = slide.shapes.add_picture(str(src), Inches(px), Inches(py), Inches(pw), Inches(ph))
         if frame:
@@ -464,7 +499,7 @@ def bar_chart(slide, x, y, w, h, labels, values):
     axis.tick_labels.number_format, axis.tick_labels.number_format_is_linked = "0%", False
     axis.format.line.fill.background()
     chart.category_axis.format.line.color.rgb = rgb(LINE)
-    # Transparent chart and plot areas on the dark slide.
+    # Transparent chart and plot areas on the slide background.
     space = chart._chartSpace
     sp = etree.Element(qn("c:spPr"))
     etree.SubElement(sp, qn("a:noFill"))
@@ -510,7 +545,8 @@ def divider(d, number, title, subtitle, caption, painting, extra=None, notes="")
         picture(s, path, 7.25, 0, W - 7.25, H, alt=credit or painting, label=f"Painting {painting}", cover=True)
         band = rect(s, 7.25, H - 0.55, W - 7.25, 0.55, radius=0)
         alpha_fill(band, "000000", 0.55)
-        mono(s, 7.45, H - 0.42, W - 7.65, 0.3, credit, size=mono_fit(credit, W - 7.65, 9.5), color=BODY)
+        mono(s, 7.45, H - 0.55, W - 7.65, 0.55, credit, size=mono_fit(credit, W - 7.65, 9.5), color=ON_IMAGE,
+             anchor=MSO_ANCHOR.MIDDLE)
     mono(s, M, 1.45, 3, 0.5, f"CHAPTER {number}", size=12, color=ACCENT)
     text(s, M, 1.85, 6.3, 1.1, number, size=66, color=TEXT, font=MONO)
     text(s, M, 3.25, 6.4, 1.6, title, size=44, color=TEXT, line=0.95, anchor=MSO_ANCHOR.BOTTOM)
@@ -522,12 +558,12 @@ def divider(d, number, title, subtitle, caption, painting, extra=None, notes="")
 
 
 def mono_width(s, size):
-    """Inches taken by one mono line: Courier New advance (0.6 em) plus tracking, sized for the wider
+    """Inches taken by one mono line: Menlo advance (0.6 em) plus tracking, sized for the wider
     Quick Look rendering so a fit there also fits in PowerPoint."""
     return len(s) * (0.6 * size + 1.0) / 72
 
 
-def mono_fit(s, width, size, floor=8):
+def mono_fit(s, width, size, floor=MONO_MIN_PT):
     """Largest size (0.5 pt steps, not below floor) that keeps s on one line."""
     while size > floor and mono_width(s, size) > width:
         size -= 0.5
@@ -535,7 +571,7 @@ def mono_fit(s, width, size, floor=8):
 
 
 def brand_runs(s, upper=False):
-    """Runs for s with the brand "Họa." in the sans face: Courier New draws "Ọ" like a "Q"."""
+    """Runs for s with the brand "Họa." in the sans face: keeps the wordmark in the logo face."""
     runs = []
     for i, part in enumerate(s.split("Họa.")):
         if i:
@@ -713,7 +749,8 @@ def s_title(d):
         picture(s, path, 7.6, 0, W - 7.6, H, alt=credit, label="Painting P10", cover=True)
         band = rect(s, 7.6, H - 0.55, W - 7.6, 0.55, radius=0)
         alpha_fill(band, "000000", 0.55)
-        mono(s, 7.8, H - 0.42, W - 8.0, 0.3, credit, size=mono_fit(credit, W - 8.0, 9.5), color=BODY)
+        mono(s, 7.8, H - 0.55, W - 8.0, 0.55, credit, size=mono_fit(credit, W - 8.0, 9.5), color=ON_IMAGE,
+             anchor=MSO_ANCHOR.MIDDLE)
     text(s, M, 1.55, 6.6, 1.2, "Họa.", size=72, color=TEXT)
     text(s, M, 3.05, 6.7, 1.5, "From requirements to running code.", size=40, color=TEXT, line=0.98)
     text(s, M, 4.6, 6.4, 1.0, "Analysis and design of a painting shop with multimodal search, Gemma 4 and Whisper",
@@ -1529,7 +1566,10 @@ def render_qa(pptx, out):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    parser.add_argument("--qa", action="store_true", help="render slides/qa/slide-NN.png with Quick Look")
+    parser.add_argument("--theme", choices=THEMES, default="light",
+                        help="light -> thuyettrinh_Hoa.pptx, dark -> thuyettrinh_Hoa_dark.pptx")
+    parser.add_argument("--qa", action="store_true",
+                        help="render slide-NN.png with Quick Look into slides/qa/ (dark: slides/qa-dark/)")
     parser.add_argument("--allow-stale", action="store_true", help="also use figures exported before the cutoff")
     parser.add_argument("--dummies", action="store_true", help="grey stand-ins for missing figures (layout tests)")
     parser.add_argument("--out", default=str(OUT))
@@ -1553,8 +1593,8 @@ def main():
         print("Missing:", ", ".join(sorted(set(ASSETS.missing))) or "-")
         print("Stale (exported before the painting shop):", ", ".join(sorted(set(ASSETS.stale))) or "-")
     if args.qa:
-        pngs = render_qa(out, HERE / "qa")
-        print(f"Rendered {len(pngs)} slides to slides/qa/ (contact.png)")
+        pngs = render_qa(out, QA_DIR)
+        print(f"Rendered {len(pngs)} slides to {QA_DIR.relative_to(ROOT)}/ (contact.png)")
 
 
 if __name__ == "__main__":

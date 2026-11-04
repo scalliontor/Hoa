@@ -1,7 +1,10 @@
 {
   "class": "04",
-  "group": "",
+  "group": "10",
   "members": [
-    {"name": "Vũ Hùng Anh", "id": "B23DCDT022"}
+    {"name": "Bế Quốc Khánh", "id": "", "role": "", "photo": ""},
+    {"name": "Vũ Hùng Anh", "id": "B23DCDT022", "role": "", "photo": ""},
+    {"name": "Nguyễn Gia Đức Trung", "id": "", "role": "", "photo": ""},
+    {"name": "Phạm Tuấn Anh", "id": "", "role": "", "photo": ""}
   ]
 }

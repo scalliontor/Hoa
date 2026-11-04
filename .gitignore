@@ -13,6 +13,7 @@ demo/data/*.db
 *.log
 slides/.cache/
 slides/qa/
+slides/qa-dark/
 build/report/*
 !build/report/tieuluan_V2_*.pdf
 build/guide/
@@ -22,3 +23,7 @@ build/guide/
 
 # OS files
 .DS_Store
+.~lock.*#
+
+# Browser automation output
+.playwright-mcp/

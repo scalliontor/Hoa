@@ -14,12 +14,25 @@ Everything except the Gemma calls works offline, and every AI feature has a fall
 
 ## Run
 
+First time on a new computer, create `config/app.local.properties` (it is not in git) with the Gemma key from
+`HUONG_DAN_GOI_GEMMA4.md`:
+
+```
+gemma.apiKey=<the key>
+```
+
+Without it the shop still runs, but every Gemma call fails and the offline fallbacks answer instead. The first
+`./run.sh` also creates the Whisper virtual environment and downloads the model, so it needs the Internet once.
+
 ```bash
 ./build.sh                    # compile into build/classes (needs a JDK 17+, e.g. brew install openjdk@21)
 ./run.sh                      # start the Whisper server and the shop: http://127.0.0.1:8686
 ./test.sh                     # 59 tests and the code-model check -> ../build/test_results.txt
 python3 scripts/evaluate.py   # the A06-style evaluation -> ../build/eval/
 ```
+
+To show that every AI feature has a fallback, start a second shop whose Gemma address leads nowhere:
+`./run.sh config/app.offline.properties` (port 8687, its own database `data/ecom_offline.db`).
 
 Demo accounts (switcher in the top bar): **C001** Nguyen Minh An (VIP, 10 % discount, orders 20261001 and
 20261002), **C002** Tran Thu Binh (new customer, order 20261003) and **ADMIN** (manage paintings and order

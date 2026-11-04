@@ -10,6 +10,7 @@ Requirement Determination, Analysis, AI in E-commerce, Design, Code.
 | Essay (PDF) | `build/report/tieuluan_V2_04_<group>_<NAME>.pdf` (rebuild: `report/build.sh`) |
 | Essay (LaTeX source) | `report/main.tex`, `report/chapters/ch1_requirements.tex` … `ch5_code.tex` |
 | Presentation | `slides/thuyettrinh_Hoa.pptx` (rebuild: `slides/.venv/bin/python slides/build_slides.py`) |
+| Presentation guide (Vietnamese, PDF) | `guide/guide_thuyet_trinh_Hoa.pdf`: script for every slide, demo steps, Q&A, troubleshooting (rebuild: `guide/build.sh`) |
 | Demo (run it) | `demo/run.sh` → http://127.0.0.1:8686 |
 | Single source of truth | `tools/model.py`: requirements, use cases, classes, methods, layers, tables |
 | Visual Paradigm project | `vp/tieuluan_design.vpp` (built by `tools/build_vp.py` + `vp/plugin/`) |
@@ -38,6 +39,7 @@ Requirement Determination, Analysis, AI in E-commerce, Design, Code.
 demo/
 ├── run.sh, build.sh, test.sh   start / compile / test (JDK 17+, e.g. brew install openjdk@21)
 ├── config/app.properties       port 8686, Gemma 4 endpoint, Whisper, ranking weights α β γ
+│   (app.local.properties = the Gemma key, not in git; app.offline.properties = "Gemma off" copy on port 8687)
 ├── src/main/java/com/ptit/ecom/
 │   ├── presentation/  view (JS views live in web/js), controller, web (WebServer, SessionManager)
 │   ├── application/   service (Cart, Checkout, Order, Product, Assistant), search (Query, Search, Ranking…)

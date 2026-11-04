@@ -158,6 +158,11 @@ public class WebServer {
             String cartId = cartController.viewCart(customerId).getCartId();
             return checkoutController.checkout(customerId, cartId, text(json, "addressId"), text(json, "paymentMethod"));
         }
+        if (route.equals("POST /api/addresses")) {
+            JsonObject json = json(exchange);
+            return checkoutController.addAddress(customerId, text(json, "houseNumber"), text(json, "street"),
+                    text(json, "district"), text(json, "city"));
+        }
         if (route.equals("GET /api/orders")) return orderController.listOrders(customerId);
         if (route.startsWith("GET /api/orders/")) return orderController.viewOrder(customerId, path[3]);
         if (route.startsWith("POST /api/orders/") && route.endsWith("/cancel")) {

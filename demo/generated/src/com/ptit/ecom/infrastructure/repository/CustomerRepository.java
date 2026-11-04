@@ -1,5 +1,6 @@
 package com.ptit.ecom.infrastructure.repository;
 
+import com.ptit.ecom.domain.customer.Address;
 import com.ptit.ecom.domain.customer.Customer;
 import java.util.List;
 
@@ -11,4 +12,6 @@ public interface CustomerRepository {
     Customer findById(String customerId);
 
     List<Customer> allCustomers();
+
+    Address saveAddress(String customerId, Address address);
 }

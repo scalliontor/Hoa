@@ -83,6 +83,7 @@ still answer `200` (see §6). The Whisper server is the one exception: when it i
 | POST | `/api/cart/items` | customer | `{productId, quantity}` | `Cart` | `CartController.addItem(customerId, productId, quantity)` |
 | PUT | `/api/cart/items` | customer | `{productId, quantity}` | `Cart` | `CartController.updateQuantity(customerId, productId, quantity)` |
 | DELETE | `/api/cart/items` | customer | `?productId=P05` | `Cart` | `CartController.removeItem(customerId, productId)` |
+| POST | `/api/addresses` | customer | `{houseNumber, street, district, city}` | new `Address` (with its `addressId`) | `CheckoutController.addAddress(customerId, houseNumber, street, district, city)` |
 | POST | `/api/checkout` | customer | `{addressId, paymentMethod}` | new `Order` | `CheckoutController.checkout(customerId, cartId, addressId, paymentMethod)` |
 | GET | `/api/orders` | customer | — | `Order[]` (newest first) | `OrderController.listOrders(customerId)` |
 | GET | `/api/orders/{orderId}` | customer | — | `Order` | `OrderController.viewOrder(customerId, orderId)` |
@@ -722,6 +723,20 @@ Gemma offline: rule-based answer, prefixed and flagged —
 exist or the stock is too low. `PUT /api/cart/items` `{"productId": "P05", "quantity": 2}` sets the quantity
 (`0` removes the line). `DELETE /api/cart/items?productId=P05` removes it. All four return the whole `Cart`
 (example in §5). To buy a painting with a frame (product page, room preview), add both products.
+
+### POST /api/addresses
+A delivery address typed at checkout (UC07). Request `{"houseNumber": "7B", "street": "Lang Ha Street", "district": "Ba Dinh", "city": "Hanoi"}`;
+all four parts are required. The server trims them, collapses repeated blanks, stores the address for the signed-in
+customer (`CheckoutController.addAddress` → `CheckoutService.addAddress` → `CustomerRepository.saveAddress`) and
+answers with the new address. The page then selects it, and `POST /api/checkout` uses its `addressId`.
+
+```json
+{"addressId": "A004", "houseNumber": "7B", "street": "Lang Ha Street", "district": "Ba Dinh", "city": "Hanoi"}
+```
+
+Errors: `400 Street is required` (any part empty), `400 House number must be at most 20 characters` (limits: house
+number 20, street 100, district 60, city 60, as in the `address` table), `400 Missing field street`,
+`403 Please sign in as a customer`.
 
 ### POST /api/checkout
 Request `{"addressId": "A001", "paymentMethod": "CARD:4242:Nguyen Minh An"}`; `paymentMethod` is `"CASH"` (paid on

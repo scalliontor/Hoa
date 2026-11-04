@@ -106,12 +106,13 @@ least three alternative or exception flows. The business rule ids (BR) are expla
 \specrow{Trigger}{The customer confirms the order.}
 \specrow{Preconditions}{The customer is signed in; the cart has at least one line.}
 \specrow{Postconditions}{An order in status PLACED exists with all its lines at frozen prices; stock has been decreased; the cart is empty; one payment attempt is recorded.}
-\specrow{Main flow}{1. The customer opens the cart. 2. The system shows the prints, quantities and the provisional total. 3. The customer confirms, choosing a delivery address and a payment method. 4. The system reads every product again and checks that enough stock is left. 5. The system creates the order lines at the current catalogue price (frozen price). 6. The system computes the total: subtotal minus the VIP discount plus the shipping fee. 7. The system records the payment: cash is collected on delivery; a card needs an authorisation code from the payment service. 8. The system saves the order, decreases the stock and empties the cart. 9. The system shows the order id and the status PLACED.}
+\specrow{Main flow}{1. The customer opens the cart. 2. The system shows the prints, quantities and the provisional total. 3. The customer confirms, choosing a delivery address (a saved one, or a new one typed in: A6) and a payment method. 4. The system reads every product again and checks that enough stock is left. 5. The system creates the order lines at the current catalogue price (frozen price). 6. The system computes the total: subtotal minus the VIP discount plus the shipping fee. 7. The system records the payment: cash is collected on delivery; a card needs an authorisation code from the payment service. 8. The system saves the order, decreases the stock and empties the cart. 9. The system shows the order id and the status PLACED.}
 \specrow{A1 -- Empty cart}{At step 3: checkout is refused (BR03).}
 \specrow{A2 -- Out of stock}{At step 4 one print is short: the system names it, asks the customer to change the cart and creates no order (BR02).}
 \specrow{A3 -- Invalid address}{At step 3 the address does not belong to the customer: the system asks for one of the customer's own addresses.}
 \specrow{A4 -- Card refused}{At step 7 there is no authorisation code: the payment is recorded as FAILED and the order is not considered paid (BR09).}
 \specrow{A5 -- Price changed}{At step 5 the catalogue price differs from the price when the print was added: the order uses the current price and the customer sees the new total (BR04).}
+\specrow{A6 -- New address}{At step 3 none of the saved addresses fits: the customer types the house number, street, district and city. The system removes extra blanks, refuses an empty or too long part and saves the address for this customer; the new address is selected and the flow goes on at step 3.}
 \specrow{Rules}{BR01, BR02, BR03, BR04, BR05, BR09}
 \specrow{Requirements}{FR07, NFR05}
 \bottomrule

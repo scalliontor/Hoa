@@ -1,5 +1,6 @@
 package com.ptit.ecom.application.service;
 
+import com.ptit.ecom.domain.customer.Address;
 import com.ptit.ecom.domain.order.Order;
 import com.ptit.ecom.domain.payment.Payment;
 import com.ptit.ecom.infrastructure.repository.CartRepository;
@@ -23,5 +24,9 @@ public class CheckoutService {
 
     public Order checkout(String cartId, String customerId, String addressId, Payment payment) {
         throw new UnsupportedOperationException("TODO: checkout");
+    }
+
+    public Address addAddress(String customerId, Address address) {
+        throw new UnsupportedOperationException("TODO: addAddress");
     }
 }

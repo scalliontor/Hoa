@@ -3,6 +3,7 @@ demo/
 ├── README.md
 ├── build.sh
 ├── config/
+│   ├── app.local.properties
 │   └── app.properties
 ├── data/
 │   ├── ATTRIBUTION.md

@@ -476,6 +476,37 @@ def bar_chart(slide, x, y, w, h, labels, values):
     return gf
 
 
+def bar_chart2(slide, x, y, w, h, categories, series):
+    """Grouped columns drawn as plain shapes, so they look the same in PowerPoint, Keynote and Quick Look.
+    series: (name, values 0..1, hex colour) per series; a None value leaves its slot empty."""
+    legend_x = x
+    for name, _, colour in series:
+        rect(slide, legend_x, y + 0.04, 0.16, 0.16, fill=colour, radius=0)
+        mono(slide, legend_x + 0.26, y, 3.0, 0.26, name.upper(), size=9.5, color=BODY)
+        legend_x += 0.26 + 0.105 * len(name) + 0.55
+    top, base = y + 0.75, y + h - 0.75          # 100 % line, 0 % line
+    span = base - top
+    for frac in (0, 0.5, 1.0):
+        gy = base - frac * span
+        rect(slide, x + 0.5, gy, w - 0.5, 0.012, fill="2A2A2A" if frac else "5A5A5A", radius=0)
+        mono(slide, x, gy - 0.1, 0.4, 0.22, f"{int(frac * 100)}%", size=9, color=MUTED, align=PP_ALIGN.RIGHT)
+    group_w = (w - 0.5) / len(categories)
+    bar_w, gap = 0.44, 0.06
+    for i, label in enumerate(categories):
+        left = x + 0.5 + i * group_w + (group_w - (len(series) * bar_w + (len(series) - 1) * gap)) / 2
+        for j, (_, values, colour) in enumerate(series):
+            value = values[i]
+            if value is None:
+                continue
+            bx = left + j * (bar_w + gap)
+            bar_h = max(0.02, value * span)
+            rect(slide, bx, base - bar_h, bar_w, bar_h, fill=colour, radius=0)
+            text(slide, bx - 0.15, base - bar_h - 0.3, bar_w + 0.3, 0.26, f"{value:.0%}", size=12.5, color=TEXT,
+                 align=PP_ALIGN.CENTER)
+        mono(slide, x + 0.5 + i * group_w, base + 0.1, group_w, 0.6, label.upper(), size=8.5, color=BODY,
+             align=PP_ALIGN.CENTER)
+
+
 # ---------------------------------------------------------------- slide frame
 class Deck:
     def __init__(self):
@@ -580,6 +611,35 @@ def demo_port():
 
 MODE_LABELS = {"text": "Text", "voice": "Voice", "image": "Image", "room": "Room", "order": "Order",
                "multimodal": "Text + image", "assistant": "Assistant"}
+
+
+def eval_summary():
+    """Hit@1 (assistant: answers correct) with and without Gemma 4 from build/eval/eval_results.json."""
+    path = ASSETS.file("build/eval/eval_results.json")
+    if not path:
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8")).get("summary")
+    except ValueError:
+        return None
+    if not data:
+        return None
+
+    def hit(key):
+        row = data.get(key)
+        return None if not row else (row["n"], row["hit1"] if "hit1" in row else row["correct"] / row["n"])
+
+    groups = [("Text, direct", "text/Gemma 4/direct", "text/keyword rules/direct"),
+              ("Text, paraphrased", "text/Gemma 4/paraphrased", "text/keyword rules/paraphrased"),
+              ("Voice (Whisper)", "voice/Whisper + Gemma 4", None),
+              ("Image", "image/Gemma 4 vision", "image/local colour"),
+              ("Assistant", "assistant/Gemma 4 tools", "assistant/rules")]
+    rows = []
+    for label, with_key, without_key in groups:
+        a, b = hit(with_key), (hit(without_key) if without_key else None)
+        if a:
+            rows.append((f"{label}\nn = {a[0]}", a[1], b[1] if b else None))
+    return rows or None
 
 
 def eval_rates():
@@ -1166,24 +1226,21 @@ def s_assistant(d):
 def s_eval(d):
     s = d.slide("03 AI IN E-COMMERCE", NOTES["eval"])
     d.title(s, "Evaluation as required by A06")
-    rates = eval_rates()
-    if rates:
-        bar_chart(s, M, 1.95, 6.6, 4.3, [f"{lab} ({ok}/{tot})" for lab, _, ok, tot in rates],
-                  [r for _, r, _, _ in rates])
+    rows = eval_summary()
+    if rows:
+        bar_chart2(s, M, 1.9, 6.7, 4.4, [r[0] for r in rows],
+                   [("With Gemma 4", [r[1] for r in rows], ACCENT),
+                    ("Without Gemma (offline rules)", [r[2] for r in rows], "6B6B6B")])
     else:
-        summary = first_lines("build/eval/eval_summary.txt", 12, 70)
-        if summary:
-            rect(s, M, 1.95, 6.6, 4.3)
-            mono(s, M + 0.2, 2.1, 6.2, 4.0, "\n".join(summary), size=10, color=BODY)
-        else:
-            picture(s, None, M, 1.95, 6.6, 4.3, alt="", label="build/eval/eval_results.json",
-                    hint="Success rate per search mode")
-    mono(s, M, 6.45, 6.6, 0.4, "SUCCESS RATE = SUCCESSFUL QUERIES / ALL QUERIES", size=10.5, color=TEXT)
+        picture(s, None, M, 1.95, 6.6, 4.3, alt="", label="build/eval/eval_results.json",
+                hint="Hit@1 per search mode")
+    mono(s, M, 6.4, 6.7, 0.5, "HIT@1 = TOP RESULT IS RELEVANT ▪ ASSISTANT = ANSWER CORRECT ▪ VOICE: NO OFFLINE RUN ▪ "
+                              "ONE RUN, SMALL SETS, GEMMA VARIES BETWEEN RUNS", size=9.5, color=TEXT)
     x = 7.6
     mono(s, x, 1.95, W - M - x, 0.3, "DEMO QUERIES (MATCHING A06)", size=10.5, color=ACCENT)
-    rows = [[[[(q, {"color": TEXT})]], [[(a, {"font": MONO, "size": 10.5, "color": MUTED})]]]
-            for q, a in zip(model.DEMO_QUERIES, A06_QUERIES)]
-    table(s, x, 2.3, [2.75, W - M - x - 2.75], [["Họa.", "Assignment A06"]] + rows, size=12.5, row_h=0.62)
+    rows_q = [[[[(q, {"color": TEXT})]], [[(a, {"font": MONO, "size": 10.5, "color": MUTED})]]]
+              for q, a in zip(model.DEMO_QUERIES, A06_QUERIES)]
+    table(s, x, 2.3, [2.75, W - M - x - 2.75], [["Họa.", "Assignment A06"]] + rows_q, size=12.5, row_h=0.62)
     mono(s, x, 6.0, W - M - x, 0.9, "REPORTED: QUERIES, SUCCESSES, RATE, FAILURE EXAMPLES (build/eval/)", size=9.5)
 
 
@@ -1323,12 +1380,23 @@ def s_code(d):
         text(s, M + 0.2, 2.4, 6.9, 1.0, f"The {NAMES.op('VectorIndex.cosineSimilarity')} excerpt is inserted "
                                         "once the demo exports it.", size=13, color=MUTED)
     x = 8.25
-    tests = first_lines("build/test_results.txt", 40, 60)
-    test_line = next((ln for ln in reversed(tests or []) if re.search(r"pass|ok|success", ln, re.I)), None)
-    checks = [("01 ▪ MODEL ↔ CODE", "tools/check_code_model.py compares classes, methods, parameters, tables and "
-                                    "columns with model.py"),
+    results = ASSETS.file("build/test_results.txt")
+    lines = results.read_text(encoding="utf-8", errors="replace").splitlines() if results else []
+    passed = sum(ln.startswith("PASS") for ln in lines)
+    failed = sum(ln.startswith("FAIL") for ln in lines)
+    test_line = f"{passed} automated tests pass, {failed} fail (build/test_results.txt)" if passed else None
+    check_line = next((ln.split(":", 1)[1].strip() for ln in lines if ln.startswith("Model check:")), None)
+    ev = eval_summary()
+    ev_line = None
+    if ev:
+        best = {label.split("\n")[0]: (a, b) for label, a, b in ev}
+        img = best.get("Image")
+        ev_line = ("Image search Hit@1 {:.0%} with Gemma vs {:.0%} offline; text {:.0%}; assistant {:.0%}".format(
+            img[0], img[1], best["Text, direct"][0], best["Assistant"][0]) if img else None)
+    checks = [("01 ▪ MODEL ↔ CODE", "tools/check_code_model.py: " + (check_line or "compares classes, methods, "
+                                    "parameters, tables and columns with model.py")),
               ("02 ▪ TESTS", test_line or "Results in build/test_results.txt"),
-              ("03 ▪ A06 EVALUATION", "build/eval/: success rate per search mode"),
+              ("03 ▪ A06 EVALUATION", ev_line or "build/eval/: Hit@1 per search mode"),
               ("04 ▪ DATABASE", f"SQLite schema generated from the same specification: {len(model.TABLES)} tables")]
     y = 1.95
     for label, body in checks:
@@ -1453,7 +1521,7 @@ NOTES = {
     "room": """"Try it in your room" is use case UC14. The customer uploads a photo of their room, and Gemma 4 first reads it: the colours, the interior style, the mood and the light. SearchService.searchRoom then follows the two steps of Assignment 06. Retrieval: VectorIndex shortlists the twelve paintings closest to the suggested style, subject and colour by cosine similarity. Ranking: Gemma 4 sees the photo again with the shortlist, picks the three to five paintings that fit best and writes one sentence for each explaining why it fits, for example that its warm browns echo the wooden floor and the brick wall. If Gemma is unavailable, the vector ranking stays and the sentence is built from the painting's attributes. RoomPreview then hangs the chosen painting on the wall in the photo, so the customer can see how it would look. This requirement is a Could: it adds value to the experience but is not part of the core buying process.""",
     "architecture": """Architecturally, every use of AI goes through an interface: LlmClient for Gemma and SpeechClient for Whisper. This lets us swap the model, or use a fake one in tests. The table on the right lists how Họa. reacts when AI fails: if Gemma fails or takes more than {timeout} seconds, search falls back to keyword rules; if Whisper is down, the customer types; images of the wrong type or size are rejected before Gemma is called; AI only builds filters and never decides prices or stock; order access is always checked on the server.""",
     "assistant": """The curator assistant uses Gemma 4 tool calling. AssistantService sends the question together with the list of tools — search paintings and look up orders. Gemma chooses a tool and its arguments; runTool executes it with the customer id taken from the session, not from the question, so a customer can never retrieve someone else's order. The result goes back to Gemma, which writes the answer. Customers can ask by text or by voice through Whisper; the assistant answers in text.""",
-    "eval": """Assignment 06 asks for an evaluation on a small set of queries: the number of queries, the number of successes, the success rate and examples of failures. The chart on the left shows the success rate per mode on our test set. The table on the right lists the demo queries of Họa. next to the example queries of the assignment: "black running shoes" becomes "blue landscape paintings", "Nike shoes under 100 dollars" becomes "Monet paintings under 100 dollars", and the order queries are kept unchanged.""",
+    "eval": """Assignment 06 asks for an evaluation on a small set of queries: the number of queries, the number of successes, the rate and examples of failures. We ran the demo twice on the same sets: once with Gemma 4 online and once with Gemma switched off, so the offline keyword rules answer alone. The chart shows the result honestly. On text queries Gemma and the rules tie: 93 percent on direct requests and 67 percent on paraphrased ones, so on this small catalogue Gemma does not beat the rules. The clear gain is image search: 75 percent with Gemma against 12 percent with the local colour reader. The voice pipeline reaches 83 percent with a word error rate of about 4 percent, and the assistant answers all seven questions correctly without leaking any other customer's data. These are one run on small sets, and Gemma's results vary a little between runs, so we read them as indications, not proof. The table on the right lists the demo queries of Họa. next to the example queries of the assignment.""",
     "ch4": """Chapter 4 is the design, following Lecture 05 and the outline 4.1 to 4.6 given by our lecturer. Analysis says what the system needs; design says how the software realises it: design classes, the database, layers and packages, and finally the code.""",
     "transform": """This transformation table follows slide 22 of Lecture 05. The analysis classes Cart, CartItem, Order and OrderItem become domain classes with behaviour; checkout of a Cart at analysis level becomes CheckoutService.checkout at design level; the business interaction becomes a controller plus a service; the need to persist data becomes repositories. Besides the cartId of the lecture, our method also receives the customer id from the session to check ownership, the address and the payment method. On the right is the design class diagram with types, methods and navigability.""",
     "db": """Section 4.2: from the data model we generate the database. The diagram on the left shows the tables with their primary keys, foreign keys and unique constraints. Three main mapping rules: inheritance becomes a subclass table whose primary key is also a foreign key; a one-to-many association puts the foreign key on the many side; composition, such as cart lines and order lines, uses a composite primary key. The screenshot on the right is the real SQLite database of the demo — the "copy screen of DB" our lecturer asked for.""",
@@ -1461,7 +1529,7 @@ NOTES = {
     "checkout_seq": """This is the checkout sequence across the layers — the central example of Lecture 05. The controller receives the request and CheckoutService coordinates: it reads the cart, checks stock, creates the Order and its OrderItems, saves the order, reduces stock and empties the cart. Business rules such as adding a cart line or computing the total live in the domain classes Cart and Order rather than in the service, which avoids the "God class" the lecture warns about.""",
     "ch5": """Chapter 5 is the code. The goal is not only that it runs, but that it matches the model name for name: classes, methods, parameters, tables and columns in the code are identical to the specification.""",
     "mapping": """This table maps the sample code of the course slides to the code of Họa. The Python code of Assignment 06 — all_products, text_query, transcribe, search_text, cosine_similarity, find_order — keeps its names following Java conventions, and so does CheckoutService.checkout from Lecture 05. The package column shows the layer of each class. The last line is the technology mapping of Lecture 05: a controller is a Java HTTP handler, a repository is JDBC on SQLite.""",
-    "code": """On the left is a representative excerpt of the real code. On the right are the four ways we verify consistency: the check_code_model tool compares class, method, parameter, table and column names between the code and the specification; the test suite; the evaluation required by Assignment 06; and the SQLite schema generated from the same specification. This is how the report, the diagrams and the code stay aligned.""",
+    "code": """On the left is a representative excerpt of the real code. On the right are the four ways we verify consistency: the check_code_model tool compares class, method, parameter, table and column names between the code and the specification, and reports that everything matches; sixty-one automated tests pass; the evaluation required by Assignment 06 gives the success rates you saw; and the SQLite schema is generated from the same specification. This is how the report, the diagrams and the code stay aligned.""",
     "demo": """This is the script of the live demo. We search by text, by voice, by image and try a painting in a room; add a painting and a frame to the cart and check out; ask the assistant about orders; cancel an order; sign in as another customer to show that their order is refused; open the administration page to change price, stock and order status; and finally switch Gemma off to show that search still works. The diagram on the right is the deployment: everything runs on the laptop except Gemma 4, which runs on the L40S server.""",
     "conclusion": """To conclude, we kept one continuous trace: from requirement FR03 and use case UC04, through the activity and sequence diagrams, to the methods in the code, the database table and the test and evaluation results. The main lessons: understand the problem before choosing technology; analysis says what and design says how; AI is a component behind an interface with a fallback; and one shared specification keeps every artefact consistent. Limitations: payments are simulated and the evaluation set is still small.""",
     "qa": """Thank you for listening. We are happy to answer your questions.""",

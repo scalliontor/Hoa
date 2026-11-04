@@ -1,6 +1,7 @@
 package com.ptit.ecom.presentation.controller;
 
 import com.ptit.ecom.application.service.CheckoutService;
+import com.ptit.ecom.domain.customer.Address;
 import com.ptit.ecom.domain.order.Order;
 import com.ptit.ecom.domain.payment.PayCash;
 import com.ptit.ecom.domain.payment.PayCredit;
@@ -20,6 +21,16 @@ public class CheckoutController {
 
     public Order checkout(String customerId, String cartId, String addressId, String paymentMethod) {
         return checkoutService.checkout(cartId, customerId, addressId, toPayment(paymentMethod));
+    }
+
+    /** A delivery address typed by the customer at checkout; the customer id comes from the session. */
+    public Address addAddress(String customerId, String houseNumber, String street, String district, String city) {
+        Address address = new Address();
+        address.setHouseNumber(houseNumber);
+        address.setStreet(street);
+        address.setDistrict(district);
+        address.setCity(city);
+        return checkoutService.addAddress(customerId, address);
     }
 
     /** Builds the Payment subclass; the card authorisation of a real provider is simulated here. */

@@ -10,12 +10,12 @@
 \endhead
 \bottomrule
 \endlastfoot
-\footnotesize \code{CustomerRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{findById}, \code{allCustomers}\\
+\footnotesize \code{CustomerRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{findById}, \code{allCustomers}, \code{saveAddress}\\
 \footnotesize \code{ProductRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{allProducts}, \code{findById}, \code{decreaseStock}, \code{save}\\
 \footnotesize \code{CartRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{findById}, \code{findByCustomerId}, \code{save}, \code{clear}\\
 \footnotesize \code{OrderRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{findOrder}, \code{findByCustomer}, \code{allOrders}, \code{save}, \code{updateStatus}\\
 \footnotesize \code{Database} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{getConnection}, \code{initialize}\\
-\footnotesize \code{SqliteCustomerRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{findById}, \code{allCustomers}\\
+\footnotesize \code{SqliteCustomerRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{findById}, \code{allCustomers}, \code{saveAddress}\\
 \footnotesize \code{SqliteProductRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{allProducts}, \code{findById}, \code{decreaseStock}, \code{save}\\
 \footnotesize \code{SqliteCartRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{findById}, \code{findByCustomerId}, \code{save}, \code{clear}\\
 \footnotesize \code{SqliteOrderRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{findOrder}, \code{findByCustomer}, \code{allOrders}, \code{save}, \code{updateStatus}\\
@@ -34,14 +34,14 @@
 \footnotesize \code{RankingService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{rank}, \code{businessScore}\\
 \footnotesize \code{SearchService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{searchText}, \code{searchVoice}, \code{searchImage}, \code{searchRoom}, \code{describeRoom}, \code{searchMultimodal}, \code{retrieve}\\
 \footnotesize \code{CartService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{addToCart}, \code{updateQuantity}, \code{removeItem}, \code{viewCart}\\
-\footnotesize \code{CheckoutService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{checkout}\\
+\footnotesize \code{CheckoutService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{checkout}, \code{addAddress}\\
 \footnotesize \code{OrderService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{getOrder}, \code{listOrders}, \code{latestOrder}, \code{cancelOrder}, \code{listAllOrders}, \code{updateStatus}\\
 \footnotesize \code{ProductService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{listProducts}, \code{updatePriceAndStock}, \code{addPainting}\\
 \footnotesize \code{AssistantReply} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \\
 \footnotesize \code{AssistantService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{ask}, \code{tools}, \code{runTool}\\
 \footnotesize \code{SearchController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{search}, \code{transcribe}, \code{searchVoice}, \code{searchImage}, \code{searchRoom}, \code{describeRoom}, \code{searchMultimodal}\\
 \footnotesize \code{CartController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{addItem}, \code{updateQuantity}, \code{removeItem}, \code{viewCart}\\
-\footnotesize \code{CheckoutController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{checkout}\\
+\footnotesize \code{CheckoutController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{checkout}, \code{addAddress}\\
 \footnotesize \code{OrderController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{viewOrder}, \code{listOrders}, \code{cancelOrder}\\
 \footnotesize \code{AdminController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{listProducts}, \code{updateProduct}, \code{addPainting}, \code{listAllOrders}, \code{updateOrderStatus}\\
 \footnotesize \code{AssistantController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{ask}\\

@@ -1,4 +1,4 @@
-Họa. demo — test run 2026-10-30 16:07
+Họa. demo — test run 2026-11-04 19:52
 
 == Domain rules (4.1, 4.3)
 PASS  FullName shows last, middle and first name
@@ -30,6 +30,8 @@ PASS  An empty cart cannot be checked out
 PASS  A product sold out since it was added to the cart stops the checkout
 PASS  A card is authorised (PayCredit.process); a declined card saves nothing
 PASS  An address of another customer is refused
+PASS  An address typed at checkout is saved with the next id and can be used for the order
+PASS  An address with a missing or too long part is refused and nothing is stored
 
 == Orders: ownership, cancel, status (NFR01, UC11, UC13)
 PASS  find my order 20261001 returns the customer's own order
@@ -75,7 +77,7 @@ PASS  Uploads: only JPEG, PNG or WebP up to 5 MB, checked on the bytes (NFR03)
 PASS  Administrator routes need the ADMIN session
 PASS  Voice: transcript to correct; nothing heard (200, empty); Whisper down (503)
 
-59 tests passed, 0 failed
+61 tests passed, 0 failed
 
 == Code versus model (tools/check_code_model.py)
 == Java classes of DESIGN (tools/model.py) ==
@@ -96,12 +98,12 @@ OK    domain.order.Shipping                                   fields  7  operati
 OK    domain.payment.Payment                                  fields  4  operations  3
 OK    domain.payment.PayCash                                  fields  2  operations  1
 OK    domain.payment.PayCredit                                fields  4  operations  2
-OK    infrastructure.repository.CustomerRepository            fields  0  operations  2
+OK    infrastructure.repository.CustomerRepository            fields  0  operations  3
 OK    infrastructure.repository.ProductRepository             fields  0  operations  4
 OK    infrastructure.repository.CartRepository                fields  0  operations  4
 OK    infrastructure.repository.OrderRepository               fields  0  operations  5
 OK    infrastructure.repository.sqlite.Database               fields  1  operations  3
-OK    infrastructure.repository.sqlite.SqliteCustomerRepository fields  1  operations  3
+OK    infrastructure.repository.sqlite.SqliteCustomerRepository fields  1  operations  4
 OK    infrastructure.repository.sqlite.SqliteProductRepository fields  1  operations  5
 OK    infrastructure.repository.sqlite.SqliteCartRepository   fields  1  operations  5
 OK    infrastructure.repository.sqlite.SqliteOrderRepository  fields  1  operations  6
@@ -120,14 +122,14 @@ OK    application.search.ImageService                         fields  1  operati
 OK    application.search.RankingService                       fields  3  operations  3
 OK    application.search.SearchService                        fields  5  operations  8
 OK    application.service.CartService                         fields  2  operations  5
-OK    application.service.CheckoutService                     fields  4  operations  2
+OK    application.service.CheckoutService                     fields  4  operations  3
 OK    application.service.OrderService                        fields  1  operations  7
 OK    application.service.ProductService                      fields  1  operations  4
 OK    application.service.AssistantReply                      fields  3  operations  1
 OK    application.service.AssistantService                    fields  3  operations  4
 OK    presentation.controller.SearchController                fields  2  operations  8
 OK    presentation.controller.CartController                  fields  1  operations  5
-OK    presentation.controller.CheckoutController              fields  1  operations  2
+OK    presentation.controller.CheckoutController              fields  1  operations  3
 OK    presentation.controller.OrderController                 fields  1  operations  4
 OK    presentation.controller.AdminController                 fields  2  operations  6
 OK    presentation.controller.AssistantController             fields  1  operations  2
@@ -145,8 +147,8 @@ OK    view OrderView                                          web/js/order-view.
 OK    view AssistantView                                      web/js/assistant-view.js  (2 functions)
 OK    view AdminView                                          web/js/admin-view.js  (4 functions)
 == Database ==
-OK    database db/ecom_schema_sqlite.sql: 17 tables, 87 columns, keys and foreign keys as in TABLES
-OK    SQL of the repositories: 58 statements, 82 model identifiers used
+OK    database data/ecom.db: 17 tables, 87 columns, keys and foreign keys as in TABLES
+OK    SQL of the repositories: 60 statements, 82 model identifiers used
 == Dependencies ==
 OK    36/36 Java dependencies of DESIGN_DEPENDENCIES_44 found in the code
 OK    layer Application -> Domain: 8 file(s)
@@ -158,4 +160,4 @@ NOTE  presentation.web.WebServer: private helper field(s) server
 NOTE  layer Presentation -> Domain: 5 file(s) (controllers return domain objects)
 NOTE  layer Presentation -> Infrastructure: 1 file(s) (EcomApplication)
 
-Model check: 58 Java classes, 162 fields, 180 operations, 26 view functions, 17 tables, 87 columns, 58 SQL statements -> all match the model
+Model check: 58 Java classes, 162 fields, 184 operations, 26 view functions, 17 tables, 87 columns, 60 SQL statements -> all match the model

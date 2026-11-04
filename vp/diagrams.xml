@@ -2111,6 +2111,7 @@
       <attr name="checkoutService" type="CheckoutService" vis="private" />
       <op name="CheckoutController" vis="public" params="checkoutService: CheckoutService" />
       <op name="checkout" vis="public" params="customerId: String; cartId: String; addressId: String; paymentMethod: String" ret="Order" />
+      <op name="addAddress" vis="public" params="customerId: String; houseNumber: String; street: String; district: String; city: String" ret="Address" />
     </node>
     <node id="OrderController" type="Class" name="OrderController" x="913" y="320" w="114" h="26" hideMembers="true">
       <attr name="orderService" type="OrderService" vis="private" />
@@ -2183,6 +2184,7 @@
       <attr name="customerRepository" type="CustomerRepository" vis="private" />
       <op name="CheckoutService" vis="public" params="cartRepository: CartRepository; orderRepository: OrderRepository; productRepository: ProductRepository; customerRepository: CustomerRepository" />
       <op name="checkout" vis="public" params="cartId: String; customerId: String; addressId: String; payment: Payment" ret="Order" />
+      <op name="addAddress" vis="public" params="customerId: String; address: Address" ret="Address" />
     </node>
     <node id="OrderService" type="Class" name="OrderService" x="922" y="470" w="96" h="26" hideMembers="true">
       <attr name="orderRepository" type="OrderRepository" vis="private" />
@@ -2366,12 +2368,14 @@
     <node id="CustomerRepository" type="Class" name="CustomerRepository" x="630" y="260" w="140" h="40" stereotype="Interface" hideMembers="true">
       <op name="findById" vis="public" params="customerId: String" ret="Customer" abstract="true" />
       <op name="allCustomers" vis="public" params="" ret="List&lt;Customer&gt;" abstract="true" />
+      <op name="saveAddress" vis="public" params="customerId: String; address: Address" ret="Address" abstract="true" />
     </node>
     <node id="SqliteCustomerRepository" type="Class" name="SqliteCustomerRepository" x="614" y="420" w="171" h="26" hideMembers="true">
       <attr name="database" type="Database" vis="private" />
       <op name="SqliteCustomerRepository" vis="public" params="database: Database" />
       <op name="findById" vis="public" params="customerId: String" ret="Customer" />
       <op name="allCustomers" vis="public" params="" ret="List&lt;Customer&gt;" />
+      <op name="saveAddress" vis="public" params="customerId: String; address: Address" ret="Address" />
     </node>
     <node id="OrderRepository" type="Class" name="OrderRepository" x="922" y="260" w="117" h="40" stereotype="Interface" hideMembers="true">
       <op name="findOrder" vis="public" params="orderId: String" ret="Order" abstract="true" />
@@ -2412,6 +2416,7 @@
       <attr name="customerRepository" type="CustomerRepository" vis="private" />
       <op name="CheckoutService" vis="public" params="cartRepository: CartRepository; orderRepository: OrderRepository; productRepository: ProductRepository; customerRepository: CustomerRepository" />
       <op name="checkout" vis="public" params="cartId: String; customerId: String; addressId: String; payment: Payment" ret="Order" />
+      <op name="addAddress" vis="public" params="customerId: String; address: Address" ret="Address" />
     </node>
     <node id="OrderService" type="Class" name="OrderService" x="932" y="40" w="96" h="26" hideMembers="true">
       <attr name="orderRepository" type="OrderRepository" vis="private" />

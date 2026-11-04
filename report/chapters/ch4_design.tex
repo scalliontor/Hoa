@@ -166,7 +166,8 @@ Foreign keys and \code{UNIQUE} constraints enforce the \emph{upper} bound of a m
 1 of a relationship such as \code{orders} -- \code{order_item} (1 -- 1..*). The rules ``an order has at least one
 line'' and ``a customer has at least one address'' are therefore checked by the application:
 \code{CheckoutService.checkout} refuses an empty cart, and \code{Customer.findAddress} refuses an address of another
-customer. In the same way, the discriminator \code{product_type} says which child table must hold the details of a
+customer; \code{CheckoutService.addAddress} refuses an address with an empty part or a part longer than its column
+before \code{CustomerRepository.saveAddress} writes it. In the same way, the discriminator \code{product_type} says which child table must hold the details of a
 product; the repositories read and write the parent row and the child row of a product together.
 
 \subsection{Generate Data Base}\label{sec:4.2.4}

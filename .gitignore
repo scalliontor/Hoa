@@ -15,6 +15,7 @@ slides/.cache/
 slides/qa/
 build/report/*
 !build/report/tieuluan_V2_*.pdf
+build/guide/
 
 # Visual Paradigm backups
 *.bak_*

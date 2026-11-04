@@ -63,6 +63,33 @@ public class SqliteCustomerRepository implements CustomerRepository {
         return customers;
     }
 
+    /** The next addressId is A + the highest number in use + 1 (A001, A002, ...), written in the address table. */
+    @Override
+    public Address saveAddress(String customerId, Address address) {
+        try (Connection connection = database.getConnection()) {
+            try (PreparedStatement next = connection.prepareStatement(
+                    "SELECT COALESCE(MAX(CAST(SUBSTR(address_id, 2) AS INTEGER)), 0) + 1 FROM address");
+                 ResultSet row = next.executeQuery()) {
+                row.next();
+                address.setAddressId(String.format("A%03d", row.getInt(1)));
+            }
+            try (PreparedStatement insert = connection.prepareStatement(
+                    "INSERT INTO address (address_id, customer_id, house_number, street, district, city) "
+                            + "VALUES (?, ?, ?, ?, ?, ?)")) {
+                insert.setString(1, address.getAddressId());
+                insert.setString(2, customerId);
+                insert.setString(3, address.getHouseNumber());
+                insert.setString(4, address.getStreet());
+                insert.setString(5, address.getDistrict());
+                insert.setString(6, address.getCity());
+                insert.executeUpdate();
+            }
+            return address;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot save the address of customer " + customerId, e);
+        }
+    }
+
     /** The customer_vip / customer_new rows decide which subclass is created (inheritance, section 4.2). */
     private Customer newCustomer(Connection connection, String customerId) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(

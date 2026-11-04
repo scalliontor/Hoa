@@ -1,5 +1,6 @@
 // CartView (model view): the cart lines (CartItem) and the checkout panel. Checkout itself happens on the
-// server — CheckoutController -> CheckoutService.checkout(cartId, customerId, addressId, payment) (slide A05).
+// server — CheckoutController -> CheckoutService.checkout(cartId, customerId, addressId, payment) (slide A05);
+// a delivery address can also be typed here (CheckoutController.addAddress -> CheckoutService.addAddress).
 import { api, artistLine, esc, frameLook, money, refreshSession, state, timelineHtml, toast } from "./core.js";
 
 const SHIPPING_FEE = 8;   // flat fee used by CheckoutService
@@ -28,9 +29,11 @@ function summaryHtml(cart) {
   const subtotal = cart.items.reduce((sum, item) => sum + Number(item.cartPrice) * item.quantity, 0);
   const rate = Number(session.discountRate || 0);
   const discount = subtotal * rate;
-  const addresses = (session.addresses || []).map((address, i) => `
-    <label class="option ${i === 0 ? "selected" : ""}">
-      <input type="radio" name="address" value="${esc(address.addressId)}" ${i === 0 ? "checked" : ""}>
+  const list = session.addresses || [];
+  const picked = Math.max(0, list.findIndex((address) => address.addressId === CartView.selectedAddress));
+  const addresses = list.map((address, i) => `
+    <label class="option ${i === picked ? "selected" : ""}">
+      <input type="radio" name="address" value="${esc(address.addressId)}" ${i === picked ? "checked" : ""}>
       <span><strong style="font-weight:500">${esc(address.houseNumber)} ${esc(address.street)}</strong><br>
       <span class="muted">${esc(address.district)}, ${esc(address.city)}</span></span>
     </label>`).join("");
@@ -45,7 +48,23 @@ function summaryHtml(cart) {
     <div class="divider"></div>
     <div class="stack">
       <span class="label">Deliver to</span>
-      ${addresses || '<p class="muted">No address on file.</p>'}
+      ${addresses}
+      <button type="button" class="link ${list.length ? "" : "hidden"}" id="new-address-toggle" style="align-self:flex-start">+ Add a new address</button>
+      <form class="stack ${list.length ? "hidden" : ""}" id="new-address" autocomplete="on" style="gap:8px">
+        ${list.length ? "" : '<p class="muted">Where should we deliver your order?</p>'}
+        <div class="row" style="gap:8px">
+          <input class="input" name="houseNumber" placeholder="House no." maxlength="20" required aria-label="House number" autocomplete="off" style="max-width:110px">
+          <input class="input" name="street" placeholder="Street" maxlength="100" required aria-label="Street" autocomplete="street-address" style="flex:1;min-width:140px">
+        </div>
+        <div class="row" style="gap:8px">
+          <input class="input" name="district" placeholder="District" maxlength="60" required aria-label="District" autocomplete="off" style="flex:1;min-width:120px">
+          <input class="input" name="city" placeholder="City" maxlength="60" required aria-label="City" autocomplete="address-level2" style="flex:1;min-width:120px">
+        </div>
+        <div class="row" style="gap:14px">
+          <button type="submit" class="btn small solid" id="save-address">Save address</button>
+          ${list.length ? '<button type="button" class="link" id="new-address-cancel">Cancel</button>' : ""}
+        </div>
+      </form>
     </div>
     <div class="divider"></div>
     <div class="stack">
@@ -88,11 +107,45 @@ function wire(container) {
       other.closest(".option").classList.toggle("selected", other.checked));
     if (input.name === "payment") container.querySelector("#card-fields").classList.toggle("hidden", input.value !== "CARD");
   });
+  const form = container.querySelector("#new-address");
+  const toggle = container.querySelector("#new-address-toggle");
+  if (toggle) toggle.onclick = () => {
+    form.classList.remove("hidden");
+    toggle.classList.add("hidden");
+    form.querySelector("input").focus();
+  };
+  const cancel = container.querySelector("#new-address-cancel");
+  if (cancel) cancel.onclick = () => {
+    form.reset();
+    form.classList.add("hidden");
+    toggle.classList.remove("hidden");
+  };
+  if (form) form.onsubmit = (event) => {
+    event.preventDefault();
+    CartView.addAddress(Object.fromEntries(new FormData(form)), container.querySelector("#save-address"));
+  };
   const place = container.querySelector("#place-order");
   if (place) place.onclick = () => CartView.checkout();
 }
 
 export const CartView = {
+  selectedAddress: null,   // addressId typed or picked last; selected again after the panel is redrawn
+
+  /** View helper (not part of the model class): sends a typed address to CheckoutController.addAddress and selects it. */
+  async addAddress(fields, button) {
+    button.disabled = true;
+    try {
+      const address = await api("/api/addresses", { method: "POST", body: fields });
+      this.selectedAddress = address.addressId;
+      await refreshSession();
+      this.render(await api("/api/cart"));
+      toast("Address saved");
+    } catch (error) {
+      toast(error.message, true);
+      button.disabled = false;
+    }
+  },
+
   /** Renders the cart lines and the checkout panel. */
   render(cart) {
     const container = document.getElementById("cart-view");
@@ -118,6 +171,7 @@ export const CartView = {
   async checkout() {
     const container = document.getElementById("cart-view");
     const addressId = container.querySelector('input[name="address"]:checked')?.value;
+    if (!addressId) return toast("Please add a delivery address first", true);
     const method = container.querySelector('input[name="payment"]:checked')?.value || "CASH";
     let paymentMethod = "CASH";
     if (method === "CARD") {

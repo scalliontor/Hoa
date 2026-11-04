@@ -9,6 +9,7 @@ import static com.ptit.ecom.test.TestRunner.test;
 
 import com.ptit.ecom.application.service.CartService;
 import com.ptit.ecom.application.service.CheckoutService;
+import com.ptit.ecom.domain.customer.Address;
 import com.ptit.ecom.domain.order.Order;
 import com.ptit.ecom.domain.order.OrderStatus;
 import com.ptit.ecom.domain.order.ShippingStatus;
@@ -100,6 +101,39 @@ final class CheckoutTest {
         test("An address of another customer is refused", () -> {
             CheckoutTest t = new CheckoutTest();
             fails(IllegalArgumentException.class, () -> t.checkout.checkout("CART-C001", "C001", "A003", new PayCash()));
+        });
+        test("An address typed at checkout is saved with the next id and can be used for the order", () -> {
+            CheckoutTest t = new CheckoutTest();
+            Address typed = new Address();
+            typed.setHouseNumber("  7B ");
+            typed.setStreet("Lang   Ha Street");
+            typed.setDistrict("Ba Dinh");
+            typed.setCity("Hanoi");
+            Address saved = t.checkout.addAddress("C001", typed);
+            same("A004", saved.getAddressId(), "next address id after A003");
+            same("7B", saved.getHouseNumber(), "house number is trimmed");
+            same("Lang Ha Street", saved.getStreet(), "inner blanks are collapsed");
+            same(3, new SqliteCustomerRepository(t.database).findById("C001").getAddresses().size(), "C001 now has 3 addresses");
+            new CartService(t.carts, t.products).addToCart("C001", "F03", 1);
+            Order order = t.checkout.checkout("CART-C001", "C001", "A004", new PayCash());
+            same("A004", t.orders.findOrder(order.getOrderId()).getShipping().getAddress().getAddressId(), "shipping address");
+        });
+        test("An address with a missing or too long part is refused and nothing is stored", () -> {
+            CheckoutTest t = new CheckoutTest();
+            Address blank = new Address();
+            blank.setHouseNumber("1");
+            blank.setStreet("   ");
+            blank.setDistrict("Ba Dinh");
+            blank.setCity("Hanoi");
+            fails(IllegalArgumentException.class, () -> t.checkout.addAddress("C001", blank));
+            Address tooLong = new Address();
+            tooLong.setHouseNumber("1".repeat(21));
+            tooLong.setStreet("Lang Ha Street");
+            tooLong.setDistrict("Ba Dinh");
+            tooLong.setCity("Hanoi");
+            fails(IllegalArgumentException.class, () -> t.checkout.addAddress("C001", tooLong));
+            fails(IllegalArgumentException.class, () -> t.checkout.addAddress("C999", tooLong));
+            same(2, new SqliteCustomerRepository(t.database).findById("C001").getAddresses().size(), "still 2 addresses");
         });
     }
 }

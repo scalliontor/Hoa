@@ -1,5 +1,6 @@
 package com.ptit.ecom.infrastructure.repository.sqlite;
 
+import com.ptit.ecom.domain.customer.Address;
 import com.ptit.ecom.domain.customer.Customer;
 import com.ptit.ecom.infrastructure.repository.CustomerRepository;
 import java.util.List;
@@ -23,5 +24,10 @@ public class SqliteCustomerRepository implements CustomerRepository {
     @Override
     public List<Customer> allCustomers() {
         throw new UnsupportedOperationException("TODO: allCustomers");
+    }
+
+    @Override
+    public Address saveAddress(String customerId, Address address) {
+        throw new UnsupportedOperationException("TODO: saveAddress");
     }
 }

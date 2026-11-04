@@ -5,6 +5,13 @@ public class EcomApplication {
         try (Reader reader = Files.newBufferedReader(Path.of(args.length > 0 ? args[0] : "config/app.properties"))) {
             config.load(reader);
         }
+        // Secrets such as gemma.apiKey live in config/app.local.properties, which is not in git.
+        Path local = Path.of("config/app.local.properties");
+        if (Files.exists(local)) {
+            try (Reader reader = Files.newBufferedReader(local)) {
+                config.load(reader);
+            }
+        }
         Files.createDirectories(Path.of("data"));
         Database database = new Database("jdbc:sqlite:" + config.getProperty("db.path"));
         database.initialize(Files.readString(Path.of("db/ecom_schema_sqlite.sql")), Files.readString(Path.of("db/seed.sql")));

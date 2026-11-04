@@ -62,6 +62,30 @@ public class CheckoutService {
         return order;
     }
 
+    /**
+     * Saves a delivery address typed at checkout (UC07). Every part is required and must fit its database column
+     * (house number 20, street 100, district 60, city 60 characters), so a bad entry is refused before anything is stored.
+     */
+    public Address addAddress(String customerId, Address address) {
+        if (customerRepository.findById(customerId) == null) {
+            throw new IllegalArgumentException("Unknown customer " + customerId);
+        }
+        address.setHouseNumber(required("House number", address.getHouseNumber(), 20));
+        address.setStreet(required("Street", address.getStreet(), 100));
+        address.setDistrict(required("District", address.getDistrict(), 60));
+        address.setCity(required("City", address.getCity(), 60));
+        return customerRepository.saveAddress(customerId, address);
+    }
+
+    private static String required(String label, String value, int maxLength) {
+        String trimmed = value == null ? "" : value.trim().replaceAll("\\s+", " ");
+        if (trimmed.isEmpty()) throw new IllegalArgumentException(label + " is required");
+        if (trimmed.length() > maxLength) {
+            throw new IllegalArgumentException(label + " must be at most " + maxLength + " characters");
+        }
+        return trimmed;
+    }
+
     private Order newOrder(Customer customer) {
         Order order = new Order();
         String stamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmmss"));

@@ -1,4 +1,4 @@
-Họa. demo — test run 2026-10-30 16:07
+Họa. demo — test run 2026-11-04 19:52
 
 == Domain rules (4.1, 4.3)
 PASS  FullName shows last, middle and first name
@@ -30,6 +30,8 @@ PASS  An empty cart cannot be checked out
 PASS  A product sold out since it was added to the cart stops the checkout
 PASS  A card is authorised (PayCredit.process); a declined card saves nothing
 PASS  An address of another customer is refused
+PASS  An address typed at checkout is saved with the next id and can be used for the order
+PASS  An address with a missing or too long part is refused and nothing is stored
 
 == Orders: ownership, cancel, status (NFR01, UC11, UC13)
 PASS  find my order 20261001 returns the customer's own order
@@ -75,4 +77,4 @@ PASS  Uploads: only JPEG, PNG or WebP up to 5 MB, checked on the bytes (NFR03)
 PASS  Administrator routes need the ADMIN session
 PASS  Voice: transcript to correct; nothing heard (200, empty); Whisper down (503)
 
-59 tests passed, 0 failed
+61 tests passed, 0 failed

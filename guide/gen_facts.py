@@ -24,11 +24,8 @@ from pptx import Presentation  # noqa: E402
 
 OUT = ROOT / "build" / "guide"
 WORDS_PER_MINUTE = 130  # speaking speed used to turn the length of the speaker notes into a time estimate
-# Slides without a shape named "Title" (the title slide, the chapter dividers, the Q&A slide).
-FIXED_TITLES = {1: "Title slide", 4: "Chapter 1 - Requirement Determination", 10: "Chapter 2 - Analysis",
-                15: "Chapter 3 - AI in e-commerce", 23: "Chapter 4 - Design", 28: "Chapter 5 - Code",
-                33: "Questions & answers"}
-CHAPTERS = [("1", 4, 9), ("2", 10, 14), ("3", 15, 22), ("4", 23, 27), ("5", 28, 31), ("6", 32, 33)]  # first, last slide
+CHAPTER_NAMES = {"1": "Requirement Determination", "2": "Analysis", "3": "AI in e-commerce", "4": "Design",
+                 "5": "Code"}
 SPECIAL = {"\\": r"\textbackslash{}", "&": r"\&", "%": r"\%", "#": r"\#", "_": r"\_", "$": r"\$", "{": r"\{",
            "}": r"\}", "~": r"\textasciitilde{}", "^": r"\textasciicircum{}", "\u2194": " <-> ",
            "\u2260": " != ", "\u25aa": "-", "\u2192": "->", "\u2014": "-", "\u2013": "-"}
@@ -50,24 +47,58 @@ def minutes_text(seconds):
     return f"{minutes} phút" + (f" {rest} giây" if rest else "")
 
 
+def slide_text(slide):
+    return " ".join(sh.text_frame.text for sh in slide.shapes if sh.has_text_frame)
+
+
 def slide_data():
+    """(number, title, seconds of speech, kind) per slide; kind is chapter N, conclusion, backup or ''."""
     prs = Presentation(str(ROOT / "slides" / "thuyettrinh_Hoa.pptx"))
     rows = []
     for number, slide in enumerate(prs.slides, 1):
         title = next((sh.text_frame.text.strip() for sh in slide.shapes
-                      if sh.has_text_frame and sh.name == "Title"), FIXED_TITLES.get(number))
-        if not title:
-            sys.exit(f"slide {number} has no title: add it to FIXED_TITLES in guide/gen_facts.py")
+                      if sh.has_text_frame and sh.name == "Title"), None)
+        text = slide_text(slide)
+        kind = ""
+        divider = re.search(r"CHAPTER 0(\d)", text)
+        if title is None and divider:
+            kind = f"chapter{divider.group(1)}"
+            title = f"Chapter {divider.group(1)} - {CHAPTER_NAMES[divider.group(1)]}"
+        elif title is None and number == 1:
+            title = "Title slide"
+        elif title is None and "Q&A" in text:
+            title = "Questions & answers"
+        if title is None:
+            sys.exit(f"slide {number} has no title: teach slide_data() in guide/gen_facts.py about it")
+        if "CONCLUSION" in text.upper().split("Họa.")[-1][:60] and title:
+            kind = "conclusion"
+        if "APPENDIX" in text and "BACKUP" in text:
+            kind = "backup"
         notes = slide.notes_slide.notes_text_frame.text if slide.has_notes_slide else ""
-        rows.append((number, title, len(notes.split()) * 60.0 / WORDS_PER_MINUTE))
+        rows.append((number, title, len(notes.split()) * 60.0 / WORDS_PER_MINUTE, kind))
     return rows
 
 
+def chapter_ranges(slides):
+    """Chapter k runs from its divider to the slide before the next divider (or the conclusion)."""
+    starts = {kind[-1]: n for n, _, _, kind in slides if kind.startswith("chapter")}
+    conclusion = next(n for n, _, _, kind in slides if kind == "conclusion")
+    backup = next(n for n, _, _, kind in slides if kind == "backup")
+    ordered = sorted(starts.items(), key=lambda item: int(item[0]))
+    ranges = []
+    for i, (chapter, first) in enumerate(ordered):
+        last = (int(ordered[i + 1][1]) if i + 1 < len(ordered) else conclusion) - 1
+        ranges.append((chapter, first, last))
+    ranges.append(("6", conclusion, backup - 1))
+    return ranges
+
+
 def guide_slides():
-    """Slide numbers that have text in guide/slides_vi.tex, and the ones marked [must]."""
+    """Slide numbers that have text in guide/slides_vi.tex, the ones marked [must], and the deck titles it expects."""
     source = (ROOT / "guide" / "slides_vi.tex").read_text(encoding="utf-8")
     found = [(m.group(1) or "may", int(m.group(2))) for m in re.finditer(r"\\slide(?:\[(\w+)\])?\{(\d+)\}", source)]
-    return [n for _, n in found], {n for kind, n in found if kind == "must"}
+    expected = {int(m.group(1)): m.group(2).strip() for m in re.finditer(r"^% T(\d+): (.+)$", source, re.M)}
+    return [n for _, n in found], {n for kind, n in found if kind == "must"}, expected
 
 
 def read_macros(path):
@@ -157,23 +188,30 @@ def main():
 
     # ---- slides: titles, estimated time, check against slides_vi.tex
     slides = slide_data()
-    wanted, must = guide_slides()
-    missing = [n for n, _, _ in slides if n not in wanted]
+    wanted, must, expected = guide_slides()
+    missing = [n for n, _, _, _ in slides if n not in wanted]
     extra = [n for n in wanted if n > len(slides)]
     if missing or extra or len(wanted) != len(set(wanted)):
         sys.exit(f"guide/slides_vi.tex does not match the deck: no text for slides {missing}, unknown slides {extra}, "
                  f"duplicates {sorted(n for n in set(wanted) if wanted.count(n) > 1)}")
-    for number, title, seconds in slides:
+    moved = [(n, expected[n], title) for n, title, _, _ in slides if n in expected and expected[n] != title]
+    if moved:
+        sys.exit("the deck changed under guide/slides_vi.tex (slide, title the guide expects, title in the deck): "
+                 + "; ".join(map(str, moved)) + ". Renumber the guide, then update the '% T' comments.")
+    unguarded = [n for n, _, _, _ in slides if n not in expected]
+    if unguarded:
+        sys.exit(f"slides {unguarded} have no '% T<number>: <title>' line in guide/slides_vi.tex")
+    for number, title, seconds, _ in slides:
         out.append(f"\\expandafter\\def\\csname slideTitle{number}\\endcsname{{{tex(title)}}}")
         out.append(f"\\expandafter\\def\\csname slideTime{number}\\endcsname{{{minutes_text(seconds)}}}")
     macro("factSlides", len(slides))
-    total = sum(s for _, _, s in slides)
-    short = sum(s for n, _, s in slides if n in must)
+    total = sum(s for _, _, s, _ in slides)
+    short = sum(s for n, _, s, _ in slides if n in must)
     macro("timeFull", f"{total / 60:.0f}")
     macro("timeShort", f"{short / 60:.0f}")
     macro("factMustSlides", len(must))
-    for chapter, first, last in CHAPTERS:
-        seconds = sum(s for n, _, s in slides if first <= n <= last)
+    for chapter, first, last in chapter_ranges(slides):
+        seconds = sum(s for n, _, s, _ in slides if first <= n <= last)
         out.append(f"\\expandafter\\def\\csname chapterTime{chapter}\\endcsname{{{minutes_text(seconds)}}}")
         out.append(f"\\expandafter\\def\\csname chapterSlides{chapter}\\endcsname{{{first}--{last}}}")
     (OUT / "facts.tex").write_text("\n".join(out) + "\n", encoding="utf-8")

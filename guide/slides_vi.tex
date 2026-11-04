@@ -1,26 +1,36 @@
 % Lời dẫn tiếng Việt cho từng slide. Mỗi slide: \slide[must]{số}{ý chính}{\item nói}{\item chỉ vào/lưu ý}{câu chuyển ý}
 % guide/gen_facts.py kiểm tra file này có đủ lời dẫn cho đúng các slide của file PowerPoint.
 
-\subsection{Mở đầu (slide 1--3)}
+\subsection{Mở đầu (slide 1--4)}
 
+% T1: Title slide
 \slide[must]{1}{Chào, giới thiệu đề tài và thông điệp bao trùm: một sản phẩm cụ thể, Họa., đi từ yêu cầu đến code chạy được.}{
 \item Nhóm em xin trình bày tiểu luận môn Phân tích và thiết kế hệ thống thông tin, đề tài \say{Từ yêu cầu đến code chạy được}.
 \item Xuyên suốt bài, nhóm dùng \key{một sản phẩm cụ thể}: Họa., cửa hàng bán bản in các tác phẩm hội họa thuộc phạm vi công cộng.
 \item Khách tìm tranh bằng cách \key{gõ, nói hoặc tải ảnh lên}. Có trợ lý mua sắm dùng Gemma 4, và giọng nói được nhận dạng bằng Whisper chạy ngay trên laptop.
 \item Bài nói bám theo nội dung môn học; mỗi khái niệm đều có ví dụ lấy từ Họa.
 }{
-\item Giới thiệu các thành viên và phân công \todo{điền tên}.
 \item Ảnh nền là bức The Great Wave của Hokusai, thuộc phạm vi công cộng, lấy từ Wikimedia Commons; nguồn ghi trong \file{demo/data/ATTRIBUTION.md}.
+}{Xin giới thiệu nhóm.}
+
+% T2: Group 10 — the people behind Họa.
+\slide[must]{2}{Giới thiệu nhóm 10 và phân công trong buổi thuyết trình.}{
+\item Nhóm 10 gồm bốn thành viên: Bế Quốc Khánh, Vũ Hùng Anh, Nguyễn Gia Đức Trung và Phạm Tuấn Anh.
+\item Cho thầy biết ngay \key{ai nói chương nào} và ai thao tác demo, để thầy biết hỏi ai: \todo{điền phân công}.
+}{
+\item Chỉ vào khung ảnh của từng bạn khi nhắc tên; mỗi bạn chỉ cần một câu về phần mình, không kể lể.
 }{Bài nói gồm năm phần, tương ứng năm chương của báo cáo.}
 
-\slide{2}{Năm phần của bài nói là năm chương báo cáo, đi theo một sợi chỉ xuyên suốt của môn học.}{
+% T3: One system, five perspectives
+\slide{3}{Năm phần của bài nói là năm chương báo cáo, đi theo một sợi chỉ xuyên suốt của môn học.}{
 \item Năm phần: một, xác định yêu cầu; hai, phân tích; ba, AI trong thương mại điện tử; bốn, thiết kế; năm, code và demo.
 \item Dòng cuối slide là \key{sợi chỉ thầy vẽ ở bài 1}: vấn đề $\to$ nhu cầu $\to$ yêu cầu $\to$ use case $\to$ hành vi $\to$ mô hình miền $\to$ thiết kế $\to$ code. Mỗi phần của bài nói là một mắt xích.
 }{
 \item Đọc lướt, không dừng quá 20 giây.
 }{Trước hết, sản phẩm của nhóm là gì?}
 
-\slide[must]{3}{Họa. là cửa hàng bán tranh thật, dùng AI để giúp khách tìm đúng bức mình cần.}{
+% T4: Họa. — a painting shop that listens and sees
+\slide[must]{4}{Họa. là cửa hàng bán tranh thật, dùng AI để giúp khách tìm đúng bức mình cần.}{
 \item Họa. bán bản in của \factPaintings{} tác phẩm thuộc phạm vi công cộng cùng \factFrames{} loại khung, giá bằng USD.
 \item Ngoài chức năng quen thuộc (giỏ hàng, thanh toán, theo dõi và hủy đơn) còn có \key{năm tính năng AI} sẽ nói ở Chương 3: hiểu câu tự nhiên, tìm bằng giọng nói, tìm bằng ảnh, thử tranh trong phòng của khách, và trợ lý.
 \item Dòng số liệu ở cuối slide (\factReq{} yêu cầu, \factUC{} use case, \factJavaClasses{} lớp Java, \factTables{} bảng) được \key{đọc trực tiếp từ file đặc tả chung} của dự án, nên luôn khớp với báo cáo và code.
@@ -29,14 +39,16 @@
 \item Nhấn vào dòng số liệu cuối: đây là mở đầu cho thông điệp ``mọi thứ khớp nhau''.
 }{Bắt đầu với Chương 1: hệ thống phải làm gì, và cho ai?}
 
-\subsection{Chương 1 -- Xác định yêu cầu (slide 4--9)}
+\subsection{Chương 1 -- Xác định yêu cầu (slide 5--10)}
 
-\slide{4}{Chương 1 trả lời câu hỏi: hệ thống phải làm gì, và cho ai?}{
+% T5: Chapter 1 - Requirement Determination
+\slide{5}{Chương 1 trả lời câu hỏi: hệ thống phải làm gì, và cho ai?}{
 \item Bài 1 dạy: phải hiểu nghiệp vụ trước, gồm con người, quy trình, thông tin và vấn đề.
 \item Bài 2 biến hiểu biết đó thành yêu cầu chức năng, yêu cầu phi chức năng, actor và use case.
 }{}{Trước khi vẽ sơ đồ, nhóm tìm hiểu nghiệp vụ.}
 
-\slide{5}{Hệ thống thông tin không chỉ là phần mềm: nó là con người, quy trình, dữ liệu và công nghệ.}{
+% T6: Understand the business before drawing diagrams
+\slide{6}{Hệ thống thông tin không chỉ là phần mềm: nó là con người, quy trình, dữ liệu và công nghệ.}{
 \item Theo bài 1, HTTT gồm bốn thành phần. Với Họa.: \emph{con người} là khách, quản trị viên, nhân viên kho và giao hàng; \emph{quy trình} là tìm, bỏ giỏ, thanh toán, giao, hủy; \emph{dữ liệu} là tranh, họa sĩ, giỏ, đơn, thanh toán; \emph{công nghệ} là Java, SQLite, Gemma 4, Whisper.
 \item Bảng bên trái là phân tích các bên liên quan theo mẫu của bài giảng: mục tiêu của từng bên và thông tin họ cần.
 \item Sơ đồ bên phải là \key{context diagram}: vạch ranh giới hệ thống Họa. Gallery và bốn thực thể bên ngoài là khách, quản trị viên, dịch vụ thanh toán và dịch vụ Gemma 4.
@@ -44,7 +56,8 @@
 \item Chỉ vào ranh giới: Gemma nằm \emph{ngoài} (chạy trên server riêng), còn Whisper nằm \emph{trong} (chạy trên máy); đây là quyết định về quyền riêng tư (NFR08).
 }{Từ hiểu nghiệp vụ, ta đi tới yêu cầu.}
 
-\slide[must]{6}{Chuỗi cốt lõi của bài 1 và 2: vấn đề $\to$ nguyên nhân gốc $\to$ nhu cầu $\to$ yêu cầu $\to$ use case.}{
+% T7: From business problem to system requirement
+\slide[must]{7}{Chuỗi cốt lõi của bài 1 và 2: vấn đề $\to$ nguyên nhân gốc $\to$ nhu cầu $\to$ yêu cầu $\to$ use case.}{
 \item Vấn đề: khách thích một bức tranh nhưng không biết tên hay họa sĩ.
 \item Nguyên nhân gốc: tìm kiếm cũ chỉ khớp từ khóa chính xác, còn hình ảnh thì khó diễn tả bằng lời.
 \item Nhu cầu của bên liên quan: tìm tranh từ một câu tự nhiên, từ giọng nói hoặc từ một bức ảnh.
@@ -54,14 +67,16 @@
 \item Chỉ vào dòng chữ đỏ cuối slide (NEED $\neq$ SOLUTION): thầy rất hay hỏi điểm này.
 }{Toàn bộ yêu cầu được lập thành bảng và xếp ưu tiên.}
 
-\slide{7}{\factFR{} yêu cầu chức năng, xếp ưu tiên theo MoSCoW.}{
+% T8: 14 functional requirements, prioritised with MoSCoW
+\slide{8}{\factFR{} yêu cầu chức năng, xếp ưu tiên theo MoSCoW.}{
 \item Bảng theo đúng mẫu bài 2: mã yêu cầu, mô tả, mức ưu tiên và use case liên quan.
 \item Phân bố: \factMust{} Must, \factShould{} Should, \factCould{} Could. Các Must là lõi cửa hàng: tìm kiếm, xem chi tiết, giỏ hàng, thanh toán, xem và tra cứu đơn, quản trị.
 \item Các tính năng AI nâng cao xếp Should hoặc Could: giọng nói, ảnh, trợ lý và hủy đơn là Should; thử tranh trong phòng và tìm đa phương thức là Could.
 \item Thanh toán thật là \key{Won't} của bản này: dịch vụ thanh toán chỉ được mô phỏng.
 }{}{Còn yêu cầu phi chức năng thì sao?}
 
-\slide{8}{Yêu cầu phi chức năng phải đo được.}{
+% T9: Non-functional requirements must be measurable
+\slide{9}{Yêu cầu phi chức năng phải đo được.}{
 \item Bài 2 cảnh báo: \say{hệ thống phải nhanh} không kiểm chứng được. Mỗi NFR của Họa. đều có điều kiện đo được.
 \item Ví dụ: tìm bằng chữ trả lời trong 2 giây (NFR07); ảnh tải lên chỉ JPEG, PNG hoặc WebP và không quá 5 MB (NFR03); âm thanh chỉ xử lý trên máy, câu 5 giây được phiên âm trong 3 giây (NFR08); quyền xem đơn do server kiểm tra (NFR01).
 \item Nhờ đó mỗi NFR có thể trở thành một test. Nhóm đã kiểm chứng; kết quả nằm ở phần đánh giá của Chương 3.
@@ -69,7 +84,8 @@
 \item Nếu thiếu giờ, chỉ đọc NFR02 (Gemma lỗi thì tìm bằng luật từ khóa) và NFR01 (bảo mật đơn hàng): hai điều này sẽ được demo.
 }{Có yêu cầu rồi, ai là người dùng hệ thống?}
 
-\slide[must]{9}{Bốn actor và một sơ đồ use case; use case là mục tiêu, không phải nút bấm.}{
+% T10: A use case is a goal, not a button
+\slide[must]{10}{Bốn actor và một sơ đồ use case; use case là mục tiêu, không phải nút bấm.}{
 \item Có \factActors{} actor: Khách hàng và Quản trị viên là actor chính; dịch vụ Gemma 4 và dịch vụ thanh toán là actor phụ trợ mà hệ thống gọi tới.
 \item Hai điều bài 2 nhấn mạnh. Một, \key{stakeholder không phải actor}: nhân viên kho hay hỗ trợ có liên quan nhưng không dùng hệ thống trực tiếp. Hai, \key{use case là mục tiêu}: ``Search Product'', không phải ``bấm nút tìm''.
 \item Ba kiểu tìm (chữ, giọng nói, ảnh) là các trường hợp \emph{chuyên biệt hóa} của Search Product, đúng cấu trúc của bài tập A06; thử tranh trong phòng là kiểu thứ tư.
@@ -79,14 +95,16 @@
 \item UC01 viết nghiêng vì là use case trừu tượng.
 }{Xong yêu cầu. Sang Chương 2: các yêu cầu đó hoạt động thế nào?}
 
-\subsection{Chương 2 -- Phân tích (slide 10--14)}
+\subsection{Chương 2 -- Phân tích (slide 11--15)}
 
-\slide{10}{Chương 2 biến yêu cầu thành các mô hình.}{
+% T11: Chapter 2 - Analysis
+\slide{11}{Chương 2 biến yêu cầu thành các mô hình.}{
 \item Bài 3: khi actor thực hiện một use case, hệ thống hành xử thế nào? Trả lời bằng kịch bản, luồng thay thế và activity diagram.
 \item Bài 4 (bài tập A03): hệ thống phải quản lý những khái niệm nào? Trả lời bằng mô hình miền và lớp phân tích.
 }{}{Lấy một use case làm ví dụ: thanh toán.}
 
-\slide[must]{11}{Đặc tả use case Checkout (UC07) theo mẫu bài 3.}{
+% T12: Use case specification: Checkout (UC07)
+\slide[must]{12}{Đặc tả use case Checkout (UC07) theo mẫu bài 3.}{
 \item Mẫu gồm actor chính và phụ, mục tiêu, tác nhân kích hoạt, điều kiện trước và sau.
 \item Luồng chính có năm bước: hiển thị giỏ; khách chọn địa chỉ và phương thức thanh toán; hệ thống đọc lại giá và kiểm tra tồn kho; tạo Order và các OrderItem với giá đã chốt; ghi nhận thanh toán, trừ kho, làm rỗng giỏ.
 \item Thầy nhấn mạnh \key{luồng bình thường chưa đủ}, nên nhóm viết cả các luồng thay thế: hết hàng, địa chỉ không phải của khách, thanh toán bị từ chối. Mỗi luồng này sau đó thành một nhánh quyết định trong activity và một câu kiểm tra trong code.
@@ -94,20 +112,23 @@
 \item Bổ sung nếu có thời gian: báo cáo còn có luồng thay thế A6, khách \key{gõ địa chỉ mới} ngay lúc thanh toán; chức năng này có trong demo.
 }{Từ kịch bản ta vẽ activity diagram.}
 
-\slide{12}{Từ kịch bản đến activity: mỗi quyết định đến từ một quy tắc nghiệp vụ.}{
+% T13: From scenario to activity: decisions follow rules
+\slide{13}{Từ kịch bản đến activity: mỗi quyết định đến từ một quy tắc nghiệp vụ.}{
 \item Activity diagram có ba làn: khách, hệ thống Họa. và cơ sở dữ liệu. Mỗi nút quyết định bắt nguồn từ một quy tắc: hết hàng thì không tạo đơn, địa chỉ phải là của khách, chỉ được hủy trước khi giao.
 \item Bên phải là bốn câu hỏi của phân tích chức năng (bài 3): mục tiêu của actor là gì, luồng bình thường ra sao, điều gì có thể sai, hệ thống phản ứng thế nào.
 \item Dấu vết FR07 $\to$ UC07 $\to$ kịch bản $\to$ activity trả lời câu hỏi \say{yêu cầu này nằm ở đâu trong mô hình?}
 }{}{Một cách kiểm tra mô hình có nhất quán không là lần theo một yêu cầu.}
 
-\slide{13}{Kiểm tra nhất quán: \say{khách được hủy đơn trước khi giao}.}{
+% T14: Consistency check: cancel before shipment
+\slide{14}{Kiểm tra nhất quán: \say{khách được hủy đơn trước khi giao}.}{
 \item Bài 3 có đúng ví dụ này, và nhóm làm lại cho Họa.: yêu cầu FR11; use case Cancel Order mở rộng View Order; quyết định \say{đơn đã giao chưa?}; máy trạng thái chỉ cho hủy từ PLACED hoặc PROCESSING; trong thiết kế, \code{cancelOrder} gọi \code{Order.cancel}.
 \item Về phía vận hành: quản trị viên chuyển đơn sang SHIPPED, và từ lúc đó khách không hủy được nữa.
 }{
 \item Ảnh chụp màn hình ở bên phải là chức năng hủy đơn trong demo (bạn sẽ làm lại ở bước 7 của demo).
 }{Còn các khái niệm mà hệ thống phải quản lý?}
 
-\slide[must]{14}{Mô hình miền: CartItem khác OrderItem, và thanh toán là một phép biến đổi.}{
+% T15: Domain concepts: CartItem ≠ OrderItem
+\slide[must]{15}{Mô hình miền: CartItem khác OrderItem, và thanh toán là một phép biến đổi.}{
 \item Bên trái là mô hình miền của Họa.: khách hàng, tranh, họa sĩ, giỏ, đơn, vận chuyển, thanh toán.
 \item Đây là điểm cốt lõi của bài 4: \key{CartItem không phải OrderItem}. Cái đầu giữ thông tin mua sắm tạm thời, với giá lúc thêm vào giỏ. Cái sau giữ thông tin giao dịch bền vững, với giá \key{đã chốt} lúc thanh toán.
 \item Vì vậy checkout biến một Cart thành một Order; nó được vẽ là quan hệ phụ thuộc \key{«create»}, không phải một association lâu dài.
@@ -116,14 +137,16 @@
 \item Trên sơ đồ, chỉ mũi tên đứt nét \emph{checkout} từ Cart sang Order.
 }{Hết phần phân tích. Sang Chương 3, phần AI.}
 
-\subsection{Chương 3 -- AI trong thương mại điện tử (slide 15--22)}
+\subsection{Chương 3 -- AI trong thương mại điện tử (slide 16--23)}
 
-\slide{15}{Họa. có năm tính năng AI; nguyên tắc chung là AI giúp khách diễn đạt, còn quy tắc nghiệp vụ trong code vẫn quyết định.}{
+% T16: Chapter 3 - AI in e-commerce
+\slide{16}{Họa. có năm tính năng AI; nguyên tắc chung là AI giúp khách diễn đạt, còn quy tắc nghiệp vụ trong code vẫn quyết định.}{
 \item Năm tính năng: hiểu câu tự nhiên, tìm bằng giọng nói (Whisper chạy trên laptop), tìm bằng ảnh, thử tranh trong phòng của khách, và trợ lý mua sắm.
 \item Nguyên tắc: AI giúp khách nói ra điều mình muốn; \key{giá, tồn kho, quyền truy cập do luật nghiệp vụ trong code quyết định}, không do AI.
 }{}{Cả năm tính năng đều đi qua cùng một đường ống.}
 
-\slide[must]{16}{Nguyên lý trung tâm của bài tập A06: nhiều đầu vào khác nhau được đưa về một biểu diễn chung, rồi truy hồi, rồi xếp hạng.}{
+% T17: Different inputs, one common query
+\slide[must]{17}{Nguyên lý trung tâm của bài tập A06: nhiều đầu vào khác nhau được đưa về một biểu diễn chung, rồi truy hồi, rồi xếp hạng.}{
 \item Có bốn đầu vào: chữ, giọng nói, ảnh một bức tranh, ảnh một căn phòng. Mỗi đầu vào đi qua \key{đúng các lớp và hàm ghi trong hộp của nó}.
 \item Tất cả gặp nhau ở \code{CommonQuery}. \code{SearchService} truy hồi ứng viên từ \code{ProductRepository} và \code{VectorIndex}; \code{RankingService} xếp hạng bằng công thức của bài tập.
 \item Bốn nguyên tắc ở dưới cũng lấy từ A06: một biểu diễn chung; truy hồi tách khỏi xếp hạng; giao diện không chạm cơ sở dữ liệu; bắt đầu đơn giản.
@@ -131,7 +154,8 @@
 \item Đi lần lượt từng hộp bên trái, đọc tên hàm đầu tiên của mỗi hộp (\code{submitText}, \code{upload}, \code{choose}, \code{chooseRoom}).
 }{Hãy xem kỹ từng đầu vào, bắt đầu từ giọng nói.}
 
-\slide[must]{17}{Tìm bằng giọng nói: âm thanh không bao giờ rời khỏi laptop.}{
+% T18: Voice search: the audio never leaves the laptop
+\slide[must]{18}{Tìm bằng giọng nói: âm thanh không bao giờ rời khỏi laptop.}{
 \item Sơ đồ sequence bên trái có \key{đúng bảy participant} mà bài tập A06 yêu cầu.
 \item Bản ghi âm được gửi tới Whisper tự host, chạy ngay trên máy, nên âm thanh không ra khỏi máy; đây là yêu cầu về quyền riêng tư.
 \item Bản phiên âm được hiện ra để khách sửa, rồi đi theo \key{cùng đường với câu gõ}. Nếu Whisper không chạy, hệ thống mời khách gõ.
@@ -139,10 +163,11 @@
 \item Đo trên laptop với \evSttN{} câu tiếng Anh: trung bình \evSttMean{} giây, tối đa \evSttMax{} giây, trong giới hạn 3 giây của NFR08; tỉ lệ sai từ \evSttWer{}; \evSttExact{}/\evSttN{} câu đúng hoàn toàn.
 }{
 \item Đếm bảy thanh dọc trên sơ đồ; chỉ ba con số lớn ở dưới.
-\item Nếu thầy hỏi vì sao slide ghi 2,0\% mà slide 22 ghi khoảng 4\%, xem câu hỏi tương ứng ở mục~\ref{sec:hoidap}.
+\item Nếu thầy hỏi vì sao slide ghi 2,0\% mà slide 23 ghi khoảng 4\%, xem câu hỏi tương ứng ở mục~\ref{sec:hoidap}.
 }{Voice dùng văn bản làm đường chung. Còn ảnh thì sao?}
 
-\slide[must]{18}{Tìm bằng ảnh: biến ảnh thành vector rồi so bằng cosine; điểm cuối là tổ hợp ba điểm.}{
+% T19: Search by image: vectors and cosine similarity
+\slide[must]{19}{Tìm bằng ảnh: biến ảnh thành vector rồi so bằng cosine; điểm cuối là tổ hợp ba điểm.}{
 \item Bộ mã hóa ảnh ở đây là Gemma 4 vision: mô hình \key{mô tả bức ảnh} thành phong cách, chủ đề, màu chủ đạo; \code{VectorIndex.toVector} đổi mô tả đó thành vector.
 \item Độ giống là cosine giữa vector truy vấn và vector từng bức tranh.
 \item Điểm cuối kết hợp ba thành phần: $S = \alpha S_{text} + \beta S_{image} + \gamma S_{business}$, với trọng số cấu hình là 0,45; 0,45; 0,10.
@@ -151,7 +176,8 @@
 \item Chỉ vào ba công thức theo thứ tự trên slide, rồi sơ đồ sequence bên phải từ \code{ImageUpload} xuống \code{RankingService}.
 }{Cùng cơ chế đó cho phép làm một việc thú vị hơn: thử tranh vào phòng của khách.}
 
-\slide[must]{19}{Thử tranh trong phòng của bạn (UC14): Gemma đọc căn phòng, chọn tranh hợp và giải thích vì sao hợp.}{
+% T20: Try it in your room (UC14 Find Painting for My Room)
+\slide[must]{20}{Thử tranh trong phòng của bạn (UC14): Gemma đọc căn phòng, chọn tranh hợp và giải thích vì sao hợp.}{
 \item Khách tải ảnh phòng lên. Gemma 4 đọc ảnh: tông màu, phong cách nội thất, không khí, ánh sáng.
 \item \code{SearchService.searchRoom} đi hai bước như A06. \emph{Truy hồi:} \code{VectorIndex} chọn ra 12 bức gần nhất theo cosine. \emph{Xếp hạng:} Gemma xem lại ảnh cùng danh sách rút gọn, chọn 3 đến 5 bức hợp nhất và viết \key{một câu giải thích} cho mỗi bức, ví dụ tông nâu ấm hợp với sàn gỗ và tường gạch.
 \item Gemma chỉ được chọn trong 12 bức đã rút gọn; mã ngoài danh sách bị bỏ, câu quá ngắn hoặc chung chung bị thay bằng câu dựng từ thuộc tính. Nếu Gemma không có, thứ hạng vector vẫn giữ.
@@ -161,14 +187,16 @@
 \item Bạn sẽ làm trực tiếp tính năng này ở bước 4 của demo.
 }{Mọi tính năng AI đều có chung một kiến trúc an toàn.}
 
-\slide{20}{AI nằm sau interface và luôn có phương án dự phòng.}{
+% T21: AI behind interfaces, always with a fallback
+\slide{21}{AI nằm sau interface và luôn có phương án dự phòng.}{
 \item Mọi lần dùng AI đều đi qua interface: \code{LlmClient} cho Gemma, \code{SpeechClient} cho Whisper. Nhờ vậy có thể đổi mô hình, hoặc dùng bản giả khi chạy test.
 \item Bảng bên phải liệt kê phản ứng khi AI lỗi: Gemma lỗi hoặc quá 15 giây thì tìm bằng luật từ khóa; Whisper tắt thì khách gõ; ảnh sai loại hay kích thước bị từ chối \emph{trước khi} gọi Gemma; AI chỉ tạo bộ lọc, không quyết giá hay kho; quyền xem đơn luôn do server kiểm tra.
 }{
 \item Ảnh chụp ở dưới: tìm kiếm vẫn chạy khi tắt Gemma. Bạn sẽ chứng minh điều này ở bước 9 của demo.
 }{Tính năng AI cuối cùng là trợ lý mua sắm.}
 
-\slide{21}{Trợ lý mua sắm dùng tool calling của Gemma 4.}{
+% T22: Curator assistant: Gemma picks the tool
+\slide{22}{Trợ lý mua sắm dùng tool calling của Gemma 4.}{
 \item \code{AssistantService} gửi câu hỏi kèm danh sách công cụ (tìm tranh, tra đơn hàng). Gemma chọn công cụ và tham số; \code{runTool} chạy công cụ đó.
 \item Điểm then chốt: \code{runTool} dùng \key{mã khách lấy từ phiên đăng nhập, không lấy từ câu hỏi}. Nên khách không thể hỏi ra đơn của người khác.
 \item Kết quả quay về Gemma để viết câu trả lời. Khách hỏi bằng chữ hoặc bằng giọng nói; trợ lý trả lời bằng chữ.
@@ -176,7 +204,8 @@
 \item Ở bước 6 và 7 của demo, bạn sẽ hỏi về đơn của mình, rồi chứng minh đơn của người khác bị từ chối.
 }{Vậy những tính năng này tốt đến đâu?}
 
-\slide[must]{22}{Đánh giá theo yêu cầu của A06, trình bày trung thực.}{
+% T23: Evaluation as required by A06
+\slide[must]{23}{Đánh giá theo yêu cầu của A06, trình bày trung thực.}{
 \item A06 yêu cầu: số truy vấn, số thành công, tỉ lệ và ví dụ thất bại. Nhóm chạy hai lần trên cùng tập: một lần có Gemma, một lần \key{tắt Gemma} để luật từ khóa trả lời một mình.
 \item \key{Tìm bằng chữ: hòa.} Truy vấn trực tiếp: \evTextDirectGemma{} có Gemma và \evTextDirectRules{} không có; câu diễn đạt lại: \evTextParaGemma{} và \evTextParaRules{}. Nghĩa là với danh mục nhỏ này, Gemma \emph{không} hơn luật từ khóa.
 \item \key{Tìm bằng ảnh: Gemma hơn rõ.} \evImageGemma{} so với \evImageLocal{} (Hit@1), và \evImageGemmaThree{} so với \evImageLocalThree{} (Hit@3).
@@ -187,13 +216,15 @@
 \item Cột giọng nói chỉ có một thanh vì không có lần chạy ``tắt Gemma''; đừng để thầy hiểu nhầm là 0\%.
 }{Hết phần AI. Sang Chương 4: thiết kế.}
 
-\subsection{Chương 4 -- Thiết kế (slide 23--27)}
+\subsection{Chương 4 -- Thiết kế (slide 24--28)}
 
-\slide{23}{Chương 4 theo dàn ý 4.1--4.6 của thầy: phân tích nói \emph{cái gì}, thiết kế nói \emph{như thế nào}.}{
+% T24: Chapter 4 - Design
+\slide{24}{Chương 4 theo dàn ý 4.1--4.6 của thầy: phân tích nói \emph{cái gì}, thiết kế nói \emph{như thế nào}.}{
 \item Phân tích cho biết hệ thống cần gì; thiết kế cho biết phần mềm hiện thực hóa thế nào: lớp thiết kế, cơ sở dữ liệu, tầng và package, rồi code.
 }{}{Bước đầu tiên là biến lớp phân tích thành lớp thiết kế.}
 
-\slide[must]{24}{Từ lớp phân tích (A04) sang lớp thiết kế (A05), theo slide 22 của bài 5.}{
+% T25: From analysis classes (A04) to design classes (A05)
+\slide[must]{25}{Từ lớp phân tích (A04) sang lớp thiết kế (A05), theo slide 22 của bài 5.}{
 \item Các lớp phân tích Cart, CartItem, Order, OrderItem trở thành lớp miền có hành vi. \code{checkout} ở mức phân tích trở thành \code{CheckoutService.checkout} ở mức thiết kế. Tương tác nghiệp vụ thành controller cộng service. Nhu cầu lưu dữ liệu thành repository.
 \item So với \code{checkout(cartId)} trong bài giảng, hàm của nhóm nhận thêm mã khách lấy từ phiên (để kiểm quyền), địa chỉ và phương thức thanh toán.
 \item Bên phải là sơ đồ lớp thiết kế với kiểu, phương thức và hướng điều hướng.
@@ -201,7 +232,8 @@
 \item Chỉ vào hàng \code{checkout(cartId)} $\to$ \code{CheckoutService.checkout(...)} trong bảng.
 }{Dữ liệu cần được lưu: sang mục 4.2.}
 
-\slide{25}{Từ mô hình dữ liệu sinh ra cơ sở dữ liệu SQLite (mục 4.2).}{
+% T26: From data model to an SQLite database
+\slide{26}{Từ mô hình dữ liệu sinh ra cơ sở dữ liệu SQLite (mục 4.2).}{
 \item Sơ đồ bên trái là \factTables{} bảng với khóa chính, khóa ngoại và ràng buộc duy nhất.
 \item Ba quy tắc ánh xạ chính: kế thừa thành bảng con mà khóa chính của nó cũng là khóa ngoại; quan hệ một-nhiều đặt khóa ngoại ở phía nhiều (một-không-hoặc-một thì thêm UNIQUE); composition dùng khóa ghép và \code{ON DELETE CASCADE}.
 \item Ảnh bên phải là cơ sở dữ liệu SQLite thật của demo, chính là ``copy screen of DB'' mà thầy yêu cầu. Schema được sinh từ cùng một đặc tả với code.
@@ -209,7 +241,8 @@
 \item Ví dụ để minh họa kế thừa: \code{Customer} thành bảng \code{customer} cùng \code{customer_vip} và \code{customer_new}.
 }{Tiếp theo là cách tổ chức code: bốn tầng.}
 
-\slide[must]{26}{Bốn tầng, và một tầng không phải là một package (mục 4.4).}{
+% T27: Four layers — a layer is not a package
+\slide[must]{27}{Bốn tầng, và một tầng không phải là một package (mục 4.4).}{
 \item Kiến trúc bốn tầng của bài 5: presentation, application, domain, infrastructure. Mỗi tầng có trách nhiệm riêng, ghi bên phải cùng các package Java hiện thực nó.
 \item Bài giảng nhấn mạnh: \key{tầng là trách nhiệm kiến trúc, package là cách tổ chức code}; nên mỗi tầng chia thành nhiều package (\factPackages{} package tất cả).
 \item Hai quy tắc phụ thuộc: giao diện không bao giờ chạm cơ sở dữ liệu; service chỉ phụ thuộc interface của repository và của các client AI.
@@ -217,54 +250,62 @@
 \item Chỉ vào hai dòng chữ ở cuối slide.
 }{Xem các tầng phối hợp ra sao trong một ca thật: thanh toán.}
 
-\slide[must]{27}{Thanh toán chạy qua các tầng: ví dụ trung tâm của bài 5.}{
+% T28: Checkout across the layers (Lecture 05)
+\slide[must]{28}{Thanh toán chạy qua các tầng: ví dụ trung tâm của bài 5.}{
 \item \code{CheckoutController} nhận yêu cầu; \code{CheckoutService.checkout} \emph{điều phối}: đọc giỏ, kiểm tra tồn kho, tạo Order và OrderItem, lưu đơn, trừ kho, làm rỗng giỏ.
 \item Các quy tắc nghiệp vụ như thêm một dòng vào giỏ (\code{Cart.addItem}) hay tính tổng (\code{Order.calculateTotal}) nằm ở lớp miền chứ không ở service. Nhờ vậy tránh được \say{God class} mà bài giảng cảnh báo.
 }{
 \item Đi dọc sơ đồ từ trái sang phải: controller, service, miền, ba repository.
 }{Thiết kế xong; đến Chương 5: code.}
 
-\subsection{Chương 5 -- Code và demo (slide 28--31)}
+\subsection{Chương 5 -- Code và demo (slide 29--32)}
 
-\slide{28}{Mục tiêu của Chương 5: code không chỉ chạy được mà còn khớp với mô hình từng cái tên.}{
+% T29: Chapter 5 - Code
+\slide{29}{Mục tiêu của Chương 5: code không chỉ chạy được mà còn khớp với mô hình từng cái tên.}{
 \item Tên lớp, hàm, tham số, bảng và cột trong code trùng hệt với đặc tả.
 }{}{Hãy xem sự tương ứng giữa code bài giảng và code của Họa.}
 
-\slide[must]{29}{Bảng ánh xạ code bài giảng sang code của Họa.}{
+% T30: Course code ↔ Họa. code
+\slide[must]{30}{Bảng ánh xạ code bài giảng sang code của Họa.}{
 \item Code Python của bài tập A06 (\code{all_products}, \code{text_query}, \code{transcribe}, \code{search_text}, \code{cosine_similarity}, \code{find_order}) giữ nguyên tên, chuyển theo quy ước Java; \code{CheckoutService.checkout} của bài 5 cũng vậy.
 \item Cột cuối là tầng chứa từng lớp. Dòng cuối là ánh xạ công nghệ của bài 5: controller thành Java HTTP handler, repository thành JDBC trên SQLite.
 \item Tổng cộng \factJavaClasses{} lớp Java, \factJsViews{} view JavaScript và \factPackages{} package, tất cả sinh ra từ cùng một file đặc tả.
 }{}{Làm sao biết code thật sự khớp?}
 
-\slide[must]{30}{Đoạn code tiêu biểu và cách nhóm kiểm chứng sự nhất quán.}{
+% T31: Representative code and how it is verified
+\slide[must]{31}{Đoạn code tiêu biểu và cách nhóm kiểm chứng sự nhất quán.}{
 \item Bên trái là một đoạn code thật (\code{VectorIndex}).
 \item Bốn cách kiểm chứng: (1) công cụ \code{check_code_model.py} so tên lớp, hàm, tham số, bảng, cột giữa code và đặc tả, và báo mọi thứ đều khớp (\factCheckOps{} hàm, \factCheckColumns{} cột); (2) \factTests{} test tự động đều đạt; (3) đánh giá theo A06; (4) schema SQLite sinh từ chính đặc tả.
 \item Nhờ vậy báo cáo, sơ đồ và code luôn đồng bộ.
 }{}{Bây giờ xin chuyển sang demo trực tiếp.}
 
-\slide[must]{31}{Demo trực tiếp: chín bước, và sơ đồ triển khai ở góc phải.}{
+% T32: Live demo script
+\slide[must]{32}{Demo trực tiếp: chín bước, và sơ đồ triển khai ở góc phải.}{
 \item Giới thiệu nhanh sơ đồ triển khai: mọi thứ chạy trên laptop, \key{trừ} Gemma 4 chạy trên server L40S.
 \item Rồi chuyển sang demo và làm theo kịch bản ở mục~\ref{sec:demo}.
 }{
 \item Người cầm chuột bắt đầu thao tác ngay khi người nói chuyển sang trình duyệt; người nói tiếp tục giải thích.
-\item Xong demo, quay lại PowerPoint ở slide 32.
+\item Xong demo, quay lại PowerPoint ở slide 33.
 }{Xin chuyển sang trình duyệt.}
 
-\subsection{Kết luận (slide 32--34)}
+\subsection{Kết luận (slide 33--35)}
 
-\slide[must]{32}{Dấu vết liền mạch từ yêu cầu đến code, bốn bài học và các hạn chế.}{
+% T33: Traceable from requirement to code
+\slide[must]{33}{Dấu vết liền mạch từ yêu cầu đến code, bốn bài học và các hạn chế.}{
 \item Nhóm giữ một dấu vết xuyên suốt: yêu cầu FR03 và use case UC04, qua activity và sequence, tới \code{ImageService.embed} và \code{VectorIndex.cosineSimilarity}, bảng \code{product_feature}, rồi test và đánh giá.
 \item Bốn bài học: hiểu vấn đề và bên liên quan trước khi chọn công nghệ; phân tích nói \emph{cái gì}, thiết kế nói \emph{như thế nào}; AI là một thành phần sau interface và luôn có phương án dự phòng; một đặc tả chung giữ sơ đồ, cơ sở dữ liệu, code và báo cáo đồng bộ.
 \item Hạn chế (nói thẳng): thanh toán chỉ mô phỏng; tập đánh giá còn nhỏ; gợi ý cá nhân hóa cần dữ liệu và sự đồng ý của khách; nhiều máy thì cần cơ sở dữ liệu server. Thêm: thanh toán chưa nằm gọn trong một transaction và hủy đơn chưa hoàn lại tồn kho (mục~\ref{sec:hanche}).
 }{}{Xin cảm ơn thầy cô và các bạn đã lắng nghe.}
 
-\slide[must]{33}{Hỏi đáp.}{
+% T34: Questions & answers
+\slide[must]{34}{Hỏi đáp.}{
 \item Cảm ơn và mời thầy cô đặt câu hỏi. Để người chịu trách nhiệm chương liên quan trả lời trước (mục~\ref{sec:hoidap}).
 }{
 \item Có hai tab trình duyệt và PDF báo cáo mở sẵn để chỉ cho thầy khi cần.
 }{}
 
-\slide{34}{Slide dự phòng: bản đồ thư mục, chỉ mở khi được hỏi \say{file này nằm ở đâu}.}{
+% T35: Folder map of tieuluan/
+\slide{35}{Slide dự phòng: bản đồ thư mục, chỉ mở khi được hỏi \say{file này nằm ở đâu}.}{
 \item Mỗi dòng là một thư mục của dự án, nội dung của nó và chương dùng nó. Cột cuối cho biết thư mục có tồn tại lúc dựng slide.
 }{
 \item Thông tin chi tiết hơn: mục~\ref{sec:filemap}.

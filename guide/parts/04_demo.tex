@@ -1,5 +1,5 @@
 \section{Kịch bản demo trực tiếp}\label{sec:demo}
-Đây là chín bước ở slide 31, viết chi tiết. Tổng cộng khoảng \key{8 phút}; bản rút gọn (khoảng 5 phút) bỏ bước 8 và nói ngắn các bước còn lại.
+Đây là chín bước ở slide 32, viết chi tiết. Tổng cộng khoảng \key{8 phút}; bản rút gọn (khoảng 5 phút) bỏ bước 8 và nói ngắn các bước còn lại.
 \key{Người nói} giải thích; \key{người thao tác} gõ và bấm. Các câu truy vấn đều bằng \key{tiếng Anh}, vì dữ liệu và giao diện của Họa. là tiếng Anh.
 
 \begin{note}[warn]{Ba điều cần biết trước khi demo}
@@ -94,12 +94,12 @@ Thông báo ``Order \#20261003 is now processing'' rồi ``shipped''; đơn SHIP
 \lab{Thao tác}
 Sang tab 2, bản ``tắt Gemma'' (\code{http://127.0.0.1:8687/?debug=1}; chuẩn bị ở mục~\ref{sec:chuanbi}). Gõ lại \code{blue landscape paintings}; rồi tải ảnh \file{Q02.jpg} ở ``find paintings similar to a photo''; rồi hỏi trợ lý \code{find my order 20261001}.
 \lab{Nói}
-\say{Bản này có địa chỉ Gemma trỏ vào hư không. Tìm bằng chữ vẫn chạy bằng luật từ khóa: kết quả giống hệt, chỉ khác nhãn ``KEYWORD FALLBACK'' và thời gian. Nhưng với \emph{ảnh}, khác biệt lớn: có Gemma, The Great Wave đứng đầu; không có Gemma, hệ thống chỉ đọc màu và trả về tranh sai. Đây chính là kết quả đánh giá ở slide 22. Trợ lý vẫn tra được đơn nhờ luật. Đó là NFR02: AI hỏng thì cửa hàng vẫn bán được.}
+\say{Bản này có địa chỉ Gemma trỏ vào hư không. Tìm bằng chữ vẫn chạy bằng luật từ khóa: kết quả giống hệt, chỉ khác nhãn ``KEYWORD FALLBACK'' và thời gian. Nhưng với \emph{ảnh}, khác biệt lớn: có Gemma, The Great Wave đứng đầu; không có Gemma, hệ thống chỉ đọc màu và trả về tranh sai. Đây chính là kết quả đánh giá ở slide 23. Trợ lý vẫn tra được đơn nhờ luật. Đó là NFR02: AI hỏng thì cửa hàng vẫn bán được.}
 \lab{Mong đợi}
 Chữ: cùng ba tranh đầu, nhãn ``KEYWORD FALLBACK'', thời gian vài chục mili giây. Ảnh Q02: chỉ còn một tranh \emph{The Child's Bath}, không phải The Great Wave. Trợ lý trả lời đơn 20261001 theo luật (có thể kèm ghi chú ``Gemma 4 is offline'').
 \lab{Nếu lỗi}
 Tab 2 không mở được: chưa bật bản tắt Gemma (mục~\ref{sec:chuanbi}). Cách thay thế: bỏ qua bước này và nói bằng lời, chỉ vào ảnh chụp ``ai\_fallback'' trong báo cáo.
 
 \begin{note}[good]{Sau demo}
-Quay lại PowerPoint, slide 32 (kết luận). Nếu còn thời gian, nói một câu về hạn chế đã biết (mục~\ref{sec:hanche}). Đặt lại dữ liệu mẫu (mục~\ref{sec:reset}) nếu còn buổi thuyết trình khác.
+Quay lại PowerPoint, slide 33 (kết luận). Nếu còn thời gian, nói một câu về hạn chế đã biết (mục~\ref{sec:hanche}). Đặt lại dữ liệu mẫu (mục~\ref{sec:reset}) nếu còn buổi thuyết trình khác.
 \end{note}

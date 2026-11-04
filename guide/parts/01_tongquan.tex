@@ -1,0 +1,80 @@
+\begin{center}
+{\color{accent}\fontsize{30}{34}\selectfont\bfseries Họa.}\\[3pt]
+{\LARGE\bfseries Hướng dẫn thuyết trình}\\[3pt]
+{\large Từ yêu cầu đến code chạy được: phân tích và thiết kế một cửa hàng tranh có AI}\\[7pt]
+{\small Môn Phân tích và thiết kế hệ thống thông tin · Lớp 04 · Nhóm \todo{điền số nhóm}}
+\end{center}
+
+\begin{note}{Tài liệu này dành cho ai?}
+Dành cho \key{người trình bày}: nói gì ở từng slide, thao tác demo theo thứ tự nào, trả lời thế nào khi thầy hỏi, và
+xử lý ra sao khi máy hoặc mạng trục trặc. Bài thuyết trình (file PowerPoint, 34 slide) viết bằng tiếng Anh theo slide
+của môn học; lời nói thì bằng tiếng Việt, nên tài liệu này viết sẵn lời dẫn tiếng Việt.
+\end{note}
+
+\section{Tổng quan}\label{sec:tongquan}
+\subsection{Cách dùng tài liệu}
+\begin{itemize}
+\item \key{Đọc một lần} mục~\ref{sec:tongquan} để nắm bức tranh chung, rồi \key{tập nói} theo mục~\ref{sec:slides} (từng slide).
+\item \key{Tập demo ít nhất ba lần} theo mục~\ref{sec:demo}, mỗi lần với đúng thao tác và đúng thứ tự. Sau mỗi lần tập, đặt lại dữ liệu mẫu (mục~\ref{sec:reset}).
+\item \key{Đọc mục~\ref{sec:hoidap}} (câu hỏi thường gặp) trước hôm thi; mục~\ref{sec:suco} (sự cố) chỉ mở khi cần.
+\item Đừng học thuộc nguyên văn. Mỗi slide chỉ cần nhớ \key{ý chính} và vài ý để nói; phần còn lại nói bằng lời của mình.
+\item Ghi chú thuyết trình trong file PowerPoint bằng tiếng Anh, có thể dùng như bản dịch tham khảo của lời dẫn ở đây.
+\item Số liệu và tên slide trong tài liệu được lấy tự động từ dự án lúc dựng PDF (\file{guide/build.sh}). Nếu code hoặc
+slide đổi, chạy lại lệnh này để tài liệu không lệch với bài.
+\end{itemize}
+
+\subsection{Ba thông điệp cần nhớ}
+Nếu thầy chỉ nhớ được ba điều sau buổi thuyết trình, thì đó là:
+\begin{enumerate}[leftmargin=1.6em]
+\item \key{Một sợi chỉ xuyên suốt, từ vấn đề đến code.} Mọi thứ đi từ vấn đề kinh doanh, qua yêu cầu, use case, mô hình,
+thiết kế rồi tới code, và \key{tên lớp, hàm, bảng, cột ở mọi nơi đều trùng nhau}. Nhóm có công cụ kiểm tra tự động:
+\factCheckOps{} hàm, \factCheckFields{} trường và \factCheckColumns{} cột của CSDL đều khớp với đặc tả; \factTests{} test đạt.
+\item \key{AI là một thành phần đặt sau interface, luôn có phương án dự phòng.} Gemma 4 và Whisper giúp khách diễn đạt
+điều mình muốn; còn giá, tồn kho, quyền xem đơn hàng do luật nghiệp vụ trong code quyết định. Tắt Gemma thì cửa hàng vẫn chạy.
+\item \key{Trung thực về kết quả.} Đánh giá chỉ là một lần chạy trên tập nhỏ. Gemma hơn rõ ở tìm bằng ảnh
+(\evImageGemma{} so với \evImageLocal{}), nhưng ở tìm bằng chữ thì ngang luật từ khóa (\evTextDirectGemma{}).
+Hạn chế đã biết thì nói ra (mục~\ref{sec:hanche}), đừng giấu.
+\end{enumerate}
+
+\subsection{Cấu trúc bài nói và thời gian}
+Thời gian dưới đây ước tính từ độ dài lời dẫn (khoảng 130 từ mỗi phút), \key{chưa tính demo trực tiếp}.
+\begin{center}\small
+\begin{tabular}{@{}P{3.2cm}P{1.5cm}P{5.7cm}P{2.2cm}P{2.2cm}@{}}
+\toprule
+\textbf{Phần} & \textbf{Slide} & \textbf{Nội dung} & \textbf{Thời gian} & \textbf{Người nói}\\
+\midrule
+Chương 1 -- Yêu cầu & \slideinfo{chapterSlides}{1} & HTTTCN là gì, bên liên quan, vấn đề $\to$ yêu cầu, \factFR{} FR, \factNFR{} NFR, actor, use case & \slideinfo{chapterTime}{1} & \todo{tên}\\
+Chương 2 -- Phân tích & \slideinfo{chapterSlides}{2} & Đặc tả use case, activity, kiểm tra nhất quán, mô hình miền & \slideinfo{chapterTime}{2} & \todo{tên}\\
+Chương 3 -- AI & \slideinfo{chapterSlides}{3} & Text, voice, ảnh, phòng, trợ lý; kiến trúc; đánh giá & \slideinfo{chapterTime}{3} & \todo{tên}\\
+Chương 4 -- Thiết kế & \slideinfo{chapterSlides}{4} & Lớp phân tích $\to$ lớp thiết kế, CSDL, 4 tầng, sequence checkout & \slideinfo{chapterTime}{4} & \todo{tên}\\
+Chương 5 -- Code & \slideinfo{chapterSlides}{5} & Ánh xạ code bài giảng, kiểm chứng, kịch bản demo & \slideinfo{chapterTime}{5} & \todo{tên}\\
+Kết luận, Q\&A & \slideinfo{chapterSlides}{6} & Dấu vết liền mạch, bài học, hạn chế & \slideinfo{chapterTime}{6} & \todo{tên}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Hai phương án thời lượng}
+\begin{itemize}
+\item \key{Đầy đủ:} cả \factSlides{} slide, khoảng \timeFull{} phút nói, cộng 6--8 phút demo (mục~\ref{sec:demo}).
+\item \key{Rút gọn:} chỉ nói các slide đánh dấu \key{[NÊN NÓI]} ở mục~\ref{sec:slides} (\factMustSlides{} slide, khoảng \timeShort{} phút), cộng
+khoảng 5 phút demo (bỏ các bước đánh dấu \emph{có thể bỏ} ở mục~\ref{sec:demo}). Các slide còn lại lướt qua trong vài giây.
+\item Hỏi giảng viên hoặc lớp trưởng \key{thời lượng thật} của buổi thi. Nếu dưới 15 phút, dùng phương án rút gọn.
+\end{itemize}
+
+\subsection{Phân công gợi ý}
+\begin{itemize}
+\item \key{Một người nói, một người thao tác demo.} Khi người nói đang giải thích, người kia gõ và bấm, nên không có
+khoảng lặng nào và không ai vừa nói vừa gõ sai.
+\item Chia theo chương như bảng trên; người nói Chương 5 cũng dẫn phần demo. Người mở đầu nói slide 1--3, người cuối cùng nói kết luận.
+\item Mỗi người phải trả lời được các câu hỏi của \key{chương mình} (mục~\ref{sec:hoidap}) và biết \key{tìm ở file nào} khi bị hỏi sâu (mục~\ref{sec:filemap}).
+\end{itemize}
+
+\subsection{Mẹo trình bày}
+\begin{itemize}
+\item \key{Nhìn người nghe, không nhìn slide.} Slide dày chữ nhỏ: chỉ đọc tên lớp, tên hàm khi cần, còn lại nói ý.
+\item \key{Chỉ tay hoặc con trỏ vào hình} khi nói (sơ đồ use case, activity, sequence). Mỗi sơ đồ có một chỗ để nhấn, đã ghi ở phần \emph{Chỉ vào}.
+\item Nói \key{chậm ở tên riêng} (\code{CheckoutService.checkout}, \code{VectorIndex.cosineSimilarity}); thầy sẽ đối chiếu với slide của thầy.
+\item Mỗi chương mở bằng \key{một câu hỏi} (ví dụ ``hệ thống phải làm gì, cho ai?'') và đóng bằng một câu chuyển ý. Lời chuyển ý có sẵn ở cuối mỗi hộp slide.
+\item Khi demo: \key{phóng to trình duyệt} (Cmd/Ctrl và dấu +) để người cuối phòng nhìn rõ; nói trước điều sắp bấm, rồi mới bấm.
+\item Nếu bị hỏi điều chưa chắc: nói ``phần này em xin kiểm tra lại trong báo cáo'' và mở đúng mục (mục~\ref{sec:filemap}), đừng đoán.
+\end{itemize}

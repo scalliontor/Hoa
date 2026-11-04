@@ -1,0 +1,90 @@
+% Hướng dẫn thuyết trình "Họa." (tiếng Việt). Build: guide/build.sh  ->  guide/guide_thuyet_trinh_Hoa.pdf
+% Số liệu và tên slide lấy tự động từ dự án (guide/gen_facts.py -> build/guide/facts.tex).
+\documentclass[a4paper,10.5pt]{article}
+\usepackage{fontspec}
+\IfFontExistsTF{Arial}{\setmainfont{Arial}[Ligatures=TeX]}{\setmainfont{TeX Gyre Heros}[Ligatures=TeX]}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}[Scale=0.82]}{\setmonofont{TeX Gyre Cursor}[Scale=0.88]}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+\usepackage[a4paper,left=2cm,right=2cm,top=2.1cm,bottom=2cm,headheight=14pt]{geometry}
+\usepackage{xcolor,graphicx,array,booktabs,longtable,enumitem,fancyhdr,titlesec,setspace}
+\usepackage[most]{tcolorbox}
+\usepackage{needspace}
+\usepackage[obeyspaces,spaces]{url}
+\usepackage[hidelinks]{hyperref}
+\urlstyle{tt}
+\graphicspath{{../figures/demo/}}
+
+\definecolor{accent}{HTML}{C93A22}
+\definecolor{ink}{HTML}{1B1B1B}
+\definecolor{soft}{HTML}{F4F2EE}
+\definecolor{good}{HTML}{1F7A4D}
+\definecolor{warn}{HTML}{B26A00}
+\definecolor{bad}{HTML}{A12622}
+\color{ink}
+\setstretch{1.12}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\emergencystretch=3em
+\setlist{itemsep=1.5pt,topsep=2pt,parsep=0pt,leftmargin=1.3em}
+
+\input{../build/guide/facts.tex}
+
+% ---------------------------------------------------------------- headings, header and footer
+\titleformat{\section}{\Large\bfseries\color{accent}}{\thesection.}{0.5em}{}[{\color{accent}\titlerule[0.8pt]}]
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{16pt}{8pt}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{gray}Họa. — Hướng dẫn thuyết trình}
+\fancyhead[R]{\small\color{gray}Môn Phân tích và thiết kế hệ thống thông tin}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% ---------------------------------------------------------------- small helpers
+\newcommand{\code}[1]{{\small\path{#1}}}
+\newcommand{\file}[1]{{\small\path{#1}}}
+\newcommand{\key}[1]{\textbf{#1}}
+\newcommand{\say}[1]{\textit{“#1”}}
+\newcommand{\slideinfo}[2]{\csname #1#2\endcsname}
+\newcommand{\todo}[1]{{\color{bad}\textbf{[#1]}}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\cb}{{\fboxsep=0pt\fbox{\rule{0pt}{1.05ex}\rule{1.05ex}{0pt}}}\;}
+\newlist{checklist}{itemize}{1}
+\setlist[checklist]{label=\cb,itemsep=2.5pt,leftmargin=1.6em}
+\newcommand{\cmd}[1]{\par{\ttfamily\small #1}\par}
+% A screenshot of the demo, framed. #1 file in figures/demo, #2 caption
+\newcommand{\shot}[2]{\begin{center}{\fboxsep=0pt\fboxrule=0.4pt\fcolorbox{gray}{white}{\includegraphics[width=0.58\linewidth]{#1}}}\\[2pt]{\footnotesize\itshape #2}\end{center}}
+\newcommand{\qa}[2]{\begin{tcolorbox}[enhanced,breakable,colback=white,colframe=gray!60,boxrule=0.4pt,left=6pt,right=6pt,top=3pt,bottom=3pt,before skip=5pt,after skip=3pt]\textbf{Hỏi: #1}\par\smallskip #2\end{tcolorbox}}
+\newcommand{\lab}[1]{\par\smallskip\textbf{\color{accent}#1}\par\nopagebreak}
+
+% A box with a coloured title. #1 colour, #2 title.
+\newtcolorbox{note}[2][accent]{enhanced,breakable,colback=soft,colframe=#1,boxrule=0.5pt,left=7pt,right=7pt,top=4pt,
+  bottom=4pt,fonttitle=\bfseries\small,title={#2},attach boxed title to top left={yshift=-2mm,xshift=4mm},
+  boxed title style={colback=#1,boxrule=0pt,top=1pt,bottom=1pt}}
+
+% One slide of the talk: \slide[must]{N}{key idea}{items to say}{where to point / notes}{transition}
+\expandafter\def\csname slideflagmust\endcsname{}
+\newcommand{\slidebadge}[1]{\ifcsname slideflag#1\endcsname\textcolor{white}{\textbf{[NÊN NÓI]}}\else\textcolor{white}{có thể lược nếu thiếu giờ}\fi}
+\newcommand{\slide}[6][may]{%
+  \begin{tcolorbox}[enhanced,breakable,colback=white,colframe=accent!85!black,boxrule=0.5pt,left=7pt,right=7pt,top=3pt,
+      bottom=3pt,before skip=7pt,after skip=5pt,coltitle=white,colbacktitle=accent!85!black,fonttitle=\small,
+      title={\textbf{Slide #2}\hspace{0.6em}\slideinfo{slideTitle}{#2}\hfill{\footnotesize ≈ \slideinfo{slideTime}{#2} · \slidebadge{#1}}}]
+    \textbf{Ý chính.} #3\par
+    \smallskip\textbf{Nói:}
+    \begin{itemize}#4\end{itemize}
+    \ifx\relax#5\relax\else\textbf{Chỉ vào · lưu ý:}\begin{itemize}#5\end{itemize}\fi
+    \ifx\relax#6\relax\else\textbf{Chuyển ý:} \textit{#6}\fi
+  \end{tcolorbox}}
+
+\begin{document}
+\input{parts/01_tongquan}
+\input{parts/02_chuanbi}
+\input{parts/03_slides}
+\input{parts/04_demo}
+\input{parts/05_hoidap}
+\input{parts/06_suco}
+\input{parts/07_phuluc}
+\end{document}

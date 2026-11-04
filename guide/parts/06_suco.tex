@@ -1,0 +1,47 @@
+\section{Xử lý sự cố khi demo}\label{sec:suco}
+Nguyên tắc chung: \key{giữ bình tĩnh và nói thật}. Cửa hàng được thiết kế để vẫn chạy khi AI hỏng (NFR02), nên nhiều sự cố biến thành cơ hội để chứng minh điều đó.
+Người thao tác xử lý sự cố, người nói tiếp tục giải thích; nếu mất quá 30 giây thì chuyển sang ảnh chụp màn hình trong \file{figures/demo}.
+
+\begin{longtable}{@{}P{3.3cm}P{3.9cm}P{8.6cm}@{}}
+\toprule
+\textbf{Triệu chứng} & \textbf{Nguyên nhân thường gặp} & \textbf{Cách xử lý}\\
+\midrule\endfirsthead
+\toprule
+\textbf{Triệu chứng} & \textbf{Nguyên nhân thường gặp} & \textbf{Cách xử lý}\\
+\midrule\endhead
+Trình duyệt báo không kết nối được \code{127.0.0.1:8686} & Server chưa chạy hoặc đã bị tắt & Trong thư mục \file{demo}, chạy \code{./run.sh}; kiểm tra bằng \code{lsof -nP -iTCP:8686 -sTCP:LISTEN}.\\
+\addlinespace
+Khởi động báo cổng đang bị chiếm (\emph{Address already in use}) & Tiến trình cũ vẫn chạy & Lấy mã tiến trình bằng \code{lsof -tiTCP:8686 -sTCP:LISTEN}, tắt bằng \code{kill <mã>}, rồi chạy lại \code{./run.sh}.\\
+\addlinespace
+\emph{Gemma 4: offline} lúc khởi động; kết quả có nhãn ``KEYWORD FALLBACK'' & Mất mạng hoặc VPN; server GPU tắt; thiếu hoặc sai key & (1) Chạy lệnh kiểm tra ở mục~\ref{sec:chuanbi}. (2) Xem \file{demo/config/app.local.properties} có đúng một dòng \code{gemma.apiKey=...}; sửa xong phải \emph{khởi động lại} server. (3) Nếu chưa sửa được, vẫn demo tiếp ở chế độ dự phòng và \key{nói rõ AI đang tắt}: đó chính là NFR02. Khi mạng có lại, không cần khởi động lại.\\
+\addlinespace
+Gemma phản hồi chậm (vài giây) & Mạng yếu; server đang bận & Chờ tối đa 15 giây; quá hạn thì hệ thống tự dùng phương án dự phòng. Trong lúc chờ, nói tiếp về điều đang xảy ra phía sau.\\
+\addlinespace
+\emph{``Voice search is unavailable''} & Server Whisper chưa chạy & Mở Terminal mới, vào \file{demo/voice-server} và chạy \code{./run_voice.sh}; đợi khoảng 10 giây; kiểm tra \code{curl http://127.0.0.1:9000/health}. Tạm thời gõ câu hỏi thay cho nói.\\
+\addlinespace
+\emph{``We couldn't hear you''} & Không thu được tiếng; micro tắt & Nói to, rõ, bằng tiếng Anh; kiểm tra micro đã cho phép (biểu tượng ổ khóa trên thanh địa chỉ Chrome).\\
+\addlinespace
+Whisper nghe sai (ví dụ ``Monet'' thành ``Money'') & Giọng nói, tiếng ồn & Sửa chữ trong ô \emph{We heard} rồi bấm Search; nói luôn: đó là lý do khách được xem và sửa bản phiên âm.\\
+\addlinespace
+Tải ảnh không được & Tệp không phải JPEG, PNG, WebP hoặc quá lớn & Trình duyệt tự đổi ảnh sang JPEG tối đa 1600 px; nếu vẫn lỗi, dùng \file{room1.jpg}, \file{Q02.jpg} hoặc các phòng mẫu có sẵn.\\
+\addlinespace
+Số liệu lạ: tranh hết hàng, giỏ có đồ lạ, ``latest order'' là đơn cũ & Dữ liệu còn dư từ lần tập trước & Đặt lại dữ liệu mẫu (mục~\ref{sec:reset}), rồi khởi động lại server.\\
+\addlinespace
+Thông báo về địa chỉ khi bấm \emph{Save address} & Bỏ trống hoặc quá dài (số nhà 20, đường 100, quận 60, thành phố 60 ký tự) & Điền đủ bốn ô, ngắn hơn giới hạn.\\
+\addlinespace
+\code{./run.sh} báo thiếu JDK & Chưa cài Java 17 trở lên & \code{brew install openjdk@21}, rồi chạy \code{./build.sh} trong thư mục \file{demo}.\\
+\addlinespace
+Màn hình máy chiếu chữ nhỏ, khó đọc & Độ phân giải & Phóng to trình duyệt (Cmd/Ctrl và dấu +) lên 125\%; ở PowerPoint dùng chế độ trình chiếu.\\
+\addlinespace
+Mọi thứ hỏng, không cứu được & Máy hoặc mạng & Chiếu \file{figures/demo/*.png} và slide PDF dự phòng; vừa chiếu vừa kể lại kịch bản (mục~\ref{sec:demo}), thừa nhận trực tiếp rằng demo trực tiếp không chạy được.\\
+\bottomrule
+\end{longtable}
+
+\begin{note}[warn]{Những điều không nên nói khi trả lời}
+\begin{itemize}
+\item Không nói Gemma \emph{vượt trội} luật từ khóa ở tìm bằng chữ: số liệu cho thấy hòa. Chỉ nói Gemma hơn rõ ở \emph{ảnh}.
+\item Không nói vector ảnh là embedding \emph{học được}, không nói thanh toán là thật, không nói thanh toán nằm trong một transaction.
+\item Không hứa kết quả Gemma luôn giống nhau; nói rõ nó có thể thay đổi giữa các lần chạy.
+\item Không đọc to khóa API hay địa chỉ server khi chiếu màn hình; đóng file \file{app.local.properties} trước khi chia sẻ màn hình.
+\end{itemize}
+\end{note}

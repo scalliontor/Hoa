@@ -1,0 +1,67 @@
+\section{Chuẩn bị trước buổi thuyết trình}\label{sec:chuanbi}
+Mở Terminal tại \key{thư mục dự án} (thư mục chứa \file{README.md}; trên máy này là \file{~/PTIT/infor_sys/tieuluan}, còn
+nếu clone từ GitHub thì là thư mục \file{Hoa}). Các lệnh dưới đây đều tính từ thư mục đó.
+
+\subsection{Trước một ngày}
+\begin{checklist}
+\item \key{Cài đặt.} JDK 17 trở lên (\code{brew install openjdk@21}) và Python 3. Lần đầu chạy \file{./run.sh}, máy tự tạo môi trường
+Python cho Whisper và tải mô hình (khoảng nửa gigabyte), nên \key{cần Internet một lần và mất vài phút}; đừng để đến sáng thi mới chạy lần đầu.
+\item \key{Tạo file key của Gemma.} Tạo \file{demo/config/app.local.properties} với đúng một dòng \code{gemma.apiKey=<key>}
+(key nằm trong file \file{HUONG_DAN_GOI_GEMMA4.md}). File này \emph{không} có trên GitHub; thiếu nó thì mọi cuộc gọi Gemma thất bại và
+chỉ còn chế độ dự phòng.
+\item \key{Biên dịch và chạy test:} \code{cd demo && ./build.sh && ./test.sh}. Phải thấy \factTests{} dòng PASS và dòng cuối
+``\ldots all match the model''.
+\item \key{Kiểm tra server Gemma từ chính mạng sẽ dùng trên lớp} (mạng trường, 4G\ldots). Lệnh sau phải in \code{200}:
+\cmd{cd demo}
+\cmd{KEY=\$(sed -n 's/\^{}gemma.apiKey=//p' config/app.local.properties)}
+\cmd{URL=\$(sed -n 's/\^{}gemma.baseUrl=//p' config/app.properties)}
+\cmd{curl -s -o /dev/null -w "\%\{http\_code\}\textbackslash n" -H "Authorization: Bearer \$KEY" "\$\{URL\}models"}
+Nếu không phải 200, xem mục~\ref{sec:suco}; demo vẫn chạy được ở chế độ dự phòng nhưng \key{phải nói rõ với thầy}.
+\item \key{Chuẩn bị ảnh cho demo}, chép ra Desktop cho dễ chọn trong hộp thoại: \file{demo/data/eval_images/Q02.jpg} (The Great Wave),
+\file{Q06.jpg} (The Kiss), \file{Q01.jpg} (Sunflowers) và ảnh phòng \file{demo/web/img/rooms/room1.jpg}, \file{room2.jpg}, \file{room3.jpg}.
+\item \key{Micro:} mở Chrome tại \code{http://127.0.0.1:8686}, bấm biểu tượng micro, chọn \emph{Allow}, nói thử ``blue landscape paintings''.
+Whisper nhận \key{tiếng Anh} tốt (sai từ \evSttWer); tiếng Việt kém hơn nhiều nên đừng nói tiếng Việt khi demo.
+\item \key{Tập toàn bộ kịch bản demo ba lần} (mục~\ref{sec:demo}), rồi đặt lại dữ liệu mẫu (mục~\ref{sec:reset}).
+\item \key{Phương án dự phòng:} xuất slide ra PDF (PowerPoint $\to$ File $\to$ Export), chép vào USB; mang theo thư mục
+\file{figures/demo} (ảnh chụp màn hình từng chức năng) để chiếu thay thế nếu mạng hoặc máy hỏng.
+\item \key{Máy:} sạc đầy pin, mang theo sạc và cáp ra máy chiếu, tắt thông báo (Không làm phiền), tắt chế độ ngủ bằng \code{caffeinate -d}.
+\end{checklist}
+
+\subsection{Trước buổi thuyết trình 30 phút}
+\begin{enumerate}[leftmargin=1.6em]
+\item \key{Đặt lại dữ liệu mẫu} nếu vừa tập xong (mục~\ref{sec:reset}).
+\item \key{Terminal 1}, bật cửa hàng và Whisper: \cmd{cd demo \&\& ./run.sh} Chờ hai dòng:
+\code{Họa. is running at http://127.0.0.1:8686} và \code{Gemma 4: online | Whisper: online}.
+Whisper cần khoảng 10 giây để nạp mô hình; nếu thấy \code{Whisper: offline}, đợi rồi kiểm tra bằng
+\code{curl http://127.0.0.1:9000/health}. Nếu thấy \code{Gemma 4: offline}, xem mục~\ref{sec:suco}.
+\item \key{Terminal 2}, bật bản ``tắt Gemma'' cho bước 9 của demo: \cmd{cd demo \&\& ./run.sh config/app.offline.properties}
+Bản này chạy ở cổng 8687 với cơ sở dữ liệu riêng, nên không đụng tới dữ liệu của bản chính.
+\item \key{Trình duyệt Chrome}, hai tab: tab 1 là \code{http://127.0.0.1:8686} (cửa hàng mở sẵn với tài khoản C001);
+tab 2 là \code{http://127.0.0.1:8687/?debug=1} (bản tắt Gemma, bật chế độ developer). Phóng to 110--125\% và chọn giao diện tối cho khớp với slide.
+\item \key{PowerPoint:} mở \file{slides/thuyettrinh_Hoa.pptx} ở chế độ trình chiếu, dừng ở slide 1. Mở sẵn PDF báo cáo
+(\file{build/report/tieuluan_V2_04_*.pdf}) để tra khi cần.
+\end{enumerate}
+
+\begin{note}[good]{Ba tài khoản demo (chuyển bằng cách bấm tên ở góc phải trên cùng)}
+\small
+\begin{tabular}{@{}P{3.3cm}P{3.7cm}P{7.2cm}@{}}
+\textbf{C001} Nguyen Minh An & khách VIP, giảm 10\% & tài khoản mặc định; có đơn 20261001 (đã gửi, SHIPPED) và 20261002 (đã giao).\\
+\textbf{C002} Tran Thu Binh & khách mới & chứng minh bị từ chối khi xem đơn của người khác; có đơn 20261003 (PLACED).\\
+\textbf{ADMIN} Gallery staff & quản trị viên & đổi giá, tồn kho và chuyển trạng thái đơn (menu ``Back office'').\\
+\end{tabular}
+\end{note}
+
+\subsection{Đặt lại dữ liệu mẫu sau mỗi lần tập}\label{sec:reset}
+Mỗi lần tập demo làm thay đổi dữ liệu (đơn mới, tồn kho giảm; hủy đơn \emph{không} hoàn lại kho). Trước buổi thi, đưa
+cơ sở dữ liệu về như ban đầu: dừng server bằng \code{Ctrl+C} rồi
+\cmd{rm -f demo/data/ecom.db* \&\& cd demo \&\& ./run.sh}
+Cơ sở dữ liệu \file{ecom.db} được tạo lại từ \file{demo/db/seed.sql}, nên chỉ mất các đơn do chính mình tạo lúc tập. Việc này quan trọng vì câu
+hỏi ``where is my latest order?'' ở bước 6 phải trả lời về đơn \emph{vừa đặt trong demo}, chứ không phải đơn của lần tập trước.
+
+\subsection{Trước năm phút}
+\begin{checklist}
+\item Hai tab trình duyệt đã mở, cửa hàng hiện trang chủ, \code{Gemma 4: online} trong Terminal 1.
+\item Micro đã cho phép; âm lượng loa đủ nghe nếu cần phát lại; ảnh demo đã nằm trên Desktop.
+\item PowerPoint ở slide 1; đã đóng Zalo, Messenger, email và mọi cửa sổ không liên quan.
+\item Nước uống; mỗi người biết mình nói chương nào và ai cầm chuột lúc demo.
+\end{checklist}

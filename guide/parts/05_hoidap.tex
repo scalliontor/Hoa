@@ -1,0 +1,113 @@
+\section{Câu hỏi thường gặp}\label{sec:hoidap}
+Các câu trả lời dưới đây bám theo báo cáo và code thật. Nếu thầy hỏi sâu hơn, mở đúng mục ở bảng ``hỏi gì mở file nào'' (mục~\ref{sec:filemap}).
+Trả lời ngắn, nói thẳng điều chưa làm được, và đừng đoán.
+
+\subsection{Yêu cầu và phân tích (Chương 1--2)}
+\qa{Stakeholder và actor khác nhau thế nào? Họa. có những actor nào?}{
+Stakeholder là bất kỳ ai có lợi ích liên quan; actor là bên \emph{tương tác trực tiếp} với hệ thống. Nhân viên kho và nhân viên hỗ trợ là
+stakeholder nhưng không dùng hệ thống trực tiếp nên không phải actor. Họa. có \factActors{} actor: Customer và Administrator là actor chính;
+Gemma 4 Service và Payment Service là actor phụ trợ, nghĩa là hệ thống gọi họ chứ họ không khởi động use case.}
+
+\qa{Vì sao \say{dùng Gemma} không phải là yêu cầu?}{
+Yêu cầu nói hệ thống phải \emph{làm gì} để đáp ứng nhu cầu (ví dụ FR03: trả về các tranh giống nhất với ảnh khách tải lên), không nói
+bằng công nghệ nào. Gemma là một \emph{giải pháp}, và nhóm đặt nó sau interface \code{LlmClient} để có thể thay. Nhu cầu không phải giải pháp.}
+
+\qa{Giải thích include, extend và generalization trong sơ đồ use case của nhóm.}{
+\emph{Generalization:} UC02 (từ khóa), UC03 (giọng nói), UC04 (ảnh) và UC14 (phòng) là các cách cụ thể của UC01 Search Product, vốn trừu tượng.
+\emph{Include:} UC07 Checkout luôn dùng UC06 Manage Cart; UC10 trợ lý luôn dùng tra đơn (UC09) và tìm tranh (UC01).
+\emph{Extend:} UC11 Cancel Order là phần mở rộng tùy chọn của UC08 View Order; UC05 View Product mở rộng UC01.}
+
+\qa{Yêu cầu phi chức năng của nhóm đo thế nào? Cho ví dụ.}{
+Mỗi NFR có điều kiện đo được. NFR07 (tìm bằng chữ trong 2 giây): đo trong đánh giá, trung bình \evTextSecGemma{} giây với Gemma và \evTextSecRules{} giây
+với luật từ khóa. NFR08 (câu nói 5 giây được phiên âm trong 3 giây): trung bình \evSttMean{} giây, tối đa \evSttMax{} giây. NFR03 (ảnh JPEG, PNG,
+WebP, tối đa 5 MB) và NFR01 (quyền xem đơn) có test tự động.}
+
+\qa{Vì sao CartItem khác OrderItem?}{
+CartItem là thông tin mua sắm \emph{tạm thời}, giữ giá lúc khách thêm vào giỏ (\code{cartPrice}), nên có thể cũ. OrderItem là thông tin giao dịch
+\emph{bền vững}, giữ giá \emph{đã chốt} lúc thanh toán (\code{unitPrice}). Khi thanh toán, \code{OrderItem.fromCartItem} lấy giá hiện tại của danh mục, không lấy giá trong giỏ.}
+
+\qa{Vì sao checkout được vẽ là phụ thuộc «create», không phải association?}{
+Vì checkout là một \emph{phép biến đổi tại một thời điểm}: một Cart sinh ra một Order, rồi giỏ được làm rỗng. Cart không sở hữu Order lâu dài,
+nên không có quan hệ cấu trúc bền vững giữa hai lớp; chỉ có sự phụ thuộc lúc tạo.}
+
+\qa{Kiểm tra nhất quán giữa các mô hình là gì? Nhóm làm thế nào?}{
+Là lần theo một yêu cầu qua mọi mô hình để xem có chỗ nào mâu thuẫn. Ví dụ \say{khách được hủy đơn trước khi giao}: FR11, rồi use case UC11 mở rộng UC08,
+quyết định \say{đã giao chưa} trong activity, máy trạng thái chỉ cho hủy từ PLACED hoặc PROCESSING, rồi \code{OrderService.cancelOrder} gọi \code{Order.cancel}.
+Mỗi mắt xích trùng khớp thì yêu cầu được đại diện đúng.}
+
+\subsection{AI (Chương 3)}
+\qa{Gemma làm gì và không làm gì?}{
+Gemma (1) hiểu câu của khách thành bộ lọc (phong cách, chủ đề, màu, họa sĩ, giá tối đa); (2) mô tả ảnh thành phong cách, chủ đề, màu; (3) đọc ảnh phòng, chọn tranh và viết lý do;
+(4) làm trợ lý chọn công cụ và viết câu trả lời. Gemma \key{không} quyết giá, tồn kho, quyền truy cập, và không tự tạo hay hủy đơn. Những việc đó do code và quy tắc nghiệp vụ làm.}
+
+\qa{Nếu Gemma không phản hồi thì sao?}{
+Mỗi lần gọi Gemma có thời gian chờ tối đa 15 giây (NFR07). Nếu lỗi hoặc quá hạn, tìm bằng chữ chuyển sang luật từ khóa, tìm bằng ảnh chuyển sang đọc màu
+cục bộ, trợ lý trả lời bằng luật, ảnh phòng xếp theo màu. Nhóm đã thử cả hai lần chạy trong đánh giá, và bước 9 của demo cho thấy điều này.}
+
+\qa{Vector ảnh của nhóm là gì? Có phải embedding học được không?}{
+\key{Không.} Gemma mô tả ảnh thành phong cách, chủ đề, màu chủ đạo; \code{VectorIndex.toVector} đổi mô tả đó thành vector one-hot (10 phong cách, 8 chủ đề, 10 màu),
+và độ giống là cosine. Với 32 tranh thì cách này đủ dùng và dễ giải thích. Hướng phát triển là dùng embedding ảnh thật, đặt sau cùng interface \code{VectorIndex}
+(bảng \code{product_feature} đã có cột \code{model_version} để phân biệt).}
+
+\qa{Công thức xếp hạng $S = \alpha S_{text} + \beta S_{image} + \gamma S_{business}$ chọn trọng số thế nào?}{
+Cấu hình là $\alpha=0{,}45$, $\beta=0{,}45$, $\gamma=0{,}10$, tổng bằng 1, đọc từ \code{demo/config/app.properties}. Nhóm chọn thủ công, \emph{chưa tinh chỉnh} bằng dữ liệu.
+$S_{business}$ là điểm kinh doanh: bằng 0 nếu hết hàng, tăng theo tồn kho và đạt tối đa khi còn từ 5 chiếc; nên tranh còn hàng được ưu tiên nhẹ.}
+
+\qa{Kết quả đánh giá có đáng tin không?}{
+Chưa thể coi là chứng minh: đó là \key{một lần chạy trên tập nhỏ} (\evTextDirectN{} truy vấn trực tiếp, \evTextParaN{} diễn đạt lại, \evVoiceN{} bản ghi giọng nói, \evImageN{} ảnh, \evAssistantN{} câu hỏi trợ lý), và kết quả của Gemma
+dao động chút giữa các lần chạy. Nhóm chỉ khẳng định hai điều có chứng cứ rõ: Gemma hơn rõ ở tìm bằng ảnh (\evImageGemma{} so với \evImageLocal{}), và ở tìm bằng chữ thì \emph{không} hơn
+luật từ khóa (\evTextDirectGemma{} so với \evTextDirectRules{}). Danh sách thất bại và tiêu chí đúng/sai nằm trong Chương 3.}
+
+\qa{Vì sao slide 17 ghi tỉ lệ sai từ 2,0\% mà slide 22 nói khoảng 4\%?}{
+Hai phép đo khác nhau. \evSttWer{} là riêng nhận dạng giọng nói trên \evSttN{} câu tiếng Anh dùng để thử Whisper. \evVoiceWer{} là trong đánh giá đầu cuối,
+trên \evVoiceUtterances{} bản ghi dùng cho tìm kiếm, có cả mã đơn và tên họa sĩ khó (ví dụ \say{Klimt} bị nghe thành \say{Climbed}). Cả hai có trong báo cáo, Chương 3.}
+
+\qa{Vì sao tự host Whisper, và vì sao không làm đọc thành tiếng (TTS)?}{
+Tự host để \key{âm thanh không rời khỏi máy} (NFR08, quyền riêng tư), độ trễ thấp (khoảng \evSttMean{} giây) và không phụ thuộc dịch vụ bên ngoài. Cái giá là phải có máy đủ mạnh và tải mô hình một lần.
+Nhóm không làm TTS vì không yêu cầu nào cần đến nó; trợ lý trả lời bằng chữ.}
+
+\qa{Gemma có thể bịa ra lý do khi giải thích vì sao tranh hợp với phòng không?}{
+Nhóm giảm rủi ro bằng cách ràng buộc: Gemma chỉ được chọn trong 12 tranh đã rút gọn (mã ngoài danh sách bị bỏ); câu phải dài 15--25 từ và nêu được chi tiết cụ thể,
+nếu quá ngắn hoặc chung chung thì bị thay bằng câu dựng từ thuộc tính của tranh và thông tin đọc được từ ảnh. Trong đánh giá, \evRoomConcrete{} trên \evRoomPicks{} câu giải thích
+được xem là cụ thể. Nhưng đây vẫn là văn bản do mô hình sinh, nên có thể sai chi tiết.}
+
+\qa{Làm sao khách không xem được đơn của người khác? Vì sao trả 404 chứ không phải 403?}{
+Mã khách luôn lấy từ phiên đăng nhập, không từ dữ liệu khách gửi; \code{OrderService.getOrder} kiểm tra chủ đơn, và trợ lý cũng chạy công cụ với mã khách của phiên.
+Đơn không tồn tại và đơn của người khác đều trả \emph{cùng một thông báo} ``không tìm thấy trong tài khoản của bạn'' (HTTP 404), để kẻ xấu không dò ra mã đơn nào có thật (NFR01).}
+
+\subsection{Thiết kế và code (Chương 4--5)}
+\qa{Vì sao có bốn tầng? Tầng khác package ở chỗ nào?}{
+Bốn tầng (presentation, application, domain, infrastructure) chia trách nhiệm kiến trúc để giao diện không chạm cơ sở dữ liệu và service chỉ phụ thuộc interface (NFR04).
+Tầng là trách nhiệm; package là cách tổ chức code, nên mỗi tầng gồm nhiều package (\factPackages{} package tất cả).}
+
+\qa{Ánh xạ lớp sang bảng theo những quy tắc nào? Cho ví dụ.}{
+Kế thừa $\to$ bảng con có khóa chính cũng là khóa ngoại (ví dụ \code{Customer} thành \code{customer}, \code{customer_vip}, \code{customer_new}). Một-nhiều $\to$ khóa ngoại ở phía nhiều (\code{address.customer_id}).
+Một-không-hoặc-một $\to$ khóa ngoại có thêm UNIQUE (\code{shipping.order_id}). Composition $\to$ khóa ghép và \code{ON DELETE CASCADE} (\code{order_item}). Có \factTables{} bảng và \factFKs{} khóa ngoại.}
+
+\qa{Làm sao bảo đảm code khớp thiết kế?}{
+Có một file đặc tả chung, \code{tools/model.py}. Từ đó nhóm sinh ra sơ đồ Visual Paradigm, schema SQL, khung code Java và các bảng trong báo cáo. Rồi công cụ \code{check_code_model.py}
+so code thật với đặc tả: \factCheckClasses{} lớp, \factCheckFields{} trường, \factCheckOps{} hàm, \factCheckColumns{} cột đều khớp. Thêm \factTests{} test tự động đều đạt.}
+
+\qa{Vì sao dùng Java và SQLite, không dùng framework?}{
+Để bám theo slide môn học (Controller, Service, Domain, Repository) và để \emph{mọi mũi tên đọc được trong code}, không có phép màu của framework. Máy chủ HTTP dùng chính thư viện chuẩn của Java,
+SQLite là một file nên không cần cài đặt gì thêm.}
+
+\qa{Muốn mở rộng thì làm gì?}{
+Đổi cơ sở dữ liệu bằng cách viết bản cài đặt khác cho các interface repository; thay \code{VectorIndex} bằng embedding học được; cắm cổng thanh toán thật sau phần Payment; thêm máy thì cần cơ sở dữ liệu dạng server.
+Nhờ các interface, những thay đổi này không phải sửa tầng application.}
+
+\qa{Ảnh tranh lấy ở đâu? Có vướng bản quyền không?}{
+Cả \factPaintings{} tranh đều thuộc \key{phạm vi công cộng}, tải từ Wikimedia Commons; nguồn và giấy phép từng ảnh ghi trong \file{demo/data/ATTRIBUTION.md}.}
+
+\needspace{9\baselineskip}
+\subsection{Hạn chế đã biết: nói thẳng}\label{sec:hanche}
+Thầy đánh giá cao việc nhóm \key{biết rõ giới hạn của mình}. Nếu bị hỏi hoặc còn thời gian, nói các điều sau, kèm hướng khắc phục:
+\begin{itemize}
+\item \key{Thanh toán chưa nằm gọn trong một transaction.} Việc lưu đơn nằm trong một transaction, nhưng trừ tồn kho và làm rỗng giỏ là các lệnh riêng; nếu sập giữa chừng, có thể có đơn đã lưu mà kho chưa trừ. \emph{Khắc phục:} gói cả ba bước vào một transaction SQLite.
+\item \key{Hủy đơn không hoàn lại tồn kho.} \code{OrderService.cancelOrder} chỉ đổi trạng thái. \emph{Khắc phục:} thêm thao tác ngược của \code{decreaseStock} vào \code{ProductRepository}.
+\item \key{Thanh toán chỉ mô phỏng;} chưa có cổng thanh toán thật, không có mật khẩu (tài khoản demo chọn từ danh sách).
+\item \key{Đánh giá nhỏ, một lần chạy;} cần nhiều truy vấn và ảnh thật của khách hơn.
+\item \key{Vector ảnh do nhóm dựng,} không phải embedding học được.
+\item \key{Phụ thuộc server Gemma từ xa;} mất mạng thì chạy chế độ dự phòng (kém hơn ở tìm bằng ảnh).
+\item \key{Một máy, một file SQLite;} chưa dành cho nhiều người dùng cùng lúc.
+\end{itemize}

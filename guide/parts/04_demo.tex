@@ -1,0 +1,105 @@
+\section{Kịch bản demo trực tiếp}\label{sec:demo}
+Đây là chín bước ở slide 31, viết chi tiết. Tổng cộng khoảng \key{8 phút}; bản rút gọn (khoảng 5 phút) bỏ bước 8 và nói ngắn các bước còn lại.
+\key{Người nói} giải thích; \key{người thao tác} gõ và bấm. Các câu truy vấn đều bằng \key{tiếng Anh}, vì dữ liệu và giao diện của Họa. là tiếng Anh.
+
+\begin{note}[warn]{Ba điều cần biết trước khi demo}
+\begin{itemize}
+\item Kết quả của Gemma có thể \key{khác một chút giữa các lần chạy} (câu giải thích, thứ tự các tranh phía sau). Đừng đọc nguyên văn kết quả mong đợi ở dưới; chỉ cần cùng \emph{tinh thần}.
+\item Giỏ hàng của C001 có sẵn \key{một tranh} (Woman with a Parasol, 89 USD) từ dữ liệu mẫu, nên số dòng trong giỏ và tổng tiền sẽ cao hơn số bạn vừa thêm.
+\item Nhấn \key{Shift+D} (hoặc thêm \code{?debug=1} vào địa chỉ) để bật \emph{developer view}: hiện chế độ AI (``GEMMA 4'' hay ``KEYWORD FALLBACK''), thời gian và điểm $S_{text}$, $S_{image}$, $S_{business}$ của từng kết quả. Rất tiện để giải thích công thức A06; tắt đi khi không cần.
+\end{itemize}
+\end{note}
+
+\subsection{Bước 1 -- Mở cửa hàng \normalfont\small(≈ 30 giây)}
+\lab{Thao tác}
+Ở tab 1 (\code{http://127.0.0.1:8686}), trang chủ hiện ra với tranh The Starry Night. Bấm \emph{Explore the collection}.
+\lab{Nói}
+\say{Đây là Họa. Cửa hàng đã đăng nhập sẵn khách VIP Nguyen Minh An, giảm 10\%. Không có số UC hay tên mô hình nào hiện lên: người dùng chỉ thấy một cửa hàng bình thường.}
+\lab{Mong đợi}
+Trang ``Find your painting'' với ô tìm kiếm, nút micro, nút ảnh và vùng tải ảnh phòng.
+
+\subsection{Bước 2 -- Tìm bằng chữ \normalfont\small(≈ 30 giây)}
+\lab{Thao tác}
+Gõ \code{blue landscape paintings}, Enter. Sau đó nhấn Shift+D để hiện điểm.
+\lab{Nói}
+\say{Gemma 4 hiểu câu này thành bộ lọc: chủ đề phong cảnh, màu xanh. Kết quả trả về dưới một giây, mỗi tranh có lý do. Ở chế độ developer, đây là công thức của bài tập A06: $S_{text}=1{,}00$, $S_{image}=0$, $S_{business}=1{,}00$, nên $S = 0{,}45\cdot1 + 0{,}45\cdot0 + 0{,}10\cdot1 = 0{,}55$.}
+\lab{Mong đợi}
+``12 works for \ldots'' với ba tranh đầu là Woman with a Parasol, The Starry Night, Wanderer above the Sea of Fog (cùng điểm 0,550); nhãn ``GEMMA 4''.
+\lab{Nếu lỗi}
+Không có kết quả hoặc thấy nhãn ``KEYWORD FALLBACK'': Gemma không trả lời. Cửa hàng vẫn chạy (đúng NFR02); xem mục~\ref{sec:suco}.
+
+\subsection{Bước 3 -- Tìm bằng giọng nói \normalfont\small(≈ 1 phút)}
+\lab{Thao tác}
+Bấm biểu tượng micro trong ô tìm kiếm, nói rõ bằng tiếng Anh: \code{Monet paintings under 100 dollars}, bấm dừng. Bản phiên âm hiện trong ô \emph{We heard}; sửa nếu sai, rồi bấm \emph{Search}.
+\lab{Nói}
+\say{Giọng nói được nhận dạng bằng Whisper chạy ngay trên laptop này, nên âm thanh không rời khỏi máy; mất khoảng 0,7 giây. Bản phiên âm hiện ra để khách kiểm tra và sửa, rồi đi theo đúng đường của câu gõ: giọng nói chỉ là một cách nhập khác.}
+\lab{Mong đợi}
+Ba bức Monet dưới 100 USD lên đầu: Impression, Sunrise (79 USD), Water Lilies (69 USD), Woman with a Parasol (89 USD). Phía sau là vài bức Ấn tượng khác dưới 100 USD (Degas, Pissarro, Cassatt): danh mục chỉ có ba bức Monet đủ điều kiện, nên các bức sau là gợi ý cùng trường phái. Nếu thầy hỏi, giải thích đúng như vậy.
+\lab{Nếu lỗi}
+\emph{``Voice search is unavailable''}: server Whisper chưa chạy (mục~\ref{sec:suco}). \emph{``We couldn't hear you''}: không thu được tiếng nói; nói lại to hơn, hoặc gõ câu đó. Micro bị chặn: cho phép micro trong thanh địa chỉ của Chrome.
+\shot{search_voice.png}{Màn hình mong đợi: bản phiên âm hiện trong ô ``We heard'' để khách sửa.}
+
+\subsection{Bước 4 -- Tìm bằng ảnh, rồi thử tranh trong phòng \normalfont\small(≈ 1,5 phút)}
+\lab{4a. Tìm tranh giống một bức ảnh}
+Ở trang Collection bấm liên kết nhỏ \emph{or find paintings similar to a photo}, chọn \file{Q02.jpg} (The Great Wave) trên Desktop. Gemma mô tả ảnh thành phong cách, chủ đề, màu; hệ thống đổi mô tả thành vector và so cosine. Mong đợi: \emph{The Great Wave off Kanagawa} đứng đầu, điểm 1,00.
+\lab{4b. Thử tranh trong phòng}
+Kéo thả ảnh phòng vào trang (hoặc bấm \emph{Upload photo}, hoặc dán bằng Cmd+V); chọn \file{room1.jpg}. Trang chuyển ngay sang \emph{Find for my room}: tranh phù hợp nhất đã \key{treo sẵn trên tường trong ảnh của khách}, kèm câu \emph{Why it fits}; dải \emph{Picked for this wall} có 3--5 tranh khác, bấm vào bức nào thì bức đó treo lên và đổi câu giải thích.
+\lab{Nói}
+\say{Đây là use case UC14. Gemma đọc căn phòng, hệ thống chọn 12 tranh gần nhất bằng cosine, rồi Gemma chọn 3 đến 5 bức hợp nhất và viết \emph{một câu} giải thích vì sao hợp, nhắc đến sofa, sàn gỗ, ánh sáng của chính căn phòng này. Ảnh phòng chỉ nằm trong tab trình duyệt, không được lưu trên server.}
+\lab{Nếu lỗi}
+Chờ vài giây khi thấy ``Looking at your room\ldots''; nếu quá 15 giây, hệ thống tự chuyển sang xếp hạng bằng màu (câu giải thích dựng từ thuộc tính tranh). Ảnh quá lớn hoặc sai định dạng: dùng \file{room1.jpg} hoặc ba phòng mẫu có sẵn ở cột bên phải.
+\shot{room_preview.png}{Màn hình mong đợi: bức tranh đã treo lên tường của khách, câu ``Why it fits'' ở dưới.}
+
+\subsection{Bước 5 -- Thêm vào giỏ và thanh toán \normalfont\small(≈ 1 phút)}
+\lab{Thao tác}
+Ở trang phòng bấm \emph{Add to cart} (thêm cả tranh và khung đang xem). Mở \emph{Cart}. Chọn địa chỉ giao hàng; chọn \emph{Cash on delivery}; bấm \emph{Place order}.
+\lab{Có thể thêm}
+Bấm \emph{+ Add a new address}, gõ một địa chỉ mới (số nhà, đường, quận, thành phố), \emph{Save address}: địa chỉ được lưu và tự chọn. Nói: \say{địa chỉ cũng gõ được, hệ thống kiểm tra không để trống và không quá dài}.
+\lab{Nói}
+\say{Giá được đọc lại từ danh mục lúc thanh toán và \emph{chốt} vào đơn; khách VIP được giảm 10\%, phí giao 8 USD. Phía sau là \code{CheckoutService.checkout}: đọc giỏ, kiểm tra tồn kho, tạo Order cùng các OrderItem, ghi thanh toán, trừ kho, làm rỗng giỏ.}
+\lab{Mong đợi}
+``ORDER PLACED'': ``Your order \#\ldots{} is confirmed'', trạng thái PLACED. Tổng $=$ tạm tính $-$ 10\% $+$ 8 USD (ví dụ 203 $\to$ 190,70 USD).
+\lab{Nếu lỗi}
+Báo hết hàng: tranh vừa hết kho sau nhiều lần tập; đặt lại dữ liệu mẫu (mục~\ref{sec:reset}).
+
+\subsection{Bước 6 -- Hỏi trợ lý về đơn hàng \normalfont\small(≈ 45 giây)}
+\lab{Thao tác}
+Bấm nút chat tròn ở góc phải dưới (hoặc mục \emph{Assistant}). Gõ (hoặc bấm gợi ý): \code{find my order 20261001}, rồi \code{where is my latest order?}
+\lab{Nói}
+\say{Trợ lý dùng tool calling của Gemma: Gemma chọn công cụ tra đơn hàng, còn mã khách do hệ thống lấy từ phiên đăng nhập, không lấy từ câu hỏi.}
+\lab{Mong đợi}
+Đơn 20261001: đã gửi (SHIPPED), giao bởi GHN Express, mã vận đơn GHN26102001, gồm The Great Wave và khung đen. ``Latest order'': đơn \key{vừa đặt ở bước 5}, đang được chuẩn bị. (Bật developer view sẽ thấy tên công cụ được gọi.)
+\lab{Lưu ý}
+Hỏi \emph{latest order} \key{trước} khi hủy đơn ở bước 7; hỏi sau khi hủy thì câu trả lời về một đơn đã hủy dễ gây rối.
+
+\subsection{Bước 7 -- Hủy đơn, và chứng minh đơn người khác bị từ chối \normalfont\small(≈ 1 phút)}
+\lab{Thao tác}
+Mở \emph{My orders} (menu tên ở góc phải trên). Ở đơn vừa đặt bấm \emph{Cancel order}: trạng thái thành CANCELLED. Rồi ở ô \emph{Find an order} bên phải, gõ \code{20261003} (đơn của khách C002) và bấm \emph{Look up}. Có thể làm tương tự với đơn 20261001 sau khi đổi sang tài khoản C002.
+\lab{Nói}
+\say{Khách chỉ hủy được khi đơn chưa giao: đây là yêu cầu FR11 mà ta đã lần theo ở Chương 2. Còn đơn 20261003 là của khách khác: hệ thống trả lời \emph{không tìm thấy trong tài khoản của bạn}, giống hệt như khi đơn không tồn tại, để không lộ mã đơn nào có thật. Đây là NFR01: quyền xem đơn do server kiểm tra.}
+\lab{Mong đợi}
+``We can't show order \#20261003 \ldots was not found in your account.'' Đơn đã gửi (SHIPPED) thì không còn nút hủy.
+\shot{order_forbidden.png}{Màn hình mong đợi: ô ``Find an order'' từ chối đơn của người khác.}
+
+\subsection{Bước 8 -- Trang quản trị \normalfont\small(≈ 1 phút, có thể bỏ khi rút gọn)}
+\lab{Thao tác}
+Bấm tên ở góc phải trên, chọn \emph{Gallery staff} (``Back office'' hiện trên thanh menu). Ở tab \emph{Paintings \& frames}, đổi giá hoặc tồn kho một tranh, bấm \emph{Save}. Ở tab \emph{Orders}, với đơn 20261003 bấm \emph{Mark processing}, rồi \emph{Mark shipped}.
+\lab{Nói}
+\say{Quản trị viên đổi giá, tồn kho và đưa đơn đi từng bước PLACED, PROCESSING, SHIPPED, DELIVERED; không nhảy cóc được. Chỉ phiên quản trị mới gọi được các chức năng này; khách thường bị từ chối.}
+\lab{Mong đợi}
+Thông báo ``Order \#20261003 is now processing'' rồi ``shipped''; đơn SHIPPED thì khách hết hủy được.
+\shot{admin_orders.png}{Màn hình mong đợi: danh sách đơn, mỗi đơn chỉ có nút cho bước kế tiếp.}
+
+\subsection{Bước 9 -- Tắt Gemma, cửa hàng vẫn chạy \normalfont\small(≈ 1 phút)}
+\lab{Thao tác}
+Sang tab 2, bản ``tắt Gemma'' (\code{http://127.0.0.1:8687/?debug=1}; chuẩn bị ở mục~\ref{sec:chuanbi}). Gõ lại \code{blue landscape paintings}; rồi tải ảnh \file{Q02.jpg} ở ``find paintings similar to a photo''; rồi hỏi trợ lý \code{find my order 20261001}.
+\lab{Nói}
+\say{Bản này có địa chỉ Gemma trỏ vào hư không. Tìm bằng chữ vẫn chạy bằng luật từ khóa: kết quả giống hệt, chỉ khác nhãn ``KEYWORD FALLBACK'' và thời gian. Nhưng với \emph{ảnh}, khác biệt lớn: có Gemma, The Great Wave đứng đầu; không có Gemma, hệ thống chỉ đọc màu và trả về tranh sai. Đây chính là kết quả đánh giá ở slide 22. Trợ lý vẫn tra được đơn nhờ luật. Đó là NFR02: AI hỏng thì cửa hàng vẫn bán được.}
+\lab{Mong đợi}
+Chữ: cùng ba tranh đầu, nhãn ``KEYWORD FALLBACK'', thời gian vài chục mili giây. Ảnh Q02: chỉ còn một tranh \emph{The Child's Bath}, không phải The Great Wave. Trợ lý trả lời đơn 20261001 theo luật (có thể kèm ghi chú ``Gemma 4 is offline'').
+\lab{Nếu lỗi}
+Tab 2 không mở được: chưa bật bản tắt Gemma (mục~\ref{sec:chuanbi}). Cách thay thế: bỏ qua bước này và nói bằng lời, chỉ vào ảnh chụp ``ai\_fallback'' trong báo cáo.
+
+\begin{note}[good]{Sau demo}
+Quay lại PowerPoint, slide 32 (kết luận). Nếu còn thời gian, nói một câu về hạn chế đã biết (mục~\ref{sec:hanche}). Đặt lại dữ liệu mẫu (mục~\ref{sec:reset}) nếu còn buổi thuyết trình khác.
+\end{note}

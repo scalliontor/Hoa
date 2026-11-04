@@ -1,0 +1,98 @@
+\section{Phụ lục}\label{sec:phuluc}
+
+\subsection{Những con số cần thuộc}
+Các số liệu này được lấy tự động từ dự án lúc dựng tài liệu, nên khớp với báo cáo và slide.
+\begin{center}\small
+\begin{tabular}{@{}P{4.6cm}P{11.2cm}@{}}
+\toprule
+\textbf{Chủ đề} & \textbf{Số liệu}\\
+\midrule
+Yêu cầu & \factReq{} yêu cầu: \factFR{} chức năng (\factMust{} Must, \factShould{} Should, \factCould{} Could) và \factNFR{} phi chức năng\\
+Use case, actor & \factUC{} use case; \factActors{} actor (Customer, Administrator, Gemma 4 Service, Payment Service)\\
+Lớp & \factAnalysis{} lớp phân tích; \factJavaClasses{} lớp Java và \factJsViews{} view JavaScript ở mức thiết kế; \factPackages{} package trong \factLayers{} tầng\\
+Cơ sở dữ liệu & \factTables{} bảng, \factFKs{} khóa ngoại (SQLite, tạo từ đặc tả)\\
+Code & \factJavaLines{} dòng Java, \factJsLines{} dòng JavaScript; \factTests{} test tự động đều đạt\\
+Kiểm tra code và mô hình & \factCheckClasses{} lớp, \factCheckFields{} trường, \factCheckOps{} hàm, \factCheckViews{} hàm view, \factCheckTables{} bảng, \factCheckColumns{} cột: khớp hoàn toàn\\
+Danh mục & \factPaintings{} tranh phạm vi công cộng và \factFrames{} khung, giá bằng USD\\
+Đánh giá chữ (Hit@1) & trực tiếp \evTextDirectGemma{} có Gemma, \evTextDirectRules{} không (n=\evTextDirectN{}); diễn đạt lại \evTextParaGemma{} và \evTextParaRules{} (n=\evTextParaN{})\\
+Đánh giá ảnh & Hit@1 \evImageGemma{} có Gemma, \evImageLocal{} không; Hit@3 \evImageGemmaThree{} và \evImageLocalThree{} (n=\evImageN{})\\
+Đánh giá giọng nói & đầu cuối \evVoiceHit{} (n=\evVoiceN{}), tỉ lệ sai từ \evVoiceWer{}; riêng Whisper: \evSttWer{} sai từ, \evSttMean{} giây trung bình, \evSttMax{} giây tối đa, \evSttExact{}/\evSttN{} câu đúng hoàn toàn\\
+Trợ lý & \evAssistantCorrect{}/\evAssistantN{} câu đúng, \evAssistantLeaks{} lần lộ dữ liệu khách khác\\
+Cấu hình & $\alpha=0{,}45$, $\beta=0{,}45$, $\gamma=0{,}10$; Gemma chờ tối đa 15 giây; cửa hàng cổng 8686; Whisper mô hình \emph{small} ở \code{127.0.0.1:9000}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Thuật ngữ Anh -- Việt}
+\begin{center}\small
+\begin{tabular}{@{}P{3.9cm}P{3.6cm}P{3.9cm}P{3.6cm}@{}}
+\toprule
+\textbf{Tiếng Anh} & \textbf{Tiếng Việt} & \textbf{Tiếng Anh} & \textbf{Tiếng Việt}\\
+\midrule
+stakeholder & bên liên quan & domain model & mô hình miền\\
+actor & tác nhân & analysis / design class & lớp phân tích / thiết kế\\
+use case & ca sử dụng & layer & tầng\\
+functional requirement & yêu cầu chức năng & repository & lớp truy cập dữ liệu\\
+non-functional requirement & yêu cầu phi chức năng & controller / service & bộ điều khiển / dịch vụ\\
+MoSCoW & thứ tự ưu tiên M/S/C/W & generalization & tổng quát hóa\\
+activity diagram & sơ đồ hoạt động & composition / aggregation & hợp thành / kết tập\\
+sequence diagram & sơ đồ tuần tự & multiplicity & bội số\\
+state machine & máy trạng thái & foreign key & khóa ngoại\\
+alternative flow & luồng thay thế & fallback & phương án dự phòng\\
+traceability & truy vết & retrieval / ranking & truy hồi / xếp hạng\\
+consistency check & kiểm tra nhất quán & cosine similarity & độ tương tự cosine\\
+business rule & quy tắc nghiệp vụ & tool calling & gọi công cụ\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Hỏi gì thì mở file nào}\label{sec:filemap}
+Các đường dẫn tính từ thư mục dự án. Báo cáo là file PDF trong \file{build/report/}; sơ đồ ở \file{figures/vp/}; ảnh chụp màn hình ở \file{figures/demo/}.
+\begin{center}\small
+\begin{longtable}{@{}P{4.6cm}P{11.2cm}@{}}
+\toprule
+\textbf{Chủ đề} & \textbf{Mở}\\
+\midrule\endfirsthead
+\toprule
+\textbf{Chủ đề} & \textbf{Mở}\\
+\midrule\endhead
+Yêu cầu, MoSCoW, use case & báo cáo Chương 1; \file{tools/model.py} (\code{REQUIREMENTS}, \code{USE_CASES}); \file{figures/vp/c1_usecase.png}\\
+Đặc tả use case, activity & báo cáo Chương 2; \file{figures/vp/c2_activity_checkout.png}\\
+Mô hình miền & \file{figures/vp/c2_domain.png}; báo cáo mục 4.1\\
+Kiến trúc AI, luồng đầu vào & báo cáo Chương 3; \file{figures/vp/c3_ai_architecture.png}; \file{demo/src/main/java/com/ptit/ecom/application/search/}\\
+Gọi Gemma, tool calling & \file{.../infrastructure/ai/GemmaClient.java}; \file{.../application/service/AssistantService.java}\\
+Giọng nói & \file{demo/voice-server/server.py}; \file{.../infrastructure/ai/WhisperClient.java}; \file{build/eval/voice_eval.txt}\\
+Đánh giá A06 & \file{build/eval/eval_summary.txt}, \file{eval_results.json}; \file{demo/scripts/evaluate.py}\\
+Lớp thiết kế & \file{figures/vp/c43_design.png}; \file{tools/model.py} (\code{DESIGN})\\
+Cơ sở dữ liệu & \file{demo/db/ecom_schema_sqlite.sql}, \file{demo/db/seed.sql}; \file{figures/vp/c42_tables.png}; \file{figures/demo/db_tables.png}\\
+Bốn tầng, thanh toán & \file{figures/vp/c44_layers.png}; \file{figures/vp/c44_checkout_seq.png}; \file{.../application/service/CheckoutService.java}\\
+Code khớp mô hình & \file{tools/check_code_model.py}; \file{build/test_results.txt}\\
+Điểm cuối API & \file{demo/API.md}\\
+Giao diện web & \file{demo/web/}; \file{demo/web/README.md} (file nào ứng với lớp nào)\\
+Nguồn ảnh tranh & \file{demo/data/ATTRIBUTION.md}\\
+Bản đồ toàn dự án & \file{README.md}\\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\subsection{Lệnh thường dùng}
+\begin{center}\small
+\begin{longtable}{@{}P{2.8cm}P{6.1cm}P{6.8cm}@{}}
+\toprule
+\textbf{Chạy trong} & \textbf{Lệnh} & \textbf{Để làm gì}\\
+\midrule\endfirsthead
+\toprule
+\textbf{Chạy trong} & \textbf{Lệnh} & \textbf{Để làm gì}\\
+\midrule\endhead
+\file{demo/} & \code{./run.sh} & Bật cửa hàng (cổng 8686) và Whisper (9000)\\
+\file{demo/} & \code{./run.sh config/app.offline.properties} & Bật bản ``tắt Gemma'' (cổng 8687, dữ liệu riêng)\\
+\file{demo/} & \code{./build.sh} & Biên dịch Java\\
+\file{demo/} & \code{./test.sh} & Chạy test và kiểm tra code khớp mô hình\\
+\file{demo/} & \code{python3 scripts/evaluate.py} & Chạy lại đánh giá A06 (cần Gemma, mất vài phút)\\
+thư mục dự án & \code{rm -f demo/data/ecom.db*} & Đặt lại dữ liệu mẫu (rồi chạy lại cửa hàng)\\
+thư mục dự án & \code{report/build.sh} & Dựng lại báo cáo PDF\\
+thư mục dự án & \code{guide/build.sh} & Dựng lại tài liệu này\\
+bất kỳ & \code{curl http://127.0.0.1:9000/health} & Kiểm tra Whisper (phải trả về JSON)\\
+\bottomrule
+\end{longtable}
+\end{center}

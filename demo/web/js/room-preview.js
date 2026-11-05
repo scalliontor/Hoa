@@ -3,7 +3,8 @@
 // paintings, and the chosen painting is previewed on the wall at its real size with a frame.
 // The room photo stays in this browser tab (memory and sessionStorage); nothing is stored on the server.
 import {
-  addToCart, api, esc, frames, frameLook, frameStops, framedHtml, MAX_UPLOAD_BYTES, money, note, state, toast, toJpeg,
+  addToCart, api, esc, frames, frameLook, frameStops, framedHtml, MAX_UPLOAD_BYTES, money, note, state, takePhoto, toast,
+  toJpeg,
 } from "./core.js";
 
 /** Sample rooms (CC0 photos); the real list with curated wall boxes is /img/rooms/rooms.json. */
@@ -288,9 +289,21 @@ export function wireRoomControls() {
   };
   fileInput.onchange = () => pick(fileInput);
   cameraInput.onchange = () => pick(cameraInput);
+  // "Take a photo": the camera opens in the page; if the browser has no camera or access is refused, the file
+  // input with `capture` is the fallback (it opens the camera app on a phone).
+  document.getElementById("room-camera-btn").onclick = async (event) => {
+    event.stopPropagation();
+    try {
+      const photo = await takePhoto("Take a photo of your room");
+      if (photo) view.chooseRoom(photo);
+    } catch (error) {
+      toast("We can't open the camera — allow camera access in the browser, or upload a photo", true);
+      cameraInput.click();
+    }
+  };
   const drop = document.getElementById("room-drop");
   drop.onclick = (event) => {
-    if (!event.target.closest("label")) fileInput.click();   // the camera button has its own input
+    if (!event.target.closest("button, label")) fileInput.click();   // the buttons have their own action
   };
   drop.onkeydown = (event) => {
     if (event.key === "Enter" || event.key === " ") {

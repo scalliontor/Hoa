@@ -287,6 +287,60 @@ export async function toJpeg(file, maxSide = 1600, quality = 0.85) {
   }
 }
 
+/**
+ * Opens the device camera in a small window (live picture, "Take photo", "Cancel") and resolves with the photo as a
+ * JPEG File, or with null when the customer cancels. A file input with `capture` only opens the camera on phones;
+ * on a laptop the browser shows a file picker instead, so the camera is opened here with getUserMedia (allowed on
+ * localhost). Rejects when the browser has no camera or the customer refuses access; the caller then falls back.
+ */
+export async function takePhoto(title = "Take a photo") {
+  if (!navigator.mediaDevices?.getUserMedia) throw new Error("no camera");
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: { facingMode: { ideal: "environment" }, width: { ideal: 1600 }, height: { ideal: 1200 } }, audio: false,
+  });
+  return new Promise((resolve) => {
+    const box = document.createElement("div");
+    box.className = "camera";
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-modal", "true");
+    box.setAttribute("aria-label", title);
+    box.innerHTML = `<div class="camera-panel">
+      <div class="camera-head"><span class="label">${esc(title)}</span></div>
+      <video class="camera-video" autoplay playsinline muted></video>
+      <div class="camera-actions">
+        <button type="button" class="btn" data-camera="cancel">Cancel</button>
+        <button type="button" class="btn solid" data-camera="shoot">Take photo</button>
+      </div>
+    </div>`;
+    document.body.appendChild(box);
+    const video = box.querySelector("video");
+    video.srcObject = stream;
+    // A laptop camera faces the customer: show it like a mirror; the photo itself is not mirrored.
+    if (stream.getVideoTracks()[0]?.getSettings().facingMode !== "environment") video.classList.add("mirror");
+    const onKey = (event) => { if (event.key === "Escape") close(null); };
+    function close(file) {
+      stream.getTracks().forEach((track) => track.stop());
+      document.removeEventListener("keydown", onKey);
+      box.remove();
+      resolve(file);
+    }
+    document.addEventListener("keydown", onKey);
+    box.onclick = (event) => { if (event.target === box) close(null); };
+    box.querySelector('[data-camera="cancel"]').onclick = () => close(null);
+    const shoot = box.querySelector('[data-camera="shoot"]');
+    shoot.onclick = () => {
+      if (!video.videoWidth) return;                      // the first frame has not arrived yet
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext("2d").drawImage(video, 0, 0);
+      canvas.toBlob((blob) => close(blob && new File([blob], `photo-${Date.now()}.jpg`, { type: "image/jpeg" })),
+        "image/jpeg", 0.92);
+    };
+    shoot.focus();
+  });
+}
+
 export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;   // same limit as the server (NFR03)
 
 /** Adds one product to the signed-in customer's cart and refreshes the header count. */

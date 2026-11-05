@@ -364,7 +364,7 @@ async function room(params) {
       <aside class="room-panel">
         <section class="step">
           <div class="step-head"><span class="num">01</span><h3>Your room</h3></div>
-          ${photoDropHtml("room-drop", "room-upload", `<label class="btn small">Take a photo<input type="file" id="room-camera" accept="image/*" capture="environment" hidden></label>`)}
+          ${photoDropHtml("room-drop", "room-upload", `<button type="button" class="btn small" id="room-camera-btn">Take a photo</button><input type="file" id="room-camera" accept="image/*" capture="environment" hidden>`)}
           <input type="file" id="room-file" accept="image/*" hidden>
           <span class="label" style="display:block;margin-top:18px">Or try a sample room</span>
           <div class="samples">${samples.map((s, i) => `<button type="button" data-sample="${i}" title="${esc(s.label)}"><img src="${s.url}" alt="${esc(s.label)}"></button>`).join("")}</div>

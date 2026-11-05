@@ -5,7 +5,8 @@ Every number and every slide title in the guide comes from the project itself, s
   build/code_stats5.tex      Java / JavaScript line counts and the number of tests
   build/test_results.txt     the code-versus-model check line
   build/eval/*.json          evaluation results (search, voice, assistant, room)
-  slides/thuyettrinh_Hoa.pptx  slide titles and the length of the speaker notes (for the timing)
+  slides/thuyettrinh_Hoa.pptx  slide titles
+  guide/slides_vi.tex          the length of the Vietnamese script of each slide (for the timing)
 
 It also stops with an error when a slide has no text in guide/slides_vi.tex (or the other way round), so the guide
 is rebuilt whenever the deck changes.
@@ -23,7 +24,8 @@ import model  # noqa: E402
 from pptx import Presentation  # noqa: E402
 
 OUT = ROOT / "build" / "guide"
-WORDS_PER_MINUTE = 130  # speaking speed used to turn the length of the speaker notes into a time estimate
+WORDS_PER_MINUTE = 160  # Vietnamese syllable-words per minute at a calm presentation pace
+SKIM_SECONDS = 8  # a slide that is only shown, not explained, in the short version
 CHAPTER_NAMES = {"1": "Requirement Determination", "2": "Analysis", "3": "AI in e-commerce", "4": "Design",
                  "5": "Code"}
 SPECIAL = {"\\": r"\textbackslash{}", "&": r"\&", "%": r"\%", "#": r"\#", "_": r"\_", "$": r"\$", "{": r"\{",
@@ -99,6 +101,57 @@ def guide_slides():
     found = [(m.group(1) or "may", int(m.group(2))) for m in re.finditer(r"\\slide(?:\[(\w+)\])?\{(\d+)\}", source)]
     expected = {int(m.group(1)): m.group(2).strip() for m in re.finditer(r"^% T(\d+): (.+)$", source, re.M)}
     return [n for _, n in found], {n for kind, n in found if kind == "must"}, expected
+
+
+def read_group(src, i):
+    """src[i] is '{'; returns (text inside the matching braces, index after them)."""
+    depth, j = 0, i
+    while j < len(src):
+        if src[j] == "\\":
+            j += 2
+            continue
+        if src[j] == "{":
+            depth += 1
+        elif src[j] == "}":
+            depth -= 1
+            if depth == 0:
+                return src[i + 1:j], j + 1
+        j += 1
+    raise ValueError("unbalanced braces in guide/slides_vi.tex")
+
+
+def parse_slides(source):
+    """{number: dict(kind, idea, script, notes)} read from the \\slide blocks of guide/slides_vi.tex."""
+    out = {}
+    for m in re.finditer(r"\\slide(?:\[(\w+)\])?\{(\d+)\}", source):
+        i, groups = m.end(), []
+        for _ in range(3):
+            while source[i] in " \n":
+                i += 1
+            group, i = read_group(source, i)
+            groups.append(group)
+        out[int(m.group(2))] = dict(kind=m.group(1) or "may", idea=groups[0], script=groups[1], notes=groups[2])
+    return out
+
+
+def drop_optional(script):
+    """The script without the paragraphs marked \\luocbo{...} (they may be dropped when time is short)."""
+    while True:
+        k = script.find("\\luocbo{")
+        if k < 0:
+            return script
+        _, end = read_group(script, k + len("\\luocbo"))
+        script = script[:k] + script[end:]
+
+
+def count_words(text):
+    text = re.sub(r"\\cue\{[^{}]*\}", " ", text)             # stage directions are not spoken
+    text = re.sub(r"\$[^$]*\$", " x ", text)                  # a formula is read as one word
+    text = re.sub(r"\\(?:key|emph|textit|textbf|code|file|todo)\{", "{", text)
+    text = re.sub(r"\\[a-zA-Z]+", " x ", text)                # \factXxx and other macros count as one word
+    for ch in "{}~\\":
+        text = text.replace(ch, " ")
+    return len(text.split())
 
 
 def read_macros(path):
@@ -189,6 +242,10 @@ def main():
     # ---- slides: titles, estimated time, check against slides_vi.tex
     slides = slide_data()
     wanted, must, expected = guide_slides()
+    blocks = parse_slides((ROOT / "guide" / "slides_vi.tex").read_text(encoding="utf-8"))
+    full = {n: count_words(b["script"]) * 60.0 / WORDS_PER_MINUTE for n, b in blocks.items()}
+    core = {n: count_words(drop_optional(b["script"])) * 60.0 / WORDS_PER_MINUTE for n, b in blocks.items()}
+    slides = [(n, t, full.get(n, 0.0), k) for n, t, _, k in slides]
     missing = [n for n, _, _, _ in slides if n not in wanted]
     extra = [n for n in wanted if n > len(slides)]
     if missing or extra or len(wanted) != len(set(wanted)):
@@ -206,8 +263,10 @@ def main():
         out.append(f"\\expandafter\\def\\csname slideTime{number}\\endcsname{{{minutes_text(seconds)}}}")
     macro("factSlides", len(slides))
     total = sum(s for _, _, s, _ in slides)
-    short = sum(s for n, _, s, _ in slides if n in must)
+    short = sum(core[n] if n in must else SKIM_SECONDS for n, _, _, _ in slides)
     macro("timeFull", f"{total / 60:.0f}")
+    macro("wpm", WORDS_PER_MINUTE)
+    macro("scriptWords", sum(count_words(b["script"]) for b in blocks.values()))
     macro("timeShort", f"{short / 60:.0f}")
     macro("factMustSlides", len(must))
     for chapter, first, last in chapter_ranges(slides):

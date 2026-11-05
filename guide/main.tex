@@ -65,18 +65,21 @@
   bottom=4pt,fonttitle=\bfseries\small,title={#2},attach boxed title to top left={yshift=-2mm,xshift=4mm},
   boxed title style={colback=#1,boxrule=0pt,top=1pt,bottom=1pt}}
 
-% One slide of the talk: \slide[must]{N}{key idea}{items to say}{where to point / notes}{transition}
+% A stage direction inside the script, and a paragraph that can be dropped when time is short.
+\newcommand{\cue}[1]{{\color{gray}\textit{[#1]}}}
+\newcommand{\luocbo}[1]{{\color{warn}\small\textbf{[có thể lược]}} {\color{black!70}#1}}
+
+% One slide of the talk: \slide[must]{N}{key idea}{full script}{notes, as \item lines (or empty)}
 \expandafter\def\csname slideflagmust\endcsname{}
 \newcommand{\slidebadge}[1]{\ifcsname slideflag#1\endcsname\textcolor{white}{\textbf{[NÊN NÓI]}}\else\textcolor{white}{có thể lược nếu thiếu giờ}\fi}
-\newcommand{\slide}[6][may]{%
+\newcommand{\slide}[5][may]{%
   \begin{tcolorbox}[enhanced,breakable,colback=white,colframe=accent!85!black,boxrule=0.5pt,left=7pt,right=7pt,top=3pt,
       bottom=3pt,before skip=7pt,after skip=5pt,coltitle=white,colbacktitle=accent!85!black,fonttitle=\small,
       title={\textbf{Slide #2}\hspace{0.6em}\slideinfo{slideTitle}{#2}\hfill{\footnotesize ≈ \slideinfo{slideTime}{#2} · \slidebadge{#1}}}]
-    \textbf{Ý chính.} #3\par
-    \smallskip\textbf{Nói:}
-    \begin{itemize}#4\end{itemize}
-    \ifx\relax#5\relax\else\textbf{Chỉ vào · lưu ý:}\begin{itemize}#5\end{itemize}\fi
-    \ifx\relax#6\relax\else\textbf{Chuyển ý:} \textit{#6}\fi
+    \setlength{\parskip}{5.5pt}\textbf{Ý chính.} #3\par
+    \smallskip\textbf{Lời thoại đầy đủ:}\par
+    #4
+    \ifx\relax#5\relax\else\par\smallskip\textbf{Lưu ý · việc cần làm:}\begin{itemize}#5\end{itemize}\fi
   \end{tcolorbox}}
 
 \begin{document}

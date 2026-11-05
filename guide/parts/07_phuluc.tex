@@ -23,27 +23,34 @@ Cấu hình & $\alpha=0{,}45$, $\beta=0{,}45$, $\gamma=0{,}10$; Gemma chờ tố
 \end{tabular}
 \end{center}
 
-\subsection{Thuật ngữ Anh -- Việt}
+\subsection{Thuật ngữ: nói đơn giản là gì}
+Khi cần giải thích một thuật ngữ trước người nghe, hãy dùng cách nói ở cột bên phải.
 \begin{center}\small
-\begin{tabular}{@{}P{3.9cm}P{3.6cm}P{3.9cm}P{3.6cm}@{}}
+\begin{longtable}{@{}P{3.7cm}P{3.5cm}P{8.6cm}@{}}
 \toprule
-\textbf{Tiếng Anh} & \textbf{Tiếng Việt} & \textbf{Tiếng Anh} & \textbf{Tiếng Việt}\\
-\midrule
-stakeholder & bên liên quan & domain model & mô hình miền\\
-actor & tác nhân & analysis / design class & lớp phân tích / thiết kế\\
-use case & ca sử dụng & layer & tầng\\
-functional requirement & yêu cầu chức năng & repository & lớp truy cập dữ liệu\\
-non-functional requirement & yêu cầu phi chức năng & controller / service & bộ điều khiển / dịch vụ\\
-MoSCoW & thứ tự ưu tiên M/S/C/W & generalization & tổng quát hóa\\
-activity diagram & sơ đồ hoạt động & composition / aggregation & hợp thành / kết tập\\
-sequence diagram & sơ đồ tuần tự & multiplicity & bội số\\
-state machine & máy trạng thái & foreign key & khóa ngoại\\
-alternative flow & luồng thay thế & fallback & phương án dự phòng\\
-traceability & truy vết & retrieval / ranking & truy hồi / xếp hạng\\
-consistency check & kiểm tra nhất quán & cosine similarity & độ tương tự cosine\\
-business rule & quy tắc nghiệp vụ & tool calling & gọi công cụ\\
+\textbf{Tiếng Anh} & \textbf{Tiếng Việt} & \textbf{Nói đơn giản là}\\
+\midrule\endfirsthead
+\toprule
+\textbf{Tiếng Anh} & \textbf{Tiếng Việt} & \textbf{Nói đơn giản là}\\
+\midrule\endhead
+stakeholder & bên liên quan & ai cũng có lợi ích với hệ thống\\
+actor & tác nhân & bên thật sự dùng hệ thống, hoặc được hệ thống gọi tới\\
+use case & ca sử dụng & một việc người dùng muốn làm xong, ví dụ ``tìm tranh''\\
+functional / non-functional requirement & yêu cầu chức năng / phi chức năng & hệ thống phải \emph{làm gì} / phải \emph{làm tốt đến đâu}\\
+MoSCoW & thứ tự ưu tiên & bắt buộc, nên có, có thì tốt, lần này chưa làm\\
+activity diagram & sơ đồ hoạt động & sơ đồ các bước, có ngã rẽ khi gặp tình huống khác nhau\\
+sequence diagram & sơ đồ tuần tự & ai gọi ai, theo thứ tự nào\\
+state machine & máy trạng thái & các trạng thái của đơn: mới đặt, đang xử lý, đã gửi, đã giao\\
+domain model & mô hình miền & những thứ cửa hàng cần quản lý, và quan hệ giữa chúng\\
+layer & tầng & một bộ phận lo một việc: giao diện, điều phối, nghiệp vụ, kho dữ liệu\\
+repository & lớp truy cập dữ liệu & ``thủ kho'': nơi lấy và cất dữ liệu\\
+fallback & phương án dự phòng & hỏng thì làm cách đơn giản hơn, không dừng hẳn\\
+retrieval / ranking & truy hồi / xếp hạng & chọn ra những bức có thể hợp / sắp theo thứ tự\\
+cosine similarity & độ tương tự cosine & một cách đo hai thứ giống nhau đến đâu\\
+tool calling & gọi công cụ & AI ``nhờ'' một chương trình làm một việc rồi dùng kết quả\\
+traceability & truy vết & lần theo một yêu cầu qua các bản vẽ đến tận code\\
 \bottomrule
-\end{tabular}
+\end{longtable}
 \end{center}
 
 \subsection{Hỏi gì thì mở file nào}\label{sec:filemap}

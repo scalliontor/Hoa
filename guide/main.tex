@@ -57,7 +57,7 @@
 \newcommand{\cmd}[1]{\par{\ttfamily\small #1}\par}
 % A screenshot of the demo, framed. #1 file in figures/demo, #2 caption
 \newcommand{\shot}[2]{\begin{center}{\fboxsep=0pt\fboxrule=0.4pt\fcolorbox{gray}{white}{\includegraphics[width=0.58\linewidth]{#1}}}\\[2pt]{\footnotesize\itshape #2}\end{center}}
-\newcommand{\qa}[2]{\begin{tcolorbox}[enhanced,breakable,colback=white,colframe=gray!60,boxrule=0.4pt,left=6pt,right=6pt,top=3pt,bottom=3pt,before skip=5pt,after skip=3pt]\textbf{Hỏi: #1}\par\smallskip #2\end{tcolorbox}}
+\newcommand{\qa}[3]{\begin{tcolorbox}[enhanced,breakable,colback=white,colframe=gray!60,boxrule=0.4pt,left=6pt,right=6pt,top=3pt,bottom=3pt,before skip=5pt,after skip=3pt]\textbf{Hỏi: #1}\par\smallskip\textbf{Nói ngắn:} #2\ifx\relax#3\relax\else\par\smallskip{\small\color{black!75}\textbf{Nếu thầy hỏi tiếp:} #3}\fi\end{tcolorbox}}
 \newcommand{\lab}[1]{\par\smallskip\textbf{\color{accent}#1}\par\nopagebreak}
 
 % A box with a coloured title. #1 colour, #2 title.
@@ -67,7 +67,7 @@
 
 % A stage direction inside the script, and a paragraph that can be dropped when time is short.
 \newcommand{\cue}[1]{{\color{gray}\textit{[#1]}}}
-\newcommand{\luocbo}[1]{{\color{warn}\small\textbf{[có thể lược]}} {\color{black!70}#1}}
+\newcommand{\luocbo}[1]{{\color{warn}\small\textbf{[nếu còn giờ]}} {\color{black!70}#1}}
 
 % One slide of the talk: \slide[must]{N}{key idea}{full script}{notes, as \item lines (or empty)}
 \expandafter\def\csname slideflagmust\endcsname{}
@@ -77,9 +77,9 @@
       bottom=3pt,before skip=7pt,after skip=5pt,coltitle=white,colbacktitle=accent!85!black,fonttitle=\small,
       title={\textbf{Slide #2}\hspace{0.6em}\slideinfo{slideTitle}{#2}\hfill{\footnotesize ≈ \slideinfo{slideTime}{#2} · \slidebadge{#1}}}]
     \setlength{\parskip}{5.5pt}\textbf{Ý chính.} #3\par
-    \smallskip\textbf{Lời thoại đầy đủ:}\par
+    \smallskip\textbf{Nói thế này:}\par
     #4
-    \ifx\relax#5\relax\else\par\smallskip\textbf{Lưu ý · việc cần làm:}\begin{itemize}#5\end{itemize}\fi
+    \ifx\relax#5\relax\else\par\smallskip\textbf{Nhớ thêm (không đọc lên):}{\raggedright\begin{itemize}#5\end{itemize}}\fi
   \end{tcolorbox}}
 
 \begin{document}

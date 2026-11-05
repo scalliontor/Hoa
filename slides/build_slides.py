@@ -1374,29 +1374,29 @@ def s_voice(d):
 
 def s_image(d):
     s = d.slide("03 AI IN E-COMMERCE", NOTES["image"])
-    d.title(s, "Search by image: vectors and cosine similarity")
-    blocks = [
-        ("IMAGE ENCODER (fθ)", [("z", {}), ("q", {"sub": True}), (" = f", {}), ("θ", {"sub": True}), ("(I", {}),
-                                 ("q", {"sub": True}), (")", {})],
-         f"Gemma 4 describes the photo → style, subject, colour → {NAMES.op('VectorIndex.toVector')}"),
-        ("COSINE SIMILARITY", [("s(q, p) = z", {}), ("q", {"sub": True}), (" · z", {}), ("p", {"sub": True}),
-                                (" / (‖z", {}), ("q", {"sub": True}), ("‖ ‖z", {}), ("p", {"sub": True}), ("‖)", {})],
+    d.title(s, "Search by image: describe it, then match it")
+
+    def pct(key, default):
+        return f"{float(DEMO_PROPS.get(key, default)) * 100:.0f} %"
+
+    steps = [
+        ("01 ▪ DESCRIBE", "Gemma 4 looks at the photo and describes it with three tags: style, subject and main colour.",
+         NAMES.op("VectorIndex.toVector")),
+        ("02 ▪ MATCH", "Every painting in the shop carries the same three tags. The more tags it shares with the "
+                       "photo, the more alike they are.",
          NAMES.op("VectorIndex.cosineSimilarity")),
-        ("RANKING (ASSIGNMENT A06)", [("S(x|q) = α·S", {}), ("text", {"sub": True}), (" + β·S", {}),
-                                       ("image", {"sub": True}), (" + γ·S", {}), ("business", {"sub": True})],
-         f"{NAMES.cls('RankingService')}({', '.join(a['name'] for a in model.DESIGN_BY_NAME['RankingService']['attrs'])})"
-         f".rank(...)")]
-    y = 1.95
-    for label, formula, mapping in blocks:
+        ("03 ▪ RANK", f"Text match counts {pct('ranking.alpha', '0.45')}, photo match {pct('ranking.beta', '0.45')}, "
+                      f"and being in stock {pct('ranking.gamma', '0.10')}. The best total comes first.",
+         NAMES.op("RankingService.rank"))]
+    y = 1.9
+    for label, sentence, mapping in steps:
         mono(s, M, y, 5.9, 0.3, label, size=10.5, color=ACCENT)
-        text(s, M, y + 0.3, 5.9, 0.55, [formula], size=21, color=TEXT)
-        mono(s, M, y + 0.9, 5.9, 0.55, mapping, size=10, color=BODY)
-        y += 1.55
-    weights = [DEMO_PROPS.get(f"ranking.{k}") for k in ("alpha", "beta", "gamma")]
-    if all(weights):
-        mono(s, M, 6.3, 5.9, 0.3, "Họa. (app.properties): α = {} ▪ β = {} ▪ γ = {}".format(*weights), size=10,
-             color=BODY)
-    mono(s, M, 6.65, 5.9, 0.3, "MULTIMODAL: λt + λi = 1 (A06: λt = λi = 0.5)", size=10.5, color=TEXT)
+        text(s, M, y + 0.3, 5.9, 0.85, sentence, size=15.5, color=TEXT, line=1.0)
+        mono(s, M, y + 1.0, 5.9, 0.3, mapping, size=9.5, color=BODY)
+        y += 1.45
+    mono(s, M, 6.25, 5.9, 0.5, "EXAMPLE ▪ THE GREAT WAVE → UKIYO-E ▪ SEASCAPE ▪ BLUE → SAME THREE TAGS = BEST MATCH",
+         size=10, color=TEXT)
+    mono(s, M, 6.75, 5.9, 0.3, "NO GEMMA ▪ THE PHOTO'S AVERAGE COLOUR IS USED INSTEAD", size=10, color=MUTED)
     picture(s, ASSETS.figure("vp", "c3_seq_image"), 6.8, 1.9, W - M - 6.8, 5.0, alt="Image search sequence",
             label="figures/vp/c3_seq_image.png", hint="Customer → ImageUpload → … → RankingService", panel=True)
 
@@ -1773,7 +1773,7 @@ NOTES = {
     "ch3": """Chapter 3 covers AI in e-commerce. Họa. has five AI features: understanding natural text, voice search with Whisper running on the laptop, image search, trying a painting in your own room, and a curator assistant. The common principle: AI helps customers express what they want, while prices, stock and access rights stay under the control of business rules in the code.""",
     "pipeline": """The central principle of Assignment 06: different inputs are turned into one common representation, then candidates are retrieved, then ranked. Họa. has four inputs — text, voice, a photo of a painting and a photo of a room — and each one goes through exactly the classes and methods written in its box. They all meet in CommonQuery. SearchService retrieves candidates from ProductRepository and VectorIndex, and RankingService ranks them with the formula of the assignment. The four principles at the bottom also come from A06: one common representation, retrieval separate from ranking, the UI never touching the database, and starting simple.""",
     "voice": """Voice search. The sequence diagram on the left has exactly the seven participants required by Assignment 06. In Họa., the recording is sent to a self-hosted Whisper model running on the laptop, so the audio never leaves the machine — that is a privacy requirement. The transcript is shown so the customer can correct it, and then it follows the same path as a typed query. If the Whisper server is not running, the system asks the customer to type instead. We deliberately do not implement text-to-speech.""",
-    "image": """Image search uses the formulas of Assignment 06. Here the encoder f-theta is Gemma 4 vision: the model describes the photo as a style, a subject and a colour, and VectorIndex.toVector turns that description into a vector. Similarity is the cosine between the query vector and the vector of each painting. The final score combines the text, image and business scores with the alpha, beta and gamma weights of RankingService. The sequence diagram on the right shows the order of calls from ImageUpload to RankingService.""",
+    "image": """Image search in three plain steps. One, describe: Gemma 4 looks at the photo and describes it with three tags, the style, the subject and the main colour. Two, match: every painting in the shop carries the same three tags, so the system counts how many tags a painting shares with the photo; the more they share, the more alike they are. In the code this comparison is the cosine similarity of Assignment 06, but you can think of it as counting shared tags. Three, rank: RankingService puts the candidates in order. Text match counts 45 percent, photo match 45 percent and being in stock 10 percent, as set in the configuration file, and the best total comes first. For example, a photo of The Great Wave is described as ukiyo-e, seascape, blue, and the painting with exactly those three tags comes first. If Gemma is not available, the photo's average colour is used instead, and the result is much weaker. The sequence diagram on the right shows the order of calls from ImageUpload to RankingService.""",
     "room": """"Try it in your room" is use case UC14. The customer uploads a photo of their room, and Gemma 4 first reads it: the colours, the interior style, the mood and the light. SearchService.searchRoom then follows the two steps of Assignment 06. Retrieval: VectorIndex shortlists the twelve paintings closest to the suggested style, subject and colour by cosine similarity. Ranking: Gemma 4 sees the photo again with the shortlist, picks the three to five paintings that fit best and writes one sentence for each explaining why it fits, for example that its warm browns echo the wooden floor and the brick wall. If Gemma is unavailable, the vector ranking stays and the sentence is built from the painting's attributes. RoomPreview then hangs the chosen painting on the wall in the photo, so the customer can see how it would look. This requirement is a Could: it adds value to the experience but is not part of the core buying process.""",
     "architecture": """Architecturally, every use of AI goes through an interface: LlmClient for Gemma and SpeechClient for Whisper. This lets us swap the model, or use a fake one in tests. The table on the right lists how Họa. reacts when AI fails: if Gemma fails or takes more than {timeout} seconds, search falls back to keyword rules; if Whisper is down, the customer types; images of the wrong type or size are rejected before Gemma is called; AI only builds filters and never decides prices or stock; order access is always checked on the server.""",
     "assistant": """The curator assistant uses Gemma 4 tool calling. AssistantService sends the question together with the list of tools — search paintings and look up orders. Gemma chooses a tool and its arguments; runTool executes it with the customer id taken from the session, not from the question, so a customer can never retrieve someone else's order. The result goes back to Gemma, which writes the answer. Customers can ask by text or by voice through Whisper; the assistant answers in text.""",

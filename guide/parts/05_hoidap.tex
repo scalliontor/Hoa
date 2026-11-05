@@ -28,6 +28,10 @@ CartItem giữ \code{cartPrice} (giá lúc thêm vào giỏ); OrderItem giữ \c
 Vì đặt hàng chỉ là một khoảnh khắc: giỏ tạo ra đơn, rồi giỏ rỗng đi. Giỏ không ``sở hữu'' đơn lâu dài, nên không có quan hệ cấu trúc bền vững giữa hai thứ.}{
 Cart khác Order về bản chất; quan hệ chỉ tồn tại lúc tạo, nên dùng dependency «create» thay vì association.}
 
+\qa{Sơ đồ ngữ cảnh (context diagram) dùng để làm gì trong phân tích?}{
+Để vẽ ranh giới trước khi nhìn vào bên trong: cửa hàng là một hộp kín, bên ngoài có bốn bên, và mỗi mũi tên ghi thứ đi vào hoặc đi ra. Mỗi thứ đi vào phải có một việc nhận nó và một khái niệm giữ nó; mỗi thứ đi ra phải có một việc tạo ra nó. Ranh giới cũng cho biết Whisper ở trong, Gemma và dịch vụ thanh toán ở ngoài.}{
+Bốn external entity: Customer, Administrator, Payment Service, Gemma 4 Service; tám luồng «flow». Visual Paradigm bản Community không có DFD nên luồng vẽ bằng dependency «flow». Báo cáo mục 1.7.}
+
 \qa{Kiểm tra nhất quán là gì? Nhóm làm thế nào?}{
 Là lần theo một yêu cầu qua mọi bản vẽ để xem có chỗ nào mâu thuẫn không. Ví dụ ``khách được hủy đơn trước khi giao'': nó xuất hiện ở yêu cầu, ở việc Hủy đơn, ở sơ đồ từng bước, ở sơ đồ trạng thái và ở thiết kế, và cả năm đều khớp.}{
 FR11; UC11 mở rộng UC08; quyết định ``đã giao chưa'' trong activity; máy trạng thái chỉ cho hủy từ PLACED hoặc PROCESSING; \code{OrderService.cancelOrder} gọi \code{Order.cancel}.}
@@ -70,9 +74,13 @@ Cửa hàng luôn lấy tài khoản từ lần đăng nhập, không từ nhữ
 \code{OrderService.getOrder} kiểm tra chủ đơn; trợ lý chạy công cụ với mã khách của phiên; kết quả là HTTP 404 (NFR01).}
 
 \subsection{Thiết kế và code (Chương 4--5)}\label{sec:q3}
-\qa{Vì sao chia bốn tầng?}{
-Để mỗi bộ phận lo một việc, và để đổi thứ bên dưới thì không phải sửa thứ bên trên. Hai luật chính: giao diện không bao giờ chạm thẳng cơ sở dữ liệu; phần điều phối chỉ làm việc với ``cổng'' của kho và của AI. Tầng không phải là thư mục; mỗi tầng gồm nhiều gói nhỏ.}{
-presentation, application, domain, infrastructure; \factPackages{} package tất cả (NFR04).}
+\qa{Vì sao chia ba tầng? Các lớp như giỏ, đơn nằm ở tầng nào?}{
+Để mỗi phần lo một việc, và để đổi thứ bên dưới thì không phải sửa thứ bên trên: giao diện nhận yêu cầu, tầng xử lý điều phối, tầng dữ liệu cất và lấy dữ liệu và gọi AI. Mũi tên chỉ đi xuống. Giỏ, đơn, khách không thuộc riêng tầng nào: đó là mô hình chung mà cả ba tầng cùng dùng. Tầng không phải là thư mục; mỗi tầng gồm nhiều gói nhỏ.}{
+Presentation (presentation.*), Application (application.*), Data (infrastructure.*); domain.* là mô hình dùng chung (cross-cutting), như bài tập A06 và bài mẫu; bài 5 vẽ domain thành ô thứ tư. \factPackages{} gói Java; luật được kiểm tra trên import của từng file (NFR04).}
+
+\qa{Ba mức của mô hình dữ liệu khác nhau thế nào?}{
+Mỗi mức thêm chi tiết cho mức trước. Mức khái niệm chỉ có tên các thứ cần cất và các đường nối có tên. Mức logic thêm thông tin chi tiết, đánh dấu ``sẽ được lưu'', và ghi số lượng ở hai đầu mỗi đường nối. Mức vật lý thêm bảng, cột có kiểu dữ liệu, khóa chính và khóa ngoại; từ đó sinh ra cơ sở dữ liệu thật.}{
+Conceptual: entity và relationship có tên. Logical: thuộc tính, «ORM-Persistable», nhãn, bội số 1, 0..1, 0..*, 1..*, kế thừa thành ``is a'' 1 -- 0..1. Physical: «table», kiểu SQL như \code{numeric(12,2)}, \{PK\}, \{FK\}, \{U\}. Báo cáo mục 2.9 (mức khái niệm và mức logic) và mục 4.2 (mức vật lý).}
 
 \qa{Khối code chuyển thành bảng dữ liệu theo quy tắc nào?}{
 Ba quy tắc chính. Một thứ là một loại của thứ khác (khách VIP là một loại khách) thì có bảng riêng nhưng dùng chung mã với bảng cha. Một bên có nhiều bên kia (một khách có nhiều địa chỉ) thì bảng bên ``nhiều'' giữ mã của bên kia. Một thứ là phần không tách rời (món trong đơn) thì xóa đơn sẽ xóa luôn các món.}{

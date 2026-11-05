@@ -8,9 +8,10 @@ LANE_SYSTEM = "Họa. system"
 
 # ------------------------------------------------------------------ domain
 def domain(root):
-    """The 17 analysis classes with names only, associations with multiplicities, generalizations."""
-    class_model(root, "c2_domain", "2.1 Domain Model (concepts)", "domain", "analysis", "4.1 Analysis model",
-                col_gap=170, row_gap=90)
+    """Domain model as the analysis class diagram: the 17 classes with their attributes and the kind of each
+    relationship (association, composition, aggregation, generalization, «create»); no names, no multiplicities."""
+    class_model(root, "c2_domain", "2.8 Domain Model - analysis class diagram", "analysis", "analysis",
+                "4.1 Analysis model", col_gap=170, row_gap=100)
 
 
 # ---------------------------------------------------------------- activity

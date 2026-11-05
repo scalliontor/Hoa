@@ -1,7 +1,8 @@
 %% =========================================================================
 %% Chapter 4 -- Design, following the lecturer's outline 4.1-4.6 (board of 29/10/2026):
 %% 4.1 Class Diagram in Analysis (update, describe in words, explain relationships)
-%% 4.2 Data Model (explain relations of tables, generate database, copy screen of DB)
+%% 4.2 Data Model: the physical level (+ keys, data types, foreign keys; explain relations of tables), generate
+%%     database, copy screen of DB. The conceptual and logical levels are in Chapter 2 (Section 2.dm).
 %% 4.3 Class Diagram in Design (update attributes, relationships, methods; explain)
 %% 4.4 Layers + class + relation (figures, explain)
 %% 4.5 Generate code from 4.4 (present code + structure of packages and classes)
@@ -13,18 +14,21 @@
 
 Analysis answered \emph{what} the system means; design answers \emph{how} the software realises it (Lecture~05).
 This chapter follows the six points of the lecturer's outline. It starts from the analysis class diagram of
-Chapter~\ref{ch:analysis}, turns it into a data model and a database, refines it into a design class diagram with
+Chapter~\ref{ch:analysis}, takes the logical data model of the analysis to a physical data model and a database,
+refines the classes into a design class diagram with
 types and methods, places every class in a layer, and finally generates the code skeleton from the layered model.
-Each step produces an artefact that the next step uses -- the analysis class diagram (4.1), the data model and
-the database (4.2), the design class diagram (4.3), the layered class model (4.4) and the code (4.5) -- and every
+Each step produces an artefact that the next step uses -- the analysis class diagram (4.1), the physical data
+model and the database (4.2), the design class diagram (4.3), the layered class model (4.4) and the code (4.5) -- and every
 artefact is derived from the same specification file \code{tools/model.py}.
 
 %% =========================================================================
 \section{Class Diagram in Analysis}\label{sec:4.1}
 
 The analysis class diagram answers which concepts the system must represent (Lecture~04). Following the lecturer's
-rule, it contains no controller, service or repository: every class is a business concept and every relationship a
-business constraint with its multiplicity.
+rule, it contains no controller, service or repository: every class is a business concept with its attributes, and
+every relationship shows only its kind (association, composition, aggregation, generalization, «create»). Names and
+multiplicities are added in the logical data model (Section~\ref{sec:2.dm.2}); directions, role names and methods in
+the design class diagram (Section~\ref{sec:4.3}).
 
 \subsection{Update}\label{sec:4.1.1}
 
@@ -48,12 +52,12 @@ customer, cart, order, shipping and payment classes are kept; the product side i
 \small Line items & \small \code{CartItem} and \code{OrderItem} each had four links to the product classes with a \{xor\} constraint & \small One link \emph{refers to} \code{Product}, multiplicity 0..* -- 1 & \small A line always points to exactly one product; the model of Lecture~04 is Cart $\rightarrow$ CartItem $\rightarrow$ Product\\
 \small Common attributes & \small Identifier, price and stock repeated in each product class & \small \code{productId}, \code{name}, \code{price}, \code{stockQuantity}, \code{imageUrl}, \code{description} in \code{Product} & \small No duplication; image and description are needed by the AI search\\
 \small Card data & \small \code{PayCredit} stored \code{cardNumber} and \code{expiryDate} & \small \code{cardLast4} and \code{authorizationCode} & \small The system shall not store full card numbers (NFR05)\\
-\small Multiplicities & \small Added only in the data model & \small Written on the analysis diagram; \code{Order} -- \code{Payment} is 1 -- 0..* & \small Lecture~04 asks for multiplicities in analysis; a failed payment can be retried\\
+\small Multiplicities & \small Added only in the data model & \small Kept: the analysis diagram shows the kind of each relationship; names and multiplicities are written in the logical data model (Section~\ref{sec:2.dm.2}) & \small Each diagram adds one level of detail: analysis, data model, design\\
 \small Checkout & \small Dependency \code{Cart} $\dashrightarrow$ \code{Order} «create» & \small Kept & \small Checkout is a transformation, not a permanent association (Lecture~04)\\
 \bottomrule
 \end{longtable}
 
-\landscapefig{c41_analysis}{Analysis class diagram of Họa.}{Updated analysis class diagram of Họa. (\nAnalysisClasses{} classes; abstract classes in italics). Visual Paradigm diagram \vpsrc{c41_analysis}.}{\label{fig:c41_analysis}\label{fig:analysis41}}
+\landscapefig{c41_analysis}{Analysis class diagram of Họa.}{Updated analysis class diagram of Họa. (\nAnalysisClasses{} classes with their attributes, abstract classes in italics; relationships by kind only, without names or multiplicities). Visual Paradigm diagram \vpsrc{c41_analysis}.}{\label{fig:c41_analysis}\label{fig:analysis41}}
 
 \subsection{Describe in Words}\label{sec:4.1.2}
 
@@ -91,17 +95,17 @@ Five kinds of relationships are used, each with a precise meaning:
 \code{OrderItem} lines.
 \item \textbf{Aggregation} (hollow diamond): \code{Customer} groups its \code{Address} objects, but an address is
 also used by \code{Shipping}, so it is not deleted with the customer.
-\item \textbf{Association}: two independent objects that know each other, with a name and a multiplicity at each
-end, for example a customer \emph{places} 0..* orders and an artist \emph{paints} 0..* paintings.
+\item \textbf{Association} (plain line): two independent objects that know each other, for example a customer and
+the orders placed by that customer, or an artist and that artist's paintings. In the data model the line receives its name and its
+multiplicities: a customer \emph{places} 0..* orders, an artist \emph{paints} 0..* paintings.
 \item \textbf{Generalization} (hollow triangle): \code{CustomerVIP} and \code{CustomerNew} specialise
 \code{Customer}, \code{PayCash} and \code{PayCredit} specialise \code{Payment}, \code{Painting} and \code{Frame}
 specialise \code{Product}.
 \item \textbf{Dependency «create»} (dashed arrow): \code{Cart} creates an \code{Order} at checkout.
 \end{itemize}
 
-The multiplicity written at one end says how many objects at this end are linked to \emph{one} object at the
-other end; Table~\ref{tab:rel41} in Appendix~B explains every relationship of Figure~\ref{fig:c41_analysis} with its
-multiplicities and its business meaning.
+Table~\ref{tab:rel41} in Appendix~B explains every relationship of Figure~\ref{fig:c41_analysis} with the name and
+the multiplicities it receives in the data model, and with its business meaning.
 
 Two points of Lecture~04 deserve emphasis. First, \code{CartItem} is not \code{OrderItem}: the cart line is
 temporary shopping information whose price may change, the order line is historical transaction information whose
@@ -110,26 +114,46 @@ $\{\text{CartItem}_1,\dots,\text{CartItem}_n\}$ into $\{\text{OrderItem}_1,\dots
 same products and quantities and leaves the cart empty. This is why \code{Cart} and \code{Order} are linked by a
 «create» dependency and not by a permanent association.
 
+\subsection{From Analysis Classes to Design Classes}\label{sec:4.1.4}
+
+Lecture~05 (slide~22) gives the transformation from the analysis model to the design model. Table~\ref{tab:a2d}
+applies it to Họa.; the rest of this chapter carries it out step by step: the data (Section~\ref{sec:4.2}), the
+design classes (Section~\ref{sec:4.3}) and the layers (Section~\ref{sec:4.4}).
+
+\begin{longtable}{@{}P{3.6cm}P{4.4cm}P{7.0cm}@{}}
+\caption{From analysis classes to design classes (Lecture~05)}\label{tab:a2d}\\
+\toprule
+\textbf{Analysis} & \textbf{Design (lecture)} & \textbf{Họa.}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Analysis} & \textbf{Design (lecture)} & \textbf{Họa.}\\
+\midrule
+\endhead
+\small \code{Cart}, \code{CartItem} & \small Domain classes & \small \code{Cart.addItem}, \code{Cart.calculateTotal}, \code{CartItem.getSubtotal}\\
+\small \code{CartItem} $\rightarrow$ \code{OrderItem} & \small Domain class & \small \code{OrderItem.fromCartItem(item, current)}\\
+\small \code{checkout(Cart)} & \small \code{CheckoutService.checkout(cartID)} & \small \code{CheckoutService.checkout(cartId, customerId, addressId, payment)}\\
+\small Business interaction & \small Controller + service & \small \code{CheckoutController} $\rightarrow$ \code{CheckoutService}\\
+\small Persistence need & \small Repository & \small \code{CartRepository}, \code{OrderRepository}, \code{ProductRepository}, \code{CustomerRepository}\\
+\small Analysis model & \small Design class model & \small \nAnalysisClasses{} analysis classes $\rightarrow$ \nJavaTypes{} Java types and \nViews{} browser views\\
+\small Domain structure & \small Layered architecture & \small Three layers, the shared domain model and their packages (Table~\ref{tab:layers})\\
+\bottomrule
+\end{longtable}
+
 %% =========================================================================
 \section{Data Model -- Database}\label{sec:4.2}
 
-\subsection{Data Model}\label{sec:4.2.1}
+The conceptual and logical data models were built in the analysis (Section~\ref{sec:2.dm}, Figures~\ref{fig:c42_conceptual}
+and~\ref{fig:c42_orm}). Design takes the logical model to the third level, the physical data model, and generates
+the database from it.
 
-The data model (Figure~\ref{fig:c42_orm}) is derived from the analysis diagram in four steps, the same steps as in
-Test~01: every class is marked «ORM-Persistable», meaning that its objects are stored as records; every association
-receives a name and multiplicities at both ends; every generalization becomes an association \emph{is a} with
-multiplicity 1 at the parent and 0..1 at the child, because the relational model has no inheritance; and the
-«create» dependency is dropped, because it describes an operation, not data to store.
+\subsection{Physical Data Model}\label{sec:4.2.1}\label{sec:4.2.2}\label{sec:4.2.3}
 
-\landscapefig{c42_orm}{Data model of Họa.}{Data model: classes marked «ORM-Persistable», generalizations turned into \emph{is a} associations 1 -- 0..1. Visual Paradigm diagram \vpsrc{c42_orm}.}{\label{fig:c42_orm}\label{fig:orm}}
-
-\subsection{From the Data Model to Tables}\label{sec:4.2.2}
-
-Table~\ref{tab:mapping42} lists the mapping rules. They are applied mechanically by \code{tools/gen_sql.py}, so the
+The physical data model fixes how the logical model is stored. Table~\ref{tab:mapping42} lists the mapping rules. They are applied mechanically by \code{tools/gen_sql.py}, so the
 database cannot drift from the model.
 
 \begin{longtable}{@{}P{3.4cm}P{6.6cm}P{5.0cm}@{}}
-\caption{Rules that turn the data model into tables}\label{tab:mapping42}\\
+\caption{Rules that turn the logical data model into tables}\label{tab:mapping42}\\
 \toprule
 \textbf{Case} & \textbf{Rule} & \textbf{Example}\\
 \midrule
@@ -151,15 +175,14 @@ database cannot drift from the model.
 \bottomrule
 \end{longtable}
 
-\subsection{Explain Relations of Tables}\label{sec:4.2.3}
-
-Figure~\ref{fig:c42_tables} shows the physical model: each table is drawn as a class with the stereotype «table»,
+\paragraph{Explain relations of tables.} Figure~\ref{fig:c42_tables} shows the physical data model: each table
+is drawn as a class with the stereotype «table»,
 each column with its SQL type and the markers \{PK\}, \{FK\}, \{U\} (unique) and \{NULL\} (nullable), and each line
 is one foreign key from the parent table to the child table, labelled with the relationship name and the
 foreign-key column. Table~\ref{tab:tables} in Appendix~B lists the \nTables{} tables with their keys and
 Table~\ref{tab:fks} explains the \nFks{} foreign keys with their names and multiplicities.
 
-\landscapefig{c42_tables}{Physical database model of Họa.}{Physical database model: \nTables{} tables «table» with columns, keys and the \nFks{} foreign keys. Visual Paradigm diagram \vpsrc{c42_tables}.}{\label{fig:c42_tables}\label{fig:tables42}}
+\landscapefig{c42_tables}{Physical data model of Họa.}{Physical data model: \nTables{} tables «table» with columns, SQL data types, keys and the \nFks{} foreign keys. Visual Paradigm diagram \vpsrc{c42_tables}.}{\label{fig:c42_tables}\label{fig:tables42}}
 
 
 Foreign keys and \code{UNIQUE} constraints enforce the \emph{upper} bound of a multiplicity, but not the lower bound
@@ -171,6 +194,15 @@ before \code{CustomerRepository.saveAddress} writes it. In the same way, the dis
 product; the repositories read and write the parent row and the child row of a product together.
 
 \subsection{Generate Data Base}\label{sec:4.2.4}
+
+From the physical data model the database is drawn as an entity relationship diagram in Visual Paradigm
+(Figure~\ref{fig:c42_erd}). It follows the physical data model table by table, on the same grid: each table lists
+all its columns with their SQL types; a key icon marks the primary key, a key with a link marks a foreign key, \emph{N}
+marks a column that may be empty and \emph{U} a unique column; each foreign key is a relationship with its name and
+crow's-foot ends (one, zero or one, zero or many, one or many). A solid line is an identifying relationship (the child
+table's key contains the parent's key, as \code{order_item} and \code{painting}); a dashed line is a plain foreign key.
+
+\landscapefig{c42_erd}{Database of Họa. (entity relationship diagram)}{Database of Họa.: entity relationship diagram of the \nTables{} tables with their columns, keys and the \nFks{} foreign keys, drawn on the grid of the physical data model. Visual Paradigm diagram \vpsrc{c42_erd}.}{\label{fig:c42_erd}}
 
 The database is generated, not written by hand. \code{tools/gen_sql.py} reads \code{model.TABLES} and writes two
 files: \texttt{\schemaPath}, with the \code{CREATE TABLE} statements in the order required by the foreign keys, and
@@ -213,7 +245,8 @@ The design class diagram (Figure~\ref{fig:c43_design}) keeps the \nAnalysisClass
 Figure~\ref{fig:c41_analysis} and answers a new question: \emph{what does each class hold, with which type, and
 which behaviour is it responsible for?} Three enumerations are added for the states (\code{OrderStatus},
 \code{ShippingStatus}, \code{PaymentStatus}). Controllers, services and repositories are not domain classes; they
-are added in Section~\ref{sec:4.4}.
+are added in Section~\ref{sec:4.4}, and the signatures of their methods are listed in Table~\ref{tab:appclasses}
+(Appendix~B).
 
 \landscapefig{c43_design}{Design class diagram of the domain}{Design class diagram of the domain: typed private attributes, public methods, directed associations with role names. Visual Paradigm diagram \vpsrc{c43_design}.}{\label{fig:c43_design}\label{fig:design43}}
 
@@ -251,7 +284,8 @@ refinements; every typed attribute is shown in Figure~\ref{fig:c43_design}.
 
 Lecture~05 warns against two opposite mistakes: putting all logic in the controller or in one ``god'' service, and
 leaving the domain classes as bare data. Họa. keeps the business rules in the domain classes and lets the services
-only coordinate. Table~\ref{tab:ops43} in Appendix~B lists every method with its signature; the important ones are:
+only coordinate. Table~\ref{tab:ops43} at the end of this subsection is the catalogue of every method of the domain
+classes, with its signature and its responsibility; the important ones are:
 \begin{itemize}
 \item \code{Cart.addItem(product, quantity)} merges a product already in the cart and rejects a quantity of zero
 or less; \code{Cart.calculateTotal()} sums \code{CartItem.getSubtotal()}.
@@ -270,6 +304,8 @@ Polymorphism replaces conditions on a type field: \code{Product.getCategory()} i
 (cash checked on delivery) and \code{PayCredit} (authorisation code required); \code{Customer.getDiscountRate()}
 returns zero and is overridden by \code{CustomerVIP}.
 
+\input{generated/design_ops}
+
 
 \subsection{Update Relationships -- Explain}\label{sec:4.3.3}
 
@@ -287,42 +323,117 @@ process, the application service \code{CheckoutService} creates the order (Secti
 Lecture~05: checkout is an application process, so it belongs to an application service.
 
 
+\subsection{Database (Revised)}\label{sec:4.3.4}
+
+The design classes change some decisions of the logical data model, so the database is revised with them.
+Table~\ref{tab:dbrev} compares the logical data model of Section~\ref{sec:2.dm.2} with the database that is
+actually generated (Section~\ref{sec:4.2}); each change comes from one of the refinements above. The generated
+schema already contains all of them, and \code{tools/check_code_model.py} checks after every change that the
+database, the model and the SQL of the repositories still agree.
+
+\begin{longtable}{@{}P{2.6cm}P{3.6cm}P{4.6cm}P{4.2cm}@{}}
+\caption{Revisions of the database after the design}\label{tab:dbrev}\\
+\toprule
+\textbf{Topic} & \textbf{Logical data model} & \textbf{Database (revised)} & \textbf{Design reason}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Topic} & \textbf{Logical data model} & \textbf{Database (revised)} & \textbf{Design reason}\\
+\midrule
+\endhead
+\small Money & \small \code{float} & \small \code{numeric(12,2)} (\code{price}, \code{unit_price}, \code{total_amount}, \dots); \code{discount_rate numeric(4,3)} & \small \code{BigDecimal}: exact cents\\
+\small Dates & \small \code{Date} & \small \code{date} for a day, \code{timestamp} for an instant & \small \code{LocalDate}, \code{LocalDateTime}\\
+\small States & \small \code{status : String} & \small \code{varchar} with \code{CHECK ... IN} the allowed values & \small Enumerations \code{OrderStatus}, \code{ShippingStatus}, \code{PaymentStatus}\\
+\small Address & \small No identifier & \small \code{address_id} primary key, \code{address.customer_id} and \code{shipping.address_id} foreign keys & \small \code{Address.addressId}: choose the delivery address at checkout\\
+\small Links & \small Named associations with multiplicities & \small A foreign key per association; \code{UNIQUE} where the upper bound is 1 (\code{cart.customer_id}, \code{shipping.order_id}) & \small Navigable references (Section~\ref{sec:4.3.3})\\
+\small Inheritance & \small \emph{is a} links 1 -- 0..1 & \small Child table shares the parent key; discriminators \code{product.product_type}, \code{payment.method} & \small Abstract \code{Product} and \code{Payment}: the repository must know which subclass to build\\
+\small Value object & \small \code{FullName} class & \small Columns \code{first_name}, \code{middle_name}, \code{last_name} of \code{customer} & \small Embedded in \code{Customer}\\
+\small Card data & \small \code{cardLast4} & \small \code{card_last4 char(4)}; no column for the full number & \small NFR05\\
+\small Search & \small -- & \small New technical table \code{product_feature} (\code{feature_vector}, \code{model_version}) & \small \code{VectorIndex} of the image search (Chapter~3)\\
+\small Checks & \small -- & \small \code{CHECK} on quantities ($>0$), prices and stock ($\ge 0$) & \small The database itself refuses impossible values, such as a negative stock\\
+\bottomrule
+\end{longtable}
+
 %% =========================================================================
 \section{Layers + Class + Relation}\label{sec:4.4}
 
-\subsection{Layers and Packages}\label{sec:4.4.1}
+\subsection{Three Layers and their Relationships}\label{sec:4.4.1}
 
-Following Lecture~05, Họa. has four layers (Figure~\ref{fig:c44_layers}). The \textbf{presentation} layer receives
-requests and presents results (browser views, controllers, the web server); the \textbf{application} layer
-coordinates use cases (services, including the search services of A06); the \textbf{domain} layer represents the
-business concepts and rules; the \textbf{infrastructure} layer stores data and talks to external technical services
-(SQLite repositories, the vector index, the Gemma~4 and Whisper clients).
+Họa. uses the three-layer architecture of Assignment~06 (Figure~\ref{fig:c44_layers}). Each layer is a frame, and
+the classes inside it are linked to the classes they use, in the same layer and in the layer below:
+\begin{itemize}
+\item The \textbf{Presentation layer} receives requests and shows results: the views of the browser (\code{SearchUI},
+\code{CartView}, \dots), the controllers that receive the requests, the web server and the session.
+\item The \textbf{Application layer} coordinates the use cases: the services of the shop (\code{CartService},
+\code{CheckoutService}, \code{OrderService}, \code{ProductService}, \code{AssistantService}) and the search and AI
+services of Assignment~06 (\code{SearchService}, \code{QueryService}, \code{ImageService}, \code{SpeechService},
+\code{RankingService}).
+\item The \textbf{Data layer} stores and fetches data and reaches the external services: the repository interfaces
+and their SQLite implementations, \code{Database}, the \code{VectorIndex} of the image search, and the clients of the
+Gemma~4 server and of the Whisper server behind the interfaces \code{LlmClient} and \code{SpeechClient}.
+\end{itemize}
+The domain classes (\code{Customer}, \code{Product}, \code{Cart}, \code{Order}, \code{Payment}, \dots) are not a layer
+of their own: they are the model shared by the three layers, as in the reference design. The controllers send them to
+the browser as JSON, the services apply their rules, the repositories read and write them; their attributes and
+methods are in the design class diagram (Figure~\ref{fig:c43_design}). Lecture~05 draws the same split with four
+boxes, the domain being the fourth; the classes and their packages are the same in both pictures.
 
-\begin{figure}[htbp]
-\centering
-\vpfig{c44_layers}{0.40\textheight}
-\caption[Layers and packages of Họa.]{The four layers (packages), their sub-packages and the allowed
-dependencies. Visual Paradigm diagram \vpsrc{c44_layers}.}
-\label{fig:c44_layers}\label{fig:layers44}
-\end{figure}
+\landscapefig{c44_layers}{The three layers of Họa.}{The three layers of Họa. with their classes and the links between them; the domain classes are the model shared by all layers. Visual Paradigm diagram \vpsrc{c44_layers}.}{\label{fig:c44_layers}\label{fig:layers44}}
 
-The dashed arrows are the only allowed dependencies: presentation uses application; application uses domain and
-infrastructure; infrastructure uses domain to read and write domain objects. There is no arrow from presentation
-to infrastructure, so the user interface never touches the database (NFR04), and the domain depends on no other
-layer, so the business rules do not depend on SQLite, HTTP or a model. Lecture~05 stresses that a package is not a
-layer: a layer is an architectural responsibility, a package is a way to organise code. Here each layer is a root
-package, divided further by function (\code{application.service}, \code{application.search}) or by business area
-(\code{domain.cart}, \code{domain.order}, \dots). Table~\ref{tab:layers} in Appendix~B lists the packages and their classes.
+\paragraph{Explain relationships.} Table~\ref{tab:rel44} explains every kind of link of Figure~\ref{fig:c44_layers}.
+A dashed arrow is a «use» dependency (the class at the tail calls the class at the head); a dashed arrow with a
+hollow triangle is a realization (the class at the tail implements the interface at the head).
+
+\begin{longtable}{@{}P{3.5cm}P{1.9cm}P{4.6cm}P{5.0cm}@{}}
+\caption{The links of the three-layer diagram}\label{tab:rel44}\\
+\toprule
+\textbf{Link} & \textbf{Kind} & \textbf{Example} & \textbf{Meaning}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Link} & \textbf{Kind} & \textbf{Example} & \textbf{Meaning}\\
+\midrule
+\endhead
+\small View $\rightarrow$ view (presentation) & \small «use» & \small \code{SearchUI} $\rightarrow$ \code{VoiceInput}, \code{ImageUpload}, \code{SearchResultView} & \small The search page is built from smaller views\\
+\small View $\rightarrow$ controller (presentation) & \small «use» & \small \code{CartView} $\rightarrow$ \code{CartController}, \code{CheckoutController} & \small The page sends its request over HTTP to the controller of its feature\\
+\small Web server $\rightarrow$ session (presentation) & \small «use» & \small \code{WebServer} $\rightarrow$ \code{SessionManager} & \small The customer id comes from the session, never from the browser (NFR01)\\
+\small Controller $\rightarrow$ service (presentation $\rightarrow$ application) & \small «use» & \small \code{CheckoutController} $\rightarrow$ \code{CheckoutService} & \small The controller only translates the request; the service does the work\\
+\small Service $\rightarrow$ service (application) & \small «use» & \small \code{SearchService} $\rightarrow$ \code{QueryService}, \code{ImageService}, \code{RankingService} & \small One service coordinates the steps of the search: understand, describe, rank\\
+\small Service $\rightarrow$ repository (application $\rightarrow$ data) & \small «use» & \small \code{CheckoutService} $\rightarrow$ \code{CartRepository}, \code{ProductRepository}, \code{CustomerRepository}, \code{OrderRepository} & \small Reading and saving data always goes through a repository interface\\
+\small Service $\rightarrow$ AI client (application $\rightarrow$ data) & \small «use» & \small \code{QueryService}, \code{ImageService}, \code{AssistantService} $\rightarrow$ \code{LlmClient}; \code{SpeechService} $\rightarrow$ \code{SpeechClient} & \small The AI is reached through an interface, so it can be replaced or switched off\\
+\small Implementation $\rightarrow$ interface (data) & \small Realization & \small \code{SqliteOrderRepository} $\rightarrow$ \code{OrderRepository}; \code{GemmaClient} $\rightarrow$ \code{LlmClient} & \small The SQLite class, or the Gemma~4 client, does what the interface promises\\
+\small Repository $\rightarrow$ database (data) & \small «use» & \small \code{SqliteCartRepository} $\rightarrow$ \code{Database} & \small Every SQLite repository takes its connection from \code{Database}\\
+\bottomrule
+\end{longtable}
+
+Every arrow goes down: presentation uses application, application uses data, and nothing in the data layer uses the
+layers above it; each layer may use the shared domain model. \code{tools/check_code_model.py} checks this rule on the
+imports of every Java file and finds one exception, which it reports as a note: \code{EcomApplication}, the composition
+root, creates the data-layer objects once at start-up and hands them to the services. No view or controller ever calls
+a repository or the database, so the user interface never touches the database (NFR04). Because the services depend on
+interfaces, the database or the AI provider can be replaced, or replaced by a fake in the tests, without changing the
+application layer (dependency inversion).
+
+Lecture~05 stresses that a package is not a layer: a layer is an architectural responsibility, a package is a way to
+organise code. Each layer is realised by several Java packages (\code{presentation.view},
+\code{presentation.controller}, \dots), and the shared model by the packages \code{domain.cart}, \code{domain.order},
+\dots; Table~\ref{tab:layers} in Appendix~B lists the packages and their classes.
 
 \subsection{Classes and Relationships per Layer}\label{sec:4.4.2}
 
 Figure~\ref{fig:c44_classes} places the classes in the layers and draws the relationships that cross a layer
-boundary; Figure~\ref{fig:c44_classes_backend} completes the application and infrastructure classes. The domain
-classes are drawn by name only; their attributes and methods are in Figure~\ref{fig:c43_design}.
+boundary; Figure~\ref{fig:c44_classes_backend} completes the application and data classes and shows
+the methods of the four services and the four repository interfaces, the design class model that Lecture~05 asks
+students to expand from \code{CheckoutController}, \code{CheckoutService}, \code{Cart}, \code{Order},
+\code{CartRepository} and \code{OrderRepository}. The SQLite classes implement the same methods as their interfaces
+and are drawn by name only; the views and controllers of Figure~\ref{fig:c44_classes} are also drawn by name only,
+so that the relationships stay readable. The attributes and methods of the domain classes are in
+Figure~\ref{fig:c43_design}; Table~\ref{tab:appclasses} (Appendix~B) gives the signature of every method of the
+other classes, and the methods used by checkout appear as messages in Figure~\ref{fig:c44_checkout_seq}.
 
-\landscapefig{c44_classes}{Classes and relationships per layer}{Classes per layer and the relationships «use», «create» and realization between them. Visual Paradigm diagram \vpsrc{c44_classes}.}{\label{fig:c44_classes}\label{fig:classes44}}
+\landscapefig{c44_classes}{Classes and relationships per layer}{Classes per layer and the «use» and «create» dependencies between them. Visual Paradigm diagram \vpsrc{c44_classes}.}{\label{fig:c44_classes}\label{fig:classes44}}
 
-\landscapefig{c44_classes_backend}{Application and infrastructure classes}{Application and infrastructure classes: services, search classes, repository interfaces with their SQLite implementations, and the AI clients behind their interfaces. Visual Paradigm diagram \vpsrc{c44_classes_backend}.}{\label{fig:c44_classes_backend}}
+\landscapefig{c44_classes_backend}{Application and data classes}{Application and data classes: the four services and the four repository interfaces with their methods, the SQLite implementations (realization) and \code{Database}. Visual Paradigm diagram \vpsrc{c44_classes_backend}.}{\label{fig:c44_classes_backend}}
 
 Three kinds of relationships appear:
 \begin{itemize}
@@ -470,7 +581,8 @@ the code of the search, AI and web classes.
 
 The design turns the meaning of Chapter~\ref{ch:analysis} into a structure that can be programmed. The analysis
 diagram was updated for the painting shop; the data model and the \nTables{} tables were derived and generated from
-it; the design classes received types, methods and directions; every class was placed in one of four layers with
+it; the design classes received types, methods and directions; every class was placed in one of three layers, or in the shared
+domain model, with
 explicit dependencies; and the Java skeleton was generated from that model. Table~\ref{tab:trace46} in Appendix~B traces the main
 requirements through the artefacts of this chapter to the code.
 

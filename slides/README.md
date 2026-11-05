@@ -1,6 +1,6 @@
 # slides/
 
-`thuyettrinh_Hoa.pptx` is the class presentation (35 slides: 34 + a backup folder map, in English, with speaker notes on every slide). `build_slides.py` generates it, so don't edit the .pptx by hand.
+`thuyettrinh_Hoa.pptx` is the class presentation (39 slides: 38 + a backup folder map, in English, with speaker notes on every slide). `build_slides.py` generates it, so don't edit the .pptx by hand.
 
 ## Rebuild
 

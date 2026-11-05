@@ -159,7 +159,7 @@ EXCERPTS = ["EcomApplication", "WebServer_routes", "SearchService", "QueryServic
 FOLDERS = [
     ("tools/model.py", "Shared specification: requirements, use cases, classes, relationships, layers, tables", "1--5"),
     ("vp/", "Visual Paradigm project with every diagram", "1--5"),
-    ("figures/vp/", "Diagrams exported from Visual Paradigm (PNG, SVG)", "1--5"),
+    ("figures/vp/", "Diagrams exported from Visual Paradigm (PNG, PDF, SVG)", "1--5"),
     ("figures/demo/", "Screenshots of the demo and of the database", "3--5"),
     ("demo/db/", "SQLite schema and seed data generated from tools/model.py", "4"),
     ("demo/generated/src/", "Java skeleton generated from the 4.4 model", "4"),
@@ -769,7 +769,7 @@ def main():
          for a in model.DESIGN_ASSOCIATIONS], size=r"\footnotesize"))
 
     rows = []
-    for title, lid, subs in model.LAYERS:
+    for title, lid, subs in model.PACKAGE_GROUPS:
         for pkg in subs:
             members = [c["name"] for c in model.DESIGN if c["package"] == pkg]
             rows.append([title, code(f"{model.BASE_PACKAGE}.{pkg}"), ", ".join(code(m) for m in members),
@@ -812,16 +812,24 @@ def main():
         rf"\newcommand{{\nDomainTypes}}{{{len(domain)}}}",
     ]) + "\n")
 
+    # Every public method of the classes outside the domain model, with its full signature (constructors are
+    # left out: they only receive the «use» dependencies drawn in Figures 4.4b and 4.4c).
     rows = []
-    for c in model.DESIGN:
-        if c["package"].startswith("domain."):
-            continue
-        ops = [o["name"] for o in c["ops"] if o["name"] != c["name"]]
-        kind = {"interface": "interface", "enum": "enum", "view": "view (JS)"}.get(c["kind"], "class")
-        rows.append([code(c["name"]), kind, code(c["package"]), ", ".join(code(o) for o in ops[:7])])
+    for title, _, subs in model.LAYERS:
+        for pkg in subs:
+            for c in model.DESIGN:
+                if c["package"] != pkg or pkg.startswith("domain."):
+                    continue
+                ops = [o for o in c["ops"] if o["name"] != c["name"]]
+                kind = {"interface": "«interface»", "view": "«view» (JS)"}.get(c["kind"], "class")
+                head = code(c["name"]) + rf"\newline{{\scriptsize {kind}, {title.lower()}}}"
+                if not ops:
+                    rows.append([head, r"\emph{no public method: a value object carried between the layers}"])
+                    continue
+                rows.append([head, r"\newline ".join(signature(o) for o in ops)])
     write("app_classes.tex", longtable(
-        "P{3.3cm}P{1.6cm}P{4.5cm}P{5.6cm}", "Classes outside the domain layer: kind, package and public methods",
-        "tab:appclasses", ["Class", "Kind", "Package", "Methods"], rows, size=r"\footnotesize"))
+        "P{4.2cm}P{10.8cm}", "Public methods of the classes outside the domain model", "tab:appclasses",
+        ["Class", "Methods (signature)"], rows, size=r"\footnotesize"))
 
     schema_excerpt()
     found = source_paths()

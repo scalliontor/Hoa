@@ -306,8 +306,10 @@ def check_dependencies(sources):
         else:
             fail(f"dependency {client} -> {supplier} «{stereotype}» is not used in the code")
     print(f"OK    {present}/{len(pairs)} Java dependencies of DESIGN_DEPENDENCIES_44 found in the code")
-    layer_of = {sub: layer for layer, _, subs in model.LAYERS for sub in subs}
-    allowed = set(model.LAYER_DEPENDENCIES)
+    layer_of = {sub: layer for layer, _, subs in model.PACKAGE_GROUPS for sub in subs}
+    shared = model.DOMAIN_MODEL[0]
+    # every layer may use the shared domain model; the domain model uses no layer
+    allowed = set(model.LAYER_DEPENDENCIES) | {(layer, shared) for layer, _, _ in model.LAYERS}
     edges = {}
     for path in SRC.rglob("*.java"):
         package = path.parent.relative_to(SRC).as_posix().replace("/", ".")
@@ -317,12 +319,13 @@ def check_dependencies(sources):
             if a and b and a != b:
                 edges.setdefault((a, b), set()).add(path.stem)
     for (a, b), files in sorted(edges.items()):
-        upward = (a, b) not in allowed and not (a == "Presentation" and b in ("Domain", "Infrastructure"))
+        # Presentation -> Data is only the composition root, which creates the data-layer objects once.
+        composition_root = (a, b) == ("Presentation", "Data") and files <= {"EcomApplication"}
         line = f"layer {a} -> {b}: {len(files)} file(s)"
-        if upward:
+        if (a, b) not in allowed and not composition_root:
             fail(line + f" against the layer rule ({', '.join(sorted(files))})")
-        elif (a, b) not in allowed:
-            notes.append(line + f" ({', '.join(sorted(files)) if len(files) < 4 else 'controllers return domain objects'})")
+        elif composition_root:
+            notes.append(line + " (EcomApplication, the composition root)")
         else:
             print(f"OK    {line}")
 

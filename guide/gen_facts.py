@@ -27,8 +27,8 @@ OUT = ROOT / "build" / "guide"
 WORDS_PER_MINUTE = 160  # Vietnamese syllable-words per minute at a calm presentation pace
 SKIM_SECONDS = 8  # a slide that is only shown, not explained, in the short version
 # Who says what (group 10): person 1 opens and does chapters 1-2, person 2 chapter 3, person 3 chapter 4,
-# person 4 chapter 5, the demo and the conclusion. Slide 35 is the backup slide and belongs to nobody.
-SPEAKERS = {"1": (1, 15), "2": (16, 23), "3": (24, 28), "4": (29, 34)}
+# person 4 chapter 5, the demo and the conclusion. Slide 39 is the backup slide and belongs to nobody.
+SPEAKERS = {"1": (1, 18), "2": (19, 26), "3": (27, 32), "4": (33, 38)}
 CHAPTER_NAMES = {"1": "Requirement Determination", "2": "Analysis", "3": "AI in e-commerce", "4": "Design",
                  "5": "Code"}
 SPECIAL = {"\\": r"\textbackslash{}", "&": r"\&", "%": r"\%", "#": r"\#", "_": r"\_", "$": r"\$", "{": r"\{",

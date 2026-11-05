@@ -76,15 +76,21 @@ multiplicity of each of the \nFks{} foreign keys (Section~4.2).
 
 \input{generated/fks}
 
-\section{Methods and directed relationships of the domain classes}\label{sec:B.3}
+\section{Directed relationships of the domain classes}\label{sec:B.3}
 
-Table~\ref{tab:ops43} lists every method of the domain classes of Figure~\ref{fig:c43_design} with its full
-signature and its responsibility, and the values of the three enumerations; Table~\ref{tab:nav43} gives the
-direction and the role name of every association (Section~4.3).
-
-\input{generated/design_ops}
+Table~\ref{tab:nav43} gives the direction and the role name of every association of Figure~\ref{fig:c43_design}
+(Section~4.3); the methods of the domain classes are catalogued in Table~\ref{tab:ops43} (Section~\ref{sec:4.3.2}).
 
 \input{generated/design_nav}
+
+\section{Methods of the controllers, services, repositories and views}\label{sec:B.3b}
+
+Table~\ref{tab:appclasses} completes the design classes of Section~4.4: every class outside the domain model,
+layer by layer, with the full signature of each public method. Together with Table~\ref{tab:ops43} it covers every
+method of the design model; \code{tools/check_code_model.py} checks every one of them against the Java and
+JavaScript code (Section~\ref{sec:4.5.1}).
+
+\input{generated/app_classes}
 
 \section{Layers, packages and classes}\label{sec:B.4}
 
@@ -95,7 +101,7 @@ Table~\ref{tab:layers} lists the packages of each layer of Figure~\ref{fig:c44_l
 
 \section{Traceability from requirements to design, data and code}\label{sec:B.5}
 
-Table~\ref{tab:trace46} follows the main requirements of Chapter~\ref{ch:req} through the artefacts of Chapter~4 --
+Table~\ref{tab:trace46} follows the main requirements of Chapter~\ref{ch:analysis} through the artefacts of Chapter~4 --
 analysis classes, tables, design classes and methods, packages -- to the code (Section~4.6).
 
 \begin{longtable}{@{}P{1.4cm}P{3.0cm}P{2.6cm}P{4.6cm}P{3.4cm}@{}}
@@ -185,9 +191,9 @@ Table~\ref{tab:techmap} records the technology chosen for each design concept of
 
 \chapter{Requirement Reference Tables}\label{app:reqtables}\label{app:C}
 
-The tables of this appendix complete Chapter~1: how each non-functional requirement is verified (Section~1.9), the
-full traceability matrix between requirements and use cases (Section~1.12) and the relationships of the use case
-diagram (Section~1.10). Both are generated from
+The tables of this appendix complete Chapter~\ref{ch:analysis}: how each non-functional requirement is verified
+(Section~\ref{sec:1.9}), the full traceability matrix between requirements and use cases (Section~\ref{sec:1.12})
+and the relationships of the use case diagram (Section~\ref{sec:1.10}). Both are generated from
 \code{tools/model.py}.
 
 \section{Verification of the non-functional requirements}\label{sec:C.1}

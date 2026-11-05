@@ -85,9 +85,11 @@
 % Assets produced by the other parts of the project; a framed placeholder keeps drafts compiling.
 \newcommand{\assetbox}[2]{\fbox{\parbox[c][4.2cm][c]{0.85\linewidth}{\centering #1\\[3pt]\small\texttt{\detokenize{#2}}}}}
 \newcommand{\vpfig}[2]{%
-  \IfFileExists{../figures/vp/#1.png}%
-    {\includegraphics[width=\linewidth,height=#2,keepaspectratio]{../figures/vp/#1.png}}%
-    {\assetbox{Figure exported from the Visual Paradigm project}{figures/vp/#1.png}}}
+  \IfFileExists{../figures/vp/#1.pdf}% vector export (tools/build_vp.py crops it to the diagram)
+    {\includegraphics[width=\linewidth,height=#2,keepaspectratio]{../figures/vp/#1.pdf}}%
+    {\IfFileExists{../figures/vp/#1.png}%
+      {\includegraphics[width=\linewidth,height=#2,keepaspectratio]{../figures/vp/#1.png}}%
+      {\assetbox{Figure exported from the Visual Paradigm project}{figures/vp/#1.png}}}}
 % A full-page landscape diagram: a float page of its own (the text keeps filling the current page), turned in the
 % PDF viewer like a pdflscape page. #1 VP id, #2 short caption (list of figures), #3 caption, #4 labels.
 % Inside sidewaysfigure \textwidth and \textheight are swapped, so the height is capped by the portrait width.

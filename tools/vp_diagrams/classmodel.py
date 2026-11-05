@@ -1,6 +1,7 @@
-"""One grid for the five class models of the essay, so they read as the same model:
-domain (2.1, names only), analysis (4.1), ORM-Persistable data model (4.2a), «table» classes (4.2b)
-and design (4.3). Every relation has a hand-made orthogonal route relative to the boxes."""
+"""One grid for the six class models of the essay, so they read as the same model:
+domain (2.x, names only), analysis (4.1), the data model at three levels -- conceptual (4.2a: names and
+named links only), logical (4.2b: attributes, «ORM-Persistable», multiplicities) and physical (4.2c: «table»
+classes with types and keys) -- and design (4.3). Every relation has a hand-made orthogonal route relative to the boxes."""
 import xml.etree.ElementTree as ET
 
 from .common import (LINE, Diagram, Rect, STEREO, analysis_size, assoc, caption_size, class_size,
@@ -50,7 +51,7 @@ def _members(mode):
 
 
 def _size(mode, name):
-    if mode == "domain":
+    if mode in ("domain", "conceptual"):
         return analysis_size(name, hidden=True)
     if mode == "analysis":
         return analysis_size(name)
@@ -65,9 +66,9 @@ def _size(mode, name):
 
 
 def _draw(d, mode, name, x, y):
-    if mode in ("domain", "analysis", "orm"):
+    if mode in ("domain", "conceptual", "analysis", "orm"):
         from .common import analysis_class
-        return analysis_class(d, name, x, y, hidden=mode == "domain",
+        return analysis_class(d, name, x, y, hidden=mode in ("domain", "conceptual"),
                               stereotype="ORM-Persistable" if mode == "orm" else None)
     if mode == "tables":
         t = TABLES[TABLE[name]]
@@ -208,22 +209,27 @@ def class_model(root, id_, title, mode, scope, scope_name, col_gap=170, row_gap=
     ids = {k: k for k in B}
     R = routes(B, Y)
     agg = {"composition": "composite", "aggregation": "shared"}
-    if mode in ("domain", "analysis", "orm"):
+    if mode in ("domain", "conceptual", "analysis", "orm"):
+        # analysis: attributes and the kind of each relationship only (no names, no multiplicities, no ORM);
+        # conceptual data model: names and named links; logical (orm): names, multiplicities, «ORM-Persistable».
+        named = mode in ("conceptual", "orm")
+        counted = mode == "orm"
         for a in model.ANALYSIS_ASSOCIATIONS:
             key = (a["a"], a["b"])
-            _assoc(d, a["a"], a["b"], R[key], a["name"], a["a_mult"], a["b_mult"], key, ids,
-                   aggregation=agg.get(a["kind"]))
+            _assoc(d, a["a"], a["b"], R[key], a["name"] if named else None, a["a_mult"] if counted else None,
+                   a["b_mult"] if counted else None, key, ids,
+                   aggregation=None if mode == "conceptual" else agg.get(a["kind"]))
         if mode == "orm":
             gen_tree(d, B, ids, as_assoc=lambda parent, child: ("is a", "1", "0..1"))
         else:
             gen_tree(d, B, ids)
-        if mode != "orm":
+        if mode not in ("orm", "conceptual"):
             for client, supplier, stereotype, name in model.ANALYSIS_DEPENDENCIES:
                 cart = B[client]
-                lines = [f"<<{stereotype}>>", name]
+                lines = [f"<<{stereotype}>>"]
                 w, h = caption_size(lines)
                 d.edge("Dependency", client, supplier, [(cart.cx, cart.b), (cart.cx, B[supplier].y)], label=lines,
-                       at=(cart.cx + 8 + w / 2, (cart.b + B[supplier].y) / 2), stereotype=stereotype, name=name)
+                       at=(cart.cx + 8 + w / 2, (cart.b + B[supplier].y) / 2), stereotype=stereotype)
     elif mode == "tables":
         gen_children = {"customer_vip", "customer_new", "painting", "frame", "pay_cash", "pay_credit"}
         labels = {}
@@ -271,19 +277,25 @@ def class_model(root, id_, title, mode, scope, scope_name, col_gap=170, row_gap=
     return d, B
 
 
+ERD_HEADER, ERD_ROW = 24, 18       # VP CE entity: one header line, then one row per column
+
+
 def erd(root):
-    """VP entity relationship diagram kept in the project for VP's database tools (not exported:
-    its headless export clips the columns; the figure of 4.2b is c42_tables)."""
-    d = Diagram(root, "c42_erd", "4.2c Database (VP entity relationship diagram)", "erd", "database",
-                "4.2 Database", export="false")
-    B, X, Y = {}, {}, {}
+    """The database as a VP entity relationship diagram (the 'yellow tables'), drawn on the grid of the
+    physical data model c42_tables: same tables, same places, same foreign keys and names. The caption box is
+    set to one line, otherwise VP keeps a tall default header and clips the columns."""
+    d = Diagram(root, "c42_erd", "4.2 Database - entity relationship diagram", "erd", "database",
+                "4.2 Database")
     d2 = Diagram(ET.Element("x"), "tmp", "tmp", "class", "tmp", "tmp")
     from . import common
     common.DIAGRAMS.remove(d2)
-    B, X, Y = layout(d2, "tables", 190, 110)
+    B, X, Y = layout(d2, "tables", 200, 110)          # the col_gap / row_gap of c42_tables
     for logical, r in B.items():
         t = TABLES[TABLE[logical]]
-        n = d.node(t["name"], "DBTable", t["name"], r.x, r.y, r.w + 40, 34 + 19 * len(t["columns"]), role="none")
+        w = r.w + 40
+        h = ERD_HEADER + ERD_ROW * len(t["columns"]) + 6
+        n = d.node(t["name"], "DBTable", t["name"], r.x, r.y, w, h, role="none",
+                   captionX=0, captionY=0, captionW=w, captionH=ERD_HEADER - 2)
         for c in t["columns"]:
             el = ET.SubElement(n, "column", name=c["name"], type=c["type"])
             for key in ("length", "scale"):

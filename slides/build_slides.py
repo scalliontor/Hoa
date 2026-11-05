@@ -828,7 +828,7 @@ FRS = [r for r in model.REQUIREMENTS if r[1] == "FR"]
 NFRS = [r for r in model.REQUIREMENTS if r[1] == "NFR"]
 JAVA_CLASSES = [c for c in model.DESIGN if c["kind"] != "view"]
 VIEWS = [c for c in model.DESIGN if c["kind"] == "view"]
-PACKAGES = [p for _, _, subs in model.LAYERS for p in subs]
+PACKAGES = [p for _, _, subs in model.PACKAGE_GROUPS for p in subs]
 A06_QUERIES = ["black running shoes", "find Nike shoes under 100 dollars", "show me products similar to this image",
                "find my order 20261001", "where is my latest order?"]
 
@@ -1025,8 +1025,8 @@ def s_team(d):
 def s_agenda(d):
     s = d.slide("CONTENTS", NOTES["agenda"])
     d.title(s, "One system, five perspectives")
-    cols = [("01", "Requirement Determination", "What must the system do, and for whom?", "LECTURES 01–02"),
-            ("02", "Analysis", "How does it behave, which concepts does it manage?", "LECTURES 03–04"),
+    cols = [("01", "Requirement Determination", "What is the business, and where is the system boundary?", "LECTURE 01"),
+            ("02", "Analysis", "What must it do, how does it behave, what does it store?", "LECTURES 02–04"),
             ("03", "AI in e-commerce", "How does AI help a customer find the right painting?", "A06 ▪ GEMMA 4"),
             ("04", "Design", "How does the software realise the model?", "LECTURE 05"),
             ("05", "Code", "From model to running code, name for name", "LIVE DEMO")]
@@ -1066,33 +1066,34 @@ def s_product(d):
 
 # --------------------------------------------------------------- chapter 01
 def s_ch1(d):
-    divider(d, "01", "Requirement\nDetermination", "Understand the business first, then write the requirements",
-            "LECTURE 01 ▪ BUSINESS INVESTIGATION — LECTURE 02 ▪ REQUIREMENTS ENGINEERING", "P01", notes=NOTES["ch1"])
+    divider(d, "01", "Requirement\nDetermination", "Understand the business, its problems and the system boundary",
+            "LECTURE 01 ▪ BUSINESS INVESTIGATION AND SYSTEM CONTEXT", "P01", notes=NOTES["ch1"])
 
 
 def s_business(d):
     s = d.slide("01 REQUIREMENT DETERMINATION", NOTES["business"])
     d.title(s, "Understand the business before drawing diagrams")
     label = "INFORMATION SYSTEM = PEOPLE + PROCESSES + DATA + TECHNOLOGY"
-    mono(s, M, 1.9, 5.9, 0.3, label, size=mono_fit(label, 5.9, 10))
+    mono(s, M, 1.9, W - 2 * M, 0.3, label, size=10.5)
     quad = [("PEOPLE", "Customers, administrator, warehouse and delivery"),
             ("PROCESSES", "Search → cart → checkout → delivery, cancellation"),
             ("DATA", "Paintings, artists, carts, orders, payments"),
             ("TECHNOLOGY", "Java, SQLite, Gemma 4, Whisper")]
+    gap = 0.2
+    cw = (W - 2 * M - 3 * gap) / 4
     for i, (k, v) in enumerate(quad):
-        x, y = M + (i % 2) * 2.9, 2.3 + (i // 2) * 1.0
-        rect(s, x, y, 2.75, 0.85)
-        mono(s, x + 0.15, y + 0.1, 2.5, 0.25, k, size=10, color=ACCENT)
-        text(s, x + 0.15, y + 0.36, 2.5, 0.45, v, size=12.5, color=BODY, line=1.0)
-    table(s, M, 4.45, [1.55, 2.0, 2.1], [
+        x, y = M + i * (cw + gap), 2.3
+        rect(s, x, y, cw, 1.05)
+        mono(s, x + 0.15, y + 0.12, cw - 0.3, 0.25, k, size=10, color=ACCENT)
+        text(s, x + 0.15, y + 0.42, cw - 0.3, 0.6, v, size=13, color=BODY, line=1.0)
+    table(s, M, 3.65, [2.55, 4.6, W - 2 * M - 7.15], [
         ["Stakeholder", "Goal", "Information need"],
         ["Customer", "Find and buy paintings they like", "Paintings, prices, stock, order status"],
         ["Administrator", "Manage paintings and orders", "Prices, stock, pending orders"],
         ["Warehouse, delivery", "Ship the right painting to the right place", "Order details, addresses"],
-        ["Support staff", "Answer customers quickly", "Customer order history"]], size=12, row_h=0.47)
-    picture(s, ASSETS.figure("vp", "c1_context"), 6.55, 1.9, W - M - 6.55, 5.0,
-            alt="Context view of the Họa. Gallery system", label="figures/vp/c1_context.png",
-            hint="Context view: Họa. Gallery and its external entities", panel=True)
+        ["Support staff", "Answer customers quickly", "Customer order history"]], size=13, row_h=0.47)
+    mono(s, M, 6.45, W - 2 * M, 0.3, "WHO IS INSIDE THE SYSTEM AND WHO IS OUTSIDE → CONTEXT DIAGRAM (END OF CHAPTER 1)",
+         size=10.5)
 
 
 def s_chain(d):
@@ -1120,7 +1121,7 @@ def s_chain(d):
 
 
 def s_fr(d):
-    s = d.slide("01 REQUIREMENT DETERMINATION", NOTES["fr"])
+    s = d.slide("02 ANALYSIS", NOTES["fr"])
     d.title(s, f"{len(FRS)} functional requirements, prioritised with MoSCoW")
     half = (len(FRS) + 1) // 2
     gap = 0.5
@@ -1138,7 +1139,7 @@ def s_fr(d):
 
 
 def s_nfr(d):
-    s = d.slide("01 REQUIREMENT DETERMINATION", NOTES["nfr"])
+    s = d.slide("02 ANALYSIS", NOTES["nfr"])
     d.title(s, "Non-functional requirements must be measurable")
     cw, gap, ch = 2.83, (W - 2 * M - 4 * 2.83) / 3, 2.0
     for i, (rid, _, title, ucs) in enumerate(NFRS[:8]):
@@ -1155,7 +1156,7 @@ def s_nfr(d):
 
 
 def s_usecase(d):
-    s = d.slide("01 REQUIREMENT DETERMINATION", NOTES["usecase"])
+    s = d.slide("02 ANALYSIS", NOTES["usecase"])
     d.title(s, "A use case is a goal, not a button")
     picture(s, ASSETS.figure("vp", "c1_usecase"), M, 1.9, 7.75, 5.0, alt="Use case diagram of Họa. Gallery",
             label="figures/vp/c1_usecase.png", hint=f"{len(model.USE_CASES)} use cases, {len(model.ACTORS)} actors",
@@ -1178,8 +1179,45 @@ def s_usecase(d):
 
 # --------------------------------------------------------------- chapter 02
 def s_ch2(d):
-    divider(d, "02", "Analysis", "How the system behaves, and which concepts it manages",
-            "LECTURE 03 ▪ FUNCTIONAL ANALYSIS — LECTURE 04 ▪ DOMAIN MODEL (A03)", "P05", notes=NOTES["ch2"])
+    divider(d, "02", "Analysis", "Requirements, use cases, behaviour, concepts and data",
+            "LECTURE 02 ▪ REQUIREMENTS — LECTURE 03 ▪ BEHAVIOUR — LECTURE 04 ▪ DOMAIN AND DATA", "P05", notes=NOTES["ch2"])
+
+
+def uc_ranges(ids):
+    """['UC01', 'UC02', 'UC03', 'UC10'] -> 'UC01–UC03, UC10'."""
+    nums = sorted(int(i[2:]) for i in ids)
+    parts, start = [], None
+    for i, n in enumerate(nums):
+        start = n if start is None else start
+        if i + 1 == len(nums) or nums[i + 1] != n + 1:
+            parts.append(f"UC{start:02d}" if start == n else f"UC{start:02d}–UC{n:02d}")
+            start = None
+    return ", ".join(parts)
+
+
+def s_context(d):
+    s = d.slide("01 REQUIREMENT DETERMINATION", NOTES["context"])
+    d.title(s, "Context diagram: what enters and leaves the system")
+    picture(s, ASSETS.figure("vp", "c1_context"), M, 1.9, 7.6, 5.0, alt="Context diagram of the Họa. Gallery system",
+            label="figures/vp/c1_context.png", hint="Họa. Gallery and its four external entities", panel=True)
+    x = 8.5
+    mono(s, x, 1.95, W - M - x, 0.3, "READ EVERY FLOW TWICE", size=10.5, color=ACCENT)
+    text(s, x, 2.25, W - M - x, 0.75, "In: a use case receives it, a concept keeps it.\nOut: a use case produces it.",
+         size=13, color=TEXT, line=1.05)
+    supporting = {}
+    for uc, actors in model.SUPPORTING_ACTORS.items():
+        for a in actors:
+            supporting.setdefault(a, []).append(uc)
+    rows = [["Entity", "Use cases"]]
+    for actor in ("Customer", "Administrator"):
+        rows.append([actor, uc_ranges([u[0] for u in model.USE_CASES if u[2] == actor])])
+    for actor in ("Payment Service", "Gemma 4 Service"):
+        rows.append([actor, uc_ranges(supporting.get(actor, []))])
+    table(s, x, 3.1, [1.75, W - M - x - 1.75], rows, size=12, row_h=0.38, mono_cols=(1,))
+    mono(s, x, 5.15, W - M - x, 0.3, "THE BOUNDARY DECIDES", size=10.5, color=ACCENT)
+    bullets(s, x, 5.45, W - M - x, 1.5, ["Whisper is inside: the voice never leaves",
+                                         "Gemma is outside: our rules check its answers",
+                                         "Payment is outside: it can say no"], size=12.5, gap=3)
 
 
 def s_spec(d):
@@ -1250,9 +1288,9 @@ def s_consistency(d):
 
 def s_domain(d):
     s = d.slide("02 ANALYSIS", NOTES["domain"])
-    d.title(s, "Domain concepts: CartItem ≠ OrderItem")
-    picture(s, ASSETS.figure("vp", "c2_domain"), M, 1.9, 6.35, 5.0, alt="Domain model",
-            label="figures/vp/c2_domain.png", hint=f"{len(model.ANALYSIS)} concepts and their associations", panel=True)
+    d.title(s, "Domain model: CartItem ≠ OrderItem")
+    picture(s, ASSETS.figure("vp", "c2_domain"), M, 1.9, 6.35, 5.0, alt="Domain model as the analysis class diagram",
+            label="figures/vp/c2_domain.png", hint=f"{len(model.ANALYSIS)} classes with their attributes", panel=True)
     x = 7.25
     cart_price = next(a.split(":")[0] for a in model.ANALYSIS["CartItem"] if "Price" in a)
     unit_price = next(a.split(":")[0] for a in model.ANALYSIS["OrderItem"] if "Price" in a)
@@ -1266,10 +1304,9 @@ def s_domain(d):
     mono(s, x, 4.95, W - M - x, 0.3, "CHECKOUT IS A TRANSFORMATION (A03)", size=10.5, color=ACCENT)
     text(s, x, 5.25, W - M - x, 0.4, [[("Cart ", {"color": TEXT}), ("—checkout «create»→ ", {"font": MONO, "size": 12}),
                                        ("Order", {"color": TEXT})]], size=15)
-    wanted = [("Customer", "Cart"), ("Cart", "CartItem"), ("Order", "OrderItem"), ("CartItem", "Product")]
-    mults = [f"{a['a']} {a['a_mult']} — {a['b_mult']} {a['b']}" for pair in wanted
-             for a in model.ANALYSIS_ASSOCIATIONS if (a["a"], a["b"]) == pair]
-    mono(s, x, 5.8, W - M - x, 1.0, "\n".join(mults), size=10.5, color=BODY, after=2)
+    mono(s, x, 5.8, W - M - x, 0.3, "ANALYSIS: ATTRIBUTES + KIND OF RELATIONSHIP", size=10, color=ACCENT)
+    text(s, x, 6.1, W - M - x, 0.75, "Association, composition ◆, aggregation ◇, generalization △, «create». "
+         "Names and 1 – n come in the data model.", size=12, color=BODY, line=1.02)
 
 
 # --------------------------------------------------------------- chapter 03
@@ -1530,35 +1567,100 @@ def s_transform(d):
           size=11, mono_cols=(0,), row_h=0.36)
 
 
+LEVELS = ["CONCEPTUAL", "LOGICAL", "PHYSICAL"]
+
+
+def level_strip(s, x, y, w, n):
+    """'LEVEL n OF 3' and the three level names, the current one in the accent colour."""
+    mono(s, x, y, w, 0.28, f"DATA MODEL ▪ LEVEL {n} OF 3", size=10.5, color=ACCENT)
+    text(s, x, y + 0.3, w, 0.35, [[(name + ("  →  " if i < 2 else ""),
+                                     {"color": ACCENT if i == n - 1 else MUTED, "font": MONO, "size": 10})
+                                    for i, name in enumerate(LEVELS)]], size=10)
+
+
+def s_conceptual(d):
+    s = d.slide("02 ANALYSIS", NOTES["conceptual"])
+    d.title(s, "Conceptual data model: names and links only")
+    picture(s, ASSETS.figure("vp", "c42_conceptual"), M, 1.9, 8.1, 5.0, alt="Conceptual data model",
+            label="figures/vp/c42_conceptual.png", hint="Entities by name, links by name", panel=True)
+    x = 9.0
+    level_strip(s, x, 1.95, W - M - x, 1)
+    names = list(dict.fromkeys(a["name"] for a in model.ANALYSIS_ASSOCIATIONS))
+    mono(s, x, 2.95, W - M - x, 0.28, "SHOWS", size=10.5, color=ACCENT)
+    text(s, x, 3.25, W - M - x, 0.95, f"{len(model.ANALYSIS)} entities by name; links named like a sentence: "
+         + ", ".join(names[2:6]) + " …", size=12.5, color=TEXT, line=1.02)
+    mono(s, x, 4.35, W - M - x, 0.28, "LEAVES OUT", size=10.5, color=ACCENT)
+    text(s, x, 4.65, W - M - x, 0.95, "Attributes, multiplicities, keys, data types, and «create»: an operation, "
+         "not data", size=12.5, color=TEXT, line=1.02)
+    mono(s, x, 6.35, W - M - x, 0.5, "NEXT: + ATTRIBUTES, ORM, LABELS, 1 – N", size=10)
+
+
+def s_orm(d):
+    s = d.slide("02 ANALYSIS", NOTES["orm"])
+    d.title(s, "Logical data model: persistable classes, named links")
+    picture(s, ASSETS.figure("vp", "c42_orm"), M, 1.9, 8.1, 5.0, alt="Logical data model: ORM-persistable class diagram",
+            label="figures/vp/c42_orm.png", hint="Classes «ORM-Persistable» with named associations", panel=True)
+    x = 9.0
+    level_strip(s, x, 1.95, W - M - x, 2)
+    names = list(dict.fromkeys(a["name"] for a in model.ANALYSIS_ASSOCIATIONS))
+    used = {m for a in model.ANALYSIS_ASSOCIATIONS for m in (a["a_mult"], a["b_mult"])}
+    mults = [m for m in ("1", "0..1", "0..*", "1..*") if m in used] + sorted(used - {"1", "0..1", "0..*", "1..*"})
+    items = [("+ ATTRIBUTES ▪ «ORM-PERSISTABLE»", "Every class is stored as records"),
+             ("LABEL", "Every association has a name: " + ", ".join(names[:5]) + " …"),
+             ("1 – N", "Multiplicity at both ends: " + ", ".join(mults)),
+             ("IS A ▪ 1 – 0..1", "Each generalization becomes an “is a” link: tables have no inheritance")]
+    y = 2.85
+    for k, v in items:
+        mono(s, x, y, W - M - x, 0.28, k, size=10.5, color=ACCENT)
+        text(s, x, y + 0.3, W - M - x, 0.6, v, size=12.5, color=TEXT, line=1.02)
+        y += 0.88
+    mono(s, x, 6.5, W - M - x, 0.4, "LEVEL 3 (TABLES, KEYS, TYPES): CHAPTER 4", size=10)
+
+
 def s_db(d):
     s = d.slide("04 DESIGN", NOTES["db"])
-    d.title(s, "From data model to an SQLite database")
-    picture(s, ASSETS.figure("vp", "c42_tables"), M, 1.9, 7.25, 5.0, alt="Physical database model",
+    d.title(s, "Physical data model: tables, keys and types")
+    picture(s, ASSETS.figure("vp", "c42_tables"), M, 1.9, 7.9, 5.0, alt="Physical data model",
             label="figures/vp/c42_tables.png", hint=f"{len(model.TABLES)} «table» classes with PK/FK", panel=True)
-    x = 8.15
-    picture(s, ASSETS.figure("demo", "db_tables"), x, 1.9, W - M - x, 2.85, alt="Screenshot of the ecom.db database",
+    x = 8.8
+    level_strip(s, x, 1.95, W - M - x, 3)
+    mono(s, x, 2.85, W - M - x, 0.3, "+ TABLES, COLUMNS, SQL TYPES, KEYS", size=10.5, color=ACCENT)
+    bullets(s, x, 3.25, W - M - x, 2.8, ["Inheritance → the subclass table's PK is also its FK",
+                                         "1 – * → FK on the many side",
+                                         "1 – 0..1 → FK with UNIQUE",
+                                         "Composition → composite key, ON DELETE CASCADE",
+                                         "Money numeric(12,2), states CHECK … IN"], size=12.5, gap=5)
+    mono(s, x, 6.5, W - M - x, 0.4, "NEXT: THE DATABASE (ERD)", size=10)
+
+
+def s_erd(d):
+    s = d.slide("04 DESIGN", NOTES["erd"])
+    d.title(s, "Database: the ERD of the physical data model")
+    picture(s, ASSETS.figure("vp", "c42_erd"), M, 1.9, 8.3, 5.0, alt="Database as an entity relationship diagram",
+            label="figures/vp/c42_erd.png", hint=f"{len(model.TABLES)} tables, every column", panel=True)
+    x = 9.2
+    mono(s, x, 1.95, W - M - x, 0.3, "VISUAL PARADIGM ERD", size=10.5, color=ACCENT)
+    bullets(s, x, 2.3, W - M - x, 2.0, ["Same tables and places as the physical model",
+                                        "Key icon: primary key; key with link: foreign key",
+                                        "N: may be empty ▪ U: unique",
+                                        "Crow's foot: 1, 0..1, 0..*, 1..*"], size=12, gap=4)
+    picture(s, ASSETS.figure("demo", "db_tables"), x, 4.45, W - M - x, 2.0, alt="Screenshot of the ecom.db database",
             label="figures/demo/db_tables.png", frame=True)
-    mono(s, x, 4.85, W - M - x, 0.3, "COPY SCREEN OF DB ▪ ecom.db", size=10, color=ACCENT)
-    bullets(s, x, 5.25, W - M - x, 1.7, ["Inheritance → the subclass table's PK is also its FK",
-                                         "1 – * → FK on the many side; 1 – 0..1 → add UNIQUE",
-                                         "Composition → composite key, ON DELETE CASCADE"], size=12, gap=4)
+    mono(s, x, 6.55, W - M - x, 0.3, "COPY SCREEN OF DB ▪ ecom.db", size=10, color=ACCENT)
 
 
 def s_layers(d):
     s = d.slide("04 DESIGN", NOTES["layers"])
-    d.title(s, "Four layers — a layer is not a package")
-    picture(s, ASSETS.figure("vp", "c44_layers"), M, 1.9, 5.9, 5.0, alt="Four layers and their packages",
-            label="figures/vp/c44_layers.png", hint="4 layers and their sub-packages", panel=True)
-    duty = {"Presentation": "Receive requests, present results", "Application": "Coordinate use cases and workflows",
-            "Domain": "Business concepts and rules", "Infrastructure": "SQLite, vector index, Gemma, Whisper"}
-    x, y = 6.85, 1.95
-    for title, _, subs in model.LAYERS:
-        mono(s, x, y, W - M - x, 0.28, title.upper(), size=10.5, color=ACCENT)
-        text(s, x, y + 0.28, W - M - x, 0.32, duty.get(title, ""), size=13, color=TEXT)
-        mono(s, x, y + 0.62, W - M - x, 0.5, " ▪ ".join(subs), size=9, color=MUTED)
-        y += 1.06
-    for i, rule in enumerate(["THE UI NEVER TOUCHES THE DATABASE", "SERVICES DEPEND ON INTERFACES"]):
-        chips(s, x, 6.2 + i * 0.42, [rule], size=9.5, h=0.32)
+    d.title(s, "Three layers, and the classes inside are linked")
+    picture(s, ASSETS.figure("vp", "c44_layers"), M, 1.75, W - 2 * M, 4.45, alt="Three layers with their classes",
+            label="figures/vp/c44_layers.png", hint="Presentation, Application, Data", panel=True)
+    duty = [("PRESENTATION", "Views, controllers, web server"), ("APPLICATION", "Shop services, search and AI services"),
+            ("DATA", "Repositories, SQLite, vector index, AI clients"), ("DOMAIN MODEL", "Shared by all three layers")]
+    cw = (W - 2 * M - 3 * 0.2) / 4
+    for i, (k, v) in enumerate(duty):
+        x = M + i * (cw + 0.2)
+        mono(s, x, 6.3, cw, 0.28, k, size=10, color=ACCENT)
+        text(s, x, 6.58, cw, 0.4, v, size=12, color=TEXT)
 
 
 def s_checkout_seq(d):
@@ -1747,29 +1849,30 @@ def s_folder_map(d):
 
 
 SLIDES = [s_title, s_team, s_agenda, s_product,
-          s_ch1, s_business, s_chain, s_fr, s_nfr, s_usecase,
-          s_ch2, s_spec, s_activity, s_consistency, s_domain,
+          s_ch1, s_business, s_chain, s_context,
+          s_ch2, s_fr, s_nfr, s_usecase, s_spec, s_activity, s_consistency, s_domain, s_conceptual, s_orm,
           s_ch3, s_pipeline, s_voice, s_image, s_room, s_architecture, s_assistant, s_eval,
-          s_ch4, s_transform, s_db, s_layers, s_checkout_seq,
+          s_ch4, s_transform, s_db, s_erd, s_layers, s_checkout_seq,
           s_ch5, s_mapping, s_code, s_demo,
           s_conclusion, s_qa, s_folder_map]
 
 NOTES = {
     "title": """Good morning. Our group presents the term essay for Information System Analysis and Design, titled "From requirements to running code". Throughout the talk we use one concrete product, Họa., an online painting shop with multimodal search: customers find a painting by typing, by speaking or by uploading a photo. It has a shopping assistant powered by Gemma 4 and speech recognition by Whisper running on the laptop itself. The talk follows the content of the course, and every concept is illustrated with an example taken from Họa.""",
     "team": """We are group 10 of class 04. Before the content, here are the four of us, hung like the paintings our shop sells: Bế Quốc Khánh, Vũ Hùng Anh, Nguyễn Gia Đức Trung and Phạm Tuấn Anh. We built Họa. together, from the requirements and the diagrams to the Java demo you will see at the end of the talk.""",
-    "agenda": """The talk has five parts, matching the five chapters of the essay: requirement determination from Lectures 01 and 02, analysis from Lectures 03 and 04, AI in e-commerce from Assignment 06, design from Lecture 05, and finally the code with a live demo. The line at the bottom is the thread our lecturer draws in Lecture 01: from a business problem to a stakeholder need, a requirement, a use case, behaviour, a domain model, a design and finally code. Each part of the talk is one link of that chain.""",
+    "agenda": """The talk has five parts, matching the five chapters of the essay: requirement determination from Lecture 01, analysis from Lectures 02 to 04, AI in e-commerce from Assignment 06, design from Lecture 05, and finally the code with a live demo. The line at the bottom is the thread our lecturer draws in Lecture 01: from a business problem to a stakeholder need, a requirement, a use case, behaviour, a domain model, a design and finally code. Each part of the talk is one link of that chain.""",
     "product": """Họa. sells prints of public-domain masterpieces, with images from Wikimedia Commons, together with frames, priced in US dollars. Besides the usual e-commerce functions — cart, checkout, order tracking and cancellation — the shop has five AI features that we present in Chapter 3. The numbers at the bottom, requirements, use cases, Java classes and tables, are read directly from the shared specification file of the project, so they always match the report and the code.""",
-    "ch1": """Chapter 1 answers the question: what must the system do, and for whom? Lecture 01 says we must understand the business first: its people, processes, information and problems. Lecture 02 turns that understanding into functional and non-functional requirements, actors and use cases.""",
-    "business": """Lecture 01 stresses that an information system is not just software: it is people, processes, data and technology. For Họa., the people are customers, the administrator, the warehouse and support staff; the main process is search, cart, checkout, delivery and cancellation. The table on the left is the stakeholder analysis in the lecture's format: the goal of each stakeholder and the information they need. The diagram on the right is the context view: it fixes the boundary of the Họa. Gallery system and its external entities — customer, administrator, payment service and the Gemma 4 service.""",
+    "ch1": """Chapter 1 follows Lecture 01: understand the business first — its people, processes, information and problems — trace each problem to its root cause, and fix the boundary of the system in a context diagram. The requirements themselves are written in Chapter 2.""",
+    "business": """Lecture 01 stresses that an information system is not just software: it is people, processes, data and technology. For Họa., the people are customers, the administrator, the warehouse and support staff; the main process is search, cart, checkout, delivery and cancellation. The table is the stakeholder analysis in the lecture's format: the goal of each stakeholder and the information they need. Who is inside the system and who is outside is drawn in the context diagram at the start of Chapter 2.""",
+    "context": """Analysis starts from the boundary. The context diagram shows Họa. Gallery as one box and the four external entities that exchange information with it: the customer, the administrator, the payment service and the Gemma 4 service. Each arrow is a flow labelled with what it carries; Visual Paradigm Community Edition has no data-flow diagram, so the flows are «flow» dependencies. We read every flow twice: what comes in must be received by a use case and kept by a concept of the domain model; what goes out must be produced by a use case. The table on the right gives the use cases of each entity. The boundary also decides three things: Whisper runs on the shop's own machine, so the customer's voice never leaves the system; Gemma is outside, so prices, stock and access rights are always decided by our own rules, with a keyword fallback; and the payment service is outside, so it can refuse a card, which is the alternative flow "card refused" of checkout.""",
     "chain": """This is the central chain of Lectures 01 and 02. The business problem: customers like a painting but do not know its title or artist. The root cause: the old search only matches exact keywords. The stakeholder need: find a painting from a natural sentence, the voice or a photo. Only then do we write the system requirement FR03, in the pattern "the system shall plus action plus object plus condition", and the use case UC04 Search by Image. Note that "use Gemma" is a solution, not a requirement: a need is not an implementation.""",
     "fr": """Here is the table of functional requirements in the format of Lecture 02: an identifier, a short description, a MoSCoW priority and the related use case. The Must requirements are the core of the shop: searching, viewing details, the cart, checkout, viewing and looking up orders, and administration. The advanced AI features, such as voice and image search or the assistant, are Should; trying a painting in your room and multimodal search are Could. Real payments are Won't for this release: the payment service is only simulated.""",
     "nfr": """Lecture 02 warns about requirements like "the system shall be fast": they cannot be verified. Every non-functional requirement of Họa. has a measurable condition: text search within two seconds on the demo data, images of at most five megabytes in three formats, audio processed only on the laptop, order ownership checked on the server. Each of these requirements can therefore become a test case.""",
     "usecase": """The use case diagram shows all use cases and four actors. Customer and Administrator are primary actors; the Gemma 4 Service and the Payment Service are supporting actors that the system calls. Two points from Lecture 02: a stakeholder is not an actor — the warehouse or support staff have a stake but do not interact directly; and a use case is a goal, not a button — "Search Product", not "click search". The three search modes specialise Search Product, exactly as in the structure of Assignment 06. The last line is a trace from a requirement to a method and its test.""",
-    "ch2": """Chapter 2 turns requirements into models. Lecture 03 asks how the system behaves when an actor performs a use case: scenarios, alternative flows and activity diagrams. Lecture 04, which is Assignment 03, asks which concepts the system must manage: the domain model and the analysis class diagram.""",
+    "ch2": """Chapter 2 starts from the needs of Chapter 1. Lecture 02 turns them into functional and non-functional requirements, actors and use cases. Then Lecture 03 asks how the system behaves when an actor performs a use case: scenarios, alternative flows and activity diagrams. Lecture 04, which is Assignment 03, asks which concepts the system must manage: the domain model; and the data model, at its conceptual and logical levels, says which of them must be stored.""",
     "spec": """This is the Checkout use case specified with the template of Lecture 03: primary and supporting actors, goal, trigger, pre- and postconditions. The main flow has five steps. Our lecturer insists that the normal flow is not enough, so we also list alternative flows: a painting out of stock, an address that does not belong to the customer, a rejected payment. Each alternative flow later becomes a decision in the activity diagram and a check in the code.""",
     "activity": """From the scenario we draw an activity diagram with swimlanes: the customer, the Họa. system and the database. Every decision node comes from a business rule: no stock means no order, the address must belong to the customer, and an order can only be cancelled before shipment. On the right are the four questions of functional analysis from Lecture 03. The trace FR07, UC07, scenario, activity answers the question "where is this requirement represented in our model?" """,
     "consistency": """Lecture 03 has an example of a consistency check for the requirement "a customer may cancel an order before shipment". We did exactly that exercise for Họa.: requirement FR11, the Cancel Order use case extending View Order, the decision "has the order been shipped", a state machine that allows cancellation only from PLACED or PROCESSING, and a design where cancelOrder calls Order.cancel. On the operations side, the administrator moves the order to SHIPPED, and from then on the customer can no longer cancel. The screenshot shows the cancellation in the demo.""",
-    "domain": """This is the core of Lecture 04. On the left is the domain model with the concepts of Họa.: customers, paintings, artists, carts, orders, shipping and payments. The lecture stresses that CartItem is not OrderItem: one holds temporary shopping information with the price when the item was added; the other holds persistent transaction information with the price frozen at checkout. Checkout transforms a Cart into an Order, which is why it is drawn as a «create» dependency rather than a permanent association. The multiplicities below are read directly from the model.""",
+    "domain": """This is the core of Lecture 04. On the left is the domain model drawn as the analysis class diagram: the classes of Họa. — customers, paintings, artists, carts, orders, shipping and payments — each with its attributes. Each line shows only the kind of relationship: a plain association, a composition with a filled diamond, an aggregation with a hollow diamond, a generalization with a hollow triangle, and the «create» dependency of checkout. Names and multiplicities are added one step later, in the data model. The lecture stresses that CartItem is not OrderItem: one holds temporary shopping information with the price when the item was added; the other holds persistent transaction information with the price frozen at checkout. Checkout transforms a Cart into an Order, which is why it is a «create» dependency rather than a permanent association.""",
     "ch3": """Chapter 3 covers AI in e-commerce. Họa. has five AI features: understanding natural text, voice search with Whisper running on the laptop, image search, trying a painting in your own room, and a curator assistant. The common principle: AI helps customers express what they want, while prices, stock and access rights stay under the control of business rules in the code.""",
     "pipeline": """The central principle of Assignment 06: different inputs are turned into one common representation, then candidates are retrieved, then ranked. Họa. has four inputs — text, voice, a photo of a painting and a photo of a room — and each one goes through exactly the classes and methods written in its box. They all meet in CommonQuery. SearchService retrieves candidates from ProductRepository and VectorIndex, and RankingService ranks them with the formula of the assignment. The four principles at the bottom also come from A06: one common representation, retrieval separate from ranking, the UI never touching the database, and starting simple.""",
     "voice": """Voice search. The sequence diagram on the left has exactly the seven participants required by Assignment 06. In Họa., the recording is sent to a self-hosted Whisper model running on the laptop, so the audio never leaves the machine — that is a privacy requirement. The transcript is shown so the customer can correct it, and then it follows the same path as a typed query. If the Whisper server is not running, the system asks the customer to type instead. We deliberately do not implement text-to-speech.""",
@@ -1780,8 +1883,11 @@ NOTES = {
     "eval": """Assignment 06 asks for an evaluation on a small set of queries: the number of queries, the number of successes, the rate and examples of failures. We ran the demo twice on the same sets: once with Gemma 4 online and once with Gemma switched off, so the offline keyword rules answer alone. The chart shows the result honestly. On text queries Gemma and the rules tie: 93 percent on direct requests and 67 percent on paraphrased ones, so on this small catalogue Gemma does not beat the rules. The clear gain is image search: 75 percent with Gemma against 12 percent with the local colour reader. The voice pipeline reaches 83 percent with a word error rate of about 4 percent, and the assistant answers all seven questions correctly without leaking any other customer's data. These are one run on small sets, and Gemma's results vary a little between runs, so we read them as indications, not proof. The table on the right lists the demo queries of Họa. next to the example queries of the assignment.""",
     "ch4": """Chapter 4 is the design, following Lecture 05 and the outline 4.1 to 4.6 given by our lecturer. Analysis says what the system needs; design says how the software realises it: design classes, the database, layers and packages, and finally the code.""",
     "transform": """This transformation table follows slide 22 of Lecture 05. The analysis classes Cart, CartItem, Order and OrderItem become domain classes with behaviour; checkout of a Cart at analysis level becomes CheckoutService.checkout at design level; the business interaction becomes a controller plus a service; the need to persist data becomes repositories. Besides the cartId of the lecture, our method also receives the customer id from the session to check ownership, the address and the payment method. On the right is the design class diagram with types, methods and navigability.""",
-    "db": """Section 4.2: from the data model we generate the database. The diagram on the left shows the tables with their primary keys, foreign keys and unique constraints. Three main mapping rules: inheritance becomes a subclass table whose primary key is also a foreign key; a one-to-many association puts the foreign key on the many side; composition, such as cart lines and order lines, uses a composite primary key. The screenshot on the right is the real SQLite database of the demo — the "copy screen of DB" our lecturer asked for.""",
-    "layers": """Section 4.4: the four-layer architecture of Lecture 05 — presentation, application, domain and infrastructure. Each layer has its own responsibility, listed on the right together with the Java packages that implement it. The lecture points out that a layer is not a package: a layer is an architectural responsibility, a package is a way to organise code, so each layer is split into several packages. Two dependency rules: the UI never touches the database, and services depend only on the interfaces of the repositories and of the AI clients.""",
+    "conceptual": """The data model is drawn at three levels; the first two belong to the analysis, and this is the first one, the conceptual data model. It is deliberately rough: the seventeen things the shop must keep, by name only, and the links between them, each with a name that reads as a sentence — a customer owns a cart, places orders, an order contains order items. There are no attributes, no multiplicities, no keys and no data types yet, and the «create» dependency of checkout is gone, because it is an operation, not something to store. The logical level adds the detail on the next slide; the physical level, with tables, keys and data types, is a design decision and comes in Chapter 4.""",
+    "orm": """The second level is the logical data model, drawn as a class diagram with the things our lecturer asks for. It adds the attributes. First, every class is marked «ORM-Persistable»: its objects are stored as records. Second, every association has a label, its name: a customer owns a cart and places orders, an order is paid by payments, an artist paints paintings. Third, every association has its multiplicities at both ends — one, zero or one, zero or many, one or many — which later decide where the foreign keys go. Because tables have no inheritance, each generalization becomes an "is a" association with multiplicity one to zero-or-one; and the «create» dependency of checkout is dropped, because it is an operation, not data. The next slide turns these classes into tables.""",
+    "db": """Section 4.2: the third level of the data model, the physical data model, is a design decision. The diagram on the left shows the tables with their columns, SQL data types, primary keys, foreign keys and unique constraints. The main mapping rules: inheritance becomes a subclass table whose primary key is also a foreign key; a one-to-many association puts the foreign key on the many side; a one-to-zero-or-one association adds a unique constraint; composition, such as cart lines and order lines, uses a composite primary key and cascading deletes; money is numeric with two decimals and states are checked against their allowed values. The next slide draws the database itself.""",
+    "erd": """Still in Section 4.2: from the physical data model we draw the database as an entity relationship diagram in Visual Paradigm — the orange tables. It follows the physical model table by table, on the same grid. Every table lists all its columns with their types; the key icon marks the primary key, a key with a link marks a foreign key, N marks a column that may be empty and U a unique column. Each foreign key is a relationship with its name and crow's-foot ends: one, zero or one, zero or many, one or many. The screenshot on the right is the real SQLite database of the demo, generated from the same model — the "copy screen of DB" our lecturer asked for.""",
+    "layers": """Section 4.4: Họa. uses the three-layer architecture of Assignment 06 — presentation, application and data — and each layer is drawn with its classes inside. Inside the presentation layer a view calls the controller of its feature and the web server asks the session who the customer is; inside the application layer the search service coordinates the query, image and ranking services; inside the data layer each SQLite repository implements its interface and uses the database, and the Gemma and Whisper clients implement the AI interfaces. Between layers the arrows only go down: controllers call services, services call repositories and AI interfaces. The domain classes are not a layer: they are the model shared by all three layers. The UI never touches the database, and services depend only on interfaces, so the database or the AI can be replaced.""",
     "checkout_seq": """This is the checkout sequence across the layers — the central example of Lecture 05. The controller receives the request and CheckoutService coordinates: it reads the cart, checks stock, creates the Order and its OrderItems, saves the order, reduces stock and empties the cart. Business rules such as adding a cart line or computing the total live in the domain classes Cart and Order rather than in the service, which avoids the "God class" the lecture warns about.""",
     "ch5": """Chapter 5 is the code. The goal is not only that it runs, but that it matches the model name for name: classes, methods, parameters, tables and columns in the code are identical to the specification.""",
     "mapping": """This table maps the sample code of the course slides to the code of Họa. The Python code of Assignment 06 — all_products, text_query, transcribe, search_text, cosine_similarity, find_order — keeps its names following Java conventions, and so does CheckoutService.checkout from Lecture 05. The package column shows the layer of each class. The last line is the technology mapping of Lecture 05: a controller is a Java HTTP handler, a repository is JDBC on SQLite.""",

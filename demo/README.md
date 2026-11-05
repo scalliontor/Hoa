@@ -44,7 +44,7 @@ The JSON API is described with real examples in [API.md](API.md).
 
 | Folder | Contents | Report |
 |---|---|---|
-| `src/main/java/com/ptit/ecom/` | the application, one package per layer (table below) | 4.4, 4.5, 5 |
+| `src/main/java/com/ptit/ecom/` | the application: three layers (presentation, application, data = `infrastructure.*`) and the shared domain model (table below) | 4.4, 4.5, 5 |
 | `web/` | the browser UI: `index.html`, `css/`, `js/` (one file per view of the model: `search-ui.js`, `voice-input.js`, `room-preview.js`, …), `img/` (painting images, sample rooms, `credits.json`) | 5 |
 | `db/` | `ecom_schema_sqlite.sql` and `seed.sql`, generated from `TABLES` by `tools/gen_sql.py` | 4.2 |
 | `data/` | `catalog.json` (32 paintings, 5 frames, artists), `ATTRIBUTION.md` (Wikimedia Commons sources), `eval_images/` (photos for the evaluation); `ecom.db` and logs at run time | 3, 5 |
@@ -64,15 +64,15 @@ The JSON API is described with real examples in [API.md](API.md).
 | `presentation.web` | Presentation | WebServer, SessionManager, EcomApplication | A06 `main.py` (composition root), HTTP routes | 4.4, 5 |
 | `application.service` | Application | CartService, CheckoutService, OrderService, ProductService, AssistantService, AssistantReply | A05 `CheckoutService.checkout(cartId, …)` | 4.4, 4.5 |
 | `application.search` | Application | SearchService, QueryService, SpeechService, ImageService, RankingService, CommonQuery, SearchResult | A06 search engine: query understanding, S = α·Stext + β·Simage + γ·Sbusiness | 3, 4.4 |
-| `domain.customer` | Domain | Customer, CustomerVIP, CustomerNew, FullName, Address | analysis classes of 4.1 | 4.1, 4.3 |
-| `domain.product` | Domain | Product, Painting, Frame, Artist | | 4.1, 4.3 |
-| `domain.cart` | Domain | Cart, CartItem | | 4.3 |
-| `domain.order` | Domain | Order, OrderItem, OrderStatus, Shipping, ShippingStatus | | 4.3 |
-| `domain.payment` | Domain | Payment, PayCash, PayCredit, PaymentStatus | polymorphic `process()` | 4.3 |
-| `infrastructure.repository` | Infrastructure | CustomerRepository, ProductRepository, CartRepository, OrderRepository | A05 repositories | 4.4 |
-| `infrastructure.repository.sqlite` | Infrastructure | Database, SqliteCustomerRepository, SqliteProductRepository, SqliteCartRepository, SqliteOrderRepository | A06 product and order databases | 4.2, 4.4 |
-| `infrastructure.search` | Infrastructure | VectorIndex | A06 vector database, `cosine_similarity` | 3, 4.4 |
-| `infrastructure.ai` | Infrastructure | LlmClient, GemmaClient, LlmReply, ToolCall, SpeechClient, WhisperClient | Gemma 4 and Whisper behind interfaces | 3, 4.4 |
+| `domain.customer` | Domain model (shared) | Customer, CustomerVIP, CustomerNew, FullName, Address | analysis classes of 4.1 | 4.1, 4.3 |
+| `domain.product` | Domain model (shared) | Product, Painting, Frame, Artist | | 4.1, 4.3 |
+| `domain.cart` | Domain model (shared) | Cart, CartItem | | 4.3 |
+| `domain.order` | Domain model (shared) | Order, OrderItem, OrderStatus, Shipping, ShippingStatus | | 4.3 |
+| `domain.payment` | Domain model (shared) | Payment, PayCash, PayCredit, PaymentStatus | polymorphic `process()` | 4.3 |
+| `infrastructure.repository` | Data | CustomerRepository, ProductRepository, CartRepository, OrderRepository | A05 repositories | 4.4 |
+| `infrastructure.repository.sqlite` | Data | Database, SqliteCustomerRepository, SqliteProductRepository, SqliteCartRepository, SqliteOrderRepository | A06 product and order databases | 4.2, 4.4 |
+| `infrastructure.search` | Data | VectorIndex | A06 vector database, `cosine_similarity` | 3, 4.4 |
+| `infrastructure.ai` | Data | LlmClient, GemmaClient, LlmReply, ToolCall, SpeechClient, WhisperClient | Gemma 4 and Whisper behind interfaces | 3, 4.4 |
 
 Dependencies point downwards only (Presentation → Application → Domain / Infrastructure → Domain);
 controllers return domain objects, and only `EcomApplication` creates the infrastructure objects.

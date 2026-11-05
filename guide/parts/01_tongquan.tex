@@ -36,10 +36,10 @@ Thời gian dưới đây ước tính từ độ dài \key{lời nói} ở mụ
 \textbf{Phần} & \textbf{Slide} & \textbf{Nội dung} & \textbf{Thời gian} & \textbf{Người nói}\\
 \midrule
 Mở đầu & \slideinfo{chapterSlides}{0} & Chào, giới thiệu nhóm, sơ đồ bài nói, sản phẩm & \slideinfo{chapterTime}{0} & Người 1\\
-Chương 1 -- Yêu cầu & \slideinfo{chapterSlides}{1} & HTTTCN là gì, bên liên quan, vấn đề $\to$ yêu cầu, \factFR{} FR, \factNFR{} NFR, actor, use case & \slideinfo{chapterTime}{1} & Người 1\\
-Chương 2 -- Phân tích & \slideinfo{chapterSlides}{2} & Đặc tả use case, activity, kiểm tra nhất quán, mô hình miền & \slideinfo{chapterTime}{2} & Người 1\\
+Chương 1 -- Yêu cầu & \slideinfo{chapterSlides}{1} & HTTTCN là gì, bên liên quan, vấn đề $\to$ nguyên nhân, sơ đồ ngữ cảnh & \slideinfo{chapterTime}{1} & Người 1\\
+Chương 2 -- Phân tích & \slideinfo{chapterSlides}{2} & \factFR{} FR, \factNFR{} NFR, use case, đặc tả, activity, nhất quán, mô hình miền, mô hình dữ liệu & \slideinfo{chapterTime}{2} & Người 1\\
 Chương 3 -- AI & \slideinfo{chapterSlides}{3} & Text, voice, ảnh, phòng, trợ lý; kiến trúc; đánh giá & \slideinfo{chapterTime}{3} & Người 2\\
-Chương 4 -- Thiết kế & \slideinfo{chapterSlides}{4} & Lớp phân tích $\to$ lớp thiết kế, CSDL, 4 tầng, sequence checkout & \slideinfo{chapterTime}{4} & Người 3\\
+Chương 4 -- Thiết kế & \slideinfo{chapterSlides}{4} & Lớp phân tích $\to$ lớp thiết kế, CSDL (ERD), 3 tầng, sequence checkout & \slideinfo{chapterTime}{4} & Người 3\\
 Chương 5 -- Code & \slideinfo{chapterSlides}{5} & Ánh xạ code bài giảng, kiểm chứng, kịch bản demo & \slideinfo{chapterTime}{5} & Người 4\\
 Kết luận, Q\&A & \slideinfo{chapterSlides}{6} & Dấu vết liền mạch, bài học, hạn chế & \slideinfo{chapterTime}{6} & Người 4\\
 \bottomrule
@@ -55,9 +55,9 @@ Mỗi bạn nhớ \key{một câu} cho phần của mình; nếu quên hết, ch
 \midrule
 Mở đầu & Họa. là một cửa hàng tranh biết nghe, biết nhìn, và bài nói này kể cách nó đi từ ý tưởng đến sản phẩm chạy thật.\\
 Chương 1 & Hiểu khách cần gì trước, rồi mới nói đến công nghệ.\\
-Chương 2 & Biến yêu cầu thành bản vẽ: ai làm gì, theo thứ tự nào, cần quản lý những thứ gì.\\
+Chương 2 & Viết yêu cầu, rồi vẽ: ai làm gì, theo thứ tự nào, cần quản lý và cất những thứ gì.\\
 Chương 3 & AI giúp khách tìm tranh bằng chữ, giọng nói và ảnh; AI hỏng thì cửa hàng vẫn chạy.\\
-Chương 4 & Biến bản vẽ thành thiết kế: khối code, bảng dữ liệu, bốn tầng.\\
+Chương 4 & Biến bản vẽ thành thiết kế: khối code, bảng dữ liệu, ba tầng.\\
 Chương 5 & Code khớp bản thiết kế từng cái tên, và chạy thật ngay bây giờ.\\
 Kết luận & Một bản đặc tả chung giữ cho mọi thứ khớp nhau, và nhóm nói thật những điều chưa làm được.\\
 \bottomrule
@@ -88,10 +88,10 @@ Người 4 & Chương 5 (Code), dẫn demo, kết luận, hỏi đáp & \slidein
 \end{center}
 Thời gian ở bảng chưa tính demo (khoảng 6--8 phút, do Người 4 dẫn).
 \begin{itemize}
-\item \key{Một người nói, một người thao tác demo.} Người 4 dẫn demo, còn \key{Người 3 gõ và bấm} (Chương 4 ngắn nhất, và ngay trước demo Người 3 đã nói xong); Người 2 ngồi cạnh, sẵn sàng xử lý sự cố (mục~\ref{sec:suco}).
+\item \key{Một người nói, một người thao tác demo.} Người 4 dẫn demo, còn \key{Người 3 gõ và bấm} (ngay trước demo Người 3 đã nói xong phần của mình); Người 2 ngồi cạnh, sẵn sàng xử lý sự cố (mục~\ref{sec:suco}).
 \item \key{Trao lời giữa các bạn:} cuối mỗi phần có sẵn một câu mời bạn kế tiếp (chỗ \todo{tên}), và đầu phần sau có câu mở đầu tương ứng. Hãy điền tên thật và tập nói cả hai câu.
 \item Mỗi người phải trả lời được các câu hỏi của \key{phần mình}: Người 1 mục~\ref{sec:q1}, Người 2 mục~\ref{sec:q2}, Người 3 và Người 4 mục~\ref{sec:q3}; mọi người biết \key{tìm ở file nào} khi bị hỏi sâu (mục~\ref{sec:filemap}).
-\item Thời gian không đều: Người 3 nói ít nhất. Nếu muốn cân bằng, có thể chuyển phần mở đầu (slide 1--4) hoặc phần kết luận (slide 33--34) sang Người 3.
+\item Thời gian không đều: Người 1 nói nhiều nhất, Người 4 nói ít nhất nhưng dẫn thêm phần demo. Nếu muốn cân bằng, có thể chuyển phần mở đầu (slide 1--4) từ Người 1 sang Người 4.
 \end{itemize}
 
 \subsection{Mẹo để nói dễ nghe}

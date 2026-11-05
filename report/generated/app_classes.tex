@@ -1,60 +1,60 @@
-\begin{longtable}{@{}P{3.3cm}P{1.6cm}P{4.5cm}P{5.6cm}@{}}
-\caption{Classes outside the domain layer: kind, package and public methods}\label{tab:appclasses}\\
+\begin{longtable}{@{}P{4.2cm}P{10.8cm}@{}}
+\caption{Public methods of the classes outside the domain model}\label{tab:appclasses}\\
 \toprule
-\footnotesize \textbf{Class} & \footnotesize \textbf{Kind} & \footnotesize \textbf{Package} & \footnotesize \textbf{Methods}\\
+\footnotesize \textbf{Class} & \footnotesize \textbf{Methods (signature)}\\
 \midrule
 \endfirsthead
 \toprule
-\footnotesize \textbf{Class} & \footnotesize \textbf{Kind} & \footnotesize \textbf{Package} & \footnotesize \textbf{Methods}\\
+\footnotesize \textbf{Class} & \footnotesize \textbf{Methods (signature)}\\
 \midrule
 \endhead
 \bottomrule
 \endlastfoot
-\footnotesize \code{CustomerRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{findById}, \code{allCustomers}, \code{saveAddress}\\
-\footnotesize \code{ProductRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{allProducts}, \code{findById}, \code{decreaseStock}, \code{save}\\
-\footnotesize \code{CartRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{findById}, \code{findByCustomerId}, \code{save}, \code{clear}\\
-\footnotesize \code{OrderRepository} & \footnotesize interface & \footnotesize \code{infrastructure.repository} & \footnotesize \code{findOrder}, \code{findByCustomer}, \code{allOrders}, \code{save}, \code{updateStatus}\\
-\footnotesize \code{Database} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{getConnection}, \code{initialize}\\
-\footnotesize \code{SqliteCustomerRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{findById}, \code{allCustomers}, \code{saveAddress}\\
-\footnotesize \code{SqliteProductRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{allProducts}, \code{findById}, \code{decreaseStock}, \code{save}\\
-\footnotesize \code{SqliteCartRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{findById}, \code{findByCustomerId}, \code{save}, \code{clear}\\
-\footnotesize \code{SqliteOrderRepository} & \footnotesize class & \footnotesize \code{infrastructure.repository.sqlite} & \footnotesize \code{findOrder}, \code{findByCustomer}, \code{allOrders}, \code{save}, \code{updateStatus}\\
-\footnotesize \code{VectorIndex} & \footnotesize class & \footnotesize \code{infrastructure.search} & \footnotesize \code{build}, \code{embedProduct}, \code{toVector}, \code{cosineSimilarity}, \code{nearest}\\
-\footnotesize \code{ToolCall} & \footnotesize class & \footnotesize \code{infrastructure.ai} & \footnotesize \\
-\footnotesize \code{LlmReply} & \footnotesize class & \footnotesize \code{infrastructure.ai} & \footnotesize \code{hasToolCalls}\\
-\footnotesize \code{LlmClient} & \footnotesize interface & \footnotesize \code{infrastructure.ai} & \footnotesize \code{chat}, \code{isAvailable}\\
-\footnotesize \code{SpeechClient} & \footnotesize interface & \footnotesize \code{infrastructure.ai} & \footnotesize \code{transcribe}, \code{isAvailable}\\
-\footnotesize \code{WhisperClient} & \footnotesize class & \footnotesize \code{infrastructure.ai} & \footnotesize \code{transcribe}, \code{isAvailable}\\
-\footnotesize \code{GemmaClient} & \footnotesize class & \footnotesize \code{infrastructure.ai} & \footnotesize \code{chat}, \code{isAvailable}\\
-\footnotesize \code{CommonQuery} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \\
-\footnotesize \code{SearchResult} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \\
-\footnotesize \code{QueryService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{textQuery}, \code{voiceQuery}, \code{imageQuery}, \code{understand}, \code{parseRules}\\
-\footnotesize \code{SpeechService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{transcribe}\\
-\footnotesize \code{ImageService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{embed}, \code{describe}\\
-\footnotesize \code{RankingService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{rank}, \code{businessScore}\\
-\footnotesize \code{SearchService} & \footnotesize class & \footnotesize \code{application.search} & \footnotesize \code{searchText}, \code{searchVoice}, \code{searchImage}, \code{searchRoom}, \code{describeRoom}, \code{searchMultimodal}, \code{retrieve}\\
-\footnotesize \code{CartService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{addToCart}, \code{updateQuantity}, \code{removeItem}, \code{viewCart}\\
-\footnotesize \code{CheckoutService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{checkout}, \code{addAddress}\\
-\footnotesize \code{OrderService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{getOrder}, \code{listOrders}, \code{latestOrder}, \code{cancelOrder}, \code{listAllOrders}, \code{updateStatus}\\
-\footnotesize \code{ProductService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{listProducts}, \code{updatePriceAndStock}, \code{addPainting}\\
-\footnotesize \code{AssistantReply} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \\
-\footnotesize \code{AssistantService} & \footnotesize class & \footnotesize \code{application.service} & \footnotesize \code{ask}, \code{tools}, \code{runTool}\\
-\footnotesize \code{SearchController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{search}, \code{transcribe}, \code{searchVoice}, \code{searchImage}, \code{searchRoom}, \code{describeRoom}, \code{searchMultimodal}\\
-\footnotesize \code{CartController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{addItem}, \code{updateQuantity}, \code{removeItem}, \code{viewCart}\\
-\footnotesize \code{CheckoutController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{checkout}, \code{addAddress}\\
-\footnotesize \code{OrderController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{viewOrder}, \code{listOrders}, \code{cancelOrder}\\
-\footnotesize \code{AdminController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{listProducts}, \code{updateProduct}, \code{addPainting}, \code{listAllOrders}, \code{updateOrderStatus}\\
-\footnotesize \code{AssistantController} & \footnotesize class & \footnotesize \code{presentation.controller} & \footnotesize \code{ask}\\
-\footnotesize \code{SessionManager} & \footnotesize class & \footnotesize \code{presentation.web} & \footnotesize \code{login}, \code{customerOf}, \code{isAdmin}\\
-\footnotesize \code{WebServer} & \footnotesize class & \footnotesize \code{presentation.web} & \footnotesize \code{start}, \code{stop}\\
-\footnotesize \code{EcomApplication} & \footnotesize class & \footnotesize \code{presentation.web} & \footnotesize \code{main}\\
-\footnotesize \code{SearchUI} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{submitText}, \code{submitVoice}, \code{submitImage}, \code{submitMultimodal}\\
-\footnotesize \code{VoiceInput} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{start}, \code{stop}, \code{upload}, \code{onTranscript}\\
-\footnotesize \code{RoomPreview} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{chooseRoom}, \code{placePainting}, \code{renderSuggestions}\\
-\footnotesize \code{ImageUpload} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{choose}, \code{validate}, \code{preview}\\
-\footnotesize \code{SearchResultView} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{render}, \code{renderEmpty}\\
-\footnotesize \code{CartView} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{render}, \code{checkout}\\
-\footnotesize \code{OrderView} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{render}, \code{lookup}\\
-\footnotesize \code{AssistantView} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{send}, \code{render}\\
-\footnotesize \code{AdminView} & \footnotesize view (JS) & \footnotesize \code{presentation.view} & \footnotesize \code{renderProducts}, \code{saveProduct}, \code{renderOrders}, \code{updateStatus}\\
+\footnotesize \code{SearchUI}\newline{\scriptsize «view» (JS), presentation} & \footnotesize \code{+submitText(text: String): void}\newline \code{+submitVoice(transcript: String): void}\newline \code{+submitImage(file: File): void}\newline \code{+submitMultimodal(text: String, file: File): void}\\
+\footnotesize \code{VoiceInput}\newline{\scriptsize «view» (JS), presentation} & \footnotesize \code{+start(): void}\newline \code{+stop(): void}\newline \code{+upload(audio: Blob): void}\newline \code{+onTranscript(callback: Function): void}\\
+\footnotesize \code{RoomPreview}\newline{\scriptsize «view» (JS), presentation} & \footnotesize \code{+chooseRoom(file: File): void}\newline \code{+placePainting(product: Product): void}\newline \code{+renderSuggestions(results: List<SearchResult>): void}\\
+\footnotesize \code{ImageUpload}\newline{\scriptsize «view» (JS), presentation} & \footnotesize \code{+choose(file: File): void}\newline \code{+validate(file: File): boolean}\newline \code{+preview(): void}\\
+\footnotesize \code{SearchResultView}\newline{\scriptsize «view» (JS), presentation} & \footnotesize \code{+render(results: List<SearchResult>): void}\newline \code{+renderEmpty(message: String): void}\\
+\footnotesize \code{CartView}\newline{\scriptsize «view» (JS), presentation} & \footnotesize \code{+render(cart: Cart): void}\newline \code{+checkout(): void}\\
+\footnotesize \code{OrderView}\newline{\scriptsize «view» (JS), presentation} & \footnotesize \code{+render(orders: List<Order>): void}\newline \code{+lookup(orderId: String): void}\\
+\footnotesize \code{AssistantView}\newline{\scriptsize «view» (JS), presentation} & \footnotesize \code{+send(message: String): void}\newline \code{+render(reply: AssistantReply): void}\\
+\footnotesize \code{AdminView}\newline{\scriptsize «view» (JS), presentation} & \footnotesize \code{+renderProducts(products: List<Product>): void}\newline \code{+saveProduct(productId: String): void}\newline \code{+renderOrders(orders: List<Order>): void}\newline \code{+updateStatus(orderId: String, status: String): void}\\
+\footnotesize \code{SearchController}\newline{\scriptsize class, presentation} & \footnotesize \code{+search(text: String): List<SearchResult>}\newline \code{+transcribe(audioInput: byte[]): String}\newline \code{+searchVoice(transcript: String): List<SearchResult>}\newline \code{+searchImage(image: byte[]): List<SearchResult>}\newline \code{+searchRoom(image: byte[]): List<SearchResult>}\newline \code{+describeRoom(image: byte[]): Map<String, String>}\newline \code{+searchMultimodal(text: String, image: byte[]): List<SearchResult>}\\
+\footnotesize \code{CartController}\newline{\scriptsize class, presentation} & \footnotesize \code{+addItem(customerId: String, productId: String, quantity: int): Cart}\newline \code{+updateQuantity(customerId: String, productId: String, quantity: int): Cart}\newline \code{+removeItem(customerId: String, productId: String): Cart}\newline \code{+viewCart(customerId: String): Cart}\\
+\footnotesize \code{CheckoutController}\newline{\scriptsize class, presentation} & \footnotesize \code{+checkout(customerId: String, cartId: String, addressId: String, paymentMethod: String): Order}\newline \code{+addAddress(customerId: String, houseNumber: String, street: String, district: String, city: String): Address}\\
+\footnotesize \code{OrderController}\newline{\scriptsize class, presentation} & \footnotesize \code{+viewOrder(customerId: String, orderId: String): Order}\newline \code{+listOrders(customerId: String): List<Order>}\newline \code{+cancelOrder(customerId: String, orderId: String): void}\\
+\footnotesize \code{AdminController}\newline{\scriptsize class, presentation} & \footnotesize \code{+listProducts(): List<Product>}\newline \code{+updateProduct(productId: String, price: BigDecimal, stockQuantity: int): Product}\newline \code{+addPainting(painting: Painting): Painting}\newline \code{+listAllOrders(): List<Order>}\newline \code{+updateOrderStatus(orderId: String, status: String): Order}\\
+\footnotesize \code{AssistantController}\newline{\scriptsize class, presentation} & \footnotesize \code{+ask(customerId: String, message: String): AssistantReply}\\
+\footnotesize \code{SessionManager}\newline{\scriptsize class, presentation} & \footnotesize \code{+login(customerId: String): String}\newline \code{+customerOf(token: String): String}\newline \code{+isAdmin(token: String): boolean}\\
+\footnotesize \code{WebServer}\newline{\scriptsize class, presentation} & \footnotesize \code{+start(): void}\newline \code{+stop(): void}\\
+\footnotesize \code{EcomApplication}\newline{\scriptsize class, presentation} & \footnotesize \code{+main(args: String[]): void} \{static\}\\
+\footnotesize \code{CartService}\newline{\scriptsize class, application} & \footnotesize \code{+addToCart(customerId: String, productId: String, quantity: int): Cart}\newline \code{+updateQuantity(customerId: String, productId: String, quantity: int): Cart}\newline \code{+removeItem(customerId: String, productId: String): Cart}\newline \code{+viewCart(customerId: String): Cart}\\
+\footnotesize \code{CheckoutService}\newline{\scriptsize class, application} & \footnotesize \code{+checkout(cartId: String, customerId: String, addressId: String, payment: Payment): Order}\newline \code{+addAddress(customerId: String, address: Address): Address}\\
+\footnotesize \code{OrderService}\newline{\scriptsize class, application} & \footnotesize \code{+getOrder(customerId: String, orderId: String): Order}\newline \code{+listOrders(customerId: String): List<Order>}\newline \code{+latestOrder(customerId: String): Order}\newline \code{+cancelOrder(customerId: String, orderId: String): void}\newline \code{+listAllOrders(): List<Order>}\newline \code{+updateStatus(orderId: String, status: OrderStatus): Order}\\
+\footnotesize \code{ProductService}\newline{\scriptsize class, application} & \footnotesize \code{+listProducts(): List<Product>}\newline \code{+updatePriceAndStock(productId: String, price: BigDecimal, stockQuantity: int): Product}\newline \code{+addPainting(painting: Painting): Painting}\\
+\footnotesize \code{AssistantReply}\newline{\scriptsize class, application} & \footnotesize \emph{no public method: a value object carried between the layers}\\
+\footnotesize \code{AssistantService}\newline{\scriptsize class, application} & \footnotesize \code{+ask(customerId: String, message: String): AssistantReply}\newline \code{-tools(): List<Map<String, Object>>}\newline \code{-runTool(customerId: String, call: ToolCall): String}\\
+\footnotesize \code{CommonQuery}\newline{\scriptsize class, application} & \footnotesize \emph{no public method: a value object carried between the layers}\\
+\footnotesize \code{SearchResult}\newline{\scriptsize class, application} & \footnotesize \emph{no public method: a value object carried between the layers}\\
+\footnotesize \code{QueryService}\newline{\scriptsize class, application} & \footnotesize \code{+textQuery(text: String): CommonQuery}\newline \code{+voiceQuery(text: String): CommonQuery}\newline \code{+imageQuery(embedding: double[]): CommonQuery}\newline \code{-understand(query: CommonQuery): void}\newline \code{-parseRules(query: CommonQuery): void}\\
+\footnotesize \code{SpeechService}\newline{\scriptsize class, application} & \footnotesize \code{+transcribe(audioInput: byte[]): String}\\
+\footnotesize \code{ImageService}\newline{\scriptsize class, application} & \footnotesize \code{+embed(image: byte[]): double[]}\newline \code{+describe(image: byte[], purpose: String): Map<String, String>}\\
+\footnotesize \code{RankingService}\newline{\scriptsize class, application} & \footnotesize \code{+rank(query: CommonQuery, candidates: List<SearchResult>, limit: int): List<SearchResult>}\newline \code{+businessScore(product: Product): double}\\
+\footnotesize \code{SearchService}\newline{\scriptsize class, application} & \footnotesize \code{+searchText(text: String): List<SearchResult>}\newline \code{+searchVoice(transcript: String): List<SearchResult>}\newline \code{+searchImage(image: byte[]): List<SearchResult>}\newline \code{+searchRoom(image: byte[]): List<SearchResult>}\newline \code{+describeRoom(image: byte[]): Map<String, String>}\newline \code{+searchMultimodal(text: String, image: byte[]): List<SearchResult>}\newline \code{-retrieve(query: CommonQuery): List<SearchResult>}\\
+\footnotesize \code{CustomerRepository}\newline{\scriptsize «interface», data} & \footnotesize \code{+findById(customerId: String): Customer}\newline \code{+allCustomers(): List<Customer>}\newline \code{+saveAddress(customerId: String, address: Address): Address}\\
+\footnotesize \code{ProductRepository}\newline{\scriptsize «interface», data} & \footnotesize \code{+allProducts(): List<Product>}\newline \code{+findById(productId: String): Product}\newline \code{+decreaseStock(productId: String, quantity: int): void}\newline \code{+save(product: Product): void}\\
+\footnotesize \code{CartRepository}\newline{\scriptsize «interface», data} & \footnotesize \code{+findById(cartId: String): Cart}\newline \code{+findByCustomerId(customerId: String): Cart}\newline \code{+save(cart: Cart): void}\newline \code{+clear(cartId: String): void}\\
+\footnotesize \code{OrderRepository}\newline{\scriptsize «interface», data} & \footnotesize \code{+findOrder(orderId: String): Order}\newline \code{+findByCustomer(customerId: String): List<Order>}\newline \code{+allOrders(): List<Order>}\newline \code{+save(order: Order): void}\newline \code{+updateStatus(orderId: String, status: OrderStatus): void}\\
+\footnotesize \code{Database}\newline{\scriptsize class, data} & \footnotesize \code{+getConnection(): Connection}\newline \code{+initialize(schemaSql: String, seedSql: String): void}\\
+\footnotesize \code{SqliteCustomerRepository}\newline{\scriptsize class, data} & \footnotesize \code{+findById(customerId: String): Customer}\newline \code{+allCustomers(): List<Customer>}\newline \code{+saveAddress(customerId: String, address: Address): Address}\\
+\footnotesize \code{SqliteProductRepository}\newline{\scriptsize class, data} & \footnotesize \code{+allProducts(): List<Product>}\newline \code{+findById(productId: String): Product}\newline \code{+decreaseStock(productId: String, quantity: int): void}\newline \code{+save(product: Product): void}\\
+\footnotesize \code{SqliteCartRepository}\newline{\scriptsize class, data} & \footnotesize \code{+findById(cartId: String): Cart}\newline \code{+findByCustomerId(customerId: String): Cart}\newline \code{+save(cart: Cart): void}\newline \code{+clear(cartId: String): void}\\
+\footnotesize \code{SqliteOrderRepository}\newline{\scriptsize class, data} & \footnotesize \code{+findOrder(orderId: String): Order}\newline \code{+findByCustomer(customerId: String): List<Order>}\newline \code{+allOrders(): List<Order>}\newline \code{+save(order: Order): void}\newline \code{+updateStatus(orderId: String, status: OrderStatus): void}\\
+\footnotesize \code{VectorIndex}\newline{\scriptsize class, data} & \footnotesize \code{+build(products: List<Product>): void}\newline \code{+embedProduct(product: Product): double[]}\newline \code{+toVector(style: String, subject: String, color: String): double[]} \{static\}\newline \code{+cosineSimilarity(a: double[], b: double[]): double} \{static\}\newline \code{+nearest(queryEmbedding: double[], k: int): Map<String, Double>}\\
+\footnotesize \code{ToolCall}\newline{\scriptsize class, data} & \footnotesize \emph{no public method: a value object carried between the layers}\\
+\footnotesize \code{LlmReply}\newline{\scriptsize class, data} & \footnotesize \code{+hasToolCalls(): boolean}\\
+\footnotesize \code{LlmClient}\newline{\scriptsize «interface», data} & \footnotesize \code{+chat(messages: List<Map<String, Object>>, tools: List<Map<String, Object>>): LlmReply}\newline \code{+isAvailable(): boolean}\\
+\footnotesize \code{SpeechClient}\newline{\scriptsize «interface», data} & \footnotesize \code{+transcribe(audio: byte[], language: String): String}\newline \code{+isAvailable(): boolean}\\
+\footnotesize \code{WhisperClient}\newline{\scriptsize class, data} & \footnotesize \code{+transcribe(audio: byte[], language: String): String}\newline \code{+isAvailable(): boolean}\\
+\footnotesize \code{GemmaClient}\newline{\scriptsize class, data} & \footnotesize \code{+chat(messages: List<Map<String, Object>>, tools: List<Map<String, Object>>): LlmReply}\newline \code{+isAvailable(): boolean}\\
 \end{longtable}

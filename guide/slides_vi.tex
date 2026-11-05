@@ -52,22 +52,20 @@ Họa. bán bản in của \factPaintings{} bức tranh nổi tiếng thuộc ph
 \item Ảnh chụp trang chủ bên phải để cho thấy đây là cửa hàng thật, không chỉ là sơ đồ.
 }
 
-\subsection{Chương 1 -- Xác định yêu cầu (slide 5--10)}
+\subsection{Chương 1 -- Xác định yêu cầu (slide 5--8)}
 
 % T5: Chapter 1 - Requirement Determination
-\slide{5}{Chương 1: cửa hàng phải làm gì, và làm cho ai.}{
-Chương một trả lời hai câu hỏi đơn giản: cửa hàng phải làm gì, và làm cho ai? Trước khi nghĩ tới công nghệ, nhóm em hiểu cửa hàng đã.
+\slide{5}{Chương 1: hiểu cửa hàng trước đã: ai liên quan, gặp vấn đề gì, vì sao, và hệ thống nằm ở đâu.}{
+Chương một là tìm hiểu cửa hàng trước khi nghĩ tới phần mềm. Nhóm em trả lời bốn câu: ai liên quan tới cửa hàng, cửa hàng đang gặp vấn đề gì, vì sao lại gặp, và hệ thống mới sẽ nằm ở đâu, ranh giới của nó tới đâu.
 }{}
 
 % T6: Understand the business before drawing diagrams
-\slide{6}{Một hệ thống thông tin là con người, cách làm việc, dữ liệu và công nghệ; và ta cần vẽ ranh giới quanh nó.}{
+\slide{6}{Một hệ thống thông tin là con người, cách làm việc, dữ liệu và công nghệ; trước hết phải hiểu ai liên quan và họ cần gì.}{
 Thầy dạy rằng một hệ thống thông tin không chỉ là phần mềm. Nó gồm bốn thứ. Con người: ở Họa. là khách, người quản lý, nhân viên kho và giao hàng. Cách làm việc: tìm tranh, bỏ vào giỏ, thanh toán, giao hàng, hủy khi cần. Dữ liệu: tranh, họa sĩ, giỏ, đơn, thanh toán. Và công nghệ, để làm cho các thứ kia chạy.
 
-\cue{chỉ vào bảng bên trái} Bảng bên trái liệt kê từng người liên quan: họ muốn gì và cần biết gì. \cue{chỉ vào sơ đồ bên phải} Sơ đồ bên phải vẽ một đường ranh giới quanh cửa hàng: bên trong là Họa., bên ngoài là bốn bên mà nó làm việc cùng, gồm khách, người quản lý, dịch vụ thanh toán và Gemma.
-
-Có một chi tiết hay: Gemma nằm ngoài ranh giới vì chạy trên một máy chủ khác, còn chương trình nghe giọng nói Whisper nằm trong, vì chạy ngay trên máy của cửa hàng. Nhóm em chọn vậy để giọng nói của khách không phải gửi đi đâu cả.
+\cue{chỉ vào bảng} Bảng bên dưới liệt kê từng người liên quan: họ muốn gì và cần biết gì. Ví dụ khách muốn tìm và mua được bức mình thích, nên cần biết giá, còn hàng không và đơn của mình đang ở đâu. Còn ai ở trong hệ thống, ai ở ngoài, nhóm em sẽ vẽ rõ ở cuối chương này.
 }{
-\item Tên nếu thầy hỏi: context diagram, stakeholder, NFR08 (giọng nói chỉ xử lý trên máy).
+\item Tên nếu thầy hỏi: stakeholder (người liên quan), bốn thành phần của hệ thống thông tin theo bài 1.
 }
 
 % T7: From business problem to system requirement
@@ -82,8 +80,28 @@ Vì sao khó tìm? Vì công cụ tìm kiếm thông thường chỉ khớp đú
 \item Tên nếu thầy hỏi: yêu cầu FR03, use case UC04 Search by Image.
 }
 
-% T8: 14 functional requirements, prioritised with MoSCoW
-\slide{8}{Mười bốn việc cửa hàng phải làm, xếp theo mức quan trọng.}{
+% T8: Context diagram: what enters and leaves the system
+\slide[must]{8}{Trước khi xem bên trong, vẽ ranh giới: ai gửi gì vào cửa hàng, cửa hàng trả gì ra.}{
+Trước khi xem bên trong cửa hàng làm gì, nhóm em vẽ ranh giới của nó. Sơ đồ này coi cả cửa hàng Họa. là một cái hộp kín, và chỉ hỏi hai câu: ai gửi gì vào, và cửa hàng trả gì ra. \cue{chỉ vào sơ đồ} Bên ngoài có bốn bên: khách hàng, người quản lý, dịch vụ thanh toán và Gemma. Mỗi mũi tên ghi rõ thứ nó mang theo. Ví dụ khách gửi vào câu tìm kiếm, giỏ hàng và đơn hàng; cửa hàng trả ra kết quả tìm, trạng thái đơn và câu trả lời của trợ lý.
+
+Nhóm em đọc mỗi mũi tên hai lần. Thứ đi vào thì phải có một việc nhận nó, và một khái niệm giữ nó. Thứ đi ra thì phải có một việc tạo ra nó. \cue{chỉ vào bảng bên phải} Bảng bên phải ghi mỗi bên dùng những việc nào.
+
+Ranh giới cũng quyết định ba điều. Chương trình nghe giọng nói nằm bên trong, vì chạy ngay trên máy của cửa hàng, nên giọng nói của khách không đi đâu cả. Gemma nằm bên ngoài, nên giá, kho và quyền xem đơn luôn do luật của cửa hàng quyết định, và nếu Gemma không trả lời thì vẫn tìm được bằng từ khóa. Dịch vụ thanh toán cũng ở ngoài, nên nó có thể từ chối thẻ, và kịch bản đặt hàng phải tính trước chuyện đó.
+}{
+\item Tên nếu thầy hỏi: context diagram (sơ đồ ngữ cảnh), external entity (thực thể bên ngoài), luồng «flow». Bản Community của Visual Paradigm không có sơ đồ luồng dữ liệu (DFD) nên luồng được vẽ bằng phụ thuộc «flow».
+\item Khách dùng UC01--UC11 và UC14; người quản lý dùng UC12, UC13; dịch vụ thanh toán hỗ trợ UC07; Gemma hỗ trợ UC02--UC04, UC10, UC14.
+\item Whisper ở trong ranh giới là NFR08; tìm bằng từ khóa khi Gemma hỏng là NFR02. Báo cáo: mục 1.7 (sơ đồ ở 1.7.1, bảng luồng vào ra ở 1.7.2).
+}
+
+\subsection{Chương 2 -- Phân tích (slide 9--18)}
+
+% T9: Chapter 2 - Analysis
+\slide{9}{Chương 2: viết yêu cầu, tìm ra việc người dùng làm, rồi vẽ hệ thống làm thế nào và cất những gì.}{
+Chương hai đi từ những nhu cầu vừa tìm ra. Đầu tiên nhóm em viết chúng thành yêu cầu, rồi tìm ra ai dùng hệ thống và họ làm được những việc gì. Sau đó trả lời hai câu hỏi: khi một người làm một việc, hệ thống làm gì, từng bước ra sao? Và hệ thống cần quản lý, cần cất những thứ gì? Nhóm em lấy việc đặt hàng làm ví dụ xuyên suốt.
+}{}
+
+% T10: 14 functional requirements, prioritised with MoSCoW
+\slide{10}{Mười bốn việc cửa hàng phải làm, xếp theo mức quan trọng.}{
 Nhóm em liệt kê \factFR{} việc cửa hàng phải làm, rồi xếp theo mức quan trọng, đúng cách thầy dạy: bắt buộc, nên có, có thì tốt, và lần này chưa làm. Có \factMust{} việc bắt buộc, đó là lõi của cửa hàng: tìm tranh, xem chi tiết, giỏ hàng, thanh toán, xem đơn, tra cứu đơn và phần quản lý. Có \factShould{} việc ``nên có'': tìm bằng giọng nói, tìm bằng ảnh, trợ lý và hủy đơn. Có \factCould{} việc ``có thì tốt'': tìm kết hợp chữ với ảnh, và thử tranh vào phòng.
 
 Cuối cùng, thanh toán thật là việc lần này chưa làm: phần thanh toán chỉ được mô phỏng. Nhóm em nói rõ điều này để không ai hiểu nhầm.
@@ -91,8 +109,8 @@ Cuối cùng, thanh toán thật là việc lần này chưa làm: phần thanh 
 \item MoSCoW = Must, Should, Could, Won't.
 }
 
-% T9: Non-functional requirements must be measurable
-\slide{9}{Ngoài việc phải làm gì, còn việc phải làm tốt đến đâu: mỗi yêu cầu chất lượng đều có một điều kiện đo được.}{
+% T11: Non-functional requirements must be measurable
+\slide{11}{Ngoài việc phải làm gì, còn việc phải làm tốt đến đâu: mỗi yêu cầu chất lượng đều có một điều kiện đo được.}{
 Ngoài chuyện cửa hàng phải làm gì, còn chuyện nó phải làm tốt đến đâu. Thầy cảnh báo rằng ``hệ thống phải nhanh'' thì không đo được. Vì vậy mỗi yêu cầu chất lượng của Họa. đều đi kèm một con số hoặc một điều kiện kiểm tra được.
 
 Ví dụ: tìm bằng chữ phải trả lời trong hai giây. Ảnh tải lên chỉ nhận ba định dạng và nhẹ hơn năm megabyte. Âm thanh chỉ được xử lý ngay trên máy này. Không bao giờ lưu số thẻ đầy đủ, chỉ lưu bốn số cuối. Khách chỉ xem được đơn của chính mình. Và nếu Gemma hỏng thì cửa hàng vẫn tìm được tranh. Tất cả có \factNFR{} yêu cầu như vậy, và nhóm em đã kiểm chứng chúng, các bạn sẽ thấy ở phần đánh giá và phần demo.
@@ -101,8 +119,8 @@ Ví dụ: tìm bằng chữ phải trả lời trong hai giây. Ảnh tải lên
 \item Tên nếu thầy hỏi: NFR01 bảo mật, NFR02 dự phòng, NFR03 ảnh, NFR05 thẻ, NFR07 hiệu năng, NFR08 giọng nói.
 }
 
-% T10: A use case is a goal, not a button
-\slide[must]{10}{Bốn bên dùng cửa hàng, mười bốn việc họ làm được; use case là mục tiêu, không phải nút bấm.}{
+% T12: A use case is a goal, not a button
+\slide[must]{12}{Bốn bên dùng cửa hàng, mười bốn việc họ làm được; use case là mục tiêu, không phải nút bấm.}{
 Ai dùng cửa hàng? Họa. có bốn bên. Khách hàng và người quản lý là hai bên dùng trực tiếp. Gemma và dịch vụ thanh toán là hai bên mà hệ thống gọi nhờ. Mỗi việc người dùng muốn làm được gọi là một use case, và Họa. có \factUC{} việc như vậy.
 
 Thầy nhấn mạnh hai điều. Một: người có liên quan chưa chắc là người dùng hệ thống. Nhân viên kho có liên quan, nhưng họ không bấm gì trong hệ thống nên không tính. Hai: use case là một mục tiêu, không phải một nút bấm. Ta viết ``Tìm tranh'', không viết ``bấm nút tìm''. \cue{chỉ vào sơ đồ} Trên sơ đồ, tìm bằng chữ, bằng giọng nói, bằng ảnh, và cả thử tranh vào phòng, đều là các cách khác nhau để làm cùng một việc là tìm tranh.
@@ -114,15 +132,8 @@ Thầy nhấn mạnh hai điều. Một: người có liên quan chưa chắc l�
 \item Dòng cuối slide là dấu vết truy vết: FR03, UC04, hàm tìm bằng ảnh, kiểm thử.
 }
 
-\subsection{Chương 2 -- Phân tích (slide 11--15)}
-
-% T11: Chapter 2 - Analysis
-\slide{11}{Chương 2: biến yêu cầu thành các bản vẽ, lấy việc đặt hàng làm ví dụ xuyên suốt.}{
-Chương hai biến các yêu cầu thành bản vẽ. Có hai câu hỏi: khi một người làm một việc, hệ thống làm gì, từng bước ra sao? Và hệ thống cần quản lý những thứ gì? Nhóm em lấy việc đặt hàng làm ví dụ xuyên suốt.
-}{}
-
-% T12: Use case specification: Checkout (UC07)
-\slide[must]{12}{Việc Đặt hàng được viết ra như một kịch bản, gồm cả những lúc có chuyện.}{
+% T13: Use case specification: Checkout (UC07)
+\slide[must]{13}{Việc Đặt hàng được viết ra như một kịch bản, gồm cả những lúc có chuyện.}{
 Đây là việc đặt hàng, viết ra như một kịch bản. Khách đã đăng nhập và có hàng trong giỏ. Năm bước chính: cửa hàng cho khách xem giỏ và tổng tiền; khách chọn địa chỉ và cách thanh toán; cửa hàng kiểm tra lại giá và số hàng còn trong kho; tạo đơn với giá đã chốt; rồi ghi nhận thanh toán, trừ kho và làm rỗng giỏ.
 
 Thầy dặn: chỉ viết lúc mọi chuyện suôn sẻ là chưa đủ. Nên nhóm em viết cả những lúc có chuyện. Nếu một bức hết hàng, cửa hàng nói rõ bức nào và không tạo đơn. Nếu địa chỉ không phải của khách, cửa hàng yêu cầu chọn lại. Nếu thanh toán bị từ chối, khách chọn cách khác. \luocbo{Trong báo cáo còn một tình huống nữa: khách gõ một địa chỉ mới ngay lúc đặt hàng, và nhóm có làm trong phần demo.}
@@ -130,8 +141,8 @@ Thầy dặn: chỉ viết lúc mọi chuyện suôn sẻ là chưa đủ. Nên 
 \item Tên nếu thầy hỏi: UC07 Checkout, luồng chính, luồng thay thế.
 }
 
-% T13: From scenario to activity: decisions follow rules
-\slide{13}{Từ kịch bản vẽ thành sơ đồ từng bước; mỗi ngã rẽ trong sơ đồ đến từ một luật của cửa hàng.}{
+% T14: From scenario to activity: decisions follow rules
+\slide{14}{Từ kịch bản vẽ thành sơ đồ từng bước; mỗi ngã rẽ trong sơ đồ đến từ một luật của cửa hàng.}{
 Từ kịch bản, nhóm vẽ thành một sơ đồ chạy từng bước, chia làm ba làn: khách, cửa hàng và cơ sở dữ liệu. Chỗ đáng chú ý là mỗi ngã rẽ trong sơ đồ đều đến từ một luật của cửa hàng: hết hàng thì không tạo đơn; địa chỉ phải là của khách; chỉ được hủy khi đơn chưa giao.
 
 Bên phải là bốn câu hỏi thầy dạy để phân tích một việc: người dùng muốn gì, bình thường diễn ra thế nào, điều gì có thể sai, và hệ thống làm gì khi đó. Nhờ vậy ta luôn lần được từ một yêu cầu tới việc cần làm, tới kịch bản, rồi tới sơ đồ.
@@ -139,8 +150,8 @@ Bên phải là bốn câu hỏi thầy dạy để phân tích một việc: ng
 \item Tên nếu thầy hỏi: activity diagram, ba swimlane.
 }
 
-% T14: Consistency check: cancel before shipment
-\slide{14}{Kiểm tra các bản vẽ có mâu thuẫn nhau không bằng cách lần theo một yêu cầu: ``được hủy đơn trước khi giao''.}{
+% T15: Consistency check: cancel before shipment
+\slide{15}{Kiểm tra các bản vẽ có mâu thuẫn nhau không bằng cách lần theo một yêu cầu: ``được hủy đơn trước khi giao''.}{
 Để chắc các bản vẽ không mâu thuẫn nhau, nhóm em làm đúng bài thầy cho: lần theo yêu cầu ``khách được hủy đơn trước khi giao''. Yêu cầu này xuất hiện ở năm nơi, và cả năm đều khớp. Trong danh sách yêu cầu, có yêu cầu hủy đơn. Trong các việc người dùng làm được, có việc Hủy đơn. Trong sơ đồ từng bước, có câu hỏi ``đơn đã giao chưa?''. Trong sơ đồ trạng thái của đơn, chỉ cho hủy khi đơn mới đặt hoặc đang xử lý. Và trong thiết kế, hàm hủy đơn kiểm tra đúng luật đó.
 
 Còn phía quản lý: khi đơn chuyển sang trạng thái đã gửi, khách hết hủy được. \cue{chỉ vào ảnh bên phải} Ảnh bên phải là chức năng này chạy thật, nhóm em sẽ làm lại trong phần demo.
@@ -148,31 +159,51 @@ Còn phía quản lý: khi đơn chuyển sang trạng thái đã gửi, khách 
 \item Tên nếu thầy hỏi: FR11, UC11 mở rộng UC08, máy trạng thái PLACED, PROCESSING, SHIPPED, DELIVERED, hàm cancelOrder gọi Order.cancel.
 }
 
-% T15: Domain concepts: CartItem ≠ OrderItem
-\slide[must]{15}{Giỏ hàng khác đơn hàng: giỏ là danh sách đang chọn, đơn là hóa đơn đã chốt giá; đặt hàng là biến giỏ thành đơn.}{
-Đây là bức tranh những thứ cửa hàng cần quản lý: khách, tranh và khung, họa sĩ, giỏ, đơn, vận chuyển, thanh toán. Nhóm có \factAnalysis{} khái niệm như vậy.
+% T16: Domain model: CartItem ≠ OrderItem
+\slide[must]{16}{Giỏ hàng khác đơn hàng: giỏ là danh sách đang chọn, đơn là hóa đơn đã chốt giá; đặt hàng là biến giỏ thành đơn.}{
+Đây là bức tranh những thứ cửa hàng cần quản lý: khách, tranh và khung, họa sĩ, giỏ, đơn, vận chuyển, thanh toán, mỗi thứ kèm các thông tin của nó. Nhóm có \factAnalysis{} khái niệm như vậy. Ở bước phân tích, đường nối chỉ cho biết kiểu quan hệ: hình thoi đặc nghĩa là ``là một phần không tách rời'', tam giác rỗng nghĩa là ``là một loại của''. Tên quan hệ và số lượng ở hai đầu sẽ được thêm ở mô hình dữ liệu.
 
 Điều thầy nhấn mạnh, và nhóm em thích nhất, là món trong giỏ và món trong đơn là hai thứ khác nhau. Giỏ hàng giống một danh sách đang chọn: giá có thể đổi, khách có thể bỏ bớt. Đơn hàng giống một hóa đơn: giá đã chốt, không đổi nữa. Cho nên đặt hàng thực chất là biến một giỏ thành một đơn. \cue{chỉ vào mũi tên đứt nét giữa giỏ và đơn} Mũi tên đứt nét này thể hiện đúng điều đó: giỏ tạo ra đơn, rồi giỏ rỗng đi.
 
-\luocbo{Mỗi khách có tối đa một giỏ, một giỏ có nhiều món, và một đơn có ít nhất một món.}
-
-Hết phần phân tích. Xin nhường lời cho bạn \todo{tên Người 2} kể Chương ba, phần AI.
 }{
 \item Tên nếu thầy hỏi: CartItem khác OrderItem, quan hệ phụ thuộc ``create''.
+\item Phân tích chỉ có thuộc tính và kiểu quan hệ (association, composition, aggregation, generalization, «create»); nhãn và bội số thêm ở mô hình dữ liệu mức logic (slide 18), chiều quan hệ và phương thức thêm ở thiết kế.
 \item Giá trong giỏ có thể cũ; lúc đặt hàng cửa hàng đọc lại giá hiện tại rồi mới chốt.
 }
 
-\subsection{Chương 3 -- AI trong thương mại điện tử (slide 16--23)}
+% T17: Conceptual data model: names and links only
+\slide[must]{17}{Cần cất những gì: mô hình dữ liệu vẽ qua ba mức; mức đầu rất thô, chỉ có tên và các đường nối có tên.}{
+Biết cửa hàng quản lý những gì rồi, nhóm em xác định cần cất những gì, bằng mô hình dữ liệu. Mô hình này vẽ qua ba mức, giống như phác thảo một bức tranh: vẽ phác trước, rồi mới thêm chi tiết. \cue{chỉ vào dòng ba mức ở góc phải} Mức một là mức khái niệm, mức hai là mức logic, mức ba là mức vật lý. Hai mức đầu thuộc phần phân tích; mức ba là chuyện thiết kế, bạn của em sẽ trình bày ở Chương bốn.
 
-% T16: Chapter 3 - AI in e-commerce
-\slide{16}{Năm điều AI của Họa.; nguyên tắc: AI giúp hiểu khách, còn giá, kho và quyền xem đơn do luật của cửa hàng quyết định.}{
+Đây là mức một. Nó rất thô: chỉ có tên của \factAnalysis{} thứ mà cửa hàng phải giữ, và các đường nối giữa chúng. Mỗi đường nối có một cái tên đọc lên thành câu: khách sở hữu giỏ, khách đặt đơn, đơn chứa các món. Chưa có thông tin chi tiết, chưa có số lượng, chưa có khóa, chưa có kiểu dữ liệu. Mũi tên ``giỏ tạo ra đơn'' cũng bỏ đi, vì đó là một việc làm, không phải thứ cần cất.
+}{
+\item Tên nếu thầy hỏi: conceptual data model (mô hình dữ liệu mức khái niệm): entity và relationship có tên, chưa có thuộc tính và bội số. Báo cáo: mục 2.9.1.
+\item Khác mô hình miền ở Chương 2: bỏ bội số, bỏ hình thoi composition, bỏ phụ thuộc «create»; kế thừa vẫn giữ.
+}
+
+% T18: Logical data model: persistable classes, named links
+\slide[must]{18}{Mức hai: thêm thông tin chi tiết, đánh dấu ``sẽ được lưu'', mỗi đường nối có tên và số lượng ở hai đầu.}{
+Mức hai là mức logic. Nhóm em thêm ba thứ, đúng như bài kiểm tra số một thầy cho. Một: mỗi khái niệm có đủ thông tin chi tiết, và được đánh dấu là ``sẽ được lưu'', tức là mỗi khách, mỗi đơn sẽ thành một dòng dữ liệu. Hai: mỗi đường nối có nhãn, tức là tên của nó. Ba: hai đầu mỗi đường nối ghi số lượng: một, không hoặc một, không hoặc nhiều, một hoặc nhiều. \cue{chỉ vào đường nối giữa khách và đơn} Ví dụ: một khách đặt không hoặc nhiều đơn, còn mỗi đơn thuộc đúng một khách. Một đơn có ít nhất một món. \luocbo{Mỗi khách có tối đa một giỏ, và một giỏ có thể chưa có món nào.}
+
+Còn một thay đổi: dữ liệu dạng bảng không có khái niệm ``kế thừa''. Nên câu ``khách VIP là một loại khách'' được đổi thành một đường nối tên ``là một'': mỗi khách có không hoặc một bản ghi VIP.
+
+Hết phần phân tích. Xin nhường lời cho bạn \todo{tên Người 2} kể Chương ba, phần AI.
+}{
+\item Tên nếu thầy hỏi: logical data model; «ORM-Persistable»; nhãn quan hệ; bội số 1, 0..1, 0..*, 1..*; kế thừa đổi thành association ``is a'' 1 -- 0..1. Báo cáo: mục 2.9.2.
+\item Đúng các bước của Đề kiểm tra 01: thêm 1..*, nhãn quan hệ, ORM persistable, chuyển kế thừa sang association.
+}
+
+\subsection{Chương 3 -- AI trong thương mại điện tử (slide 19--26)}
+
+% T19: Chapter 3 - AI in e-commerce
+\slide{19}{Năm điều AI của Họa.; nguyên tắc: AI giúp hiểu khách, còn giá, kho và quyền xem đơn do luật của cửa hàng quyết định.}{
 Em xin tiếp tục với Chương ba, phần mà nhóm em thấy thú vị nhất: AI. Họa. có năm điều AI: hiểu câu khách gõ, nghe giọng nói, nhìn ảnh một bức tranh, nhìn ảnh căn phòng để chọn tranh, và một trợ lý mua sắm.
 
 Nhóm em đặt ra một nguyên tắc cho cả năm điều này: AI giúp khách nói ra điều mình muốn, còn giá, số hàng trong kho và quyền xem đơn thì luôn do luật của cửa hàng quyết định, không phải do AI.
 }{}
 
-% T17: Different inputs, one common query
-\slide[must]{17}{Dù khách tìm bằng cách nào, cửa hàng cũng làm theo một đường chung: đưa về một dạng chung, chọn ứng viên, xếp hạng.}{
+% T20: Different inputs, one common query
+\slide[must]{20}{Dù khách tìm bằng cách nào, cửa hàng cũng làm theo một đường chung: đưa về một dạng chung, chọn ứng viên, xếp hạng.}{
 Dù khách tìm bằng cách nào, bằng chữ, giọng nói, ảnh tranh hay ảnh phòng, cửa hàng đều đi theo một đường chung, đúng như bài tập của thầy: đưa mọi thứ về một dạng chung, chọn ra những bức có thể hợp, rồi xếp hạng.
 
 \cue{chỉ lần lượt bốn hộp bên trái} Chữ thì đi thẳng vào. Giọng nói thì được đổi thành chữ trước. Ảnh một bức tranh thì được Gemma tả thành vài từ khóa. Ảnh căn phòng thì được Gemma đọc ra màu sắc và phong cách. Tất cả gặp nhau ở một phiếu yêu cầu chung, rồi cùng đi qua bước chọn và bước xếp hạng, và cuối cùng là danh sách tranh trả về cho khách.
@@ -184,8 +215,8 @@ Dù khách tìm bằng cách nào, bằng chữ, giọng nói, ảnh tranh hay �
 \item Bốn nguyên tắc ở dưới slide (A06): một biểu diễn chung; chọn tách khỏi xếp hạng; giao diện không chạm cơ sở dữ liệu; bắt đầu đơn giản.
 }
 
-% T18: Voice search: the audio never leaves the laptop
-\slide{18}{Tìm bằng giọng nói: khách nói, âm thanh không rời khỏi chiếc máy này; kết quả hiện thành chữ để khách sửa.}{
+% T21: Voice search: the audio never leaves the laptop
+\slide{21}{Tìm bằng giọng nói: khách nói, âm thanh không rời khỏi chiếc máy này; kết quả hiện thành chữ để khách sửa.}{
 Giọng nói. Khách bấm micro và nói, ví dụ ``tranh phong cảnh màu xanh''. Điều nhóm em tự hào là âm thanh không rời khỏi chiếc máy này. Nhóm dùng Whisper, một chương trình nhận dạng giọng nói, chạy ngay trên máy, không gửi lên mạng. Kết quả hiện ra thành chữ để khách xem và sửa nếu nghe sai, rồi mới đi tìm như một câu gõ bình thường. Nếu Whisper không chạy, cửa hàng chỉ nhẹ nhàng mời khách gõ, không báo lỗi khó hiểu.
 
 \cue{chỉ vào ba con số lớn} Nhóm em đã đo thử với \evSttN{} câu tiếng Anh: trung bình \evSttMean{} giây một câu, sai khoảng \evSttWer{} số từ, và \evSttExact{} trên \evSttN{} câu đúng hoàn toàn. Nhóm cố ý không làm phần đọc thành tiếng, vì không có việc nào cần đến.
@@ -195,8 +226,8 @@ Giọng nói. Khách bấm micro và nói, ví dụ ``tranh phong cảnh màu xa
 \item Tên nếu thầy hỏi: SpeechService, WhisperClient, NFR08.
 }
 
-% T19: Search by image: describe it, then match it
-\slide[must]{19}{Tìm bằng ảnh theo ba bước như một người bán tranh: tả ảnh bằng ba nhãn, so với các bức trong cửa hàng, rồi xếp hạng. Nói thật hạn chế.}{
+% T22: Search by image: describe it, then match it
+\slide[must]{22}{Tìm bằng ảnh theo ba bước như một người bán tranh: tả ảnh bằng ba nhãn, so với các bức trong cửa hàng, rồi xếp hạng. Nói thật hạn chế.}{
 Tìm bằng ảnh. Cách làm rất giống một người bán tranh. Bước một: Gemma nhìn ảnh khách đưa và nói ra ba điều: phong cách, chủ đề và màu chủ đạo. \cue{chỉ vào dòng ví dụ ở dưới} Ví dụ, đưa ảnh The Great Wave, Gemma nói: kiểu tranh Nhật ukiyo-e, vẽ biển, màu xanh.
 
 Bước hai: mỗi bức tranh trong cửa hàng cũng được gắn sẵn đúng ba nhãn như vậy. Cửa hàng chỉ việc xem bức nào giống ảnh nhất: càng nhiều nhãn trùng thì càng giống.
@@ -210,8 +241,8 @@ Nhóm em xin nói thật một hạn chế: ba nhãn này do nhóm tự định 
 \item Sơ đồ bên phải chỉ để cho thấy thứ tự các bước; không cần giải thích.
 }
 
-% T20: Try it in your room (UC14 Find Painting for My Room)
-\slide[must]{20}{Thử tranh vào phòng của bạn: Gemma đọc căn phòng, chọn vài bức hợp và nói vì sao hợp; cửa hàng treo thử lên tường trong chính ảnh phòng.}{
+% T23: Try it in your room (UC14 Find Painting for My Room)
+\slide[must]{23}{Thử tranh vào phòng của bạn: Gemma đọc căn phòng, chọn vài bức hợp và nói vì sao hợp; cửa hàng treo thử lên tường trong chính ảnh phòng.}{
 Đây là điều nhóm em thích nhất: thử tranh vào phòng của bạn. Khách đưa một tấm ảnh căn phòng. Gemma đọc căn phòng: màu sắc, phong cách, không khí, ánh sáng. Cửa hàng chọn ra mười hai bức có vẻ hợp. Rồi Gemma xem lại ảnh phòng cùng mười hai bức đó, chọn ba đến năm bức hợp nhất, và viết cho mỗi bức một câu giải thích vì sao hợp, ví dụ: tông nâu ấm của bức này hợp với sàn gỗ và tường gạch của phòng. Cuối cùng, cửa hàng treo bức tranh lên tường ngay trong ảnh, để khách thấy trước khi mua.
 
 Nhóm em có vài chốt chặn để Gemma không nói bừa. Gemma chỉ được chọn trong mười hai bức đã đưa ra. Câu giải thích quá ngắn hoặc chung chung sẽ bị thay bằng câu dựng từ chính thông tin của bức tranh. Và ảnh phòng chỉ nằm trong trình duyệt của khách, không lưu lên máy chủ. \cue{chỉ vào ảnh chụp} Đây là kết quả thật: bức tranh đã treo trên tường, kèm câu giải thích bên dưới.
@@ -221,8 +252,8 @@ Nhóm em có vài chốt chặn để Gemma không nói bừa. Gemma chỉ đư�
 \item Nhóm sẽ làm trực tiếp ở bước 4 của demo.
 }
 
-% T21: AI behind interfaces, always with a fallback
-\slide{21}{Mọi chỗ dùng AI đều đặt sau một ``cổng'' riêng và đều có phương án dự phòng.}{
+% T24: AI behind interfaces, always with a fallback
+\slide{24}{Mọi chỗ dùng AI đều đặt sau một ``cổng'' riêng và đều có phương án dự phòng.}{
 Mọi chỗ dùng AI trong Họa. đều đi qua một ``cổng'' riêng, nên có thể đổi mô hình, hoặc dùng bản giả khi kiểm thử, mà không phải sửa phần còn lại. Quan trọng hơn, mỗi chỗ đều có phương án dự phòng.
 
 \cue{chỉ vào bảng bên phải} Gemma lỗi hoặc chậm hơn mười lăm giây thì dùng luật từ khóa. Whisper không chạy thì mời khách gõ. Ảnh sai loại hoặc quá lớn thì bị từ chối từ đầu. AI chỉ giúp hiểu khách, nó không bao giờ quyết định giá hay số hàng. Và quyền xem đơn luôn do máy chủ kiểm tra. \cue{chỉ vào ảnh bên dưới} Ảnh bên dưới là tìm kiếm vẫn chạy khi tắt Gemma, và nhóm em sẽ chứng minh trong phần demo.
@@ -231,8 +262,8 @@ Mọi chỗ dùng AI trong Họa. đều đi qua một ``cổng'' riêng, nên c
 \item Bước 9 của demo chứng minh slide này.
 }
 
-% T22: Curator assistant: Gemma picks the tool
-\slide{22}{Trợ lý mua sắm: khách hỏi bằng lời thường, Gemma chọn công cụ của cửa hàng để trả lời, và luôn tra theo tài khoản đang đăng nhập.}{
+% T25: Curator assistant: Gemma picks the tool
+\slide{25}{Trợ lý mua sắm: khách hỏi bằng lời thường, Gemma chọn công cụ của cửa hàng để trả lời, và luôn tra theo tài khoản đang đăng nhập.}{
 Trợ lý mua sắm. Khách hỏi bằng lời thường, ví dụ ``đơn gần nhất của tôi đâu rồi?''. Gemma có thể ``nhờ'' các công cụ của cửa hàng: tìm tranh, tìm đơn theo mã, xem đơn mới nhất, liệt kê đơn. Nó tự chọn công cụ nào cần dùng, rồi viết câu trả lời tự nhiên.
 
 Điểm an toàn then chốt: cửa hàng luôn tra theo tài khoản đang đăng nhập, không theo những gì khách gõ trong câu hỏi. Nên dù khách có gõ mã đơn của người khác, cũng không xem được. Khách hỏi bằng chữ hoặc bằng giọng nói đều được; trợ lý trả lời bằng chữ.
@@ -241,8 +272,8 @@ Trợ lý mua sắm. Khách hỏi bằng lời thường, ví dụ ``đơn gần
 \item Bước 6 và 7 của demo sẽ cho thấy điều này.
 }
 
-% T23: Evaluation as required by A06
-\slide[must]{23}{Đánh giá trung thực: Gemma hơn rõ ở tìm bằng ảnh, nhưng ở tìm bằng chữ thì ngang với luật đơn giản.}{
+% T26: Evaluation as required by A06
+\slide[must]{26}{Đánh giá trung thực: Gemma hơn rõ ở tìm bằng ảnh, nhưng ở tìm bằng chữ thì ngang với luật đơn giản.}{
 Vậy các điều AI này tốt đến đâu? Nhóm em đo hai lần trên cùng bộ câu hỏi: một lần có Gemma, một lần tắt Gemma để chỉ còn luật từ khóa. \cue{chỉ vào biểu đồ} Cột cam là có Gemma, cột xám là không có.
 
 Kết quả khá thú vị. Với tìm bằng chữ, hai bên ngang nhau: khoảng \evTextDirectGemma{} với câu nói thẳng, và \evTextParaGemma{} với câu diễn đạt lại. Nghĩa là với cửa hàng nhỏ này, Gemma không giúp tìm chữ tốt hơn một luật đơn giản. Nhưng với ảnh thì khác hẳn: \evImageGemma{} khi có Gemma, so với chỉ \evImageLocal{} khi không có. Giọng nói đạt \evVoiceHit{}. Và trợ lý trả lời đúng \evAssistantCorrect{} trên \evAssistantN{} câu, không lần nào làm lộ dữ liệu của người khác.
@@ -256,15 +287,15 @@ Nhóm em nói thật: đây là một lần đo, với bộ câu hỏi nhỏ, v�
 \item Hết phần AI. Xin nhường lời cho bạn \todo{tên Người 3} kể Chương bốn.
 }
 
-\subsection{Chương 4 -- Thiết kế (slide 24--28)}
+\subsection{Chương 4 -- Thiết kế (slide 27--32)}
 
-% T24: Chapter 4 - Design
-\slide{24}{Chương 4: phân tích nói ``cái gì'', thiết kế nói ``làm thế nào''.}{
+% T27: Chapter 4 - Design
+\slide{27}{Chương 4: phân tích nói ``cái gì'', thiết kế nói ``làm thế nào''.}{
 Em xin kể Chương bốn: thiết kế. Nếu phân tích là ``cửa hàng cần gì'', thì thiết kế là ``phần mềm sẽ làm ra điều đó thế nào''. Chương này có bốn việc: biến các khái niệm thành các khối code, biến chúng thành bảng dữ liệu, chia code thành bốn tầng, và sinh code từ chính bản thiết kế.
 }{}
 
-% T25: From analysis classes (A04) to design classes (A05)
-\slide[must]{25}{Biến khái niệm thành khối code: mỗi khối có thông tin và có việc làm, mỗi việc có một người phụ trách rõ ràng.}{
+% T28: From analysis classes (A04) to design classes (A05)
+\slide[must]{28}{Biến khái niệm thành khối code: mỗi khối có thông tin và có việc làm, mỗi việc có một người phụ trách rõ ràng.}{
 Việc đầu tiên: biến khái niệm thành khối code. Giỏ, món trong giỏ, đơn, món trong đơn trở thành những khối vừa có thông tin vừa có việc làm. Còn việc ``đặt hàng'' trở thành một việc cụ thể, do một người điều phối đảm nhận. Thầy dạy cách chia như vậy: một khối lo nhận yêu cầu, một khối lo điều phối, các khối nghiệp vụ lo giữ luật, và các khối lưu trữ lo cất dữ liệu.
 
 Có một chỗ nhóm em làm khác bài giảng một chút. Việc đặt hàng trong bài chỉ nhận mã giỏ. Của nhóm còn nhận thêm mã khách lấy từ đăng nhập, để kiểm tra giỏ này đúng là của khách này, cùng với địa chỉ và cách thanh toán. \cue{chỉ vào sơ đồ bên phải} Bên phải là sơ đồ các khối thiết kế.
@@ -272,28 +303,41 @@ Có một chỗ nhóm em làm khác bài giảng một chút. Việc đặt hàn
 \item Tên nếu thầy hỏi: lớp phân tích A04 sang lớp thiết kế A05, hàm CheckoutService.checkout(cartId, customerId, addressId, payment), slide 22 của bài 5.
 }
 
-% T26: From data model to an SQLite database
-\slide{26}{Việc thứ hai: cất dữ liệu. Cơ sở dữ liệu được tạo thẳng từ mô hình theo ba quy tắc đơn giản.}{
-Việc thứ hai là cất dữ liệu. Nhóm em tạo cơ sở dữ liệu thẳng từ mô hình, không viết tay, gồm \factTables{} bảng. Có ba quy tắc chuyển đổi chính. Một: khi một thứ là một loại của thứ khác, ví dụ khách VIP là một loại khách, thì có bảng riêng nhưng dùng chung mã với bảng cha. Hai: khi một bên có nhiều bên kia, ví dụ một khách có nhiều địa chỉ, thì bảng bên ``nhiều'' giữ mã của bên kia. Ba: khi một thứ là phần không tách rời của thứ khác, như các món trong một đơn, thì xóa đơn sẽ xóa luôn các món.
+% T29: Physical data model: tables, keys and types
+\slide{29}{Việc thứ hai: cất dữ liệu. Mức ba của mô hình dữ liệu thêm bảng, khóa và kiểu dữ liệu, theo vài quy tắc chuyển đổi đơn giản.}{
+Việc thứ hai là cất dữ liệu. Ở phần phân tích, bạn em đã vẽ mô hình dữ liệu ở hai mức đầu. Mức ba, mức vật lý, là một quyết định thiết kế. Mỗi khái niệm thành một bảng, mỗi thông tin thành một cột có kiểu dữ liệu rõ ràng, ví dụ tiền là số có hai chữ số lẻ. Mỗi bảng có khóa chính, và mỗi đường nối thành một khóa ngoại có tên. Từ mô hình này, nhóm em tạo cơ sở dữ liệu thẳng, không viết tay, gồm \factTables{} bảng. Có ba quy tắc chuyển đổi chính. Một: khi một thứ là một loại của thứ khác, ví dụ khách VIP là một loại khách, thì có bảng riêng nhưng dùng chung mã với bảng cha. Hai: khi một bên có nhiều bên kia, ví dụ một khách có nhiều địa chỉ, thì bảng bên ``nhiều'' giữ mã của bên kia. Ba: khi một thứ là phần không tách rời của thứ khác, như các món trong một đơn, thì xóa đơn sẽ xóa luôn các món.
 
-\cue{chỉ vào ảnh bên phải} Ảnh bên phải là cơ sở dữ liệu thật của sản phẩm, chính là phần ``màn hình cơ sở dữ liệu'' mà thầy yêu cầu.
+Slide sau là chính cơ sở dữ liệu đó.
 }{
-\item Tên nếu thầy hỏi: kế thừa thành bảng con có khóa chính cũng là khóa ngoại; một-nhiều thì khóa ngoại phía nhiều; composition dùng khóa ghép và ON DELETE CASCADE.
+\item Tên nếu thầy hỏi: physical data model; kế thừa thành bảng con có khóa chính cũng là khóa ngoại; một-nhiều thì khóa ngoại phía nhiều; composition dùng khóa ghép và ON DELETE CASCADE. Báo cáo: mục 4.2.
 }
 
-% T27: Four layers — a layer is not a package
-\slide[must]{27}{Việc thứ ba: chia code thành bốn tầng, như các bộ phận của một nhà hàng, với hai luật phụ thuộc nghiêm ngặt.}{
-Việc thứ ba: chia code thành bốn tầng. Cho dễ hình dung, các bạn nghĩ tới một nhà hàng. Tầng giao diện giống người phục vụ: nhận yêu cầu và mang kết quả ra. Tầng điều phối giống bếp trưởng: quyết định làm gì trước, làm gì sau. Tầng nghiệp vụ là luật của nhà hàng: món nào giá bao nhiêu, khi nào được hủy. Và tầng hạ tầng là kho, tủ lạnh, thiết bị: nơi lưu và lấy dữ liệu, nơi gọi Gemma và Whisper.
+% T30: Database: the ERD of the physical data model
+\slide[must]{30}{Cơ sở dữ liệu vẽ thành sơ đồ thực thể -- quan hệ: các bảng màu cam, đủ cột và khóa, nối bằng đường chân chim; bên cạnh là cơ sở dữ liệu thật.}{
+Từ mô hình vật lý, nhóm em vẽ cơ sở dữ liệu thành sơ đồ thực thể -- quan hệ, chính là những bảng màu cam này. Nó bám đúng mô hình vật lý: cùng các bảng, cùng vị trí, gồm \factTables{} bảng. Mỗi bảng ghi đủ các cột và kiểu dữ liệu. \cue{chỉ vào một bảng} Hình chìa khóa là khóa chính, chìa khóa có móc là khóa ngoại, chữ N là cột được để trống, chữ U là cột không được trùng. Đầu mỗi đường nối có ký hiệu chân chim: một vạch là một, vòng tròn là có thể không có, chân chim là nhiều. Ví dụ một đơn có một hoặc nhiều món.
 
-Thầy lưu ý một điều hay nhầm: tầng không phải là thư mục. Mỗi tầng được chia thành nhiều gói nhỏ, tổng cộng \factPackages{} gói. \cue{chỉ vào hai dòng ở cuối slide} Nhóm em giữ nghiêm hai luật. Giao diện không bao giờ chạm thẳng vào cơ sở dữ liệu. Và phần điều phối chỉ làm việc với ``cổng'' của kho và của AI, nên đổi thứ bên dưới thì không phải sửa thứ bên trên.
+\cue{chỉ vào ảnh bên phải} Ảnh bên phải là cơ sở dữ liệu thật của sản phẩm, tạo ra từ chính mô hình này, đúng phần ``màn hình cơ sở dữ liệu'' mà thầy yêu cầu.
 }{
-\item Tên bốn tầng: presentation, application, domain, infrastructure. Các gói nằm trong ô bên phải slide.
-\item Ví dụ nhà hàng chỉ để dễ hình dung; định nghĩa chính xác là: tầng là trách nhiệm kiến trúc, gói là cách tổ chức code.
+\item Tên nếu thầy hỏi: ERD (entity relationship diagram) của Visual Paradigm, ký hiệu chân chim (crow's foot). Đường liền là quan hệ xác định (identifying: khóa của bảng con chứa khóa bảng cha, như order\_item), đường đứt là khóa ngoại thường. Báo cáo: mục 4.2.2.
 }
 
-% T28: Checkout across the layers (Lecture 05)
-\slide[must]{28}{Khi khách bấm Đặt hàng, bốn tầng làm việc cùng nhau; luật nghiệp vụ nằm ở khối nghiệp vụ, không dồn hết vào người điều phối.}{
-Hãy xem bốn tầng làm việc cùng nhau khi khách bấm ``Đặt hàng''. Giao diện chuyển yêu cầu cho người điều phối. Người điều phối làm lần lượt: lấy giỏ ra xem; lấy thông tin khách; kiểm tra lại giá và số hàng của từng món trong kho; tạo đơn với giá chốt; tính tổng, giảm giá nếu là khách VIP; lưu đơn; trừ kho; làm rỗng giỏ; rồi báo đặt hàng thành công. \cue{đi dọc sơ đồ từ trái sang phải}
+% T31: Three layers, and the classes inside are linked
+\slide[must]{31}{Việc thứ ba: chia code thành ba tầng: giao diện, xử lý, dữ liệu; các lớp trong mỗi tầng nối với nhau, mũi tên chỉ đi xuống.}{
+Việc thứ ba: chia code thành ba tầng, giống bài tập số sáu của thầy. Cho dễ hình dung, các bạn nghĩ tới một nhà hàng. Tầng giao diện giống người phục vụ: nhận yêu cầu và mang kết quả ra. Tầng xử lý giống nhà bếp: quyết định làm gì trước, làm gì sau. Tầng dữ liệu giống cái kho: nơi cất và lấy đồ, và cũng là nơi gọi ra bên ngoài, như gọi Gemma hay Whisper.
+
+\cue{chỉ vào sơ đồ} Trong mỗi tầng, các lớp nối với nhau. Ví dụ trang giỏ hàng gọi bộ điều khiển giỏ hàng; dịch vụ tìm kiếm nhờ ba dịch vụ nhỏ để hiểu câu, tả ảnh và xếp hạng; mỗi kho dữ liệu SQLite làm đúng việc mà ``cổng'' của nó hứa. Giữa các tầng, mũi tên chỉ đi xuống: giao diện gọi tầng xử lý, tầng xử lý gọi tầng dữ liệu, không bao giờ ngược lại.
+
+Còn giỏ, đơn, khách thì không nằm riêng ở tầng nào: cả ba tầng cùng dùng, giống như thực đơn mà người phục vụ, nhà bếp và kho đều phải biết. Nhóm em giữ nghiêm hai luật: giao diện không bao giờ chạm thẳng vào cơ sở dữ liệu, và tầng xử lý chỉ làm việc với ``cổng'' của kho và của AI, nên đổi thứ bên dưới thì không phải sửa thứ bên trên.
+}{
+\item Tên ba tầng: Presentation, Application, Data, như bài tập A06 và bài mẫu. Các lớp domain là mô hình dùng chung (cross-cutting), không phải một tầng.
+\item Hai loại mũi tên: «use» (nét đứt) và realization (nét đứt, đầu tam giác rỗng). Bảng giải thích từng loại liên kết: báo cáo mục 4.4.1, bảng ``The links of the three-layer diagram''.
+\item Nếu thầy hỏi vì sao bài 5 vẽ bốn ô: bài 5 tách domain thành ô thứ tư; nhóm em vẽ ba tầng và coi domain là mô hình dùng chung; các lớp và các gói Java vẫn y nguyên.
+\item Công cụ kiểm tra luật ``mũi tên chỉ đi xuống'' trên từng file Java; ngoại lệ duy nhất là EcomApplication tạo các kho lúc khởi động. Tầng không phải là thư mục: ba tầng và mô hình chung gồm \factPackages{} gói Java.
+}
+
+% T32: Checkout across the layers (Lecture 05)
+\slide[must]{32}{Khi khách bấm Đặt hàng, ba tầng làm việc cùng nhau; luật nghiệp vụ nằm ở khối nghiệp vụ, không dồn hết vào người điều phối.}{
+Hãy xem ba tầng làm việc cùng nhau khi khách bấm ``Đặt hàng''. Giao diện chuyển yêu cầu cho người điều phối. Người điều phối làm lần lượt: lấy giỏ ra xem; lấy thông tin khách; kiểm tra lại giá và số hàng của từng món trong kho; tạo đơn với giá chốt; tính tổng, giảm giá nếu là khách VIP; lưu đơn; trừ kho; làm rỗng giỏ; rồi báo đặt hàng thành công. \cue{đi dọc sơ đồ từ trái sang phải}
 
 \luocbo{Điểm hay: các luật như ``thêm một món vào giỏ'' hay ``tính tổng đơn'' nằm ở các khối nghiệp vụ, không nằm ở người điều phối. Người điều phối chỉ gọi, không ôm hết mọi việc. Thầy gọi một khối ôm hết là God class và dặn tránh.}
 
@@ -302,15 +346,15 @@ Thiết kế đến đây là đủ. Xin nhường lời cho bạn \todo{tên Ng
 \item Tên nếu thầy hỏi: CheckoutController, CheckoutService.checkout, CartRepository, CustomerRepository, ProductRepository, OrderRepository; luật nằm ở Cart.addItem và Order.calculateTotal.
 }
 
-\subsection{Chương 5 -- Code và demo (slide 29--32)}
+\subsection{Chương 5 -- Code và demo (slide 33--36)}
 
-% T29: Chapter 5 - Code
-\slide{29}{Chương 5: code không chỉ chạy được mà còn khớp với bản thiết kế từng cái tên.}{
+% T33: Chapter 5 - Code
+\slide{33}{Chương 5: code không chỉ chạy được mà còn khớp với bản thiết kế từng cái tên.}{
 Em xin kể Chương năm, phần code. Mục tiêu của nhóm em không chỉ là code chạy được, mà là code khớp với bản thiết kế từng cái tên: tên khối, tên việc, tên bảng, tên cột trong code phải giống hệt trong thiết kế. Phần chính viết bằng Java và SQLite, giao diện bằng HTML, CSS và JavaScript, và chương trình nghe giọng nói bằng Python.
 }{}
 
-% T30: Course code ↔ Họa. code
-\slide{30}{Tên trong code giữ nguyên tên trong bài giảng của thầy, chỉ đổi theo cách đặt tên của Java.}{
+% T34: Course code ↔ Họa. code
+\slide{34}{Tên trong code giữ nguyên tên trong bài giảng của thầy, chỉ đổi theo cách đặt tên của Java.}{
 Các ví dụ code mà thầy cho trong bài giảng viết bằng Python. Nhóm em giữ nguyên tên, chỉ đổi theo cách đặt tên của Java: ví dụ ``all\_products'' thành ``allProducts'', ``text\_query'' thành ``textQuery''. Nhờ vậy, ai đã đọc bài giảng thì nhìn vào code của nhóm vẫn nhận ra ngay. Cột bên phải cho biết từng khối thuộc tầng nào, khớp với bốn tầng vừa rồi.
 
 Tổng cộng có \factJavaClasses{} khối code Java và \factJsViews{} phần giao diện, tất cả sinh ra từ cùng một file thiết kế. \luocbo{Mấy cặp tiêu biểu trong bảng: tìm bằng chữ, tìm bằng ảnh, tính độ giống, xếp hạng, tra đơn, và đặt hàng.}
@@ -319,8 +363,8 @@ Tổng cộng có \factJavaClasses{} khối code Java và \factJsViews{} phần 
 \item Dòng công thức trong bảng là phần ``tính điểm xếp hạng'' của bài tập A06; không cần giải thích.
 }
 
-% T31: Representative code and how it is verified
-\slide[must]{31}{Làm sao biết code thật sự khớp thiết kế? Nhóm có bốn cách tự kiểm tra.}{
+% T35: Representative code and how it is verified
+\slide[must]{35}{Làm sao biết code thật sự khớp thiết kế? Nhóm có bốn cách tự kiểm tra.}{
 Làm sao biết code thật sự khớp với thiết kế? Nhóm em có bốn cách. Một: một công cụ tự so tên giữa code và thiết kế, rồi báo tất cả đều khớp: \factCheckOps{} việc, \factCheckColumns{} cột dữ liệu và nhiều thứ khác. Hai: \factTests{} bài kiểm thử tự động, tất cả đều đạt. Ba: phần đánh giá nhóm đã trình bày. Bốn: cơ sở dữ liệu được sinh ra từ chính bản thiết kế. Nhờ vậy, báo cáo, sơ đồ và code luôn đồng bộ với nhau.
 
 \cue{chỉ vào đoạn code bên trái} Đoạn code bên trái chỉ để minh họa: đây là phần đổi mô tả bức ảnh thành ba nhãn, rồi so xem hai bên giống nhau đến đâu.
@@ -329,18 +373,18 @@ Làm sao biết code thật sự khớp với thiết kế? Nhóm em có bốn c
 \item Đoạn code là VectorIndex.
 }
 
-% T32: Live demo script
-\slide[must]{32}{Demo trực tiếp chín việc; mọi thứ chạy trên chiếc laptop này, trừ Gemma chạy trên một máy chủ khác.}{
+% T36: Live demo script
+\slide[must]{36}{Demo trực tiếp chín việc; mọi thứ chạy trên chiếc laptop này, trừ Gemma chạy trên một máy chủ khác.}{
 Bây giờ là phần demo. Ở góc phải là sơ đồ chạy thật: mọi thứ chạy ngay trên chiếc laptop này, chỉ trừ Gemma chạy trên một máy chủ khác. Nhóm em sẽ làm chín việc: mở cửa hàng; tìm bằng chữ; tìm bằng giọng nói; tìm bằng ảnh và thử tranh vào phòng; đặt hàng; hỏi trợ lý; hủy đơn và thử xem đơn của người khác; vào trang quản lý; và cuối cùng tắt Gemma để xem cửa hàng có còn chạy không. Xin chuyển sang trình duyệt.
 }{
 \item Người 4 nói và chuyển sang trình duyệt; Người 3 thao tác theo mục~\ref{sec:demo}.
-\item Xong demo, quay lại PowerPoint ở slide 33.
+\item Xong demo, quay lại PowerPoint ở slide 37.
 }
 
-\subsection{Kết luận (slide 33--35)}
+\subsection{Kết luận (slide 37--39)}
 
-% T33: Traceable from requirement to code
-\slide[must]{33}{Một sợi chỉ liền mạch từ yêu cầu đến code, bốn bài học, và những điều chưa làm được nói thẳng.}{
+% T37: Traceable from requirement to code
+\slide[must]{37}{Một sợi chỉ liền mạch từ yêu cầu đến code, bốn bài học, và những điều chưa làm được nói thẳng.}{
 Để kết lại. Nhóm em giữ được một sợi chỉ liền mạch: từ một yêu cầu, ví dụ ``tìm tranh bằng ảnh'', qua sơ đồ, qua thiết kế, tới code, tới bảng dữ liệu, tới kiểm thử và đánh giá, không đứt chỗ nào.
 
 Nhóm em rút ra bốn bài học. Một: hiểu vấn đề trước khi chọn công nghệ. Hai: phân tích nói ``cái gì'', thiết kế nói ``làm thế nào''. Ba: AI nên là một phần có thể thay, và luôn có phương án dự phòng. Bốn: một bản đặc tả chung giữ cho mọi thứ khớp nhau.
@@ -352,17 +396,18 @@ Xin cảm ơn thầy cô và các bạn đã lắng nghe.
 \item Chi tiết các hạn chế và cách sửa: mục~\ref{sec:hanche}.
 }
 
-% T34: Questions & answers
-\slide[must]{34}{Hỏi đáp.}{
+% T38: Questions & answers
+\slide[must]{38}{Hỏi đáp.}{
 Nhóm em xin cảm ơn thầy cô và các bạn đã lắng nghe, và sẵn sàng trả lời các câu hỏi.
 }{
 \item Người phụ trách chương liên quan trả lời trước (mục~\ref{sec:hoidap}). Nếu chưa chắc, mở đúng mục theo bảng ở mục~\ref{sec:filemap} thay vì đoán.
 \item Hai tab trình duyệt và PDF báo cáo nên mở sẵn.
 }
 
-% T35: Folder map of tieuluan/
-\slide{35}{Slide dự phòng: bản đồ thư mục, chỉ mở khi được hỏi ``cái này nằm ở đâu''.}{
+% T39: Folder map of tieuluan/
+\slide{39}{Slide dự phòng: bản đồ thư mục, chỉ mở khi được hỏi ``cái này nằm ở đâu''.}{
 Đây là slide dự phòng, dùng khi thầy hỏi một thứ nằm ở đâu trong dự án. Mỗi dòng là một thư mục: tên, nội dung bên trong, và chương nào dùng nó.
 }{
 \item Thông tin chi tiết hơn: mục~\ref{sec:filemap}.
 }
+

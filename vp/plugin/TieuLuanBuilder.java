@@ -372,6 +372,9 @@ public final class TieuLuanBuilder implements VPPlugin, VPPluginCommandLineSuppo
                 view.setBounds(num(n, "x", 0), num(n, "y", 0), num(n, "w", 120), num(n, "h", 60));
                 font(view);
                 fill(view, n);
+                if (yes(n, "transparent")) view.getFillColor().setTransparency(100, true);
+                if (view instanceof IDBTableUIModel)   // every column, including the foreign keys VP adds later
+                    ((IDBTableUIModel) view).setShowColumnsMode(IDBTableUIModel.SHOW_COLUMNS_MODE_SHOW_ALL);
                 if ("false".equals(n.getAttribute("nest"))) view.bringToFront();
                 if (n.hasAttribute("captionX")) {
                     view.getCaptionUIModel().setBounds(num(n, "captionX", 0), num(n, "captionY", 0),
@@ -388,8 +391,11 @@ public final class TieuLuanBuilder implements VPPlugin, VPPluginCommandLineSuppo
 
         void column(IDBColumn column, Element c) {
             column.setName(c.getAttribute("name"));
-            if (!column.setType(c.getAttribute("type"), num(c, "length", 0), num(c, "scale", 0)))
-                column.setTypeName(c.getAttribute("type"));
+            String type = c.getAttribute("type");
+            boolean known = column.setType(type, num(c, "length", 0), num(c, "scale", 0));
+            String shown = String.valueOf(column.getTypeInText()).toLowerCase();
+            // VP maps an unknown type (bytea) to integer: keep the type of the schema as a user type instead.
+            if (!known || !shown.startsWith(type.toLowerCase())) column.setUserType(type);
             if (c.hasAttribute("length")) column.setLength(num(c, "length", 0));
             if (c.hasAttribute("scale")) column.setScale(num(c, "scale", 0));
             column.setNullable(yes(c, "nullable"));
@@ -821,12 +827,20 @@ public final class TieuLuanBuilder implements VPPlugin, VPPluginCommandLineSuppo
                     spacers.add(spacer);
                 }
             }
+            // PNG at 3x for the slides, SVG for editing, PDF (vector, text kept as text) for the report.
             ExportDiagramAsImageOption png = new ExportDiagramAsImageOption(ExportDiagramAsImageOption.IMAGE_TYPE_PNG);
-            png.setScale(2f);
+            png.setScale(3f);
+            png.setTextAntiAliasing(true);
+            png.setGraphicAntiAliasing(true);
             ModelConvertionManager convert = ApplicationManager.instance().getModelConvertionManager();
             convert.exportDiagramAsImage(diagram, new File(dir, id + ".png"), png, (Rectangle) null);
             ExportDiagramAsImageOption svg = new ExportDiagramAsImageOption(ExportDiagramAsImageOption.IMAGE_TYPE_SVG);
             convert.exportDiagramAsImage(diagram, new File(dir, id + ".svg"), svg, (Rectangle) null);
+            ExportDiagramAsImageOption pdf = new ExportDiagramAsImageOption(ExportDiagramAsImageOption.IMAGE_TYPE_PDF);
+            pdf.setTextAntiAliasing(true);
+            pdf.setGraphicAntiAliasing(true);
+            pdf.setImageMargin(ExportDiagramImageMargin.Minimal);
+            convert.exportDiagramAsImage(diagram, new File(dir, id + ".pdf"), pdf, (Rectangle) null);
             for (IShapeUIModel spacer : spacers) spacer.deleteViewOnly();
             System.out.println("EXPORTED " + id);
         }

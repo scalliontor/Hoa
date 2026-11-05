@@ -8,13 +8,13 @@ OK    database data/ecom.db: 17 tables, 87 columns, keys and foreign keys as in 
 OK    SQL of the repositories: 60 statements, 82 model identifiers used
 == Dependencies ==
 OK    36/36 Java dependencies of DESIGN_DEPENDENCIES_44 found in the code
-OK    layer Application -> Domain: 8 file(s)
-OK    layer Application -> Infrastructure: 9 file(s)
-OK    layer Infrastructure -> Domain: 9 file(s)
+OK    layer Application -> Data: 9 file(s)
+OK    layer Application -> Domain model: 8 file(s)
+OK    layer Data -> Domain model: 9 file(s)
 OK    layer Presentation -> Application: 7 file(s)
+OK    layer Presentation -> Domain model: 5 file(s)
 NOTE  application.search.ImageService: private helper field(s) described
 NOTE  presentation.web.WebServer: private helper field(s) server
-NOTE  layer Presentation -> Domain: 5 file(s) (controllers return domain objects)
-NOTE  layer Presentation -> Infrastructure: 1 file(s) (EcomApplication)
+NOTE  layer Presentation -> Data: 1 file(s) (EcomApplication, the composition root)
 
 Model check: 58 Java classes, 162 fields, 184 operations, 26 view functions, 17 tables, 87 columns, 60 SQL statements -> all match the model

@@ -95,7 +95,7 @@ and to compare pictures.
 
 Họa. has five AI features (Table~\ref{tab:fiveai}). They share one architecture
 (Figure~\ref{fig:c3_ai_architecture}): the application layer owns the AI logic, and the models are reached through
-two interfaces of the infrastructure layer, \code{LlmClient} and \code{SpeechClient}.
+two interfaces of the data layer, \code{LlmClient} and \code{SpeechClient}.
 
 \begin{longtable}{@{}P{3.3cm}P{2.3cm}P{2.6cm}P{6.8cm}@{}}
 \caption{The five AI features of Họa.}\label{tab:fiveai}\\
@@ -128,7 +128,7 @@ The dependency direction in Figure~\ref{fig:c3_ai_architecture} is deliberate. \
 \code{ImageService} and \code{AssistantService} depend on the interface \code{LlmClient}, not on
 \code{GemmaClient}; \code{SpeechService} depends on \code{SpeechClient}, not on \code{WhisperClient}. This gives
 three properties that the requirements ask for. First, the model can be replaced (another Gemma size, another
-provider) by writing one class of the infrastructure layer, without touching the services (NFR04). Second, the
+provider) by writing one class of the data layer, without touching the services (NFR04). Second, the
 services can be tested with a fake client that answers instantly or always fails. Third, every call to a model can
 fail without breaking the shop: the services catch the error and switch to a rule-based path (NFR02,
 Section~\ref{sec:3.11}). The composition root \code{EcomApplication.main} creates one \code{GemmaClient} and one

@@ -692,16 +692,18 @@ DESIGN_DEPENDENCIES_44 = [
     ("QueryService", "LlmClient", "use"), ("ImageService", "LlmClient", "use"),
 ]
 
-# Layer packages of 4.4 and the Java sub-packages that realise them.
+# The three layers of 4.4 (A06, reference essay) and the Java sub-packages that realise them. The domain
+# classes are not a layer: they are the model shared by all three layers (cross-cutting).
 LAYERS = [
     ("Presentation", "presentation", ["presentation.view", "presentation.controller", "presentation.web"]),
     ("Application", "application", ["application.service", "application.search"]),
-    ("Domain", "domain", ["domain.customer", "domain.product", "domain.cart", "domain.order", "domain.payment"]),
-    ("Infrastructure", "infrastructure", ["infrastructure.repository", "infrastructure.repository.sqlite",
-                                          "infrastructure.search", "infrastructure.ai"]),
+    ("Data", "infrastructure", ["infrastructure.repository", "infrastructure.repository.sqlite",
+                                "infrastructure.search", "infrastructure.ai"]),
 ]
-LAYER_DEPENDENCIES = [("Presentation", "Application"), ("Application", "Domain"),
-                      ("Application", "Infrastructure"), ("Infrastructure", "Domain")]
+DOMAIN_MODEL = ("Domain model", "domain", ["domain.customer", "domain.product", "domain.cart", "domain.order",
+                                           "domain.payment"])
+PACKAGE_GROUPS = LAYERS + [DOMAIN_MODEL]          # every Java package, layer by layer, then the shared model
+LAYER_DEPENDENCIES = [("Presentation", "Application"), ("Application", "Data")]
 
 
 # ---------------------------------------------------------- 4.2 tables (DB)

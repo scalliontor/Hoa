@@ -1,4 +1,4 @@
-Họa. end-to-end check 2026-11-11 23:00 (fresh database, HTTP API)
+Họa. end-to-end check 2026-11-11 23:11 (fresh database, HTTP API)
 
 PASS  UC01/UC05 catalogue grouped by category (Category -> detail table)
       37 products: {('PAINTING', 'Fine-art prints'): 32, ('FRAME', 'Frames'): 5}
@@ -7,7 +7,7 @@ PASS  UC02 'Monet paintings under 100 dollars' (FR01: artist and maximum price r
 PASS  UC02 'blue landscape paintings' returns a blue or landscape painting first
       top: P03 Woman with a Parasol (landscape, blue)
 PASS  UC06/UC07 VIP checkout: price frozen, 10% discount, stock decreased, cart emptied (FR07, BR04)
-      order 26111122595792 PLACED, total 128.6 = (134) x 0.9 + 8; stock P03 5->4, F01 20->19; cart empty
+      order 26111123111630 PLACED, total 128.6 = (134) x 0.9 + 8; stock P03 5->4, F01 20->19; cart empty
 PASS  UC07 A: checkout of an empty cart is refused (BR03)
       409: {'error': 'Your cart is empty'}
 PASS  UC07 A: an address of another customer is refused
@@ -17,7 +17,7 @@ PASS  UC08/NFR01: another customer's order is answered as not found (BR08)
 PASS  UC11 A1: a SHIPPED order cannot be cancelled (BR06)
       409: {'error': 'Only placed or processing orders can be cancelled'}
 PASS  UC11: a PLACED order is cancelled (FR11)
-      order 26111122595792 -> CANCELLED
+      order 26111123111630 -> CANCELLED
 PASS  UC13: only the next status is accepted (BR07)
       PLACED -> DELIVERED refused; PLACED -> PROCESSING accepted
 PASS  UC12/UC13 A: back office refused to a customer (NFR01)
@@ -27,12 +27,12 @@ PASS  UC12: price and stock updated; invalid data refused (A1)
 PASS  UC04: a photo of The Great Wave finds P10 first (FR03)
       top: P10 The Great Wave; reason: Gemma 4 vision ▪ Ukiyo-e ▪ seascape ▪ blue ▪ Katsushika Hokusai ▪ 100% visual match
 PASS  UC10: the assistant looks the order up with a tool (FR10)
-      tools ['find_order'], aiUsed=True: Your order 20261001 has been shipped via GHN Express and is currently in transit. You can track it using the t
+      tools ['find_order'], aiUsed=True: Your order 20261001 has been shipped and is currently in transit via GHN Express. You can track it using the t
 PASS  UC10/NFR01: asking for another customer's orders reveals nothing
-      answer names only An's orders: You have three orders: order 20261002 (Delivered), order 20261001 (Shipped), and order 26111122595792 (Cancell
+      answer names only An's orders: You have three orders: 20261002 (Delivered), 20261001 (Shipped), and 26111123111630 (Cancelled).
 PASS  NFR02: search still answers when Gemma is unreachable (keyword rules)
       12 results without Gemma; reason: Keyword rules ▪ landscape ▪ blue
 PASS  NFR12: cart, checkout and orders work without the AI services
-      order 26111123000565 PLACED and listed while Gemma is unreachable
+      order 26111123112797 PLACED and listed while Gemma is unreachable
 
 17/17 steps passed

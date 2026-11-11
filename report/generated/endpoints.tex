@@ -26,7 +26,7 @@
 \footnotesize \code{PUT /api/cart/items} & \footnotesize \code{CartController.updateQuantity} & \footnotesize customer session & \footnotesize UC06\\
 \footnotesize \code{DELETE /api/cart/items} & \footnotesize \code{CartController.removeItem} & \footnotesize customer session & \footnotesize UC06\\
 \footnotesize \code{POST /api/checkout} & \footnotesize \code{CartController.viewCart}, \code{CheckoutController.checkout} & \footnotesize customer session & \footnotesize UC07\\
-\footnotesize \code{POST /api/addresses} & \footnotesize \code{CheckoutController.addAddress} & \footnotesize customer session & \footnotesize --\\
+\footnotesize \code{POST /api/addresses} & \footnotesize \code{CheckoutController.addAddress} & \footnotesize customer session & \footnotesize UC07\\
 \footnotesize \code{GET /api/orders} & \footnotesize \code{OrderController.listOrders} & \footnotesize customer session & \footnotesize UC08\\
 \footnotesize \code{GET /api/orders/<id>} & \footnotesize \code{OrderController.viewOrder} & \footnotesize customer session & \footnotesize UC08, UC09\\
 \footnotesize \code{POST /api/orders/<id>/cancel} & \footnotesize \code{OrderController.cancelOrder}, \code{OrderController.viewOrder} & \footnotesize customer session & \footnotesize UC11\\

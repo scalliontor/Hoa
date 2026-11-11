@@ -1,109 +1,91 @@
-\section{Kịch bản demo trực tiếp}\label{sec:demo}
-Hãy kể buổi demo như \key{một câu chuyện về một vị khách}: khách ghé Họa., tìm tranh bằng chữ, bằng giọng nói, bằng ảnh, thử tranh vào phòng, đặt hàng, hỏi trợ lý, đổi ý hủy đơn; rồi người quản lý vào xem; và cuối cùng ta tắt AI để xem cửa hàng có còn chạy không. Chín bước, khoảng \key{8 phút}; bản rút gọn (khoảng 5 phút) bỏ bước 8 và nói ngắn các bước còn lại.
-Em vừa kể vừa thao tác: \key{nói trước điều sắp bấm, rồi mới bấm}, và phóng to trình duyệt để cuối phòng nhìn rõ. Các câu tìm đều bằng \key{tiếng Anh}, vì dữ liệu và giao diện của Họa. là tiếng Anh.
+\section{Demo trực tiếp}\label{sec:demo}
+Kể demo như \key{câu chuyện của một vị khách}: chị ghé Họa., tìm tranh bằng lời và bằng giọng nói, đưa ảnh một bức tranh rồi ảnh phòng khách, đặt mua; người quản lý chuyển đơn đi; chị hỏi trợ lý và tò mò thử xem đơn của người khác; cuối cùng ta rút phích AI. Năm flow, cùng thứ tự với mục F của showcase, tổng khoảng \key{6 phút}. Trong kịch bản 7 bước (bước 6) chỉ dùng một phần Flow 1, 3 và 4; các flow còn lại dùng khi thầy muốn xem thêm. Mọi câu tìm đều bằng \key{tiếng Anh}.
 
 \begin{note}[warn]{Ba điều cần biết trước khi demo}
 \begin{itemize}
-\item Kết quả của Gemma có thể \key{khác một chút giữa các lần} (câu giải thích, thứ tự các tranh phía sau). Đừng đọc nguyên văn phần ``Mong đợi''; chỉ cần cùng \emph{tinh thần}.
-\item Giỏ hàng của khách mẫu có sẵn \key{một tranh} (Woman with a Parasol), nên số món và tổng tiền sẽ nhiều hơn số bạn vừa thêm. Cứ nói ``trong giỏ còn có một bức có sẵn''.
-\item Muốn cho thầy thấy ``AI đã tham gia'': nhấn \key{Shift+D} để bật chế độ nhà phát triển. Nó hiện nhãn ``GEMMA 4'' hay ``KEYWORD FALLBACK'' và thời gian. Chỉ bật khi cần, rồi tắt đi.
+\item Gemma có thể trả lời \key{hơi khác giữa các lần} (câu lý do, thứ tự các bức phía sau). Phần ``Mong đợi'' chỉ là tinh thần, đừng đọc nguyên văn.
+\item Giỏ của C001 có sẵn \key{một bức} (Woman with a Parasol, 89 USD), nên tổng tiền lớn hơn món vừa thêm. Cứ nói ``trong giỏ có sẵn một bức''.
+\item Muốn cho thầy thấy AI có tham gia hay không: \key{Shift+D} bật chế độ nhà phát triển, hiện nhãn ``GEMMA 4'' hoặc ``KEYWORD FALLBACK'' và thời gian. Bật khi cần, rồi tắt.
 \end{itemize}
 \end{note}
 
-\subsection{Bước 1 -- Mở cửa hàng \normalfont\small(≈ 30 giây)}
+\subsection{Flow 1 · Tìm bằng lời và bằng giọng nói \normalfont\small(≈ 1 phút; UC02, UC03)}
 \lab{Thao tác}
-Ở tab 1 (\code{http://127.0.0.1:8686}), trang chủ hiện ra với bức The Starry Night. Bấm \emph{Explore the collection}.
-\lab{Nói thế này}
-Đây là Họa., cửa hàng mà em vừa kể. Cửa hàng đang mở sẵn với tài khoản của một khách VIP tên là Nguyen Minh An, được giảm mười phần trăm. Các bạn để ý: trên màn hình không có tên kỹ thuật nào cả, người dùng chỉ thấy một cửa hàng tranh bình thường, đẹp và gọn. AI nằm phía sau, không làm rối giao diện. Bây giờ em vào bộ sưu tập.
+Tab cửa hàng, bấm \emph{Explore the collection}. Gõ \code{blue landscape paintings}, Enter. Rồi bấm micro trong ô tìm, nói rõ \code{Monet paintings under 100 dollars}, bấm dừng; chữ hiện trong ô \emph{We heard}, sửa nếu sai, bấm \emph{Search}.
+\lab{Nói}
+Một vị khách ghé Họa. Chị không nhớ tên bức tranh, chỉ nhớ đó là phong cảnh, màu xanh. Chị gõ đúng như vậy, và mỗi bức hiện ra kèm một dòng lý do vì sao được chọn. \cue{bấm micro, nói tiếng Anh} Lần này chị nói: tranh của Monet, dưới một trăm đô. Giọng nói được đổi thành chữ ngay trên chiếc laptop này, âm thanh không đi đâu cả; chữ hiện ra để chị sửa nếu máy nghe sai. Ba bức đầu đúng là ba bức Monet dưới một trăm đô.
 \lab{Mong đợi}
-Trang ``Find your painting'' với ô tìm kiếm, nút micro, nút ảnh và vùng tải ảnh phòng.
-
-\subsection{Bước 2 -- Tìm bằng chữ \normalfont\small(≈ 30 giây)}
-\lab{Thao tác}
-Gõ \code{blue landscape paintings}, Enter. (Tùy chọn: nhấn Shift+D để hiện nhãn AI.)
-\lab{Nói thế này}
-Em gõ một câu bình thường: blue landscape paintings, nghĩa là tranh phong cảnh màu xanh. Gemma hiểu câu này thành hai điều cần tìm: chủ đề là phong cảnh, màu là xanh. Kết quả hiện ra trong chưa đầy một giây, và mỗi tranh đều có một dòng lý do vì sao được chọn. \cue{nếu bật Shift+D, chỉ vào nhãn Gemma 4} Nhãn này cho biết lần tìm này có AI tham gia. Các bạn nhớ nhãn này, vì cuối buổi em sẽ cho thấy nó đổi thế nào khi tắt AI.
-\lab{Mong đợi}
-``12 works for \ldots'' với ba tranh đầu là Woman with a Parasol, The Starry Night, Wanderer above the Sea of Fog; nhãn ``GEMMA 4'' nếu bật chế độ nhà phát triển.
+Chữ: khoảng mười hai bức, bức đầu thường là Woman with a Parasol, mỗi thẻ có dòng lý do. Giọng nói: Impression, Sunrise (79 USD), Water Lilies (69), Woman with a Parasol (89), rồi vài bức Ấn tượng khác dưới 100 USD (cửa hàng chỉ có ba bức Monet đủ điều kiện).
 \lab{Nếu lỗi}
-Không có kết quả, hoặc thấy nhãn ``KEYWORD FALLBACK'': Gemma không trả lời. Cửa hàng vẫn chạy được; cứ nói thật và xem mục~\ref{sec:suco}.
+Nhãn ``KEYWORD FALLBACK'': Gemma không trả lời (mục~\ref{sec:khonggemma}). \emph{Voice search is unavailable}: Whisper chưa chạy; gõ câu thay vì nói (mục~\ref{sec:suco}). Máy nghe ``Monet'' thành ``Money'': sửa trong ô \emph{We heard}, và nói luôn: đây là lý do khách được xem và sửa chữ.
 
-\subsection{Bước 3 -- Tìm bằng giọng nói \normalfont\small(≈ 1 phút)}
+\subsection{Flow 2 · Đưa ảnh, rồi treo tranh lên tường \normalfont\small(≈ 1 phút 30; UC04, UC14)}
 \lab{Thao tác}
-Bấm biểu tượng micro trong ô tìm kiếm, nói rõ bằng tiếng Anh: \code{Monet paintings under 100 dollars}, bấm dừng. Chữ hiện trong ô \emph{We heard}; sửa nếu sai, rồi bấm \emph{Search}.
-\lab{Nói thế này}
-Bây giờ em tìm bằng giọng nói. \cue{bấm micro và nói tiếng Anh} Em nói: Monet paintings under 100 dollars, tức tranh của Monet giá dưới một trăm đô. Giọng nói được đổi thành chữ bằng chương trình Whisper chạy ngay trên chiếc laptop này, nên âm thanh không rời khỏi máy, và chỉ mất chừng một giây. Chữ hiện ra để khách xem và sửa nếu nghe sai. \cue{bấm Search} Ba bức đầu đúng là ba bức Monet giá dưới một trăm đô: Impression, Sunrise 79 đô; Water Lilies 69 đô; Woman with a Parasol 89 đô. Phía sau là vài bức cùng trường phái Ấn tượng, cũng dưới một trăm đô, vì cửa hàng chỉ có ba bức Monet đủ điều kiện nên gợi ý thêm các bức tương tự.
+Ở trang Collection bấm \emph{find paintings similar to a photo}, chọn \file{Q02.jpg} trên Desktop. Rồi kéo thả \file{room1.jpg} vào trang (hoặc Cmd+V): trang chuyển sang \emph{Find for my room}, bức hợp nhất đã treo sẵn; bấm một bức khác trong dải \emph{Picked for this wall}.
+\lab{Nói}
+Chị có một tấm ảnh chụp bức tranh ở bảo tàng, đây là bức Sóng lừng. Gemma nhìn ảnh và tả nó bằng ba nhãn: phong cách, chủ đề, màu; cửa hàng tìm những bức có nhãn giống nhất, và đúng bức đó đứng đầu. \cue{kéo ảnh phòng vào} Rồi chị muốn biết tranh có hợp phòng khách không. Chị đưa ảnh căn phòng: bức hợp nhất được treo ngay lên tường trong ảnh, kèm một câu giải thích nhắc tới những thứ có thật trong phòng. \cue{bấm bức khác} Bấm bức khác thì nó treo lên ngay. Ảnh phòng chỉ nằm trong trình duyệt, không được lưu lên máy chủ.
 \lab{Mong đợi}
-Ba bức Monet dưới 100 USD lên đầu, rồi vài bức Ấn tượng khác dưới 100 USD (Degas, Pissarro, Cassatt). Nếu thầy hỏi sao có bức không phải Monet: danh mục chỉ có ba bức Monet đủ điều kiện, nên các bức sau là gợi ý cùng trường phái.
+Ảnh Q02: The Great Wave off Kanagawa đứng đầu. Phòng: ``Looking at your room\ldots'' vài giây, rồi tranh trên tường và câu \emph{Why it fits}.
 \lab{Nếu lỗi}
-\emph{``Voice search is unavailable''}: chương trình nghe giọng nói chưa chạy (mục~\ref{sec:suco}). \emph{``We couldn't hear you''}: không thu được tiếng; nói lại to hơn, hoặc gõ câu đó. Micro bị chặn: cho phép micro trong thanh địa chỉ của Chrome.
-\shot{search_voice.png}{Màn hình mong đợi: chữ hiện trong ô ``We heard'' để khách sửa.}
+Chờ tối đa 15 giây; quá hạn thì cửa hàng tự chọn theo màu và dựng câu giải thích từ thông tin của tranh. Ảnh lỗi định dạng: dùng một trong ba phòng mẫu ở cột bên phải.
 
-\subsection{Bước 4 -- Tìm bằng ảnh, rồi thử tranh vào phòng \normalfont\small(≈ 1,5 phút)}
-\lab{Thao tác 4a}
-Ở trang Collection bấm liên kết nhỏ \emph{or find paintings similar to a photo}, chọn \file{Q02.jpg} (The Great Wave) trên Desktop.
-\lab{Thao tác 4b}
-Kéo thả ảnh phòng vào trang (hoặc bấm \emph{Upload photo}, hoặc dán bằng Cmd+V); chọn \file{room1.jpg}. Trang chuyển sang \emph{Find for my room}; bức hợp nhất đã treo sẵn, bấm bức khác trong dải \emph{Picked for this wall} thì bức đó treo lên.
-\lab{Nói thế này}
-Tiếp theo là tìm bằng ảnh. \cue{bấm liên kết find paintings similar to a photo, chọn Q02.jpg} Em đưa vào một bức ảnh, đây là The Great Wave. Gemma nhìn ảnh và tả nó bằng ba nhãn: kiểu tranh, chủ đề, màu. Cửa hàng tìm những bức có nhãn giống nhất. Và đúng bức The Great Wave đứng đầu.
-
-Bây giờ là phần em thích nhất: thử tranh vào phòng. \cue{kéo thả ảnh phòng vào trang} Em đưa vào ảnh một căn phòng. Cửa hàng chuyển ngay sang trang này, và bức tranh hợp nhất đã được treo sẵn lên tường, ngay trong ảnh phòng của khách. \cue{đọc câu Why it fits trên màn hình} Gemma còn viết một câu giải thích vì sao hợp, nhắc tới những thứ có thật trong căn phòng, như sofa, sàn gỗ hay ánh sáng. \cue{bấm vào một bức khác trong dải Picked for this wall} Em bấm bức khác: nó treo lên ngay, kèm câu giải thích riêng. Ảnh phòng chỉ nằm trong trình duyệt của khách, không được lưu lên máy chủ.
+\subsection{Flow 3 · Mua, xem danh mục, rồi giao hàng \normalfont\small(≈ 1 phút 30; UC05, UC07, UC12, UC13)}
+\lab{Thao tác}
+\begin{enumerate}[leftmargin=1.5em]
+\item Mở một bức (ví dụ The Great Wave). \key{Chỉ vào dòng nhỏ trên tên tranh}: \emph{Fine-art prints ▪ Ukiyo-e ▪ 1831}, tức tên danh mục ▪ phong cách ▪ năm. Một cái khung thì dòng này là \emph{Frames ▪ vật liệu}.
+\item Chọn một khung, \emph{Add to cart}, mở \emph{Cart}. Chọn địa chỉ, \emph{Cash on delivery}, \emph{Place order}.
+\item Bấm tên ở góc phải trên, chọn \emph{Gallery staff}; vào \emph{Back office}. Tab \emph{Paintings \& frames}: dưới tên mỗi sản phẩm có tên danh mục (``Fine-art prints ▪ họa sĩ'' hoặc ``Frames''). Kéo xuống form \emph{Add a painting}: ô \emph{Category} chỉ liệt kê danh mục chứa tranh.
+\item Tab \emph{Orders}: ở đơn vừa đặt bấm \emph{Mark processing}. Rồi đổi lại về C001.
+\end{enumerate}
+\lab{Nói}
+Chị chọn bức này. Dòng chữ nhỏ trên tên tranh là danh mục của nó, chính là dòng trong bảng danh mục em vừa cho thầy xem. \cue{thêm vào giỏ, đặt hàng} Chị thêm tranh và khung vào giỏ rồi đặt hàng. Phía sau, cửa hàng đọc lại giá và kho, tạo đơn với giá đã chốt, trừ kho rồi làm rỗng giỏ; tổng tiền đã trừ mười phần trăm cho khách VIP và cộng tám đô phí giao. \cue{đổi sang Gallery staff} Bây giờ em là người quản lý. Bảng sản phẩm cũng ghi danh mục của từng món, và khi thêm tranh mới, em chỉ chọn được danh mục dành cho tranh, nên không thể xếp nhầm một bức tranh vào mục khung. \cue{Mark processing} Đơn chỉ đi từng bước: mới đặt, đang xử lý, đã gửi, đã giao; mỗi đơn chỉ có đúng một nút cho bước kế tiếp.
+\lab{Mong đợi}
+``ORDER PLACED: Your order \#\ldots{} is confirmed''. Tổng $=$ tạm tính $-$ 10\% $+$ 8 USD. Sau khi bấm, đơn chuyển sang \emph{Processing} và nút đổi thành \emph{Mark shipped}.
 \lab{Nếu lỗi}
-Chờ vài giây khi thấy ``Looking at your room\ldots''; nếu quá 15 giây, cửa hàng tự chuyển sang chọn bằng màu (câu giải thích dựng từ thông tin của tranh). Ảnh quá lớn hoặc sai định dạng: dùng \file{room1.jpg} hoặc ba phòng mẫu có sẵn ở cột bên phải.
-\shot{room_preview.png}{Màn hình mong đợi: bức tranh đã treo lên tường của khách, câu ``Why it fits'' ở dưới.}
+Báo hết hàng: dữ liệu còn dư từ lần tập trước; đặt lại dữ liệu mẫu (mục~\ref{sec:reset}).
 
-\subsection{Bước 5 -- Thêm vào giỏ và đặt hàng \normalfont\small(≈ 1 phút)}
+\subsection{Flow 4 · Hỏi trợ lý, rồi thử xem trộm \normalfont\small(≈ 1 phút; UC10, UC09, UC11)}
 \lab{Thao tác}
-Ở trang phòng bấm \emph{Add to cart} (thêm cả tranh và khung đang xem). Mở \emph{Cart}. Chọn địa chỉ giao hàng; chọn \emph{Cash on delivery}; bấm \emph{Place order}.
-\lab{Có thể thêm}
-Bấm \emph{+ Add a new address}, gõ một địa chỉ mới, \emph{Save address}: địa chỉ được lưu và tự chọn. Nói: ``địa chỉ cũng gõ được; cửa hàng không cho để trống hay gõ quá dài''.
-\lab{Nói thế này}
-Em thấy bức này hợp, em thêm vào giỏ cùng chiếc khung. \cue{bấm Add to cart, mở Cart} Trong giỏ có tranh, có khung, và cả một bức có sẵn từ trước. Khách VIP được giảm mười phần trăm, phí giao hàng là tám đô. \cue{chọn địa chỉ, chọn Cash on delivery, bấm Place order} Em chọn địa chỉ, chọn trả tiền khi nhận hàng, rồi đặt hàng. Phía sau, cửa hàng làm lần lượt mấy việc mà em đã vẽ ở Chương hai: kiểm tra lại giá và số hàng trong kho, tạo đơn với giá đã chốt, ghi nhận thanh toán, trừ kho, rồi làm rỗng giỏ. \cue{chỉ vào màn hình xác nhận} Đơn đã được đặt, và tổng tiền đúng bằng tạm tính, trừ mười phần trăm giảm giá, cộng tám đô phí giao.
+Là C001: bấm nút chat tròn ở góc phải dưới, hỏi \code{where is my latest order?}. Rồi mở \emph{My orders}; ở ô \emph{Find an order} gõ \code{20261003} (đơn của C002), bấm \emph{Look up}. Cuối cùng bấm \emph{Cancel order} ở đơn vừa đặt.
+\lab{Nói}
+Chị hỏi trợ lý: đơn mới nhất của tôi đâu rồi? Trợ lý tự gọi công cụ tra đơn và trả lời về đúng đơn vừa đặt, đang được xử lý. Cửa hàng luôn tra theo tài khoản đang đăng nhập, không theo những gì khách gõ. \cue{tra 20261003} Giờ chị tò mò gõ mã đơn của một người khác. Cửa hàng trả lời: không tìm thấy trong tài khoản của bạn, giống hệt như khi mã đó không tồn tại, nên không ai dò ra được mã đơn nào là thật. \cue{Cancel order} Chị đổi ý và hủy đơn vừa đặt: được, vì đơn chưa gửi đi. Đơn đã gửi thì không còn nút hủy.
 \lab{Mong đợi}
-``ORDER PLACED'': ``Your order \#\ldots{} is confirmed''. Tổng $=$ tạm tính $-$ 10\% $+$ 8 USD (ví dụ 203 $\to$ 190,70 USD).
+Trợ lý nói về đơn vừa đặt (đang xử lý). Tra 20261003: \emph{``We can't show order \#20261003 \ldots{} was not found in your account.''} Hủy: đơn chuyển sang \emph{Cancelled}; đơn 20261001 (đã gửi) không có nút hủy.
+
+\subsection{Flow 5 · Rút phích Gemma \normalfont\small(≈ 1 phút; NFR02, NFR12)}
+\lab{Thao tác}
+Sang tab bản tắt Gemma (\code{http://127.0.0.1:8687/?debug=1}). Gõ lại \code{blue landscape paintings}; tải \file{Q02.jpg} ở \emph{find paintings similar to a photo}; hỏi trợ lý \code{find my order 20261001}.
+\lab{Nói}
+Câu hỏi thầy có thể đang nghĩ: nếu AI hỏng thì sao? Đây là một bản của cửa hàng mà đường tới Gemma đã bị cắt. Tìm bằng chữ vẫn ra, chỉ khác nhãn: lần này luật từ khóa làm việc, và còn nhanh hơn. Với ảnh thì khác: cửa hàng chỉ còn đọc được màu trung bình nên trả về bức sai, đúng như em đã đo, Gemma giúp rõ nhất ở ảnh. Trợ lý vẫn tra được đơn nhờ luật. AI hỏng, cửa hàng vẫn bán được hàng.
+\lab{Mong đợi}
+Chữ: vẫn ra kết quả, nhãn ``KEYWORD FALLBACK'' (bản này mở sẵn chế độ nhà phát triển). Ảnh: kết quả xếp theo màu, không phải The Great Wave. Trợ lý: vẫn trả lời đúng đơn; dưới câu trả lời ghi ``Fallback ▪ no AI'' và ``Tool ▪ find\_order''.
+
+\subsection{Khi Gemma không chạy}\label{sec:khonggemma}
+Nói câu mở ở mục~\ref{sec:gemma} trước khi bắt đầu demo, rồi đi các flow như sau. Flow 5 bỏ, vì cửa hàng chính lúc này đã là bản dự phòng.
+\begin{center}\small
+\begin{tabular}{@{}P{2cm}P{6.6cm}P{7.2cm}@{}}
+\toprule
+\textbf{Flow} & \textbf{Chuyện gì xảy ra} & \textbf{Làm và nói gì}\\
+\midrule
+1 · chữ, giọng & Vẫn chạy: luật từ khóa hiểu câu; Whisper vẫn chạy trên laptop & Bật Shift+D, chỉ nhãn ``KEYWORD FALLBACK'': ``đây là đường lui em thiết kế sẵn''. Câu Monet vẫn ra đúng ba bức Monet dưới 100 USD.\\
+2 · ảnh, phòng & Ảnh chỉ còn đọc màu, kết quả kém; phòng xếp theo màu, lý do dựng từ thông tin của tranh & Làm nhanh một lần để thấy kết quả kém, rồi mở showcase F (``Show a photo, then hang it on your wall'') hoặc \file{figures/demo/search_image.png}, \file{room_preview.png}: ảnh chụp khi có Gemma.\\
+3 · mua, giao & Không ảnh hưởng (NFR12) & Làm đầy đủ: đây là phần chứng minh cửa hàng vẫn bán được.\\
+4 · trợ lý & Trợ lý trả lời bằng luật (chế độ nhà phát triển ghi ``Fallback ▪ no AI''); quyền xem đơn y nguyên & Hỏi \code{find my order 20261001} hoặc \code{where is my latest order?}, vì luật chỉ nhận mã đơn và vài từ khóa; phần tra đơn của người khác vẫn làm như cũ.\\
+\bottomrule
+\end{tabular}
+\end{center}
+Nếu được hỏi ``vậy số đo có Gemma ở đâu?'': mục G của showcase và bài §3.15 (đo ngày 30/10).
+
+\subsection{Nếu thầy muốn xem VP sinh cơ sở dữ liệu ngay tại chỗ}\label{sec:vpgen}
+Bài chưa có ảnh chụp trình hướng dẫn \emph{Generate Database} của VP (mục này trong bảng nghiệm thu còn ``một phần''); file \file{demo/db/vp_generated_ddl.sql} là do bộ sinh SQL của chính VP viết ra khi dựng project. Nếu thầy muốn tận mắt thấy, làm như sau (khoảng 2 phút). Nói thật trước: \say{phần này em làm trực tiếp, bài chưa có ảnh chụp từng bước.}
+\begin{enumerate}[leftmargin=1.5em]
+\item Giữ lại bản cũ: \code{cp demo/db/vp_generated_ddl.sql ~/Desktop/vp_generated_ddl.bak.sql}.
+\item Mở \file{vp/tieuluan_design.vpp} bằng \key{bản dùng thử} (\file{Visual Paradigm.app}), mở sơ đồ \vp{4.2 Database - entity relationship diagram}.
+\item Menu \emph{Tools $\to$ DB $\to$ Generate Database}. Giữ cơ sở dữ liệu là \key{SQLite}, chọn \emph{Generate DDL} ra file, lưu đè lên \file{demo/db/vp_generated_ddl.sql} (đó là file công cụ so sánh đọc).
+\item Ở thư mục dự án chạy \code{python3 tools/compare_schema.py}. Mong đợi: dòng ``Same tables, columns, types, NOT NULL, primary keys and UNIQUE: True (\factCheckTables{} tables, \factCmpColumns{} columns compared)'' và câu ghi rằng VP không viết khóa ngoại và CHECK.
+\item Đóng VP, chọn \emph{Don't Save}.
+\end{enumerate}
+\lab{Nói}
+Em bấm sinh cơ sở dữ liệu ngay trong Visual Paradigm, từ chính sơ đồ quan hệ thực thể. Rồi em cho công cụ so file vừa sinh với cơ sở dữ liệu cửa hàng đang chạy: giống nhau về bảng, cột, kiểu dữ liệu, khóa chính và ràng buộc duy nhất. Chỉ khác là bộ sinh của VP cho SQLite không viết khóa ngoại và ràng buộc kiểm tra, nên công cụ của em thêm chúng vào từ cùng mô hình.
 \lab{Nếu lỗi}
-Báo hết hàng: tranh vừa hết kho sau nhiều lần tập; đặt lại dữ liệu mẫu (mục~\ref{sec:reset}).
-
-\subsection{Bước 6 -- Hỏi trợ lý về đơn hàng \normalfont\small(≈ 45 giây)}
-\lab{Thao tác}
-Bấm nút chat tròn ở góc phải dưới (hoặc mục \emph{Assistant}). Gõ (hoặc bấm gợi ý): \code{find my order 20261001}, rồi \code{where is my latest order?}
-\lab{Nói thế này}
-Bây giờ em hỏi trợ lý. \cue{bấm nút chat tròn ở góc phải dưới} Em gõ: find my order 20261001, tức tìm đơn số 20261001. Trợ lý trả lời đơn này đã gửi đi, giao bởi GHN Express, kèm mã vận đơn. Em hỏi thêm: where is my latest order? Lần này nó nói đến đơn em vừa đặt ở bước trước, đang được chuẩn bị. Điều đáng nói là cửa hàng luôn tra theo tài khoản đang đăng nhập, chứ không theo những gì khách gõ, nên trợ lý chỉ nói về đơn của chính khách.
-\lab{Mong đợi}
-Đơn 20261001: đã gửi, giao bởi GHN Express, mã vận đơn GHN26102001, gồm The Great Wave và khung đen. ``Latest order'': đơn \key{vừa đặt ở bước 5}, đang được chuẩn bị.
-\lab{Lưu ý}
-Hỏi \emph{latest order} \key{trước} khi hủy đơn ở bước 7; hỏi sau khi hủy thì câu trả lời về một đơn đã hủy dễ gây rối.
-
-\subsection{Bước 7 -- Hủy đơn, và thử xem đơn của người khác \normalfont\small(≈ 1 phút)}
-\lab{Thao tác}
-Mở \emph{My orders} (menu tên ở góc phải trên). Ở đơn vừa đặt bấm \emph{Cancel order}. Rồi ở ô \emph{Find an order} bên phải, gõ \code{20261003} (đơn của khách khác) và bấm \emph{Look up}.
-\lab{Nói thế này}
-Giờ em đổi ý và hủy đơn vừa đặt. \cue{mở My orders, bấm Cancel order trên đơn mới} Khách hủy được vì đơn chưa giao, đúng như em đã lần theo ở Chương hai. Đơn chuyển sang đã hủy. Còn đơn đã gửi thì không còn nút hủy.
-
-Bây giờ em thử một điều tò mò. \cue{gõ 20261003 vào ô Find an order, bấm Look up} Em tra đơn số 20261003, đơn này là của một khách khác. Cửa hàng trả lời: không tìm thấy trong tài khoản của bạn, và giải thích rằng vì quyền riêng tư, khách chỉ xem được đơn của mình. Điều hay là câu trả lời này giống hệt như khi đơn không hề tồn tại, nên không ai dò ra được mã đơn nào là thật.
-\lab{Mong đợi}
-``We can't show order \#20261003 \ldots was not found in your account.'' Đơn đã gửi thì không còn nút hủy.
-\shot{order_forbidden.png}{Màn hình mong đợi: ô ``Find an order'' từ chối đơn của người khác.}
-
-\subsection{Bước 8 -- Trang quản lý \normalfont\small(≈ 1 phút, có thể bỏ khi rút gọn)}
-\lab{Thao tác}
-Bấm tên ở góc phải trên, chọn \emph{Gallery staff} (``Back office'' hiện trên thanh menu). Ở tab \emph{Paintings \& frames}, đổi giá hoặc số hàng một tranh, bấm \emph{Save}. Ở tab \emph{Orders}, với đơn 20261003 bấm \emph{Mark processing}, rồi \emph{Mark shipped}.
-\lab{Nói thế này}
-Bây giờ em chuyển sang vai người quản lý cửa hàng. \cue{bấm tên ở góc phải, chọn Gallery staff} Mục Back office hiện ra, chỉ dành cho người quản lý. \cue{đổi giá một tranh, bấm Save} Ở đây có thể đổi giá và số hàng trong kho. \cue{mở tab Orders, bấm Mark processing, rồi Mark shipped} Với đơn hàng, người quản lý đưa từng bước một: mới đặt, đang xử lý, đã gửi, đã giao. Không thể nhảy cóc. Và khi một đơn đã gửi thì khách hết hủy được, đúng như luật em đã nói. Những chức năng này chỉ người quản lý mới dùng được; khách thường bị từ chối.
-\lab{Mong đợi}
-Thông báo ``Order \#20261003 is now processing'' rồi ``shipped''.
-\shot{admin_orders.png}{Màn hình mong đợi: danh sách đơn, mỗi đơn chỉ có nút cho bước kế tiếp.}
-
-\subsection{Bước 9 -- Tắt Gemma, cửa hàng vẫn chạy \normalfont\small(≈ 1 phút)}
-\lab{Thao tác}
-Sang tab 2, bản ``tắt Gemma'' (\code{http://127.0.0.1:8687/?debug=1}; chuẩn bị ở mục~\ref{sec:chuanbi}). Gõ lại \code{blue landscape paintings}; rồi tải ảnh \file{Q02.jpg} ở ``find paintings similar to a photo''; rồi hỏi trợ lý \code{find my order 20261001}.
-\lab{Nói thế này}
-Cuối cùng là câu hỏi mà thầy cô có thể đang nghĩ: nếu AI hỏng thì sao? \cue{chuyển sang tab 2, bản tắt Gemma} Đây là một bản của cửa hàng mà đường nối tới Gemma đã bị cắt. Em gõ lại câu blue landscape paintings. \cue{chỉ vào nhãn KEYWORD FALLBACK và thời gian} Kết quả vẫn ra, giống hệt, chỉ khác nhãn: lần này là các luật từ khóa làm việc, và còn nhanh hơn. Nhưng với ảnh thì khác. \cue{tải lại ảnh Q02.jpg} Cùng bức The Great Wave, lần này cửa hàng chỉ còn đọc được màu trung bình của ảnh, và trả về một bức tranh sai. Đây đúng là điều em đã đo: Gemma giúp rõ nhất ở tìm bằng ảnh. \cue{hỏi trợ lý find my order 20261001} Còn trợ lý thì vẫn tra được đơn nhờ các luật. Nghĩa là AI hỏng thì cửa hàng vẫn bán được hàng. Phần demo đến đây là hết, xin quay lại slide kết luận.
-\lab{Mong đợi}
-Chữ: cùng ba tranh đầu, nhãn ``KEYWORD FALLBACK'', thời gian rất ngắn. Ảnh Q02: chỉ còn một tranh \emph{The Child's Bath}, không phải The Great Wave. Trợ lý trả lời đơn 20261001 bằng luật (có thể kèm ghi chú ``Gemma 4 is offline'').
-\lab{Nếu lỗi}
-Tab 2 không mở được: chưa bật bản tắt Gemma (mục~\ref{sec:chuanbi}). Cách thay thế: bỏ qua bước này và nói bằng lời, chỉ vào ảnh chụp ``ai\_fallback'' trong báo cáo.
-
-\begin{note}[good]{Sau demo}
-Quay lại PowerPoint, slide 36 (kết luận). Nếu còn thời gian, nói một câu về hạn chế đã biết (mục~\ref{sec:hanche}). Đặt lại dữ liệu mẫu (mục~\ref{sec:reset}) nếu còn buổi thuyết trình khác.
-\end{note}
+Có dòng \code{DIFFERENCE}: đọc to dòng đó và giải thích; muốn quay lại bằng chứng cũ thì \code{cp ~/Desktop/vp_generated_ddl.bak.sql demo/db/vp_generated_ddl.sql} rồi chạy lại lệnh so. Bản dùng thử không mở được: mở \file{build/schema_comparison.txt} và \file{demo/db/vp_generated_ddl.sql} để thầy xem kết quả lần trước.

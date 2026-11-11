@@ -23,7 +23,7 @@
 \small \code{Payment} \emph{(abstract)} & \small One payment attempt (abstract) & \small \code{paymentId}, \code{amount}, \code{paymentDate}, \code{status}\\
 \small \code{PayCash} & \small Cash on delivery & \small \code{cashReceived}, \code{changeAmount}\\
 \small \code{PayCredit} & \small Card payment through the payment service & \small \code{cardHolder}, \code{bankName}, \code{cardLast4}, \code{authorizationCode}\\
-\small \code{Category} & \small  & \small \code{categoryId}, \code{name}, \code{description}\\
+\small \code{Category} & \small Group of products shown together; names the kind of detail its products have & \small \code{categoryId}, \code{name}, \code{description}\\
 \small \code{Product} \emph{(abstract)} & \small Anything the gallery sells (abstract) & \small \code{productId}, \code{name}, \code{price}, \code{stockQuantity}, \code{imageUrl}, \code{description}\\
 \small \code{Artist} & \small Painter of the original work & \small \code{artistId}, \code{name}, \code{nationality}, \code{lifeYears}\\
 \small \code{Painting} & \small A fine-art print of one painting & \small \code{style}, \code{subject}, \code{dominantColor}, \code{medium}, \code{yearCreated}, \code{widthCm}, \code{heightCm}\\

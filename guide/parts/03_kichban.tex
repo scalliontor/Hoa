@@ -1,0 +1,75 @@
+\section{Kịch bản 5--7 phút}\label{sec:kichban}
+Bảy bước, theo đúng thứ tự: vấn đề, sơ đồ, phân tích sang thiết kế, cơ sở dữ liệu, đặc tả sang code, demo, kiểm thử. Mỗi hộp ghi: \key{mở} cửa sổ nào, \key{nói} gì (hai đến bốn câu, nói lại bằng lời của mình cũng được), và \key{chỉ vào} đúng một chỗ. \cue{Chữ xám trong ngoặc} là thao tác, không đọc lên. Phần ``Nhớ thêm'' là tên kỹ thuật, chỉ dùng khi thầy hỏi.
+\begin{itemize}
+\item \key{Nói trước, mở sau:} ``bây giờ em mở sơ đồ hoạt động'', rồi mới Cmd+Tab. Nhìn thầy, không nhìn màn hình.
+\item \key{Không đọc tên lớp, tên hàm.} Nói ý (``đơn hàng tự quyết có được hủy không''), còn tên thì để màn hình hiện.
+\item \key{Một cửa sổ không mở được} thì đừng loay hoay: showcase có ảnh của mọi sơ đồ và mọi màn hình.
+\end{itemize}
+
+\buoc{1}{Vấn đề và yêu cầu}{45 giây}
+{Showcase, mục \key{A} (Project overview): năm thẻ vấn đề P1--P5, rồi kéo xuống ``Functional scope''.}
+{Họa. là một cửa hàng nhỏ bán bản in tranh danh họa và khung tranh. Trước đây cửa hàng bán qua tin nhắn và bảng tính, nên có năm chỗ đau: khách không biết tên tranh thì không tìm được, tranh hết hàng vẫn bị bán, khách không biết đơn đang ở đâu, giá và đơn làm bằng tay, và dữ liệu của khách dễ bị lộ. Từ năm chỗ đau đó em viết ra \factFR{} yêu cầu chức năng và \factNFR{} yêu cầu chất lượng, gom thành \factUC{} việc mà khách và người quản lý cần làm. AI chỉ được dùng cho chỗ đau đầu tiên: giúp khách tìm tranh bằng lời, bằng giọng nói và bằng ảnh.}
+{thẻ \key{P2 ``Sold-out prints are sold''}: chỗ đau này sẽ đi theo suốt bài, tới tận câu lệnh trừ kho ở bước 4 và bước 6.}
+{\item \factFR{} FR (\factMust{} Must, \factShould{} Should, \factCould{} Could), \factNFR{} NFR, \factUC{} use case, \factActors{} tác nhân; viết trong \code{tools/model.py}.
+ \item P2 $\to$ FR07, NFR11 $\to$ UC07; showcase B tô sẵn chuỗi này. Cây vấn đề: bài §1.6 (ảnh chụp bản dùng thử).}
+
+\buoc{2}{Các sơ đồ chính}{1 phút}
+{Showcase, mục \key{B} (Development process): năm cột, chuỗi UC07 Checkout được tô ở mỗi cột. Rồi VP: \vp{1.2 Use Case Diagram - Hoa Gallery}, sau đó \vp{2.2 Activity - Checkout}.}
+{Em làm đúng năm bước của môn, và lấy một việc là đặt hàng để theo suốt cả năm bước. \cue{chuyển sang VP, sơ đồ use case} Ở bước yêu cầu, sơ đồ này cho biết ai làm gì: khách tìm tranh, đặt hàng, hủy đơn; người quản lý sửa giá và chuyển trạng thái đơn. \cue{mở sơ đồ hoạt động đặt hàng} Ở bước phân tích, sơ đồ hoạt động kể từng bước của việc đặt hàng, có cả những ngã rẽ như giỏ trống hay hết hàng. Mỗi ngã rẽ là một luật của cửa hàng, và về sau mỗi luật thành một dòng code có bài kiểm thử riêng.}
+{ô quyết định có hai nhánh \code{in stock} và \code{out of stock} trong sơ đồ hoạt động.}
+{\item Project có \factDiagrams{} sơ đồ; \factTrial{} sơ đồ (2 ArchiMate, 1 BPMN, 2 DFD) là ảnh chụp bản dùng thử (câu hỏi ở mục~\ref{sec:qtrial}).
+ \item UC07 «include» UC06; luật BR02 (hết hàng), BR03 (giỏ trống); ba làn Customer / Họa. system / Database. Cùng kịch bản ở dạng tuần tự phân tích: \vp{2.6b Analysis Sequence - Checkout (UC07)}.}
+
+\buoc{3}{Từ phân tích sang thiết kế}{45 giây}
+{Showcase, mục \key{C}, chuỗi 1 ``Classes: analysis $\to$ design $\to$ code'' (lớp Order ở bốn mức). Trong VP: \vp{2.8 Domain Model - analysis class diagram}, rồi \vp{4.3 Class Diagram in Design}, rồi \vp{4.4a Three Layers - classes and their links}.}
+{Đây là phần em thấy quan trọng nhất của môn. Lúc phân tích, lớp đơn hàng chỉ có tên các thông tin và loại quan hệ. Sang thiết kế, nó có kiểu dữ liệu, có chiều quan hệ, và có những việc nó tự làm: tự tính tổng tiền, tự quyết có được hủy hay không, tự kiểm tra có phải đơn của khách này không. Rồi em xếp các lớp vào ba tầng theo bốn bước trong phụ lục của thầy; mũi tên chỉ đi xuống, nên phần giao diện không bao giờ chạm thẳng vào cơ sở dữ liệu.}
+{trong \vp{4.3 Class Diagram in Design}, ba phương thức của \code{Order}: \code{cancel()}, \code{advanceTo()}, \code{isOwnedBy()}.}
+{\item Bốn bước của phụ lục ``Từ phân tích đến thiết kế'' (bài §4.4.1): thêm phương thức; đổi liên kết thành «use»; DAO = interface + bản SQLite (\code{CartRepository} / \code{SqliteCartRepository} là \code{CartDAO} / \code{CartDAOImpl}); ba tầng có package.
+ \item \factAnalysis{} lớp phân tích $\to$ \factJavaClasses{} lớp Java và \factJsViews{} view; \factPackages{} package. Lớp domain dùng chung cho cả ba tầng, không phải một tầng.}
+
+\buoc{4}{Cơ sở dữ liệu}{50 giây}
+{Showcase, mục \key{E}, phần ``Products, their category and the detail tables''. Rồi VP \vp{4.2 Database - entity relationship diagram}. Rồi cửa sổ cơ sở dữ liệu, bảng \code{category}.}
+{Theo góp ý của thầy, sản phẩm được xếp theo danh mục. Bảng sản phẩm chỉ giữ phần chung: tên, giá, số hàng trong kho; phần riêng nằm ở bảng chi tiết: tranh có họa sĩ, kích thước, chất liệu, còn khung có vật liệu và màu; và mỗi danh mục ghi rõ chi tiết của nó nằm ở bảng nào. Nhờ vậy giá và số hàng chỉ có một chỗ giữ, giỏ hàng và đơn hàng chỉ cần trỏ tới một chỗ. Cơ sở dữ liệu này không gõ tay: Visual Paradigm sinh câu lệnh tạo bảng từ mô hình, và em đã so nó với cơ sở dữ liệu đang chạy.}
+{hai dòng của bảng \code{category}: \key{Fine-art prints} có \code{detail_kind} = PAINTING (bảng \code{painting}), \key{Frames} có FRAME (bảng \code{frame}).}
+{\item \factTables{} bảng, \factFKs{} khóa ngoại; \code{product.category_id} $\to$ \code{category} (1 -- 0..*); \code{painting}, \code{frame} dùng khóa chính đồng thời là khóa ngoại tới \code{product}.
+ \item \file{build/schema_comparison.txt}: giống về bảng, \factCmpColumns{} cột, kiểu, NOT NULL, khóa chính, UNIQUE; bộ sinh SQLite của VP không viết \factSchemaFKs{} khóa ngoại và \factSchemaChecks{} ràng buộc CHECK, \file{tools/gen_sql.py} thêm chúng từ cùng mô hình. Kiểm tra SQL: \factSqlRejected{} câu sai bị từ chối, \factMisplaced{} sản phẩm nằm sai bảng chi tiết.
+ \item Thầy muốn xem VP sinh cơ sở dữ liệu tận nơi: mục~\ref{sec:vpgen} (bản dùng thử, khoảng 2 phút).}
+
+\buoc{5}{Từ đặc tả đến code}{45 giây}
+{Showcase, mục \key{D}, thẻ ``Cancel Order'' (UC11). Rồi VS Code: \file{tools/model.py} dòng \dongModelOrder{} (lớp \code{Order}) đặt cạnh \file{Order.java} dòng \dongOrderCancel.}
+{Mọi tên gọi trong bài, từ yêu cầu, lớp, phương thức đến bảng và cột, em chỉ viết một lần trong một file đặc tả. Từ file đó em sinh ra sơ đồ, câu lệnh tạo bảng và khung code. Lấy việc hủy đơn làm ví dụ: trên trang này em đi được từ yêu cầu, qua sơ đồ, tới đúng dòng code và đúng bài kiểm thử. Và có một công cụ đọc lại code thật để so với đặc tả: nếu em đổi tên một phương thức mà quên sửa thiết kế thì nó báo ngay.}
+{hàng ``4 · Implementation'' của thẻ: liên kết \code{Order.cancel} tới \file{Order.java}, dòng \dongOrderCancel.}
+{\item Lần so gần nhất: \factCheckClasses{} lớp, \factCheckFields{} trường, \factCheckOps{} phương thức, \factCheckViews{} hàm view, \factCheckTables{} bảng, \factCheckColumns{} cột, \factCheckSql{} câu SQL: khớp hết.
+ \item Công cụ sinh: \file{tools/build_vp.py} (sơ đồ), \file{tools/gen_sql.py} (bảng, dữ liệu mẫu), \file{tools/gen_java.py} (khung code ở \file{demo/generated}); công cụ so: \file{tools/check_code_model.py}.}
+
+\buoc{6}{Demo trực tiếp}{1 phút 45 giây}
+{Tab cửa hàng (C001). Có Gemma: một phần Flow 1, Flow 3 và Flow 4 của mục~\ref{sec:demo}. Không có Gemma: theo mục~\ref{sec:khonggemma}.}
+{Bây giờ em cho thầy xem nó chạy thật. \cue{gõ blue landscape paintings} Em gõ một câu bình thường, tranh phong cảnh màu xanh, và mỗi bức hiện ra kèm một dòng lý do vì sao được chọn. \cue{mở một bức, thêm vào giỏ, đặt hàng} Dòng chữ nhỏ trên tên tranh là danh mục của nó, chính là dòng trong bảng lúc nãy; em đặt mua, và tổng tiền đã trừ mười phần trăm cho khách VIP, cộng tám đô phí giao. \cue{My orders, tra đơn 20261003} Cuối cùng em thử xem đơn của một khách khác: cửa hàng trả lời như thể đơn đó không hề tồn tại.}
+{trên trang chi tiết tranh, nhãn nhỏ \key{``Fine-art prints ▪ \ldots''} phía trên tên tranh.}
+{\item Tổng = tạm tính $-$ 10\% $+$ 8 USD; giỏ có sẵn Woman with a Parasol (89 USD).
+ \item Thầy muốn xem AI nhiều hơn: Flow 2 (ảnh, treo tranh lên tường phòng).}
+
+\buoc{7}{Kiểm thử và kết luận}{30 giây}
+{Showcase, mục \key{G} (Verification \& conclusion): hàng ô kết quả trên cùng, rồi phần ``Limitations''.}
+{Để biết mình làm đúng, em có \factTests{} bài kiểm thử tự động, một lần chạy thử từ đầu đến cuối trên cơ sở dữ liệu mới, và công cụ so code với đặc tả; tất cả đều đạt. Em cũng ghi rõ những gì chưa làm: đặt hàng chưa gói trong một giao dịch, hủy đơn chưa trả hàng về kho, và thanh toán chỉ là mô phỏng. Em xin hết phần trình bày, mời thầy đặt câu hỏi.}
+{ô ``tests pass'' và ô ``code = model''.}
+{\item \factTests{} bài kiểm thử (lần chạy \factTestRun{}), chạy thử đầu cuối \factEtoE{}/\factEtoE{} bước, có và không có Gemma (\file{build/e2e_results.txt}).
+ \item Không phải yêu cầu nào cũng có kiểm thử tự động; bảng yêu cầu ở mục G ghi rõ yêu cầu nào có, yêu cầu nào chứng minh bằng demo hoặc trong bài.}
+
+\needspace{14\baselineskip}
+\subsection{Bản 3 phút (khi thầy cho ít thời gian)}\label{sec:banngan}
+Giữ đúng thứ tự, mỗi bước một câu, chỉ mở showcase (trừ demo).
+\begin{center}\small
+\begin{tabular}{@{}P{2.2cm}P{3.3cm}P{10.3cm}@{}}
+\toprule
+\textbf{Bước} & \textbf{Mở} & \textbf{Một câu}\\
+\midrule
+1 · 20 giây & showcase A & Năm chỗ đau của một cửa hàng tranh nhỏ thành \factReq{} yêu cầu và \factUC{} việc cần làm.\\
+2+3 · 40 giây & showcase B, rồi C & Em theo việc đặt hàng qua năm bước; lớp đơn hàng đi từ vài thông tin lúc phân tích tới những việc nó tự làm lúc thiết kế, rồi được xếp vào ba tầng.\\
+4 · 30 giây & showcase E & Danh mục, bảng sản phẩm chung và bảng chi tiết; Visual Paradigm sinh câu lệnh tạo bảng và em đã so khớp với cơ sở dữ liệu thật.\\
+5 · 20 giây & showcase D & Một file đặc tả cho mọi tên gọi; từ yêu cầu em bấm tới đúng dòng code và đúng bài kiểm thử.\\
+6 · 1 phút & cửa hàng & Tìm \code{blue landscape paintings}, rồi tra đơn 20261003 của khách khác: ``không tìm thấy''.\\
+7 · 20 giây & showcase G & Kiểm thử và chạy thử đều đạt; ba hạn chế em đã ghi rõ.\\
+\bottomrule
+\end{tabular}
+\end{center}

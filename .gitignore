@@ -9,6 +9,7 @@ __pycache__/
 # Generated at build or run time
 demo/build/
 demo/data/ecom.db
+demo/data/ecom.db.*
 demo/data/*.db
 *.log
 slides/.cache/

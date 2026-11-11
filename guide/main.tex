@@ -58,7 +58,7 @@
 % A stage direction inside a spoken text: not read aloud.
 \newcommand{\cue}[1]{{\color{gray}\textit{[#1]}}}
 % A window to open: a showcase section, a VP diagram, a file in the IDE, a table, a page of the shop.
-\newcommand{\vp}[1]{\textsf{\small “#1”}}
+\newcommand{\vp}[1]{\leavevmode{\small\color{accent!70!black}“#1”}}
 
 % A screenshot of the demo, framed. #1 file in figures/demo, #2 caption
 \newcommand{\shot}[2]{\begin{center}{\fboxsep=0pt\fboxrule=0.4pt\fcolorbox{gray}{white}{\includegraphics[width=0.46\linewidth]{#1}}}\\[2pt]{\footnotesize\itshape #2}\end{center}}
@@ -73,7 +73,7 @@
 
 % One step of the 5-7 minute script:
 % \buoc{N}{title}{time}{window to open}{what to say}{the one thing to point at}{notes, as \item lines (or empty)}
-% guide/gen_facts.py reads the 4th argument of every \buoc to estimate the speaking time.
+% guide/gen_facts.py reads the 5th argument of every \buoc to estimate the speaking time.
 \newcommand{\buoc}[7]{%
   \begin{tcolorbox}[enhanced,breakable,colback=white,colframe=accent!85!black,boxrule=0.5pt,left=7pt,right=7pt,top=3pt,
       bottom=3pt,before skip=6pt,after skip=4pt,coltitle=white,colbacktitle=accent!85!black,fonttitle=\small,
@@ -87,7 +87,7 @@
   \end{tcolorbox}}
 
 % One design decision: \quyetdinh{N}{title}{why}{alternatives}{requirements}{where in the code}{if the requirement changes}
-\newcommand{\qdrow}[2]{\par\noindent\hangindent=2.75cm\hangafter=1\makebox[2.75cm][l]{\small\textbf{\color{accent!80!black}#1}}#2\par}
+\newcommand{\qdrow}[2]{\par\noindent{\raggedright\hangindent=2.75cm\hangafter=1\makebox[2.75cm][l]{\small\textbf{\color{accent!80!black}#1}}#2\par}}
 \newcommand{\quyetdinh}[7]{%
   \begin{tcolorbox}[enhanced,breakable,colback=white,colframe=gray!70,boxrule=0.45pt,left=6pt,right=6pt,top=2pt,
       bottom=3pt,before skip=5pt,after skip=3pt,coltitle=ink,colbacktitle=soft,fonttitle=\small\bfseries,

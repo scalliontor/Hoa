@@ -13,7 +13,7 @@
 \small \code{customer_vip.customer_id} $\rightarrow$ \code{customer} & \small is a & \small 1 -- 0..1 & \small VIP part of a customer\\
 \small \code{customer_new.customer_id} $\rightarrow$ \code{customer} & \small is a & \small 1 -- 0..1 & \small New-customer part of a customer\\
 \small \code{address.customer_id} $\rightarrow$ \code{customer} & \small has & \small 1 -- 1..* & \small Addresses of a customer\\
-\small \code{product.category_id} $\rightarrow$ \code{category} & \small classifies & \small 1 -- 0..* & \small \\
+\small \code{product.category_id} $\rightarrow$ \code{category} & \small classifies & \small 1 -- 0..* & \small Category of the product; its detail\_kind names the detail table\\
 \small \code{painting.product_id} $\rightarrow$ \code{product} & \small is a & \small 1 -- 0..1 & \small Painting part of a product\\
 \small \code{painting.artist_id} $\rightarrow$ \code{artist} & \small paints & \small 1 -- 0..* & \small Artist of the painting\\
 \small \code{frame.product_id} $\rightarrow$ \code{product} & \small is a & \small 1 -- 0..1 & \small Frame part of a product\\

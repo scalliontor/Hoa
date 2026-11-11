@@ -1,116 +1,141 @@
-\section{Câu hỏi thường gặp}\label{sec:hoidap}
-Mỗi câu có hai tầng. \key{Nói ngắn} là câu trả lời bằng lời thường, đủ cho phần lớn trường hợp; hãy nói câu này trước. \emph{Nếu thầy hỏi tiếp} mới dùng đến phần kỹ thuật bên dưới. Nói thẳng điều chưa làm được, và đừng đoán; chưa chắc thì mở đúng mục ở bảng ``hỏi gì mở file nào'' (mục~\ref{sec:filemap}).
+\section{Câu hỏi phản biện}\label{sec:hoidap}
+Mỗi câu có hai tầng: \key{Nói ngắn} là câu trả lời bằng lời thường, nói trước; \key{Nếu thầy hỏi tiếp} mới dùng tên kỹ thuật và mở file. Chưa chắc thì nói ``em xin mở đúng chỗ để trả lời'' và mở theo bảng ở mục~\ref{sec:filemap}; đừng đoán.
 
-\key{Bài cá nhân nên em trả lời mọi câu}, từ Chương 1 đến Chương 5. Câu hỏi được xếp theo chương: yêu cầu và phân tích (mục~\ref{sec:q1}), AI (mục~\ref{sec:q2}), thiết kế và code (mục~\ref{sec:q3}), và các hạn chế (mục~\ref{sec:hanche}).
+\subsection{Phân tích và thiết kế}
+\qa{Phân tích và thiết kế khác nhau ở đâu?}
+{Phân tích hỏi \emph{cửa hàng cần gì}: khái niệm, thông tin, luật, nói bằng ngôn ngữ của người bán. Thiết kế hỏi \emph{làm thế nào}: kiểu dữ liệu, phương thức, ai gọi ai, tầng nào, bảng nào. Ví dụ đơn hàng: lúc phân tích chỉ có ngày đặt, trạng thái, tổng tiền; lúc thiết kế thì tiền có kiểu số chính xác, trạng thái là một danh sách cố định, và đơn tự biết hủy, tự biết chuyển trạng thái.}
+{\vp{2.8 Domain Model - analysis class diagram} không có kiểu, quan hệ chỉ ghi loại; \vp{4.3 Class Diagram in Design} có \code{BigDecimal}, \code{OrderStatus}, tên vai trò, phương thức. Tuần tự: \vp{2.6b Analysis Sequence - Checkout (UC07)} so với \vp{4.4d Checkout across the layers (design sequence)}. Bảng chuyển đổi: bài §4.1.4.}
 
-\subsection{Yêu cầu và phân tích (Chương 1--2)}\label{sec:q1}
-\qa{Bên liên quan và tác nhân khác nhau thế nào?}{
-Bên liên quan là bất kỳ ai có lợi ích với hệ thống. Tác nhân là bên thật sự dùng hệ thống, hoặc được hệ thống gọi tới. Ví dụ nhân viên kho là bên liên quan nhưng họ không bấm gì trong hệ thống nên không phải tác nhân.}{
-Họa. có \factActors{} tác nhân (actor): khách hàng và quản trị viên là tác nhân chính; Gemma 4 và dịch vụ thanh toán là tác nhân phụ trợ, nghĩa là hệ thống gọi họ chứ họ không khởi động use case.}
+\qa{Vì sao sơ đồ lớp phân tích không có phương thức, cũng không có bội số?}
+{Theo quy tắc của thầy, mỗi sơ đồ thêm đúng một loại thông tin. Lớp phân tích chỉ có thuộc tính và loại quan hệ. Mô hình dữ liệu thêm tên quan hệ và số lượng ở hai đầu. Thiết kế mới thêm kiểu, phương thức và chiều quan hệ.}
+{Showcase C, chuỗi 1, trình bày đúng ba bước này cho lớp \code{Order}, kèm ``thay đổi gì, vì sao, được gì'' ở mỗi bước.}
 
-\qa{Vì sao ``dùng Gemma'' không phải là yêu cầu?}{
-Vì yêu cầu nói hệ thống phải \emph{làm được gì}, còn Gemma là \emph{cách làm}. Nếu viết ``dùng Gemma'' thì ta đã chọn giải pháp quá sớm. Nhu cầu không phải là giải pháp.}{
-Yêu cầu FR03 chỉ nói: trả về các tranh giống nhất với ảnh khách tải lên. Gemma được đặt sau một interface tên \code{LlmClient} để có thể thay.}
+\qa{Từ \factAnalysis{} lớp phân tích sao thành \factJavaClasses{} lớp Java?}
+{Các lớp miền giữ nguyên tên. Thiết kế thêm những lớp ``làm việc'': nhận yêu cầu web, điều phối từng việc, cất và lấy dữ liệu, gọi AI, cùng vài kiểu liệt kê như trạng thái đơn, trạng thái giao hàng.}
+{Controller, service, interface repository và bản SQLite, \code{Database}, \code{GemmaClient}, \code{WhisperClient}; \code{DetailKind}, \code{OrderStatus}, \code{ShippingStatus}, \code{PaymentStatus}. Cộng \factJsViews{} view JavaScript là \factDesignClasses{} lớp thiết kế.}
 
-\qa{Giải thích include, extend và generalization trong sơ đồ use case.}{
-Ba cách tìm (chữ, giọng nói, ảnh) và cả thử tranh vào phòng đều là các kiểu của một việc chung là ``tìm tranh''. Đặt hàng luôn kéo theo quản lý giỏ. Hủy đơn là phần thêm tùy chọn của xem đơn.}{
-\emph{Generalization:} UC02, UC03, UC04, UC14 là các cách cụ thể của UC01 Search Product (trừu tượng). \emph{Include:} UC07 Checkout luôn dùng UC06 Manage Cart; UC10 trợ lý luôn dùng tra đơn (UC09) và tìm tranh (UC01). \emph{Extend:} UC11 Cancel Order mở rộng UC08 View Order; UC05 View Product mở rộng UC01.}
+\subsection{Mỗi loại sơ đồ để làm gì}\label{sec:qsodo}
+Thầy chỉ vào một sơ đồ và hỏi ``sơ đồ này để làm gì?'': trả lời bằng cột giữa, rồi chỉ vào ví dụ ở Họa.
+\begin{center}\small
+\begin{longtable}{@{}P{3.7cm}P{6.3cm}P{5.9cm}@{}}
+\toprule
+\textbf{Sơ đồ} & \textbf{Trả lời câu hỏi} & \textbf{Ở Họa. (tên trong VP)}\\
+\midrule\endfirsthead
+\toprule
+\textbf{Sơ đồ} & \textbf{Trả lời câu hỏi} & \textbf{Ở Họa. (tên trong VP)}\\
+\midrule\endhead
+Ngữ cảnh / DFD mức 0 & Ranh giới: cái gì ở trong, ai ở ngoài, thông tin gì đi vào, đi ra & 1.7 Context Diagram - DFD Level 0 (bản UML: 1.1 Context View)\\
+DFD mức 1 & Mở hộp: các tiến trình chính và kho dữ liệu, cân bằng với mức 0 & 2.9c Data Flow Diagram - Level 1\\
+BPMN & Quy trình nghiệp vụ từ đặt hàng đến giao: ai làm gì, ở làn nào, ngoại lệ ra sao & 1.4 Business Process (BPMN)\\
+Bản đồ bên liên quan & Ai quan tâm điều gì, mục tiêu nào của hệ thống trả lời họ & 1.3 Stakeholder Map (ArchiMate)\\
+Cây vấn đề & Nguyên nhân gốc $\to$ vấn đề $\to$ tác động; từ đó ra nhu cầu & 1.6 Problem Tree (ArchiMate)\\
+Use case & Ai dùng hệ thống để đạt mục tiêu gì; include, extend, tổng quát hóa & 1.2 Use Case Diagram; 2.4a--c theo nhóm\\
+Hoạt động & Các bước của một việc và mọi ngã rẽ theo luật & 2.2 Activity - Checkout (và 4 sơ đồ khác)\\
+Tuần tự phân tích (BCE) & Đối tượng nào chịu trách nhiệm từng bước: trang, bộ điều khiển, thực thể & 2.6a--c Analysis Sequence\\
+Máy trạng thái & Vòng đời của đơn và bước chuyển hợp lệ & 2.4 State Machine - Order\\
+Lớp phân tích & Khái niệm miền, thuộc tính, loại quan hệ & 2.8 Domain Model; 4.1 Class Diagram in Analysis\\
+Dữ liệu mức khái niệm & Cần cất những thực thể nào, nối với nhau ra sao & 2.9a Conceptual Data Model\\
+Dữ liệu mức logic & Thuộc tính lưu trữ, tên quan hệ, bội số hai đầu & 2.9b Logical Data Model\\
+Dữ liệu mức vật lý & Bảng, cột, kiểu SQL, khóa chính, khóa ngoại, UNIQUE & 4.2 Physical Data Model\\
+ERD & Chính cơ sở dữ liệu, nguồn để VP sinh câu lệnh tạo bảng & 4.2 Database - entity relationship diagram\\
+Thành phần (component) & Ba khối logic và thứ đi qua mỗi phụ thuộc (HTTP, SQL, ảnh, âm thanh) & 4.4a Three Logical Components\\
+Lớp thiết kế & Kiểu, phương thức, chiều quan hệ, tên vai trò & 4.3 Class Diagram in Design; 4.4a--c theo tầng\\
+Tuần tự thiết kế & Lớp thật gọi phương thức thật qua các tầng, đúng như code chạy & 4.4d Checkout across the layers; 4.4d, 4.4e\\
+\bottomrule
+\end{longtable}
+\end{center}
 
-\qa{Yêu cầu chất lượng (phi chức năng) của em đo thế nào?}{
-Mỗi yêu cầu có một con số hoặc điều kiện kiểm tra được. Ví dụ tìm bằng chữ phải trả lời trong hai giây, và em đo được chỉ khoảng nửa giây khi có Gemma. Câu nói năm giây phải được nghe ra chữ trong ba giây, và em đo được trung bình chưa đầy một giây, lâu nhất khoảng một giây rưỡi.}{
-NFR07: trung bình \evTextSecGemma{} giây với Gemma và \evTextSecRules{} giây với luật từ khóa. NFR08: trung bình \evSttMean{} giây, tối đa \evSttMax{} giây. NFR03 (ảnh JPEG, PNG, WebP, tối đa 5 MB) và NFR01 (quyền xem đơn) có kiểm thử tự động.}
+\qa{Sơ đồ ngữ cảnh và DFD mức 1 khác gì?}
+{Sơ đồ ngữ cảnh coi cửa hàng là một hộp kín: chỉ thấy bốn bên ở ngoài và thông tin đi qua lại. DFD mức 1 mở cái hộp ra: bốn việc chính bên trong và ba nơi cất dữ liệu. Mọi dòng đi vào, đi ra ở sơ đồ ngữ cảnh phải có lại ở mức 1; đó gọi là cân bằng.}
+{Bốn thực thể ngoài: Customer, Administrator, Payment Service, Gemma 4 Service; tám luồng có nhãn. Kho D1 Paintings and artists, D2 Carts, D3 Orders, payments, shipping. Whisper nằm trong ranh giới (chạy trên máy), Gemma và thanh toán ở ngoài.}
 
-\qa{Vì sao món trong giỏ khác món trong đơn?}{
-Giỏ là danh sách đang chọn: giá có thể đổi, khách có thể bỏ bớt. Đơn là hóa đơn: giá đã chốt, không đổi nữa. Lúc đặt hàng, cửa hàng đọc lại giá hiện tại của danh mục chứ không lấy giá cũ trong giỏ.}{
-CartItem giữ \code{cartPrice} (giá lúc thêm vào giỏ); OrderItem giữ \code{unitPrice} (giá chốt). \code{OrderItem.fromCartItem} lấy giá hiện tại của danh mục.}
+\qa{Tuần tự phân tích và tuần tự thiết kế khác nhau thế nào? Còn sơ đồ hoạt động?}
+{Sơ đồ hoạt động kể \emph{việc gì xảy ra, theo thứ tự nào}. Tuần tự phân tích kể \emph{ai chịu trách nhiệm}: trang mà khách thấy, một bộ điều khiển cho việc đó, và các thực thể giữ dữ liệu, chưa có tên lớp code. Tuần tự thiết kế dùng đúng lớp và phương thức trong code, đi qua ba tầng.}
+{\vp{2.6b Analysis Sequence - Checkout (UC07)}: \code{CheckoutUI} «boundary», \code{CheckoutControl} «control», \code{Cart}, \code{Painting}, \code{Order}, \code{OrderItem}, \code{Payment} «entity». \vp{4.4d Checkout across the layers (design sequence)}: \code{CheckoutController} $\to$ \code{CheckoutService.checkout} $\to$ \code{OrderItem.fromCartItem} và các repository; mọi thao tác trong sơ đồ thiết kế đều có trong \code{DESIGN} và trong code.}
 
-\qa{Vì sao đặt hàng được vẽ là phụ thuộc ``create'', không phải một đường nối thường?}{
-Vì đặt hàng chỉ là một khoảnh khắc: giỏ tạo ra đơn, rồi giỏ rỗng đi. Giỏ không ``sở hữu'' đơn lâu dài, nên không có quan hệ cấu trúc bền vững giữa hai thứ.}{
-Cart khác Order về bản chất; quan hệ chỉ tồn tại lúc tạo, nên dùng dependency «create» thay vì association.}
+\subsection{UML và code có khớp nhau không}
+\qa{Làm sao em chứng minh code khớp sơ đồ?}
+{Mọi tên chỉ viết một lần trong file đặc tả; sơ đồ, bảng và khung code được sinh từ đó. Rồi một công cụ đọc lại code thật, giao diện và cơ sở dữ liệu thật, so với đặc tả, và báo mọi thứ khớp. Nếu em đổi tên một phương thức mà không sửa đặc tả, lần kiểm thử tiếp theo báo lỗi ngay.}
+{\file{tools/check_code_model.py}, chạy trong \file{demo/test.sh}: \factCheckClasses{} lớp, \factCheckFields{} trường, \factCheckOps{} phương thức, \factCheckViews{} hàm view, \factCheckTables{} bảng, \factCheckColumns{} cột, \factCheckSql{} câu SQL; kiểm cả chiều phụ thuộc giữa các tầng trên import. Dòng cuối \file{build/test_results.txt}.}
 
-\qa{Sơ đồ ngữ cảnh (context diagram) dùng để làm gì trong phân tích?}{
-Để vẽ ranh giới trước khi nhìn vào bên trong: cửa hàng là một hộp kín, bên ngoài có bốn bên, và mỗi mũi tên ghi thứ đi vào hoặc đi ra. Mỗi thứ đi vào phải có một việc nhận nó và một khái niệm giữ nó; mỗi thứ đi ra phải có một việc tạo ra nó. Ranh giới cũng cho biết Whisper ở trong, Gemma và dịch vụ thanh toán ở ngoài.}{
-Bốn external entity: Customer, Administrator, Payment Service, Gemma 4 Service; tám luồng «flow». Visual Paradigm bản Community không có DFD nên luồng vẽ bằng dependency «flow». Báo cáo mục 1.7.}
+\qa{Một mũi tên trên sơ đồ lớp thành gì trong code?}
+{Mũi tên ``dùng'' thành một tham chiếu được truyền vào lúc tạo và một lời gọi. Mũi tên ``hiện thực'' thành \code{implements}. Liên kết có tên vai trò thành một trường. Quan hệ thành phần thành một danh sách bên trong, và trong bảng là khóa ghép, xóa cha thì xóa con. Kế thừa thành \code{extends}, và bảng con dùng chung khóa với bảng cha.}
+{\code{CheckoutService} nhận \code{CartRepository}\ldots{} trong hàm tạo; \code{SqliteOrderRepository implements OrderRepository}; \code{Order.customer}, \code{Order.items}; \code{order_item} có khóa (\code{order_id}, \code{product_id}) và \code{ON DELETE CASCADE}; \code{Painting extends Product}.}
 
-\qa{Kiểm tra nhất quán là gì? Em làm thế nào?}{
-Là lần theo một yêu cầu qua mọi bản vẽ để xem có chỗ nào mâu thuẫn không. Ví dụ ``khách được hủy đơn trước khi giao'': nó xuất hiện ở yêu cầu, ở việc Hủy đơn, ở sơ đồ từng bước, ở sơ đồ trạng thái và ở thiết kế, và cả năm đều khớp.}{
-FR11; UC11 mở rộng UC08; quyết định ``đã giao chưa'' trong activity; máy trạng thái chỉ cho hủy từ PLACED hoặc PROCESSING; \code{OrderService.cancelOrder} gọi \code{Order.cancel}.}
+\subsection{Mô hình dữ liệu, khóa và quan hệ}
+\qa{Ba mức của mô hình dữ liệu khác nhau thế nào?}
+{Mỗi mức thêm chi tiết cho mức trước. Mức khái niệm chỉ có tên các thứ cần cất và các đường nối có tên. Mức logic thêm thông tin cần lưu và số lượng ở hai đầu mỗi đường nối. Mức vật lý thêm bảng, cột có kiểu, khóa chính, khóa ngoại; từ đó sinh ra cơ sở dữ liệu thật.}
+{Logic: «ORM-Persistable», bội số 1, 0..1, 0..*, 1..*; kế thừa thành ``is a'' 1 -- 0..1. Vật lý: «table», \code{numeric(12,2)}, \{PK\}, \{FK\}, \{U\}. Bài §2.10 (khái niệm, logic) và §4.2.1 (vật lý).}
 
-\subsection{AI (Chương 3)}\label{sec:q2}
-\qa{Gemma làm gì, và không làm gì?}{
-Gemma giúp \emph{hiểu}: hiểu câu khách gõ, hiểu ảnh, hiểu căn phòng, hiểu câu hỏi về đơn. Gemma \key{không} quyết giá, số hàng trong kho, quyền xem đơn, và không tự tạo hay hủy đơn. Những việc đó do các luật của cửa hàng làm.}{
-(1) Đổi câu của khách thành bộ lọc (phong cách, chủ đề, màu, họa sĩ, giá tối đa); (2) mô tả ảnh thành phong cách, chủ đề, màu; (3) đọc ảnh phòng, chọn tranh, viết lý do; (4) làm trợ lý chọn công cụ và viết câu trả lời.}
+\qa{Khóa ngoại của danh mục hoạt động thế nào?}
+{Mỗi sản phẩm trỏ tới đúng một danh mục và không được để trống; một danh mục có thể có nhiều sản phẩm hoặc chưa có cái nào. Cơ sở dữ liệu từ chối một sản phẩm trỏ tới danh mục không tồn tại. Còn luật ``chi tiết phải nằm đúng bảng danh mục chỉ định'' thì khóa ngoại không diễn tả được, nên em giữ nó trong code và kiểm tra lại bằng một truy vấn.}
+{\code{product.category_id} \code{NOT NULL} $\to$ \code{category.category_id}, nhãn ``classifies'' 1 -- 0..*; \code{category.detail_kind} có CHECK (PAINTING, FRAME). \code{Category.accepts}; \file{build/sql_validation.txt}: \factMisplaced{} sản phẩm nằm sai bảng chi tiết.}
 
-\qa{Nếu Gemma không phản hồi thì sao?}{
-Cửa hàng vẫn chạy. Mỗi lần gọi Gemma chờ tối đa mười lăm giây; quá hạn hoặc lỗi thì chuyển sang luật đơn giản. Em sẽ cho thầy cô thấy ngay trong demo, ở bước 9.}{
-Tìm bằng chữ chuyển sang luật từ khóa; tìm bằng ảnh chuyển sang đọc màu trung bình; trợ lý trả lời bằng luật; ảnh phòng xếp theo màu. Đây là NFR02.}
+\qa{Vì sao khóa chính của bảng tranh cũng là khóa ngoại?}
+{Vì một bức tranh \emph{là một} sản phẩm: dòng trong bảng tranh và dòng trong bảng sản phẩm dùng chung một mã. Là khóa chính nên mỗi sản phẩm có nhiều nhất một dòng tranh; là khóa ngoại nên không có tranh nào thiếu phần chung.}
+{Kế thừa ``mỗi lớp một bảng'': \code{painting}, \code{frame}, \code{customer_vip}, \code{customer_new}, \code{pay_cash}, \code{pay_credit}; quan hệ ``is a'' 1 -- 0..1; \code{ON DELETE CASCADE} từ \code{product}.}
 
-\qa{Cách em ``hiểu ảnh'' có phải là AI học sâu không?}{
-Chưa. Gemma nhìn ảnh và tả bằng ba nhãn (phong cách, chủ đề, màu), rồi cửa hàng so nhãn. Với ba mươi hai bức tranh thì cách này đủ dùng và dễ giải thích. Em nói thật rằng đây chưa phải cách hiểu ảnh sâu như các mô hình chuyên về ảnh, và hướng phát triển là thay bằng mô hình tốt hơn.}{
-Vector one-hot gồm 10 phong cách, 8 chủ đề, 10 màu, do \code{VectorIndex.toVector} tạo; độ giống là cosine. Bảng \code{product_feature} có cột \code{model_version} để sau này thay bằng embedding học được.}
+\qa{Vì sao dòng giỏ và dòng đơn có khóa ghép?}
+{Một dòng được nhận ra bằng cặp ``giỏ nào, sản phẩm nào''. Thêm cùng một bức hai lần thì số lượng tăng, không sinh hai dòng. Đây là quan hệ thành phần: xóa giỏ hay xóa đơn thì các dòng của nó đi theo.}
+{\code{PRIMARY KEY (cart_id, product_id)} và \code{(order_id, product_id)}, \code{ON DELETE CASCADE} trên \code{cart_id}, \code{order_id}; \code{Cart.addItem} gộp dòng. Hệ quả: mỗi sản phẩm một dòng trong một đơn, số lượng ở cột \code{quantity} (CHECK $>$ 0).}
 
-\qa{Công thức xếp hạng của bài tập A06 là gì, và em chọn trọng số thế nào?}{
-Điểm của mỗi tranh gồm ba phần: độ khớp theo chữ, độ khớp theo ảnh, và việc còn hàng; cộng lại với trọng số 45\%, 45\% và 10\%. Em chọn tay, chưa tinh chỉnh bằng dữ liệu.}{
-$S = \alpha S_{text} + \beta S_{image} + \gamma S_{business}$ với $\alpha=0{,}45$, $\beta=0{,}45$, $\gamma=0{,}10$ trong \code{demo/config/app.properties}. $S_{business}$ bằng 0 nếu hết hàng, tăng theo tồn kho và đạt tối đa khi còn từ 5 chiếc.}
+\qa{Vì sao mã khách trong bảng giỏ là duy nhất (UNIQUE)?}
+{Vì mỗi khách chỉ có tối đa một giỏ đang dùng (luật BR01). Quan hệ ``một khách có không hoặc một giỏ'' được lưu bằng khóa ngoại cộng ràng buộc duy nhất; tạo giỏ thứ hai cho cùng một khách thì cơ sở dữ liệu từ chối.}
+{\code{cart.customer_id} \code{NOT NULL UNIQUE}; cùng cách với \code{shipping.order_id} (đơn có không hoặc một lần giao). \file{build/sql_validation.txt}: ``second cart for C001'' bị từ chối.}
 
-\qa{Kết quả đánh giá có đáng tin không?}{
-Chưa thể coi là chứng minh: đó là một lần đo trên bộ câu hỏi nhỏ, và Gemma có thể cho kết quả hơi khác giữa các lần. Em chỉ khẳng định hai điều có chứng cứ rõ: ảnh thì Gemma hơn rõ (\evImageGemma{} so với \evImageLocal{}); chữ thì Gemma không hơn luật đơn giản (\evTextDirectGemma{} so với \evTextDirectRules{}).}{
-Số câu: \evTextDirectN{} truy vấn trực tiếp, \evTextParaN{} diễn đạt lại, \evVoiceN{} bản ghi giọng nói, \evImageN{} ảnh, \evAssistantN{} câu hỏi trợ lý. Danh sách thất bại và tiêu chí đúng sai nằm trong Chương 3.}
+\qa{Khóa ngoại giữ được ``nhiều nhất'', còn ``ít nhất một'' (đơn có ít nhất một dòng) thì sao?}
+{Đúng, khóa ngoại và ràng buộc duy nhất chỉ giữ được cận trên. Cận dưới em giữ ở code: không cho đặt hàng khi giỏ trống, và không cho dùng địa chỉ của khách khác.}
+{\code{CheckoutService.checkout} từ chối giỏ trống (BR03, lỗi 409); \code{Customer.findAddress}; bài §4.2.1, đoạn cuối.}
 
-\qa{Vì sao slide giọng nói ghi sai khoảng 2\% mà slide đánh giá ghi khoảng 4\%?}{
-Vì đo hai thứ khác nhau. Hai phần trăm là chỉ riêng chương trình nghe giọng nói trên hai mươi câu thử. Bốn phần trăm là cả đường ống trên các bản ghi dùng để tìm tranh, có cả mã đơn và tên họa sĩ khó nghe.}{
-\evSttWer{} trên \evSttN{} câu thử Whisper; \evVoiceWer{} trên \evVoiceUtterances{} bản ghi trong đánh giá đầu cuối. Ví dụ \say{Klimt} bị nghe thành \say{Climbed}.}
+\subsection{Phân chia trách nhiệm}
+\qa{Ai quyết định một đơn có được hủy?}
+{Chính đơn hàng. Phần điều phối chỉ làm bốn việc: tải đơn, kiểm tra đúng chủ, bảo đơn tự hủy, rồi lưu lại. Phần nhận yêu cầu web chỉ đổi yêu cầu thành một lời gọi. Mỗi lớp một việc, nên luật nằm đúng một chỗ và kiểm thử được mà không cần chạy web.}
+{\code{OrderController.cancelOrder} $\to$ \code{OrderService.cancelOrder} (\dongCancelOrder) $\to$ \code{getOrder} + \code{Order.cancel} (\dongOrderCancel) $\to$ \code{OrderRepository.updateStatus}. QĐ4.}
 
-\qa{Vì sao tự chạy Whisper trên máy, và vì sao không làm đọc thành tiếng?}{
-Để âm thanh của khách không rời khỏi máy, để nhanh, và không phụ thuộc dịch vụ bên ngoài. Em không làm đọc thành tiếng vì không có yêu cầu nào cần đến nó; trợ lý trả lời bằng chữ.}{
-NFR08 (quyền riêng tư giọng nói). Cái giá: cần máy đủ mạnh và tải mô hình một lần.}
+\qa{Vì sao không gọi Gemma ngay trong controller, hay trong lớp miền?}
+{Vì AI là một dịch vụ bên ngoài, giống cơ sở dữ liệu: nó nằm ở tầng dữ liệu, sau một interface. Phần điều phối quyết định dùng câu trả lời thế nào và chuyển sang luật khi AI lỗi. Lớp miền không biết gì về AI, nên luật kinh doanh được kiểm thử mà không cần mạng.}
+{\code{QueryService}, \code{ImageService}, \code{AssistantService} dùng \code{LlmClient}; \code{SpeechService} dùng \code{SpeechClient}. QĐ6.}
 
-\qa{Gemma có thể bịa lý do khi nói vì sao tranh hợp với phòng không?}{
-Có thể sai chi tiết vì đó là văn bản do mô hình viết. Em giảm rủi ro bằng vài chốt chặn: Gemma chỉ được chọn trong mười hai bức đã đưa ra; câu giải thích quá ngắn hoặc chung chung thì bị thay bằng câu dựng từ thông tin của chính bức tranh.}{
-Câu dài 15--25 từ và phải nêu chi tiết cụ thể; mã ngoài danh sách bị bỏ. Trong đánh giá, \evRoomConcrete{} trên \evRoomPicks{} câu được xem là cụ thể.}
+\subsection{Lựa chọn kiến trúc}
+\qa{Vì sao ba tầng mà không phải bốn? Tầng có phải là thư mục không?}
+{Ba tầng như bài tập A06 và bài mẫu; các lớp miền như giỏ, đơn, khách là mô hình dùng chung cho cả ba tầng, không thuộc riêng tầng nào. Bài giảng 05 vẽ miền thành ô thứ tư; lớp và package vẫn y như vậy. Tầng là trách nhiệm, còn package là cách xếp code: mỗi tầng gồm nhiều package.}
+{\factLayers{} tầng, \factPackages{} package (\code{presentation.*}, \code{application.*}, \code{infrastructure.*}, \code{domain.*}). Ngoại lệ duy nhất mà công cụ so khớp ghi chú: \code{EcomApplication} tạo các đối tượng của tầng dữ liệu lúc khởi động. Bài §4.4.1.}
 
-\qa{Làm sao khách không xem được đơn của người khác? Vì sao trả lời ``không tìm thấy''?}{
-Cửa hàng luôn lấy tài khoản từ lần đăng nhập, không từ những gì khách gõ. Đơn của người khác nhận đúng câu trả lời như đơn không tồn tại, là ``không tìm thấy trong tài khoản của bạn'', để không ai dò ra mã đơn nào là thật.}{
-\code{OrderService.getOrder} kiểm tra chủ đơn; trợ lý chạy công cụ với mã khách của phiên; kết quả là HTTP 404 (NFR01).}
+\qa{Vì sao Java thuần và SQLite, không dùng framework?}
+{Để bám code mẫu của môn và để mọi bước đều đọc thấy trong code; SQLite là một file nên máy nào cũng chạy được, không cần mạng trừ lúc gọi Gemma. Cái giá: phải tự viết câu SQL, và chưa dành cho nhiều người dùng cùng lúc.}
+{Máy chủ HTTP có sẵn trong Java; thư viện ngoài chỉ có \code{sqlite-jdbc}, \code{gson}, \code{slf4j} (\file{demo/lib}). Chi tiết ở QĐ9.}
 
-\subsection{Thiết kế và code (Chương 4--5)}\label{sec:q3}
-\qa{Vì sao chia ba tầng? Các lớp như giỏ, đơn nằm ở tầng nào?}{
-Để mỗi phần lo một việc, và để đổi thứ bên dưới thì không phải sửa thứ bên trên: giao diện nhận yêu cầu, tầng xử lý điều phối, tầng dữ liệu cất và lấy dữ liệu và gọi AI. Mũi tên chỉ đi xuống. Giỏ, đơn, khách không thuộc riêng tầng nào: đó là mô hình chung mà cả ba tầng cùng dùng. Tầng không phải là thư mục; mỗi tầng gồm nhiều gói nhỏ.}{
-Presentation (presentation.*), Application (application.*), Data (infrastructure.*); domain.* là mô hình dùng chung (cross-cutting), như bài tập A06 và bài mẫu; bài 5 vẽ domain thành ô thứ tư. \factPackages{} gói Java; luật được kiểm tra trên import của từng file (NFR04).}
+\qa{Muốn mở rộng thì làm gì?}
+{Nhiều người dùng: thay SQLite bằng cơ sở dữ liệu dạng máy chủ, chỉ viết lại phần cất dữ liệu. Hiểu ảnh tốt hơn: thay phần biến ảnh thành vector. Thanh toán thật: cắm cổng thanh toán sau phần thanh toán đã có. Nhờ các interface, phần điều phối không phải sửa.}
+{Bản cài đặt mới cho bốn interface repository; thay \code{VectorIndex} và \code{ImageService.embed}; lớp con mới của \code{Payment}.}
 
-\qa{Ba mức của mô hình dữ liệu khác nhau thế nào?}{
-Mỗi mức thêm chi tiết cho mức trước. Mức khái niệm chỉ có tên các thứ cần cất và các đường nối có tên. Mức logic thêm thông tin chi tiết, đánh dấu ``sẽ được lưu'', và ghi số lượng ở hai đầu mỗi đường nối. Mức vật lý thêm bảng, cột có kiểu dữ liệu, khóa chính và khóa ngoại; từ đó sinh ra cơ sở dữ liệu thật.}{
-Conceptual: entity và relationship có tên. Logical: thuộc tính, «ORM-Persistable», nhãn, bội số 1, 0..1, 0..*, 1..*, kế thừa thành ``is a'' 1 -- 0..1. Physical: «table», kiểu SQL như \code{numeric(12,2)}, \{PK\}, \{FK\}, \{U\}. Báo cáo mục 2.9 (mức khái niệm và mức logic) và mục 4.2 (mức vật lý).}
+\subsection{Kiểm chứng yêu cầu}
+\qa{Em kiểm chứng các yêu cầu thế nào?}
+{Bốn lớp bằng chứng. Một, kiểm thử tự động theo từng nhóm: luật của đơn, giỏ, kho, đặt hàng, quyền xem đơn, tìm kiếm, trợ lý. Hai, một lần chạy thử từ đầu đến cuối trên cơ sở dữ liệu mới, qua đúng các đường web, cả khi có và khi tắt Gemma. Ba, công cụ so code với đặc tả. Bốn, thử ghi dữ liệu sai vào cơ sở dữ liệu và xem nó bị từ chối. Phần AI thì đo riêng bằng bộ câu hỏi.}
+{\factTests{} kiểm thử (\file{build/test_results.txt}); \factEtoE{}/\factEtoE{} bước (\file{tools/e2e_check.py}, \file{build/e2e_results.txt}); \factSqlRejected{} câu sai bị từ chối (\file{build/sql_validation.txt}). Không phải yêu cầu nào cũng có kiểm thử tự động: bảng yêu cầu ở showcase G ghi rõ cái nào chứng minh bằng demo.}
 
-\qa{Khối code chuyển thành bảng dữ liệu theo quy tắc nào?}{
-Ba quy tắc chính. Một thứ là một loại của thứ khác (khách VIP là một loại khách) thì có bảng riêng nhưng dùng chung mã với bảng cha. Một bên có nhiều bên kia (một khách có nhiều địa chỉ) thì bảng bên ``nhiều'' giữ mã của bên kia. Một thứ là phần không tách rời (món trong đơn) thì xóa đơn sẽ xóa luôn các món.}{
-Kế thừa: \code{customer}, \code{customer_vip}, \code{customer_new}. Một-nhiều: \code{address.customer_id}. Một-không-hoặc-một: UNIQUE ở \code{shipping.order_id}. Composition: khóa ghép và \code{ON DELETE CASCADE} ở \code{order_item}. Có \factTables{} bảng và \factFKs{} khóa ngoại.}
+\qa{Kiểm thử có gọi Gemma thật không?}
+{Kiểm thử tự động thì không: em dùng bản giả, lúc trả lời như Gemma, lúc giả như mất kết nối, nên mọi đường lui đều được thử. Lần chạy thử đầu cuối thì gọi Gemma thật. Chất lượng của AI thật đo riêng ở Chương 3.}
+{Bản giả trong \file{demo/tests/java/.../Fixtures.java}. Bước đầu cuối ``UC10: the assistant looks the order up with a tool'' chạy với Gemma thật; hai bước NFR02, NFR12 chạy với bản tắt Gemma.}
 
-\qa{Làm sao bảo đảm code khớp thiết kế?}{
-Em có một file thiết kế chung. Từ đó sinh ra sơ đồ, cơ sở dữ liệu và khung code. Rồi một công cụ tự so code thật với thiết kế và báo mọi thứ đều khớp; thêm \factTests{} bài kiểm thử tự động đều đạt.}{
-\code{tools/model.py} là file chung; \code{tools/check_code_model.py} so: \factCheckClasses{} lớp, \factCheckFields{} trường, \factCheckOps{} hàm, \factCheckColumns{} cột.}
+\qa{Kết quả đánh giá AI có đáng tin không?}
+{Chưa thể coi là chứng minh: đó là một lần đo trên bộ câu hỏi nhỏ, và Gemma có thể trả lời hơi khác giữa các lần. Em chỉ khẳng định hai điều: tìm bằng ảnh thì Gemma hơn rõ, tìm bằng chữ thì Gemma không hơn luật đơn giản. Số đo làm ngày 30/10 trên máy chủ của lớp; hôm nay demo gọi Gemma~4 qua DeepInfra nên câu chữ có thể khác đôi chút.}
+{Ảnh \evImageGemma{} so với \evImageLocal{} (n=\evImageN); chữ \evTextDirectGemma{} so với \evTextDirectRules{} (n=\evTextDirectN), diễn đạt lại \evTextParaGemma{} so với \evTextParaRules{} (n=\evTextParaN); giọng nói đầu cuối \evVoiceHit{} (n=\evVoiceN); trợ lý \evAssistantCorrect{}/\evAssistantN{} đúng, \evAssistantLeaks{} lần lộ dữ liệu. Bài §3.15.}
 
-\qa{Vì sao dùng Java và SQLite, không dùng framework?}{
-Để bám theo bài giảng của thầy, và để mọi bước đều đọc thấy trong code, không có ``phép màu'' của framework. SQLite chỉ là một file nên không phải cài thêm gì.}{
-Bám các tầng Controller, Service, Domain, Repository của slide môn học. Máy chủ HTTP dùng thư viện chuẩn của Java.}
+\subsection{Đánh đổi và hạn chế}\label{sec:hanche}
+\qa{Hạn chế lớn nhất của bài là gì?}
+{Em nói thẳng năm điều, mỗi điều có cách sửa. Đặt hàng chưa nằm gọn trong một giao dịch: nếu sập giữa chừng có thể có đơn đã lưu mà kho chưa trừ; cách sửa là gói lưu đơn, trừ kho, làm rỗng giỏ vào một giao dịch. Hủy đơn chưa trả hàng về kho. Thanh toán chỉ mô phỏng, chưa có mật khẩu. Hiểu ảnh còn đơn giản. Và chỉ chạy trên một máy, một file dữ liệu.}
+{Bài §5.12; showcase G ``Limitations''. Cách sửa việc hủy: thêm thao tác ngược với \code{decreaseStock} rồi gọi trong \code{OrderService.cancelOrder}.}
 
-\qa{Muốn mở rộng thì làm gì?}{
-Đổi cơ sở dữ liệu bằng cách viết một bản mới cho phần kho dữ liệu; thay cách hiểu ảnh bằng một mô hình tốt hơn; cắm cổng thanh toán thật; và nếu nhiều máy dùng chung thì dùng cơ sở dữ liệu dạng máy chủ. Nhờ các ``cổng'' đã có, những việc này không phải sửa phần điều phối.}{
-Viết bản cài đặt khác cho các interface repository; thay \code{VectorIndex}; cắm cổng thanh toán sau phần Payment.}
+\qa{Vì sao ``hiểu ảnh'' bằng ba nhãn mà không dùng vector học sâu?}
+{Ba nhãn (phong cách, chủ đề, màu) giải thích được cho khách (``cùng phong cách, cùng màu''), dùng chung từ vựng với tìm bằng chữ nên cộng điểm được, và không cần thêm mô hình trên laptop. Cái giá là độ tinh: hai bức phong cảnh xanh khác hẳn nhau vẫn giống nhau với cửa hàng.}
+{Vector 28 chiều (10 phong cách, 8 chủ đề, 10 màu) do \code{VectorIndex.toVector} tạo, so bằng cosine. Bảng \code{product_feature} có cột \code{model_version} để sau này thay bằng vector học được.}
 
-\qa{Ảnh tranh lấy ở đâu? Có vướng bản quyền không?}{
-Cả \factPaintings{} bức đều thuộc phạm vi công cộng, tải từ Wikimedia Commons, nguồn từng ảnh được ghi lại.}{
-Nguồn và giấy phép từng ảnh nằm trong \file{demo/data/ATTRIBUTION.md}.}
+\qa{Gemma ngang luật khi tìm bằng chữ, vậy dùng Gemma làm gì?}
+{Trên bộ câu hỏi nhỏ của em thì đúng là ngang, và em không khẳng định điều chưa đo được. Giá trị rõ của Gemma là ở ảnh, ở việc đọc căn phòng để chọn tranh, và ở trợ lý biết tự gọi công cụ tra đơn. Còn ở chữ, luật đơn giản đủ tốt và nhanh hơn nhiều, nên nó vừa là đường lui vừa là mốc so sánh.}
+{Thời gian: \evTextSecGemma{} giây với Gemma, \evTextSecRules{} giây với luật. Phòng: \evRoomConcrete{}/\evRoomPicks{} câu giải thích có chi tiết cụ thể.}
 
-\needspace{9\baselineskip}
-\subsection{Hạn chế đã biết: nói thẳng}\label{sec:hanche}
-Thầy đánh giá cao việc em \key{biết rõ giới hạn của mình}. Nếu bị hỏi hoặc còn thời gian, hãy nói các điều sau, mỗi điều kèm cách sửa:
-\begin{itemize}
-\item \key{Đặt hàng chưa nằm gọn trong một giao dịch cơ sở dữ liệu.} Việc lưu đơn là một giao dịch, nhưng trừ kho và làm rỗng giỏ là các lệnh riêng; nếu sập giữa chừng, có thể có đơn đã lưu mà kho chưa trừ. \emph{Cách sửa:} gói cả ba việc vào một giao dịch.
-\item \key{Hủy đơn chưa hoàn lại số hàng vào kho.} Hiện chỉ đổi trạng thái đơn. \emph{Cách sửa:} thêm thao tác ``trả hàng vào kho'' ngược với ``trừ kho''.
-\item \key{Thanh toán chỉ mô phỏng;} chưa có cổng thanh toán thật, và chưa có mật khẩu (tài khoản demo chọn từ danh sách).
-\item \key{Đánh giá nhỏ, một lần đo;} cần nhiều câu hỏi và ảnh thật của khách hơn.
-\item \key{Cách hiểu ảnh còn đơn giản} (ba nhãn do em tự định ra), chưa sâu như các mô hình chuyên về ảnh.
-\item \key{Phụ thuộc máy chủ Gemma từ xa;} mất mạng thì chạy bằng luật đơn giản (kém hơn ở tìm bằng ảnh).
-\item \key{Một máy, một file SQLite;} chưa dành cho nhiều người dùng cùng lúc.
-\end{itemize}
+\subsection{Sơ đồ chụp từ bản dùng thử}\label{sec:qtrial}
+\qa{Vì sao có năm sơ đồ là ảnh chụp bản dùng thử của Visual Paradigm?}
+{Bản Community miễn phí từ chối vẽ BPMN, ArchiMate và DFD. Bản dùng thử vẽ được nhưng in dấu ``evaluation copy'' lên mọi file xuất ra, nên em chụp chính cửa sổ VP và ghi rõ ``bản dùng thử'' dưới mỗi hình. Mọi sơ đồ UML và ERD còn lại xuất từ bản Community, không có dấu. Cả năm sơ đồ vẫn nằm trong file project, mở và sửa được.}
+{Năm sơ đồ: 1.3 Stakeholder Map, 1.4 Business Process (BPMN), 1.6 Problem Tree, 1.7 Context Diagram - DFD Level 0, 2.9c DFD Level 1. Hình minh họa trong phụ lục ``Từ phân tích đến thiết kế'' của thầy cũng là ảnh chụp VP Enterprise (Evaluation Copy). Bản dùng thử 30 ngày từ 5/11 nên hôm nay vẫn mở được; hết hạn thì ảnh chụp và file project vẫn còn, bản Community vẫn mở mọi sơ đồ UML, ERD.}

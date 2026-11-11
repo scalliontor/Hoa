@@ -1,105 +1,61 @@
 \section{Phụ lục}\label{sec:phuluc}
 
 \subsection{Những con số cần thuộc}
-Các số liệu này được lấy tự động từ dự án lúc dựng tài liệu, nên khớp với báo cáo và slide.
+Lấy tự động từ dự án lúc dựng tài liệu, nên khớp với bài, showcase và kết quả chạy.
 \begin{center}\small
-\begin{tabular}{@{}P{4.6cm}P{11.2cm}@{}}
+\begin{tabular}{@{}P{3.9cm}P{12cm}@{}}
 \toprule
 \textbf{Chủ đề} & \textbf{Số liệu}\\
 \midrule
-Yêu cầu & \factReq{} yêu cầu: \factFR{} chức năng (\factMust{} Must, \factShould{} Should, \factCould{} Could) và \factNFR{} phi chức năng\\
-Use case, actor & \factUC{} use case; \factActors{} actor (Customer, Administrator, Gemma 4 Service, Payment Service)\\
-Lớp & \factAnalysis{} lớp phân tích; \factJavaClasses{} lớp Java và \factJsViews{} view JavaScript ở mức thiết kế; \factPackages{} package trong \factLayers{} tầng\\
-Cơ sở dữ liệu & \factTables{} bảng, \factFKs{} khóa ngoại (SQLite, tạo từ đặc tả)\\
-Code & \factJavaLines{} dòng Java, \factJsLines{} dòng JavaScript; \factTests{} test tự động đều đạt\\
-Kiểm tra code và mô hình & \factCheckClasses{} lớp, \factCheckFields{} trường, \factCheckOps{} hàm, \factCheckViews{} hàm view, \factCheckTables{} bảng, \factCheckColumns{} cột: khớp hoàn toàn\\
-Danh mục & \factPaintings{} tranh phạm vi công cộng và \factFrames{} khung, giá bằng USD\\
-Đánh giá chữ (Hit@1) & trực tiếp \evTextDirectGemma{} có Gemma, \evTextDirectRules{} không (n=\evTextDirectN{}); diễn đạt lại \evTextParaGemma{} và \evTextParaRules{} (n=\evTextParaN{})\\
-Đánh giá ảnh & Hit@1 \evImageGemma{} có Gemma, \evImageLocal{} không; Hit@3 \evImageGemmaThree{} và \evImageLocalThree{} (n=\evImageN{})\\
-Đánh giá giọng nói & đầu cuối \evVoiceHit{} (n=\evVoiceN{}), tỉ lệ sai từ \evVoiceWer{}; riêng Whisper: \evSttWer{} sai từ, \evSttMean{} giây trung bình, \evSttMax{} giây tối đa, \evSttExact{}/\evSttN{} câu đúng hoàn toàn\\
-Trợ lý & \evAssistantCorrect{}/\evAssistantN{} câu đúng, \evAssistantLeaks{} lần lộ dữ liệu khách khác\\
-Cấu hình & $\alpha=0{,}45$, $\beta=0{,}45$, $\gamma=0{,}10$; Gemma chờ tối đa 15 giây; cửa hàng cổng 8686; Whisper mô hình \emph{small} ở \code{127.0.0.1:9000}\\
+Yêu cầu & \factReq{}: \factFR{} chức năng (\factMust{} Must, \factShould{} Should, \factCould{} Could) và \factNFR{} chất lượng; \factUC{} use case; \factActors{} tác nhân\\
+Lớp & \factAnalysis{} lớp phân tích; \factDesignClasses{} lớp thiết kế = \factJavaClasses{} lớp Java + \factJsViews{} view; \factPackages{} package trong \factLayers{} tầng và miền dùng chung\\
+Cơ sở dữ liệu & \factTables{} bảng, \factFKs{} khóa ngoại, \factSchemaChecks{} ràng buộc CHECK; \factSampleRows{} dòng mẫu; \factPaintings{} tranh, \factFrames{} khung, \factCategories{} danh mục\\
+So với VP & giống về bảng, \factCmpColumns{} cột, kiểu, NOT NULL, khóa chính, UNIQUE; VP thiếu \factSchemaFKs{} khóa ngoại và \factSchemaChecks{} CHECK\\
+Kiểm chứng & \factTests{} kiểm thử đạt (\factTestRun); chạy thử đầu cuối \factEtoE{}/\factEtoE{} bước; \factSqlRejected{} câu sai bị từ chối; so khớp: \factCheckClasses{} lớp, \factCheckFields{} trường, \factCheckOps{} phương thức, \factCheckColumns{} cột, \factCheckSql{} câu SQL\\
+Sơ đồ & \factDiagrams{} sơ đồ trong project VP; \factTrial{} ảnh chụp bản dùng thử\\
+Code & \factJavaLines{} dòng Java, \factJsLines{} dòng JavaScript\\
+AI (đo 30/10) & ảnh \evImageGemma{} và \evImageLocal{} (Hit@1, n=\evImageN); chữ \evTextDirectGemma{} và \evTextDirectRules{} (n=\evTextDirectN); Whisper sai \evSttWer{} số từ, trung bình \evSttMean{} giây, tối đa \evSttMax{} giây (n=\evSttN); trợ lý \evAssistantCorrect{}/\evAssistantN{} đúng, \evAssistantLeaks{} lần lộ dữ liệu\\
+Cấu hình & cửa hàng cổng 8686 (bản tắt Gemma 8687), Whisper \code{127.0.0.1:9000} mô hình \emph{small}; Gemma chờ tối đa 15 giây; trọng số xếp hạng 0,45 / 0,45 / 0,10; phí giao 8 USD; khách VIP giảm 10\%\\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\subsection{Thuật ngữ: nói đơn giản là gì}
-Khi cần giải thích một thuật ngữ trước người nghe, hãy dùng cách nói ở cột bên phải.
-\begin{center}\small
-\begin{longtable}{@{}P{3.7cm}P{3.5cm}P{8.6cm}@{}}
+\subsection{Hỏi gì thì mở gì}\label{sec:filemap}
+Số sau dấu hai chấm là số dòng (lấy tự động lúc dựng tài liệu). File Java nằm trong \file{demo/src/main/java/com/ptit/ecom/}, file kiểm thử trong \file{demo/tests/java/com/ptit/ecom/test/}. ``Bài §'' là mục trong tiểu luận; ``VP'' là tên sơ đồ trong project; ``SC'' là mục của showcase.
+\begin{center}\small\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{@{}P{4.1cm}P{11.8cm}@{}}
 \toprule
-\textbf{Tiếng Anh} & \textbf{Tiếng Việt} & \textbf{Nói đơn giản là}\\
+\textbf{Thầy hỏi về} & \textbf{Mở}\\
 \midrule\endfirsthead
 \toprule
-\textbf{Tiếng Anh} & \textbf{Tiếng Việt} & \textbf{Nói đơn giản là}\\
+\textbf{Thầy hỏi về} & \textbf{Mở}\\
 \midrule\endhead
-stakeholder & bên liên quan & ai cũng có lợi ích với hệ thống\\
-actor & tác nhân & bên thật sự dùng hệ thống, hoặc được hệ thống gọi tới\\
-use case & ca sử dụng & một việc người dùng muốn làm xong, ví dụ ``tìm tranh''\\
-functional / non-functional requirement & yêu cầu chức năng / phi chức năng & hệ thống phải \emph{làm gì} / phải \emph{làm tốt đến đâu}\\
-MoSCoW & thứ tự ưu tiên & bắt buộc, nên có, có thì tốt, lần này chưa làm\\
-activity diagram & sơ đồ hoạt động & sơ đồ các bước, có ngã rẽ khi gặp tình huống khác nhau\\
-sequence diagram & sơ đồ tuần tự & ai gọi ai, theo thứ tự nào\\
-state machine & máy trạng thái & các trạng thái của đơn: mới đặt, đang xử lý, đã gửi, đã giao\\
-domain model & mô hình miền & những thứ cửa hàng cần quản lý, và quan hệ giữa chúng\\
-layer & tầng & một bộ phận lo một việc: giao diện, điều phối, nghiệp vụ, kho dữ liệu\\
-repository & lớp truy cập dữ liệu & ``thủ kho'': nơi lấy và cất dữ liệu\\
-fallback & phương án dự phòng & hỏng thì làm cách đơn giản hơn, không dừng hẳn\\
-retrieval / ranking & truy hồi / xếp hạng & chọn ra những bức có thể hợp / sắp theo thứ tự\\
-cosine similarity & độ tương tự cosine & một cách đo hai thứ giống nhau đến đâu\\
-tool calling & gọi công cụ & AI ``nhờ'' một chương trình làm một việc rồi dùng kết quả\\
-traceability & truy vết & lần theo một yêu cầu qua các bản vẽ đến tận code\\
-\bottomrule
-\end{longtable}
-\end{center}
-
-\subsection{Hỏi gì thì mở file nào}\label{sec:filemap}
-Các đường dẫn tính từ thư mục dự án. Báo cáo là file PDF trong \file{build/report/}; sơ đồ ở \file{figures/vp/}; ảnh chụp màn hình ở \file{figures/demo/}.
-\begin{center}\small
-\begin{longtable}{@{}P{4.6cm}P{11.2cm}@{}}
-\toprule
-\textbf{Chủ đề} & \textbf{Mở}\\
-\midrule\endfirsthead
-\toprule
-\textbf{Chủ đề} & \textbf{Mở}\\
-\midrule\endhead
-Yêu cầu, MoSCoW, use case & báo cáo Chương 1; \file{tools/model.py} (\code{REQUIREMENTS}, \code{USE_CASES}); \file{figures/vp/c1_usecase.png}\\
-Đặc tả use case, activity & báo cáo Chương 2; \file{figures/vp/c2_activity_checkout.png}\\
-Mô hình miền & \file{figures/vp/c2_domain.png}; báo cáo mục 4.1\\
-Kiến trúc AI, luồng đầu vào & báo cáo Chương 3; \file{figures/vp/c3_ai_architecture.png}; \file{demo/src/main/java/com/ptit/ecom/application/search/}\\
-Gọi Gemma, tool calling & \file{.../infrastructure/ai/GemmaClient.java}; \file{.../application/service/AssistantService.java}\\
-Giọng nói & \file{demo/voice-server/server.py}; \file{.../infrastructure/ai/WhisperClient.java}; \file{build/eval/voice_eval.txt}\\
-Đánh giá A06 & \file{build/eval/eval_summary.txt}, \file{eval_results.json}; \file{demo/scripts/evaluate.py}\\
-Lớp thiết kế & \file{figures/vp/c43_design.png}; \file{tools/model.py} (\code{DESIGN})\\
-Cơ sở dữ liệu & \file{demo/db/ecom_schema_sqlite.sql}, \file{demo/db/seed.sql}; \file{figures/vp/c42_tables.png}; \file{figures/demo/db_tables.png}\\
-Bốn tầng, thanh toán & \file{figures/vp/c44_layers.png}; \file{figures/vp/c44_checkout_seq.png}; \file{.../application/service/CheckoutService.java}\\
-Code khớp mô hình & \file{tools/check_code_model.py}; \file{build/test_results.txt}\\
-Điểm cuối API & \file{demo/API.md}\\
-Giao diện web & \file{demo/web/}; \file{demo/web/README.md} (file nào ứng với lớp nào)\\
-Nguồn ảnh tranh & \file{demo/data/ATTRIBUTION.md}\\
-Bản đồ toàn dự án & \file{README.md}\\
-\bottomrule
-\end{longtable}
-\end{center}
-
-\subsection{Lệnh thường dùng}
-\begin{center}\small
-\begin{longtable}{@{}P{2.8cm}P{6.1cm}P{6.8cm}@{}}
-\toprule
-\textbf{Chạy trong} & \textbf{Lệnh} & \textbf{Để làm gì}\\
-\midrule\endfirsthead
-\toprule
-\textbf{Chạy trong} & \textbf{Lệnh} & \textbf{Để làm gì}\\
-\midrule\endhead
-\file{demo/} & \code{./run.sh} & Bật cửa hàng (cổng 8686) và Whisper (9000)\\
-\file{demo/} & \code{./run.sh config/app.offline.properties} & Bật bản ``tắt Gemma'' (cổng 8687, dữ liệu riêng)\\
-\file{demo/} & \code{./build.sh} & Biên dịch Java\\
-\file{demo/} & \code{./test.sh} & Chạy test và kiểm tra code khớp mô hình\\
-\file{demo/} & \code{python3 scripts/evaluate.py} & Chạy lại đánh giá A06 (cần Gemma, mất vài phút)\\
-thư mục dự án & \code{rm -f demo/data/ecom.db*} & Đặt lại dữ liệu mẫu (rồi chạy lại cửa hàng)\\
-thư mục dự án & \code{report/build.sh} & Dựng lại báo cáo PDF\\
-thư mục dự án & \code{guide/build.sh} & Dựng lại tài liệu này\\
-bất kỳ & \code{curl http://127.0.0.1:9000/health} & Kiểm tra Whisper (phải trả về JSON)\\
+Vấn đề, mục tiêu, người dùng & SC A; bài §1.2, §1.3, §1.6; VP 1.3 Stakeholder Map, 1.6 Problem Tree (bản dùng thử)\\
+Yêu cầu, MoSCoW, use case & SC A; \file{tools/model.py}:\dongModelReq{} (\code{REQUIREMENTS}, rồi \code{USE_CASES}); VP 1.2 Use Case Diagram, 2.4a--c; bài §2.2, §2.3, §2.4\\
+Ranh giới, luồng thông tin & VP 1.1 Context View; 1.7 Context Diagram - DFD Level 0 và 2.9c DFD Level 1 (bản dùng thử); bài §1.7, §2.7\\
+Đặc tả use case, luồng thay thế, luật & SC D (liên kết tới nguồn LaTeX); bài §2.6 (UC07 ở §2.6.4, UC11 ở §2.6.5), luật BR01--BR11 ở §2.8\\
+Sơ đồ hoạt động, tuần tự phân tích & VP 2.2 Activity - Checkout, 2.3 Activity - Multimodal Search, 2.6a--c Analysis Sequence\\
+Mô hình miền, giỏ khác đơn & VP 2.8 Domain Model; bài §2.9; \file{OrderItem.java}:\dongFromCart\\
+Ba mức dữ liệu & SC C chuỗi 2; VP 2.9a Conceptual, 2.9b Logical, 4.2 Physical Data Model; bài §2.10, §4.2.1\\
+Danh mục và bảng chi tiết & SC E; \file{ecom_schema_sqlite.sql}:\dongSqlCategory, \dongSqlProduct, \dongSqlPainting, \dongSqlFrame; \file{Category.java}:\dongAccepts; \file{SqliteProductRepository.java}:\dongToProduct, \dongInsertProduct; bài §4.2.2\\
+VP sinh cơ sở dữ liệu & \file{demo/db/vp_generated_ddl.sql}; \file{build/schema_comparison.txt}; \file{tools/compare_schema.py}; VP 4.2 Database - entity relationship diagram; bài §4.2.3; làm trực tiếp: mục~\ref{sec:vpgen}\\
+Khóa, ràng buộc & \file{ecom_schema_sqlite.sql}:\dongSqlCart{} (UNIQUE), \dongSqlCartItem{} và \dongSqlOrderItem{} (khóa ghép); \file{build/sql_validation.txt} (câu sai bị từ chối); \file{Database.java}:\dongFkPragma{} (bật khóa ngoại)\\
+Lớp thiết kế, phương thức & VP 4.3 Class Diagram in Design; \file{tools/model.py}:\dongModelDesign{} (\code{Order} ở dòng \dongModelOrder); bài §4.3\\
+Ba tầng, package, DAO & VP 4.4a Three Layers, 4.4c Package Diagram, 4.4a Three Logical Components, 4.4b--c Classes per Layer; \file{tools/model.py}:\dongModelLayers; \file{EcomApplication.java}:\dongMain; bài §4.4.1\\
+Đặt hàng & SC B, SC D ``Checkout''; VP 4.4d Checkout across the layers; \file{CheckoutService.java}:\dongCheckout, \dongCurrentProduct\\
+Hủy đơn, trạng thái đơn & SC D ``Cancel Order'', ``Update Order Status''; VP 2.4 State Machine - Order; \file{Order.java}:\dongOrderCancel, \dongOrderAdvance; \file{OrderService.java}:\dongCancelOrder, \dongUpdateStatus; \file{DomainTest.java}:\dongTestCancel, \dongTestAdvance\\
+Quyền xem đơn (NFR01) & \file{OrderService.java}:\dongGetOrder; \file{Order.java}:\dongOrderOwned; \file{WebServer.java}:\dongSessionCustomer{} (mã khách từ phiên), \dongNotFound{} (404); \file{OrderServiceTest.java}:\dongTestNotFound\\
+Trừ kho & \file{SqliteProductRepository.java}:\dongDecreaseStock; \file{ecom_schema_sqlite.sql}:\dongSqlStockCheck; \file{RepositoryTest.java}:\dongTestStock\\
+AI và đường lui & SC G ``AI: five features''; VP 3.1 AI Components; \file{LlmClient.java}:\dongLlmChat; \file{QueryService.java}:\dongUnderstand, \dongParseRules; \file{ImageService.java}:\dongDescribe, \dongLocalColor; \file{AssistantService.java}:\dongAsk, \dongRunTool, \dongNoAi; bài §3.13\\
+Giọng nói & \file{demo/voice-server/server.py}; \file{WhisperClient.java}:\dongWhisper; \file{SpeechService.java}:\dongSpeech; bài §3.8\\
+Đánh giá AI & \file{build/eval/eval_summary.txt}, \file{build/eval/voice_eval.txt}; bài §3.15\\
+Code khớp mô hình & \file{tools/check_code_model.py} (\code{check_database}:\dongCheckDb, \code{check_dependencies}:\dongCheckDeps); dòng cuối \file{build/test_results.txt}; bài §4.5.1\\
+Sinh sơ đồ, bảng, code & \file{tools/build_vp.py}; \file{tools/gen_sql.py} (\code{create_table}:\dongGenCreate, \code{validate}:\dongGenValidate); \file{tools/gen_java.py} $\to$ \file{demo/generated/}\\
+Kiểm thử, chạy thử & \file{build/test_results.txt}; \file{build/e2e_results.txt}; \file{tools/e2e_check.py}; bài §5.10\\
+Triển khai, cấu hình & VP 5.1 Deployment; \file{demo/config/app.properties} (không mở \file{app.local.properties}); bài §5.2, §5.11\\
+Ảnh bản dùng thử & \file{figures/vp/README.md}; chú thích các hình 1.3, 1.4, 1.6, 1.7 và DFD mức 1 trong bài\\
+Hạn chế & SC G ``Limitations''; bài §5.12\\
+Các đường API & \file{demo/API.md}\\
 \bottomrule
 \end{longtable}
 \end{center}

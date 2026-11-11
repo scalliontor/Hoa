@@ -22,5 +22,5 @@
 \footnotesize \code{Shipping} -- \code{Address} (ships to) & \footnotesize \code{Shipping -> address} & \footnotesize 0..* -- 1 & \footnotesize Each delivery goes to exactly one address; an address receives many deliveries.\\
 \footnotesize \code{Order} -- \code{Payment} (paid by) & \footnotesize \code{Order -> payments} & \footnotesize 1 -- 0..* & \footnotesize An order may be unpaid, or have several attempts when one fails.\\
 \footnotesize \code{Painting} -- \code{Artist} (painted by) & \footnotesize \code{Painting -> artist} & \footnotesize 0..* -- 1 & \footnotesize An artist has many paintings in the gallery; each print belongs to exactly one artist.\\
-\footnotesize \code{Product} -- \code{Category} (classified in) & \footnotesize \code{Product -> category} & \footnotesize 0..* -- 1 & \footnotesize \\
+\footnotesize \code{Product} -- \code{Category} (classified in) & \footnotesize \code{Product -> category} & \footnotesize 0..* -- 1 & \footnotesize Every product is classified in exactly one category; a new category may still be empty.\\
 \end{longtable}

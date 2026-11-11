@@ -52,6 +52,7 @@ CLASS_TEXT = {
     "Payment": "One payment attempt (abstract)", "PayCash": "Cash on delivery", "PayCredit": "Card payment through the payment service",
     "Product": "Anything the gallery sells (abstract)", "Artist": "Painter of the original work",
     "Painting": "A fine-art print of one painting", "Frame": "A frame sold with a print",
+    "Category": "Group of products shown together; names the kind of detail its products have",
 }
 ASSOC_TEXT = {
     ("Customer", "FullName"): "Each customer has exactly one name; the name does not exist without the customer, hence composition.",
@@ -66,6 +67,7 @@ ASSOC_TEXT = {
     ("Shipping", "Address"): "Each delivery goes to exactly one address; an address receives many deliveries.",
     ("Order", "Payment"): "An order may be unpaid, or have several attempts when one fails.",
     ("Artist", "Painting"): "An artist has many paintings in the gallery; each print belongs to exactly one artist.",
+    ("Category", "Product"): "Every product is classified in exactly one category; a new category may still be empty.",
 }
 GEN_TEXT = {
     "Customer": "Both kinds of customer reuse the attributes of Customer and add their own.",
@@ -130,6 +132,7 @@ FK_TEXT = {
     "shipping.order_id": "At most one delivery per order (UNIQUE)", "shipping.address_id": "Delivery address",
     "payment.order_id": "Payment attempts of an order", "pay_cash.payment_id": "Cash part of a payment",
     "pay_credit.payment_id": "Card part of a payment",
+    "product.category_id": "Category of the product; its detail_kind names the detail table",
 }
 PACKAGE_TEXT = {
     "presentation.view": "Browser components (HTML, CSS, JS) named after the A06 presentation layer",
@@ -282,7 +285,7 @@ ENDPOINT_UC = {
     "PUT /api/cart/items": "UC06", "DELETE /api/cart/items": "UC06", "POST /api/checkout": "UC07",
     "GET /api/orders": "UC08", "GET /api/orders/": "UC08, UC09", "POST /api/orders/": "UC11",
     "GET /api/admin/products": "UC12", "PUT /api/admin/products/": "UC12", "POST /api/admin/paintings": "UC12",
-    "GET /api/admin/orders": "UC13", "PUT /api/admin/orders/": "UC13",
+    "GET /api/admin/orders": "UC13", "PUT /api/admin/orders/": "UC13", "POST /api/addresses": "UC07",
 }
 CONFIG_READER = {"server": "WebServer", "db": "Database", "gemma": "GemmaClient", "whisper": "WhisperClient",
                  "ranking": "RankingService"}

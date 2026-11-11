@@ -1,5 +1,8 @@
 # slides/
 
+**Superseded on 11/11/2026** by the defense showcase `showcase/index.html`; the deck below was not updated after the
+Category design and is kept only as a fallback.
+
 `thuyettrinh_Hoa.pptx` is the class presentation (38 slides: 37 + a backup folder map, in English, with speaker notes on every slide). `build_slides.py` generates it, so don't edit the .pptx by hand.
 
 ## Rebuild

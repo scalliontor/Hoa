@@ -41,21 +41,21 @@ Mọi lệnh chạy từ \key{thư mục dự án} \file{~/PTIT/infor_sys/tieulu
 Bản Community mở được \key{mọi sơ đồ UML và ERD}. Năm sơ đồ BPMN, ArchiMate và DFD (\vp{1.3 Stakeholder Map (ArchiMate)}, \vp{1.4 Business Process - Order to Delivery (BPMN)}, \vp{1.6 Problem Tree (ArchiMate)}, \vp{1.7 Context Diagram - DFD Level 0}, \vp{2.9c Data Flow Diagram - Level 1}) chỉ mở được bằng \key{bản dùng thử} (ứng dụng \file{Visual Paradigm.app}, dùng thử 30 ngày từ 5/11). Khi thầy hỏi đến chúng, mở ảnh chụp trong bài hoặc trong showcase (mục cuối ``All diagrams'').
 \item \key{VS Code}: \code{open -a "Visual Studio Code" .} ở thư mục dự án. Mở sẵn các tab sau (Cmd+P gõ tên file, Ctrl+G gõ số dòng):
 \begin{center}\small
-\begin{tabular}{@{}P{6.4cm}P{9.4cm}@{}}
+\begin{tabular}{@{}P{5.6cm}P{10.2cm}@{}}
 \toprule
 \textbf{File} & \textbf{Dòng cần chỉ}\\
 \midrule
-\file{tools/model.py} & \code{REQUIREMENTS} 18, \code{ANALYSIS} 141, \code{DESIGN} 235 (lớp \code{Order} 359), \code{LAYERS} 742, \code{TABLES} 773\\
-\file{.../domain/order/Order.java} & \code{cancel} 41, \code{advanceTo} 47, \code{isOwnedBy} 55\\
-\file{.../application/service/CheckoutService.java} & \code{checkout} 45; đọc lại giá \code{currentProduct} 100\\
-\file{.../application/service/OrderService.java} & \code{getOrder} 21, \code{cancelOrder} 40, \code{updateStatus} 51\\
-\file{.../repository/sqlite/SqliteProductRepository.java} & \code{decreaseStock} 70, \code{toProduct} 97 (chọn bảng chi tiết)\\
-\file{demo/db/ecom_schema_sqlite.sql} & \code{category} 48, \code{product} 57, \code{cart} 115, \code{cart_item} 125, \code{order_item} 147\\
-\file{build/schema_comparison.txt}, \file{build/test_results.txt} & kết quả so sánh với VP; dòng cuối của lần chạy kiểm thử\\
+\file{tools/model.py} & \code{REQUIREMENTS} \dongModelReq, \code{ANALYSIS} \dongModelAnalysis, \code{DESIGN} \dongModelDesign{} (lớp \code{Order} \dongModelOrder), \code{LAYERS} \dongModelLayers, \code{TABLES} \dongModelTables\\
+\file{Order.java} & \code{cancel} \dongOrderCancel, \code{advanceTo} \dongOrderAdvance, \code{isOwnedBy} \dongOrderOwned\\
+\file{CheckoutService.java} & \code{checkout} \dongCheckout; đọc lại giá \code{currentProduct} \dongCurrentProduct\\
+\file{OrderService.java} & \code{getOrder} \dongGetOrder, \code{cancelOrder} \dongCancelOrder, \code{updateStatus} \dongUpdateStatus\\
+\file{SqliteProductRepository.java} & \code{decreaseStock} \dongDecreaseStock, \code{toProduct} \dongToProduct{} (chọn bảng chi tiết)\\
+\file{ecom_schema_sqlite.sql} & \code{category} \dongSqlCategory, \code{product} \dongSqlProduct, \code{cart} \dongSqlCart, \code{cart_item} \dongSqlCartItem, \code{order_item} \dongSqlOrderItem\\
+\file{schema_comparison.txt}, \file{test_results.txt} & kết quả so sánh với VP; dòng cuối của lần chạy kiểm thử\\
 \bottomrule
 \end{tabular}
 \end{center}
-Đường dẫn Java đầy đủ bắt đầu bằng \file{demo/src/main/java/com/ptit/ecom/}.
+Cmd+P tìm theo tên file là đủ. Java nằm trong \file{demo/src/main/java/com/ptit/ecom/}, lược đồ trong \file{demo/db/}, hai file kết quả trong \file{build/}.
 \item \key{Cơ sở dữ liệu} (chỉ đọc, mở song song với cửa hàng vẫn được): \code{~/sqlite-web/bin/sqlite_web --read-only demo/data/ecom.db} rồi mở bảng \code{category} và \code{product}. Không có sqlite-web thì:
 \cmd{sqlite3 -readonly -header -column demo/data/ecom.db}
 \cmd{SELECT * FROM category;}
@@ -65,12 +65,12 @@ Bản Community mở được \key{mọi sơ đồ UML và ERD}. Năm sơ đồ 
 
 \subsection{Gemma có trả lời không? Quyết định trước khi vào phòng}\label{sec:gemma}
 \begin{enumerate}[leftmargin=1.5em]
-\item Terminal 1 in \code{Gemma 4: online}? Rồi ở tab cửa hàng nhấn \key{Shift+D}, tìm \code{blue landscape paintings}: nhãn phải là \key{GEMMA 4}. Nếu là \key{KEYWORD FALLBACK} thì Gemma không trả lời (lần tìm này đã dùng luật từ khóa).
+\item \key{Phép thử quyết định:} ở tab cửa hàng nhấn \key{Shift+D}, tìm \code{blue landscape paintings}: nhãn phải là \key{GEMMA 4}. Nếu là \key{KEYWORD FALLBACK} thì Gemma không trả lời (lần tìm này đã dùng luật từ khóa). Dòng \code{Gemma 4: online} lúc khởi động chỉ là kiểm tra nhanh; hỏi thêm trợ lý \code{find my order 20261001} cho chắc.
 \item Không trả lời: kiểm tra Internet (mạng trường, 4G), key trong \file{app.local.properties}, rồi khởi động lại cửa hàng (Ctrl+C, \code{./run.sh}).
 \item Nếu chủ máy chủ của lớp đã bật lại Gemma và muốn dùng lại máy đó: sửa hai dòng trong \file{demo/config/app.properties} về \code{gemma.baseUrl=http://171.226.10.121:8000/llm/v1/} và \code{gemma.model=gemma-4}, đổi key trong \file{app.local.properties} sang key cũ (dòng đang bị chú thích), rồi khởi động lại. \key{Không} đặt \code{gemma.baseUrl} trong \file{app.local.properties}: bản tắt Gemma cũng đọc file đó và sẽ không còn ``tắt''.
 \end{enumerate}
-\begin{note}[warn]{Vẫn không có Gemma: trình bày chế độ dự phòng một cách có chủ đích}
-Không giấu. Mở đầu demo bằng câu: \say{Hôm nay dịch vụ Gemma không trả lời. Đây đúng là tình huống em đã thiết kế cho: cửa hàng vẫn tìm được tranh, vẫn đặt được hàng, chỉ là phần hiểu câu và hiểu ảnh chuyển sang luật đơn giản.} Đó là hai yêu cầu chất lượng NFR02 (dự phòng) và NFR12 (cửa hàng chạy được khi không có AI). Phần nào cần Gemma thì chiếu ảnh chụp (mục~\ref{sec:khonggemma}).
+\begin{note}[warn]{DeepInfra vẫn lỗi: trình bày chế độ dự phòng một cách có chủ đích}
+Nếu DeepInfra không trả lời (mất mạng, dịch vụ lỗi) và máy chủ của lớp cũng chưa bật lại thì không giấu. Mở đầu demo bằng câu: \say{Hôm nay dịch vụ Gemma không trả lời. Đây đúng là tình huống em đã thiết kế cho: cửa hàng vẫn tìm được tranh, vẫn đặt được hàng, chỉ là phần hiểu câu và hiểu ảnh chuyển sang luật đơn giản.} Đó là hai yêu cầu chất lượng NFR02 (dự phòng) và NFR12 (cửa hàng chạy được khi không có AI). Phần nào cần Gemma thì chiếu ảnh chụp (mục~\ref{sec:khonggemma}).
 \end{note}
 
 \needspace{8\baselineskip}

@@ -1,47 +1,53 @@
-\section{Xử lý sự cố khi demo}\label{sec:suco}
-Nguyên tắc chung: \key{giữ bình tĩnh và nói thật}. Cửa hàng được thiết kế để vẫn chạy khi AI hỏng (NFR02), nên nhiều sự cố biến thành cơ hội để chứng minh điều đó.
-Vừa xử lý sự cố vừa nói cho người nghe biết mình đang làm gì; nếu mất quá 30 giây thì chuyển sang ảnh chụp màn hình trong \file{figures/demo}.
+\section{Sự cố và cách xử lý}\label{sec:suco}
+Nguyên tắc: \key{bình tĩnh và nói thật}, vừa sửa vừa nói cho thầy biết mình đang làm gì. Quá 30 giây thì bỏ qua và mở ảnh chụp: showcase có ảnh của mọi sơ đồ (mục cuối ``All diagrams'') và mọi màn hình demo (mục F); ảnh gốc ở \file{figures/vp/} và \file{figures/demo/}. Nhiều sự cố của AI lại là dịp chứng minh đường lui (NFR02).
 
-\begin{longtable}{@{}P{3.3cm}P{3.9cm}P{8.6cm}@{}}
+\begin{longtable}{@{}P{3.6cm}P{3.6cm}P{8.6cm}@{}}
 \toprule
 \textbf{Triệu chứng} & \textbf{Nguyên nhân thường gặp} & \textbf{Cách xử lý}\\
 \midrule\endfirsthead
 \toprule
 \textbf{Triệu chứng} & \textbf{Nguyên nhân thường gặp} & \textbf{Cách xử lý}\\
 \midrule\endhead
-Trình duyệt báo không kết nối được \code{127.0.0.1:8686} & Server chưa chạy hoặc đã bị tắt & Trong thư mục \file{demo}, chạy \code{./run.sh}; kiểm tra bằng \code{lsof -nP -iTCP:8686 -sTCP:LISTEN}.\\
+Showcase không mở được ở \code{localhost:8000} & Terminal 3 chưa chạy, hoặc cổng bận & Chạy lại \code{python3 -m http.server 8001 --bind 127.0.0.1} và mở cổng 8001. Hoặc mở bản trên GitHub Pages (cần Internet).\\
 \addlinespace
-Khởi động báo cổng đang bị chiếm (\emph{Address already in use}) & Tiến trình cũ vẫn chạy & Lấy mã tiến trình bằng \code{lsof -tiTCP:8686 -sTCP:LISTEN}, tắt bằng \code{kill <mã>}, rồi chạy lại \code{./run.sh}.\\
+Không kết nối được \code{127.0.0.1:8686} & Cửa hàng chưa chạy hoặc đã tắt & Trong \file{demo} chạy \code{./run.sh}; kiểm tra bằng \code{lsof -nP -iTCP:8686 -sTCP:LISTEN}.\\
 \addlinespace
-\emph{Gemma 4: offline} lúc khởi động; kết quả có nhãn ``KEYWORD FALLBACK'' & Mất mạng hoặc VPN; server GPU tắt; thiếu hoặc sai key & (1) Chạy lệnh kiểm tra ở mục~\ref{sec:chuanbi}. (2) Xem \file{demo/config/app.local.properties} có đúng một dòng \code{gemma.apiKey=...}; sửa xong phải \emph{khởi động lại} server. (3) Nếu chưa sửa được, vẫn demo tiếp ở chế độ dự phòng và \key{nói rõ AI đang tắt}: đó chính là NFR02. Khi mạng có lại, không cần khởi động lại.\\
+\emph{Address already in use} & Tiến trình cũ còn chạy & \code{lsof -tiTCP:8686 -sTCP:LISTEN} lấy mã tiến trình, \code{kill <mã>}, rồi \code{./run.sh}.\\
 \addlinespace
-Gemma phản hồi chậm (vài giây) & Mạng yếu; server đang bận & Chờ tối đa 15 giây; quá hạn thì hệ thống tự dùng phương án dự phòng. Trong lúc chờ, nói tiếp về điều đang xảy ra phía sau.\\
+\code{Gemma 4: offline}, hoặc nhãn ``KEYWORD FALLBACK'' & Mất Internet; key sai hoặc thiếu; dịch vụ Gemma lỗi & Làm theo mục~\ref{sec:gemma}: kiểm tra mạng và key, sửa xong thì khởi động lại cửa hàng. Không sửa được thì trình bày dự phòng có chủ đích (mục~\ref{sec:khonggemma}).\\
 \addlinespace
-\emph{``Voice search is unavailable''} & Server Whisper chưa chạy & Mở Terminal mới, vào \file{demo/voice-server} và chạy \code{./run_voice.sh}; đợi khoảng 10 giây; kiểm tra \code{curl http://127.0.0.1:9000/health}. Tạm thời gõ câu hỏi thay cho nói.\\
+Gemma chậm & Mạng yếu & Mỗi lần gọi chờ tối đa 15 giây rồi tự chuyển sang đường lui. Trong lúc chờ, kể tiếp điều đang xảy ra phía sau.\\
 \addlinespace
-\emph{``We couldn't hear you''} & Không thu được tiếng; micro tắt & Nói to, rõ, bằng tiếng Anh; kiểm tra micro đã cho phép (biểu tượng ổ khóa trên thanh địa chỉ Chrome).\\
+\emph{Voice search is unavailable} & Whisper chưa chạy & \code{cd demo/voice-server && ./run_voice.sh}, đợi khoảng 10 giây, kiểm tra \code{curl http://127.0.0.1:9000/health}. Tạm thời gõ câu thay vì nói.\\
 \addlinespace
-Whisper nghe sai (ví dụ ``Monet'' thành ``Money'') & Giọng nói, tiếng ồn & Sửa chữ trong ô \emph{We heard} rồi bấm Search; nói luôn: đó là lý do khách được xem và sửa bản phiên âm.\\
+\emph{We couldn't hear you}, hoặc nghe sai & Micro tắt; tiếng ồn & Cho phép micro (ổ khóa trên thanh địa chỉ Chrome); nói to, chậm, bằng tiếng Anh; sửa chữ trong ô \emph{We heard}.\\
 \addlinespace
-Tải ảnh không được & Tệp không phải JPEG, PNG, WebP hoặc quá lớn & Trình duyệt tự đổi ảnh sang JPEG tối đa 1600 px; nếu vẫn lỗi, dùng \file{room1.jpg}, \file{Q02.jpg} hoặc các phòng mẫu có sẵn.\\
+Tải ảnh không được & Không phải JPEG, PNG, WebP, hoặc quá 5 MB & Dùng \file{Q02.jpg}, \file{room1.jpg} hoặc ba phòng mẫu có sẵn. Nói luôn: đây là NFR03, máy chủ kiểm tra lại cả khi trình duyệt đã kiểm.\\
 \addlinespace
-Số liệu lạ: tranh hết hàng, giỏ có đồ lạ, ``latest order'' là đơn cũ & Dữ liệu còn dư từ lần tập trước & Đặt lại dữ liệu mẫu (mục~\ref{sec:reset}), rồi khởi động lại server.\\
+Hết hàng, giỏ lạ, ``latest order'' là đơn cũ & Dữ liệu còn từ lần tập & Đặt lại dữ liệu mẫu (mục~\ref{sec:reset}).\\
 \addlinespace
-Thông báo về địa chỉ khi bấm \emph{Save address} & Bỏ trống hoặc quá dài (số nhà 20, đường 100, quận 60, thành phố 60 ký tự) & Điền đủ bốn ô, ngắn hơn giới hạn.\\
+VP Community báo sơ đồ \emph{not supported} & Đó là một trong năm sơ đồ BPMN, ArchiMate, DFD & Bình thường. Mở bằng bản dùng thử, hoặc mở ảnh chụp trong bài hay showcase (câu trả lời ở mục~\ref{sec:qtrial}).\\
 \addlinespace
-\code{./run.sh} báo thiếu JDK & Chưa cài Java 17 trở lên & \code{brew install openjdk@21}, rồi chạy \code{./build.sh} trong thư mục \file{demo}.\\
+VP Community không mở được project & Bản quyền, hoặc project đang bị một tiến trình dựng sơ đồ giữ (\file{vp/.vp.lock}) & Mở bằng bản dùng thử (\file{Visual Paradigm.app}), nó mở mọi sơ đồ. Không chạy \file{tools/build_vp.py} trong buổi bảo vệ. Nếu vẫn không được: dùng ảnh trong showcase.\\
 \addlinespace
-Màn hình máy chiếu chữ nhỏ, khó đọc & Độ phân giải & Phóng to trình duyệt (Cmd/Ctrl và dấu +) lên 125\%; ở PowerPoint dùng chế độ trình chiếu.\\
+VP hỏi có lưu không & Đã lỡ kéo một hình & Chọn \emph{Don't Save}: file project phải giữ nguyên như lúc nộp.\\
 \addlinespace
-Mọi thứ hỏng, không cứu được & Máy hoặc mạng & Chiếu \file{figures/demo/*.png} và slide PDF dự phòng; vừa chiếu vừa kể lại kịch bản (mục~\ref{sec:demo}), thừa nhận trực tiếp rằng demo trực tiếp không chạy được.\\
+\code{sqlite_web: command not found} & Chưa cài sqlite-web & Dùng \code{sqlite3 -readonly -header -column demo/data/ecom.db} và các câu ở mục~\ref{sec:cuaso}.\\
+\addlinespace
+\code{./run.sh} báo thiếu JDK & Chưa cài Java 17 trở lên & \code{brew install openjdk@21}, rồi \code{./build.sh} trong \file{demo}.\\
+\addlinespace
+Chữ trên máy chiếu nhỏ & Độ phân giải & Phóng to Chrome (Cmd và dấu +) lên 125\%; VS Code: Cmd và dấu +; VP: thanh zoom ở góc dưới.\\
+\addlinespace
+Mọi thứ hỏng & Máy hoặc mạng & Chỉ cần trình duyệt: showcase (bản trên máy hoặc GitHub Pages) có đủ sơ đồ và ảnh demo. Kể lại năm flow bằng ảnh ở mục F, và nói thẳng rằng demo trực tiếp không chạy được.\\
 \bottomrule
 \end{longtable}
 
-\begin{note}[warn]{Những điều không nên nói khi trả lời}
+\begin{note}[warn]{Những điều không nên nói}
 \begin{itemize}
-\item Không nói Gemma \emph{vượt trội} luật từ khóa ở tìm bằng chữ: số liệu cho thấy hòa. Chỉ nói Gemma hơn rõ ở \emph{ảnh}.
-\item Không nói vector ảnh là embedding \emph{học được}, không nói thanh toán là thật, không nói thanh toán nằm trong một transaction.
-\item Không hứa kết quả Gemma luôn giống nhau; nói rõ nó có thể thay đổi giữa các lần chạy.
-\item Không đọc to khóa API hay địa chỉ server khi chiếu màn hình; đóng file \file{app.local.properties} trước khi chia sẻ màn hình.
+\item Không nói Gemma \emph{hơn} luật từ khóa khi tìm bằng chữ: số đo cho thấy ngang. Chỉ nói Gemma hơn rõ ở ảnh.
+\item Không nói số đo ở Chương 3 là đo trên DeepInfra: chúng đo ngày 30/10 trên máy chủ của lớp.
+\item Không nói VP sinh ra \emph{toàn bộ} cơ sở dữ liệu: bản của VP thiếu khóa ngoại và CHECK, em bổ sung từ cùng mô hình.
+\item Không nói mọi yêu cầu đều có kiểm thử tự động; không nói vector ảnh là embedding học được; không nói thanh toán là thật; không nói đặt hàng nằm trong một giao dịch.
+\item Không mở \file{demo/config/app.local.properties} khi đang chiếu (có key); không đọc key hay địa chỉ máy chủ lên.
 \end{itemize}
 \end{note}

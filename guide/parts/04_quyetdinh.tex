@@ -1,0 +1,72 @@
+\section{Quyết định thiết kế}\label{sec:quyetdinh}
+Mười quyết định thầy dễ hỏi nhất. Mỗi hộp trả lời năm câu: \key{vì sao} chọn, \key{phương án khác} là gì và vì sao không chọn, giải quyết \key{yêu cầu} nào, nằm \key{ở đâu trong code}, và \key{nếu yêu cầu đổi} thì sửa gì. Khi trả lời, nói hai dòng đầu bằng lời thường; mở dòng ``Trong code'' trên VS Code nếu thầy muốn xem. Đường dẫn Java tính từ \file{demo/src/main/java/com/ptit/ecom/}.
+
+\quyetdinh{1}{Danh mục + bảng sản phẩm chung + bảng chi tiết}
+{Cửa hàng bán hai loại hàng có thông tin khác nhau: tranh có họa sĩ, phong cách, năm, kích thước; khung có vật liệu, màu, cỡ. Thầy góp ý không để một bảng sản phẩm ôm hết. Em tách: danh mục phân loại sản phẩm và ghi chi tiết nằm ở bảng nào; bảng sản phẩm giữ phần chung (tên, giá, kho); bảng tranh và bảng khung giữ phần riêng. Giá và kho chỉ có một chỗ, nên giỏ, đơn và luật trừ kho dùng chung cho mọi loại hàng.}
+{Một bảng rộng có mọi cột: phần lớn ô bỏ trống, và một cái khung vẫn ``có'' họa sĩ. Mỗi loại một bảng riêng có giá và kho riêng: lặp cột chung, và dòng giỏ, dòng đơn không thể có một khóa ngoại tới ``sản phẩm''. Danh mục chỉ là một cột chữ: không ai biết chi tiết nằm ở bảng nào.}
+{Góp ý của thầy; FR19 (mỗi sản phẩm thuộc đúng một danh mục), NFR11 (toàn vẹn dữ liệu), FR05, FR12.}
+{\code{TABLES} trong \file{tools/model.py}; \file{ecom_schema_sqlite.sql} dòng \dongSqlCategory{} (\code{category}), \dongSqlProduct{} (\code{product}), \dongSqlPainting{} (\code{painting}), \dongSqlFrame{} (\code{frame}); \code{Category.accepts} (\file{domain/product/Category.java}:\dongAccepts); \code{SqliteProductRepository.toProduct} (dòng \dongToProduct, đọc bảng chi tiết theo \code{detailKind}) và \code{insertProduct} (dòng \dongInsertProduct, từ chối sản phẩm sai danh mục). Kiểm thử: \file{RepositoryTest.java}:\dongTestSaveRefuses, \file{DomainTest.java}:\dongTestAccepts.}
+{Thêm một dòng hàng có cùng thông tin (ví dụ tranh in canvas): thêm một dòng vào bảng \code{category}, không sửa code. Thêm loại hàng có thông tin mới (ví dụ tượng): thêm một bảng chi tiết, một giá trị \code{DetailKind} và hàm đọc, ghi của nó; giỏ, đơn và kho không đổi.}
+
+\quyetdinh{2}{Món trong giỏ khác món trong đơn; đặt hàng là một phép biến đổi}
+{Giỏ là ý định tạm thời: giá có thể đổi, khách có thể bỏ bớt. Đơn là lịch sử: giá đã chốt, không bao giờ đổi. Lúc đặt hàng, cửa hàng đọc lại giá và kho hiện tại rồi tạo món trong đơn với giá chốt, sau đó giỏ trống. Vì giỏ không ``sở hữu'' đơn lâu dài, quan hệ giữa hai thứ là một phụ thuộc «create», không phải liên kết.}
+{Một lớp ``món hàng'' có cờ trạng thái: trộn hai vòng đời, và đơn cũ sẽ đổi tiền khi danh mục đổi giá. Lấy luôn giá trong giỏ: khách có thể trả giá cũ đã hết hiệu lực. Nối đơn với giỏ bằng liên kết: giỏ bị làm rỗng ngay sau đó nên liên kết vô nghĩa.}
+{FR07; luật BR04 (giá trên đơn là giá lúc đặt), BR03 (giỏ trống không đặt được), BR02 (hết hàng); FR15, FR17 (giảm giá VIP, phí giao).}
+{\code{OrderItem.fromCartItem} (\file{domain/order/OrderItem.java}:\dongFromCart); \code{CheckoutService.checkout} (\file{application/service/CheckoutService.java}:\dongCheckout) và \code{currentProduct} (dòng \dongCurrentProduct); cột \code{cart_item.cart_price} khác \code{order_item.unit_price}. Kiểm thử \file{DomainTest.java}:\dongTestFromCart. Sơ đồ \vp{2.8 Domain Model - analysis class diagram} (mũi tên «create»).}
+{Muốn giữ giá trong giỏ 24 giờ: chỉ sửa chỗ đọc giá trong \code{currentProduct} và \code{fromCartItem}. Muốn đặt một phần giỏ: vòng lặp chỉ lấy những dòng được chọn; lớp đơn không đổi.}
+
+\quyetdinh{3}{Ba tầng, mô hình miền dùng chung; Repository chính là DAO}
+{Mỗi phần lo một việc: giao diện nhận yêu cầu, tầng ứng dụng điều phối, tầng dữ liệu cất và lấy dữ liệu, gọi AI. Mũi tên chỉ đi xuống. Em đi đúng bốn bước trong phụ lục ``Từ phân tích đến thiết kế'' của thầy: thêm phương thức, đổi liên kết thành «use», dùng DAO (interface + bản cài đặt), chia ba tầng có package. Vì tầng trên chỉ biết interface, có thể thay cơ sở dữ liệu hoặc dùng bản giả khi kiểm thử.}
+{Controller gọi SQL trực tiếp: ít file hơn nhưng giao diện chạm vào dữ liệu, vi phạm NFR04. Đối tượng tự lưu mình (active record): trộn luật nghiệp vụ với chuyện lưu trữ. Vẽ miền thành tầng thứ tư như bài giảng 05: cùng lớp, cùng package, chỉ khác cách vẽ; em chọn ba tầng như bài tập A06 và bài mẫu.}
+{NFR04 (giao diện không chạm cơ sở dữ liệu, AI sau interface), NFR10, NFR06.}
+{\code{LAYERS} trong \file{tools/model.py}:\dongModelLayers; \code{ProductRepository} (interface) và \code{SqliteProductRepository}; mọi đối tượng được tạo một lần trong \code{EcomApplication.main} (\file{presentation/web/EcomApplication.java}:\dongMain). Công cụ kiểm tra import từng file: \code{check_dependencies} (\file{tools/check_code_model.py}:\dongCheckDeps). VP: \vp{4.4a Three Layers - classes and their links}, \vp{4.4c Package Diagram - Design Packages}, \vp{4.4a Three Logical Components}.}
+{Đổi sang PostgreSQL: viết bốn lớp repository mới và sửa vài dòng trong \code{EcomApplication.main}; tầng ứng dụng không đổi. Thêm ứng dụng di động: thêm phần giao diện mới gọi cùng các service.}
+
+\quyetdinh{4}{Máy trạng thái của đơn nằm trong chính lớp Order}
+{Luật ``được hủy khi nào'' và ``được chuyển sang trạng thái nào'' thuộc về đơn hàng, nên đặt ở một chỗ duy nhất là lớp đơn. Khách hủy, quản trị viên chuyển trạng thái hay trợ lý tra đơn đều phải đi qua chỗ đó, không ai đi vòng được.}
+{Viết \code{if} rải rác trong các service và controller: luật bị lặp, dễ quên một chỗ. Đặt luật ở giao diện (ẩn nút hủy): gọi thẳng API là vượt qua. Đặt trong cơ sở dữ liệu: ràng buộc CHECK chỉ kiểm được giá trị hợp lệ, không kiểm được bước chuyển, và khó kiểm thử.}
+{FR11 (hủy khi chưa giao), FR13 (chuyển trạng thái), BR06, BR07.}
+{\code{Order.cancel} và \code{Order.advanceTo} (\file{domain/order/Order.java}:\dongOrderCancel, \dongOrderAdvance); \code{OrderService.cancelOrder} (\dongCancelOrder) và \code{updateStatus} (\dongUpdateStatus) chỉ tải đơn, gọi luật, lưu lại. CHECK giá trị trạng thái ở bảng \code{orders} (dòng \dongSqlOrders). Kiểm thử \file{DomainTest.java}:\dongTestCancel, \dongTestAdvance. VP: \vp{2.4 State Machine - Order}.}
+{Cho trả hàng sau khi giao: thêm trạng thái RETURNED vào \code{OrderStatus}, vào danh sách CHECK trong \code{TABLES}, và một bước chuyển trong \code{advanceTo}; cập nhật sơ đồ trạng thái và một bài kiểm thử.}
+
+\quyetdinh{5}{Đơn của người khác trả lời là ``không tìm thấy''}
+{Mã khách luôn lấy từ phiên đăng nhập, không bao giờ lấy từ những gì trình duyệt gửi lên. Đơn của người khác nhận đúng câu trả lời như đơn không tồn tại, nên không ai dò được mã đơn nào là thật. Trợ lý AI cũng chạy công cụ tra đơn với mã khách của phiên, và các công cụ không có tham số mã khách.}
+{Trả lời ``đơn này không phải của bạn'' (mã 403): lộ ra rằng đơn tồn tại. Chỉ kiểm tra ở giao diện: gọi thẳng API là qua. Nhận mã khách trong yêu cầu: ai cũng giả được.}
+{NFR01, FR09, luật BR08.}
+{\code{OrderService.getOrder} (\file{application/service/OrderService.java}:\dongGetOrder) gọi \code{Order.isOwnedBy} (\file{Order.java}:\dongOrderOwned); \code{WebServer.customer} (\file{presentation/web/WebServer.java}:\dongSessionCustomer) lấy mã khách từ phiên; lỗi ``không tìm thấy'' thành HTTP 404 (dòng \dongNotFound); \code{AssistantService.runTool} (dòng \dongRunTool). Kiểm thử \file{OrderServiceTest.java}:\dongTestNotFound; bước chạy thử ``UC08/NFR01''.}
+{Thêm đăng nhập có mật khẩu: chỉ đổi phần phiên (\code{SessionManager}). Cho nhân viên chăm sóc khách xem mọi đơn: thêm một vai trò và một đường riêng như trang quản trị, không nới luật của khách.}
+
+\quyetdinh{6}{AI đứng sau interface và luôn có đường lui}
+{Gemma ở máy chủ xa, có thể chậm hoặc hỏng; tối 11/11 máy chủ của lớp đã trả lỗi 502 thật. AI chỉ giúp \emph{hiểu} (câu, ảnh, phòng, câu hỏi); giá, kho, quyền xem đơn do luật của cửa hàng quyết. Mỗi tính năng AI có một cách làm không cần AI, và mỗi lần gọi chờ tối đa 15 giây.}
+{Gọi Gemma thẳng từ service: không có đường lui, không kiểm thử được khi thiếu máy chủ. Tìm kiếm chỉ bằng AI: máy chủ hỏng là cửa hàng đứng. Không dùng AI: không giải được chỗ đau P1 (khách không biết tên tranh).}
+{NFR02, NFR12, NFR04, NFR07; luật BR11 (gợi ý của AI không đổi giá, kho, quyền).}
+{\code{LlmClient} (\file{infrastructure/ai/LlmClient.java}:\dongLlmChat), \code{GemmaClient}; chữ: \code{QueryService.understand} (\dongUnderstand) $\to$ \code{parseRules} (\dongParseRules); ảnh: \code{ImageService.describe} (\dongDescribe) $\to$ \code{readColorLocally} (\dongLocalColor); trợ lý: \code{AssistantService.ask} (\dongAsk) $\to$ \code{answerWithoutAi} (\dongNoAi). Kiểm thử \file{SearchTest.java}:\dongTestFallback. Thời gian chờ: \code{gemma.timeoutSeconds=15} trong \file{demo/config/app.properties}.}
+{Đổi nhà cung cấp mô hình: \key{đã xảy ra thật} tối 11/11, chuyển từ máy chủ của lớp sang Gemma~4 trên DeepInfra chỉ bằng hai dòng cấu hình và key, không sửa dòng code nào. Mô hình khác API: viết một lớp mới cài \code{LlmClient}, sửa một dòng trong \code{EcomApplication.main}.}
+
+\quyetdinh{7}{Whisper tự chạy trên máy}
+{Giọng nói là dữ liệu riêng tư: một câu nói trong phòng khách có thể có tiếng người khác. Whisper chạy ngay trên laptop nên âm thanh không rời máy, không tốn tiền theo phút, và đủ nhanh: đo được trung bình \evSttMean{} giây, lâu nhất \evSttMax{} giây cho một câu, trong khi yêu cầu là 3 giây. Khách thấy chữ và sửa được trước khi tìm.}
+{Nhận dạng giọng nói có sẵn của trình duyệt: thường gửi âm thanh lên máy chủ của hãng trình duyệt, không điều khiển được. Dịch vụ nhận dạng trên mây: âm thanh ra ngoài, cần mạng, tốn tiền.}
+{NFR08 (âm thanh chỉ xử lý trên máy, câu 5 giây nghe xong trong 3 giây), FR02; NFR06.}
+{\file{demo/voice-server/server.py} (cổng 9000, \file{demo/run.sh} tự bật); \code{WhisperClient.transcribe} (\file{infrastructure/ai/WhisperClient.java}:\dongWhisper) sau interface \code{SpeechClient}; \code{SpeechService.transcribe} (\file{application/search/SpeechService.java}:\dongSpeech). Whisper tắt thì giao diện mời khách gõ chữ.}
+{Cần tiếng Việt: đổi tham số ngôn ngữ và dùng mô hình lớn hơn (tiếng Việt hiện kém hơn nhiều). Nhiều khách cùng lúc: chuyển máy chủ giọng nói sang một máy riêng của cửa hàng, vẫn không gửi ra ngoài.}
+
+\quyetdinh{8}{Một bản đặc tả duy nhất sinh ra sơ đồ, bảng và khung code, kèm công cụ so khớp}
+{Khi một tên được gõ ở ba nơi (sơ đồ, cơ sở dữ liệu, code) thì sớm muộn sẽ lệch. Em viết mọi yêu cầu, use case, lớp, phương thức, bảng và cột đúng một lần, rồi sinh mọi thứ từ đó. Công cụ so khớp đọc lại code thật, giao diện và cơ sở dữ liệu thật mỗi lần kiểm thử, nên ``code khớp thiết kế'' là điều được kiểm tra, không phải lời hứa.}
+{Vẽ tay trong VP rồi viết code theo trí nhớ: không gì báo khi lệch. Sinh khung code một lần rồi bỏ mặc: sau vài lần sửa là lệch. Chỉ so bằng mắt: không lặp lại được.}
+{NFR10 (tên trong code trùng mô hình, kiểm tra tự động), NFR11.}
+{\file{tools/model.py} (\code{REQUIREMENTS} dòng \dongModelReq, \code{ANALYSIS} \dongModelAnalysis, \code{DESIGN} \dongModelDesign, \code{TABLES} \dongModelTables); sinh: \file{tools/build_vp.py}, \file{tools/gen_sql.py}, \file{tools/gen_java.py} (khung ở \file{demo/generated}); so: \file{tools/check_code_model.py}, chạy trong \file{demo/test.sh}; kết quả ở cuối \file{build/test_results.txt}.}
+{Thêm một cột hoặc một phương thức: sửa \file{tools/model.py}, dựng lại sơ đồ, bảng và bảng biểu trong bài; công cụ so khớp báo lỗi cho tới khi code theo kịp.}
+
+\quyetdinh{9}{SQLite + JDBC, không framework; trừ kho bằng một câu UPDATE có điều kiện}
+{Bám code mẫu A05, A06 của môn: các tầng hiện rõ trong code, không có ``phép màu'' sinh ngầm. SQLite chỉ là một file nên chạy trên một máy, không cần cài máy chủ. Trừ kho bằng một câu lệnh vừa kiểm tra vừa trừ: chỉ trừ khi còn đủ hàng. Hai người mua cùng lúc món cuối cùng thì chỉ một người thành công, kho không bao giờ âm; ràng buộc CHECK của bảng là chốt chặn cuối.}
+{Spring Boot và một ORM: nhiều phần ẩn, tên bảng có thể do framework đặt, nặng cho bài môn học. Đọc kho, so trong Java rồi ghi lại: giữa lúc đọc và lúc ghi, người khác có thể mua mất. MySQL hay PostgreSQL: phải cài và chạy máy chủ, không còn ``một máy, chạy ngoại tuyến''.}
+{NFR06, NFR11 (kho không âm), FR07, BR02, NFR10 (mọi câu SQL được so với mô hình).}
+{\code{SqliteProductRepository.decreaseStock} (\file{infrastructure/repository/sqlite/SqliteProductRepository.java}:\dongDecreaseStock): \code{UPDATE product SET stock_quantity = stock_quantity - ? WHERE product_id = ? AND stock_quantity >= ?}; CHECK ở \file{ecom_schema_sqlite.sql}:\dongSqlStockCheck; bật khóa ngoại cho mỗi kết nối (\file{Database.java}:\dongFkPragma). Kiểm thử \file{RepositoryTest.java}:\dongTestStock.}
+{Nhiều người dùng cùng lúc: thay bằng cơ sở dữ liệu dạng máy chủ qua interface repository. Muốn đặt hàng ``tất cả hoặc không gì'': gói lưu đơn, trừ kho, làm rỗng giỏ vào một giao dịch (hạn chế đã biết).}
+
+\quyetdinh{10}{Cơ sở dữ liệu sinh từ mô hình vật lý trong VP, rồi so với cơ sở dữ liệu thật}
+{Thầy yêu cầu đi từ mô hình dữ liệu tới ``generate database''. Bộ sinh SQL của chính Visual Paradigm đọc các bảng trong ERD và viết câu lệnh tạo bảng; em nạp nó và cơ sở dữ liệu đang chạy vào SQLite rồi so từng bảng. Kết quả giống nhau về bảng, cột, kiểu, NOT NULL, khóa chính, UNIQUE. Riêng khóa ngoại và CHECK thì bộ sinh SQLite của VP không viết, nên công cụ của em bổ sung từ cùng mô hình.}
+{Viết SQL bằng tay: lệch với sơ đồ. Chỉ dùng câu lệnh của VP: cơ sở dữ liệu sẽ không có khóa ngoại và CHECK, tức không từ chối dữ liệu sai. Chỉ dùng công cụ của em: thiếu bằng chứng từ chính VP.}
+{Yêu cầu của thầy ở chương 4 (Generate Data Base); NFR11, NFR10.}
+{VP sinh \file{demo/db/vp_generated_ddl.sql} (bộ sinh SQL của chính VP, gọi qua plugin lúc dựng project); \file{tools/compare_schema.py} $\to$ \file{build/schema_comparison.txt}; \file{tools/gen_sql.py} (\code{create_table} dòng \dongGenCreate, \code{validate} dòng \dongGenValidate) $\to$ \file{demo/db/ecom_schema_sqlite.sql}, \file{seed.sql}, \file{build/sql_validation.txt}; nạp lúc khởi động: \code{Database.initialize} (\file{Database.java}:\dongDbInit). Bài §4.2.3.}
+{Thêm một cột: sửa mô hình, dựng lại cả hai bản và chạy lại phép so. Chuyển sang hệ cơ sở dữ liệu khác: đổi cấu hình cơ sở dữ liệu của project VP, sinh lại và so lại. Nói thật nếu bị hỏi: ảnh chụp từng bước của trình hướng dẫn trong giao diện VP chưa có; làm trực tiếp theo mục~\ref{sec:vpgen}.}

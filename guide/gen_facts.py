@@ -22,6 +22,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
+sys.dont_write_bytecode = True  # do not leave a .pyc in tools/
 import model  # noqa: E402
 
 OUT = ROOT / "build" / "guide"
@@ -68,7 +69,7 @@ def read_group(src, i):
 
 
 def spoken_parts(source):
-    """The 'say' argument (the 4th of 7) of every \\buoc{...} block of the script."""
+    """The 'say' argument (the 5th of 7) of every \\buoc{...} block of the script."""
     said = []
     for m in re.finditer(r"\\buoc(?=\{)", source):
         i, groups = m.end(), []
@@ -77,7 +78,7 @@ def spoken_parts(source):
                 i += 1
             group, i = read_group(source, i)
             groups.append(group)
-        said.append(groups[3])
+        said.append(groups[4])
     return said
 
 
@@ -92,6 +93,82 @@ def count_words(text):
 
 def line_count(folder, suffix):
     return sum(len(p.read_text(encoding="utf-8").splitlines()) for p in folder.rglob(f"*{suffix}"))
+
+
+# Line numbers quoted by the guide ("Order.java, dòng \dongOrderCancel"): macro suffix -> (file, regex of the line).
+J = "demo/src/main/java/com/ptit/ecom/"
+T = "demo/tests/java/com/ptit/ecom/test/"
+SQL = "demo/db/ecom_schema_sqlite.sql"
+ANCHORS = {
+    "ModelReq": ("tools/model.py", r"^REQUIREMENTS = \["),
+    "ModelAnalysis": ("tools/model.py", r"^ANALYSIS = \{"),
+    "ModelDesign": ("tools/model.py", r"^DESIGN = \["),
+    "ModelCategory": ("tools/model.py", r'^\s*cls\("Category", '),
+    "ModelOrder": ("tools/model.py", r'^\s*cls\("Order", '),
+    "ModelLayers": ("tools/model.py", r"^LAYERS = \["),
+    "ModelTables": ("tools/model.py", r"^TABLES = \["),
+    "OrderCancel": (J + "domain/order/Order.java", r"public void cancel\(\)"),
+    "OrderAdvance": (J + "domain/order/Order.java", r"public void advanceTo\("),
+    "OrderOwned": (J + "domain/order/Order.java", r"public boolean isOwnedBy\("),
+    "FromCart": (J + "domain/order/OrderItem.java", r"public static OrderItem fromCartItem\("),
+    "Accepts": (J + "domain/product/Category.java", r"public boolean accepts\("),
+    "Checkout": (J + "application/service/CheckoutService.java", r"public Order checkout\("),
+    "CurrentProduct": (J + "application/service/CheckoutService.java", r"private Product currentProduct\("),
+    "GetOrder": (J + "application/service/OrderService.java", r"public Order getOrder\("),
+    "CancelOrder": (J + "application/service/OrderService.java", r"public void cancelOrder\("),
+    "UpdateStatus": (J + "application/service/OrderService.java", r"public Order updateStatus\("),
+    "DecreaseStock": (J + "infrastructure/repository/sqlite/SqliteProductRepository.java", r"public void decreaseStock\("),
+    "ToProduct": (J + "infrastructure/repository/sqlite/SqliteProductRepository.java", r"private Product toProduct\("),
+    "InsertProduct": (J + "infrastructure/repository/sqlite/SqliteProductRepository.java", r"private void insertProduct\("),
+    "NotFound": (J + "presentation/web/WebServer.java", r"catch \(NoSuchElementException e\)"),
+    "SessionCustomer": (J + "presentation/web/WebServer.java", r"private String customer\(HttpExchange"),
+    "Ask": (J + "application/service/AssistantService.java", r"public AssistantReply ask\("),
+    "RunTool": (J + "application/service/AssistantService.java", r"private String runTool\("),
+    "NoAi": (J + "application/service/AssistantService.java", r"private AssistantReply answerWithoutAi\("),
+    "Understand": (J + "application/search/QueryService.java", r"private void understand\("),
+    "ParseRules": (J + "application/search/QueryService.java", r"private void parseRules\("),
+    "Describe": (J + "application/search/ImageService.java", r"public Map<String, String> describe\("),
+    "LocalColor": (J + "application/search/ImageService.java", r"Map<String, String> readColorLocally\("),
+    "LlmChat": (J + "infrastructure/ai/LlmClient.java", r"LlmReply chat\("),
+    "Whisper": (J + "infrastructure/ai/WhisperClient.java", r"public String transcribe\("),
+    "Speech": (J + "application/search/SpeechService.java", r"public String transcribe\("),
+    "Main": (J + "presentation/web/EcomApplication.java", r"public static void main\("),
+    "FkPragma": (J + "infrastructure/repository/sqlite/Database.java", r"PRAGMA foreign_keys = ON"),
+    "DbInit": (J + "infrastructure/repository/sqlite/Database.java", r"public void initialize\("),
+    "CheckDeps": ("tools/check_code_model.py", r"^def check_dependencies\("),
+    "CheckDb": ("tools/check_code_model.py", r"^def check_database\("),
+    "GenCreate": ("tools/gen_sql.py", r"^def create_table\("),
+    "GenValidate": ("tools/gen_sql.py", r"^def validate\("),
+    "SqlCategory": (SQL, r"^CREATE TABLE category \("),
+    "SqlProduct": (SQL, r"^CREATE TABLE product \("),
+    "SqlStockCheck": (SQL, r"stock_quantity integer NOT NULL CHECK"),
+    "SqlPainting": (SQL, r"^CREATE TABLE painting \("),
+    "SqlFrame": (SQL, r"^CREATE TABLE frame \("),
+    "SqlCart": (SQL, r"^CREATE TABLE cart \("),
+    "SqlCartItem": (SQL, r"^CREATE TABLE cart_item \("),
+    "SqlOrders": (SQL, r"^CREATE TABLE orders \("),
+    "SqlOrderItem": (SQL, r"^CREATE TABLE order_item \("),
+    "TestFromCart": (T + "DomainTest.java", r'test\("OrderItem\.fromCartItem takes'),
+    "TestCancel": (T + "DomainTest.java", r'test\("Order\.cancel is allowed'),
+    "TestAdvance": (T + "DomainTest.java", r'test\("Order\.advanceTo moves'),
+    "TestAccepts": (T + "DomainTest.java", r'test\("Category\.accepts only'),
+    "TestNotFound": (T + "OrderServiceTest.java", r"test\(\"Another customer's order is answered exactly"),
+    "TestSaveRefuses": (T + "RepositoryTest.java", r'test\("save refuses a frame'),
+    "TestStock": (T + "RepositoryTest.java", r'test\("decreaseStock refuses to go below zero'),
+    "TestFallback": (T + "SearchTest.java", r'test\("Keyword rules replace Gemma'),
+}
+
+
+def anchor_lines():
+    """{suffix: line number}; stops when a quoted method or table is no longer where the guide says."""
+    lines = {}
+    for suffix, (path, pattern) in ANCHORS.items():
+        text = (ROOT / path).read_text(encoding="utf-8").splitlines()
+        hits = [n for n, line in enumerate(text, 1) if re.search(pattern, line)]
+        if len(hits) != 1:
+            sys.exit(f"{path}: {len(hits)} lines match {pattern!r} (anchor {suffix}); update ANCHORS in guide/gen_facts.py")
+        lines[suffix] = hits[0]
+    return lines
 
 
 def main():
@@ -155,6 +232,7 @@ def main():
     macro("factSchemaChecks", vp_check)
     sql = (ROOT / "build" / "sql_validation.txt").read_text(encoding="utf-8")
     macro("factSampleRows", need(r"(\d+) sample rows", sql, "build/sql_validation.txt")[0])
+    macro("factCategories", need(r"^\s+category\s+(\d+) rows", sql, "build/sql_validation.txt")[0])
     rejected, broken = need(r"^(\d+)/(\d+) statements that break a constraint were rejected", sql,
                             "build/sql_validation.txt")
     macro("factSqlRejected", f"{rejected}/{broken}")
@@ -167,6 +245,8 @@ def main():
     macro("factTrial", trial)
 
     # ---- code and catalogue
+    for suffix, number in anchor_lines().items():
+        macro(f"dong{suffix}", number)
     macro("factJavaLines", line_count(ROOT / "demo" / "src" / "main" / "java", ".java"))
     macro("factJsLines", line_count(ROOT / "demo" / "web" / "js", ".js"))
     catalog = json.loads((ROOT / "demo" / "data" / "catalog.json").read_text(encoding="utf-8"))

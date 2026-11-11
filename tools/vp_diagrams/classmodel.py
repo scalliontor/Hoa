@@ -290,7 +290,8 @@ ERD_HEADER, ERD_ROW = 24, 18       # VP CE entity: one header line, then one row
 
 def erd(root):
     """The database as a VP entity relationship diagram (the 'yellow tables'), drawn on the grid of the
-    physical data model c42_tables: same tables, same places, same foreign keys and names. The caption box is
+    physical data model c42_tables: same tables, same places, same foreign keys. Each relationship carries the
+    name of its foreign key constraint (model.fk_name), unique as Generate Database requires. The caption box is
     set to one line, otherwise VP keeps a tall default header and clips the columns."""
     d = Diagram(root, "c42_erd", "4.2 Database - entity relationship diagram", "erd", "database",
                 "4.2 Database")
@@ -298,12 +299,14 @@ def erd(root):
     from . import common
     common.DIAGRAMS.remove(d2)
     B, X, Y = layout(d2, "tables", 200, 110)          # the col_gap / row_gap of c42_tables
+    boxes = {}
     for logical, r in B.items():
         t = TABLES[TABLE[logical]]
         w = r.w + 40
         h = ERD_HEADER + ERD_ROW * len(t["columns"]) + 6
         n = d.node(t["name"], "DBTable", t["name"], r.x, r.y, w, h, role="none",
                    captionX=0, captionY=0, captionW=w, captionH=ERD_HEADER - 2)
+        boxes[t["name"]] = (r.x, r.y, w, h)
         for c in t["columns"]:
             el = ET.SubElement(n, "column", name=c["name"], type=c["type"])
             for key in ("length", "scale"):
@@ -315,8 +318,17 @@ def erd(root):
             if c["fk"]:
                 el.set("fk", c["fk"])
     for child, column, parent, _ in model.foreign_keys():
-        name, parent_mult, child_mult = model.FK_LABELS[f"{child}.{column}"]
+        _, parent_mult, child_mult = model.FK_LABELS[f"{child}.{column}"]
         pk = next(c["pk"] for c in TABLES[child]["columns"] if c["name"] == column)
+        name = model.fk_name(child, column)
+        # A side-by-side link with little room: the name goes in the middle of the gap, just above the line
+        # (VP's own place would run into the next table).
+        left, right = sorted((boxes[parent], boxes[child]))
+        gap = right[0] - (left[0] + left[2])
+        top, bottom = max(left[1], right[1]), min(left[1] + left[3], right[1] + right[3])
+        lw, lh = caption_size([name])
+        place = dict(label=[name], at=(left[0] + left[2] + gap / 2, (top + bottom) / 2 - lh / 2 - 4)) \
+            if 0 < gap < lw + 30 and bottom > top else {}
         d.edge("DBForeignKey", parent, child, None, name=name, fromMult=parent_mult, toMult=child_mult,
-               toColumn=column, identifying=pk or None)
+               toColumn=column, identifying=pk or None, **place)
     return d

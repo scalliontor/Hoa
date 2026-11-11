@@ -20,6 +20,13 @@ Two editions of VP 18.1 are used:
   instead (title bar "Visual Paradigm Enterprise (Evaluation Copy)"), taken by `tools/vp_shots.py` with the plugin in
   `vp/shots_plugin`. They exist only as PNG, and every caption in the essay says that they come from the trial.
   The trial edition also saves the complete project, so `vp/tieuluan_design.vpp` holds every diagram.
+  Since 12/11/2026 the trial refuses to reopen saved projects ("Evaluation on this project has been expired"); the
+  Community Edition opens `vp/tieuluan_design.vpp` with all 40 diagrams.
+
+Two more trial screenshots are not diagrams but VP's own **Generate Database** wizard on the ERD, made by
+`tools/vp_generate_db.py` (Chapter 4.2.4, showcase section E): `c42_generate_db.png` (the wizard: SQLite, Create
+Database, Generate DDL, output folder) and `c42_generate_db_done.png` (after OK: "Generate Database - Finish" and the
+ORM messages). The DDL the wizard wrote is `demo/db/vp_wizard_ddl.sql`.
 
 | id | Chapter | What it shows |
 |---|---|---|
@@ -56,7 +63,7 @@ Two editions of VP 18.1 are used:
 | c42_conceptual | 2 Analysis (2.9.1) | Conceptual data model: the 18 entities by name only and the named links between them (no attributes, no multiplicities); generalizations kept |
 | c42_orm | 2 Analysis (2.9.2) | Logical data model: the 18 classes with attributes as «ORM-Persistable», named associations with multiplicities; each generalization becomes a 1 – 0..1 "is a" association |
 | c42_tables | 4 Design (4.2.1) | Physical data model: the 18 tables as «table» classes (category, product with category_id, painting and frame detail tables) with SQL types and {PK, FK, U, NULL}; every foreign key labelled "name (column)" with multiplicities |
-| c42_erd | 4 Design (4.2.2) | Database as a VP entity relationship diagram (the orange tables) on the grid of the physical data model: every column with type, PK/FK icons, N (nullable) and U (unique), crow's-foot foreign keys with their names |
+| c42_erd | 4 Design (4.2.2) | Database as a VP entity relationship diagram (the orange tables) on the grid of the physical data model: every column with type, PK/FK icons, N (nullable) and U (unique), crow's-foot foreign keys named after their constraints, fk_<table>_<column> (model.fk_name; Generate Database needs them unique) |
 | c43_design | 4 Design (4.3) | Design class diagram of the domain: 18 classes with typed attributes and operations (Category with accepts()) and 4 enumerations (DetailKind among them), navigable associations with role names, «use» OrderItem → CartItem |
 | c44_layers | 4 Design (4.4.1) | The three layers (Presentation, Application, Data) as frames with their classes inside and the «use» / realization links inside each layer and to the layer below; a note names the few long links left out and the shared domain model |
 | c44_classes | 4 Design (4.4) | Presentation → application → domain, one vertical slice per feature (views, controllers, services, Cart and Order), «use» and «create» dependencies; a note explains how WebServer dispatches to the controllers |

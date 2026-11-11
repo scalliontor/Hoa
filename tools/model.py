@@ -870,6 +870,13 @@ FK_LABELS = {
 }
 
 
+def fk_name(child, column):
+    """Name of the foreign key constraint in the database (ERD c42_erd): fk_<table>_<column without _id>. A database
+    needs these names unique, and Visual Paradigm's Generate Database refuses duplicates ("The name of foreign key
+    'is a' is duplicated"); the logical data model keeps the verbs of FK_LABELS."""
+    return f"fk_{child}_{column[:-3] if column.endswith('_id') else column}"
+
+
 def foreign_keys():
     """Yield (child_table, column, parent_table, parent_column) in table order."""
     for table in TABLES:
@@ -890,4 +897,6 @@ if __name__ == "__main__":
     for child, column, parent, parent_col in foreign_keys():
         assert parent in tables and parent_col in tables[parent], (child, column)
         assert f"{child}.{column}" in FK_LABELS, (child, column)
+    fk_names = [fk_name(child, column) for child, column, _, _ in foreign_keys()]
+    assert len(set(fk_names)) == len(fk_names), fk_names
     print(f"analysis={len(ANALYSIS)} design={len(DESIGN)} tables={len(TABLES)} fks={len(list(foreign_keys()))}")

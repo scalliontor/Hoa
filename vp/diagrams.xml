@@ -2003,25 +2003,25 @@
       <column name="card_last4" type="char" length="4" />
       <column name="authorization_code" type="varchar" length="40" nullable="true" />
     </node>
-    <edge type="DBForeignKey" from="customer" to="customer_vip" name="is a" fromMult="1" toMult="0..1" toColumn="customer_id" identifying="true" />
-    <edge type="DBForeignKey" from="customer" to="customer_new" name="is a" fromMult="1" toMult="0..1" toColumn="customer_id" identifying="true" />
-    <edge type="DBForeignKey" from="customer" to="address" name="has" fromMult="1" toMult="1..*" toColumn="customer_id" />
-    <edge type="DBForeignKey" from="category" to="product" name="classifies" fromMult="1" toMult="0..*" toColumn="category_id" />
-    <edge type="DBForeignKey" from="product" to="painting" name="is a" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" />
-    <edge type="DBForeignKey" from="artist" to="painting" name="paints" fromMult="1" toMult="0..*" toColumn="artist_id" />
-    <edge type="DBForeignKey" from="product" to="frame" name="is a" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" />
-    <edge type="DBForeignKey" from="product" to="product_feature" name="indexed by" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" />
-    <edge type="DBForeignKey" from="customer" to="cart" name="owns" fromMult="1" toMult="0..1" toColumn="customer_id" />
-    <edge type="DBForeignKey" from="cart" to="cart_item" name="contains" fromMult="1" toMult="0..*" toColumn="cart_id" identifying="true" />
-    <edge type="DBForeignKey" from="product" to="cart_item" name="refers to" fromMult="1" toMult="0..*" toColumn="product_id" identifying="true" />
-    <edge type="DBForeignKey" from="customer" to="orders" name="places" fromMult="1" toMult="0..*" toColumn="customer_id" />
-    <edge type="DBForeignKey" from="orders" to="order_item" name="contains" fromMult="1" toMult="1..*" toColumn="order_id" identifying="true" />
-    <edge type="DBForeignKey" from="product" to="order_item" name="refers to" fromMult="1" toMult="0..*" toColumn="product_id" identifying="true" />
-    <edge type="DBForeignKey" from="orders" to="shipping" name="is delivered by" fromMult="1" toMult="0..1" toColumn="order_id" />
-    <edge type="DBForeignKey" from="address" to="shipping" name="ships to" fromMult="1" toMult="0..*" toColumn="address_id" />
-    <edge type="DBForeignKey" from="orders" to="payment" name="is paid by" fromMult="1" toMult="0..*" toColumn="order_id" />
-    <edge type="DBForeignKey" from="payment" to="pay_cash" name="is a" fromMult="1" toMult="0..1" toColumn="payment_id" identifying="true" />
-    <edge type="DBForeignKey" from="payment" to="pay_credit" name="is a" fromMult="1" toMult="0..1" toColumn="payment_id" identifying="true" />
+    <edge type="DBForeignKey" from="customer" to="customer_vip" name="fk_customer_vip_customer" fromMult="1" toMult="0..1" toColumn="customer_id" identifying="true" />
+    <edge type="DBForeignKey" from="customer" to="customer_new" name="fk_customer_new_customer" fromMult="1" toMult="0..1" toColumn="customer_id" identifying="true" />
+    <edge type="DBForeignKey" from="customer" to="address" name="fk_address_customer" fromMult="1" toMult="1..*" toColumn="customer_id" />
+    <edge type="DBForeignKey" from="category" to="product" name="fk_product_category" fromMult="1" toMult="0..*" toColumn="category_id" labelX="1579" labelY="568" labelW="134" labelH="20" />
+    <edge type="DBForeignKey" from="product" to="painting" name="fk_painting_product" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" />
+    <edge type="DBForeignKey" from="artist" to="painting" name="fk_painting_artist" fromMult="1" toMult="0..*" toColumn="artist_id" />
+    <edge type="DBForeignKey" from="product" to="frame" name="fk_frame_product" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" />
+    <edge type="DBForeignKey" from="product" to="product_feature" name="fk_product_feature_product" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" labelX="1148" labelY="568" labelW="174" labelH="20" />
+    <edge type="DBForeignKey" from="customer" to="cart" name="fk_cart_customer" fromMult="1" toMult="0..1" toColumn="customer_id" />
+    <edge type="DBForeignKey" from="cart" to="cart_item" name="fk_cart_item_cart" fromMult="1" toMult="0..*" toColumn="cart_id" identifying="true" />
+    <edge type="DBForeignKey" from="product" to="cart_item" name="fk_cart_item_product" fromMult="1" toMult="0..*" toColumn="product_id" identifying="true" />
+    <edge type="DBForeignKey" from="customer" to="orders" name="fk_orders_customer" fromMult="1" toMult="0..*" toColumn="customer_id" />
+    <edge type="DBForeignKey" from="orders" to="order_item" name="fk_order_item_order" fromMult="1" toMult="1..*" toColumn="order_id" identifying="true" />
+    <edge type="DBForeignKey" from="product" to="order_item" name="fk_order_item_product" fromMult="1" toMult="0..*" toColumn="product_id" identifying="true" />
+    <edge type="DBForeignKey" from="orders" to="shipping" name="fk_shipping_order" fromMult="1" toMult="0..1" toColumn="order_id" />
+    <edge type="DBForeignKey" from="address" to="shipping" name="fk_shipping_address" fromMult="1" toMult="0..*" toColumn="address_id" />
+    <edge type="DBForeignKey" from="orders" to="payment" name="fk_payment_order" fromMult="1" toMult="0..*" toColumn="order_id" />
+    <edge type="DBForeignKey" from="payment" to="pay_cash" name="fk_pay_cash_payment" fromMult="1" toMult="0..1" toColumn="payment_id" identifying="true" />
+    <edge type="DBForeignKey" from="payment" to="pay_credit" name="fk_pay_credit_payment" fromMult="1" toMult="0..1" toColumn="payment_id" identifying="true" />
   </diagram>
   <diagram id="c43_design" name="4.3 Class Diagram in Design" kind="class" scope="design" scopeName="4.3-4.5 Design model">
     <node id="FullName" type="Class" name="FullName" x="501" y="47" w="168" h="86">

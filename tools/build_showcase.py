@@ -221,6 +221,7 @@ class Essay:
         self.figures = []           # every figure block in document order
         self.vp = {}                # vp id -> figure info
         self.demo = {}              # screenshot name -> figure info
+        self.vpshots = {}           # screenshot of a VP dialog (figures/vp, not a diagram) -> figure info
         chapter = 0
         for name in self.inputs:
             rel = f"report/chapters/{name}.tex"
@@ -273,8 +274,10 @@ class Essay:
             elif m.group(0).startswith("\\begin{figure"):
                 end = text.find("\\end{figure}", m.end())
                 block = text[m.end():end]
-                items, graphics = [], re.finditer(r"\\(vpfig|demofig)\{([^}]*)\}", block)
-                pending = [(g.group(1), g.group(2)) for g in graphics]
+                # \vpfig / \demofig, or a screenshot of VP's own dialogs included directly (counted, not a diagram)
+                items, graphics = [], re.finditer(
+                    r"\\(vpfig|demofig)\{([^}]*)\}|\\includegraphics(?:\[[^\]]*\])?\{\.\./figures/vp/([\w-]+)\.png\}", block)
+                pending = [(g.group(1), g.group(2)) if g.group(1) else ("vpshot", g.group(3)) for g in graphics]
                 for c in re.finditer(r"\\caption", block):
                     short, i = bracket(block, c.end())
                     long_, i = brace(block, i)
@@ -282,7 +285,7 @@ class Essay:
                     labels = " ".join(re.findall(r"\\label\{[^}]*\}", rest.split("\\caption")[0]))
                     need(pending, f"{rel}:{line}: caption without a figure")
                     kind_, fid = pending.pop(0)
-                    items.append(("vp" if kind_ == "vpfig" else "demo", fid, short or long_, long_, labels))
+                    items.append(({"vpfig": "vp", "demofig": "demo"}.get(kind_, kind_), fid, short or long_, long_, labels))
                     fig += 1
                 if items:
                     self._figure(rel, chapter, fig - len(items) + 1, current, line, items)
@@ -296,7 +299,7 @@ class Essay:
                         block=block)
             for label in re.findall(r"\\label\{([^}]*)\}", labels):
                 self.labels[label] = info["number"]
-            (self.vp if kind == "vp" else self.demo)[fid] = info
+            {"vp": self.vp, "demo": self.demo}.get(kind, self.vpshots)[fid] = info
         self.figures.append(items)
 
     def finish(self):
@@ -1996,8 +1999,23 @@ class Page:
             + (f' <span class="warn-text">Missing: {", ".join(f"<code>{x}</code>" for x in e["missing_tables"] + e["missing_columns"])}'
                f' — rebuild the VP figures after the model change.</span>' if e["missing_tables"] or e["missing_columns"] else "")
             + "</p></li>" for e in ev)
+        # Visual Paradigm's Generate Database wizard (tools/vp_generate_db.py) and its comparison with the schema
+        compare = read("build/schema_comparison.txt")
+        wiz = re.search(r"UNIQUE and foreign keys: (\w+) \((\d+) tables, (\d+) columns, (\d+) foreign keys compared\)", compare)
+        need(wiz, "build/schema_comparison.txt has no result for the Generate Database wizard (run tools/vp_generate_db.py)")
+        n_checks = re.search(r"no CHECK \((\d+) in the schema\)", compare).group(1)
+        wizard_shots = ""
+        for png, title in (("figures/vp/c42_generate_db.png", "The wizard on the ERD: SQLite, Create Database, Generate DDL"),
+                           ("figures/vp/c42_generate_db_done.png", "After OK: “Generate Database – Finish” and the ORM messages")):
+            w, h = png_size(png)
+            wizard_shots += (f'<li><a class="thumb small" href="{LINKS.file(png)}"><span class="wall"><img src="{LINKS.file(png)}" '
+                             f'width="{w}" height="{h}" loading="lazy" decoding="async" alt="{E(title)}"></span>'
+                             f'<span class="thumb-meta"><span class="badge trial"><i></i>VP trial screenshot</span></span>'
+                             f'<span class="thumb-title">{E(title)}</span></a></li>')
+        wizard_ok = wiz.group(1) == "True" and "DIFFERENCE" not in compare
         steps = [("Conceptual", self.fig("c42_conceptual", "c42_conceptual")), ("Logical", self.fig("c42_orm", "c42_orm")),
                  ("Physical", self.fig("c42_tables", "c42_tables")), ("VP database", self.fig("c42_erd", "c42_erd")),
+                 ("VP Generate Database", self.file("demo/db/vp_wizard_ddl.sql", "vp_wizard_ddl.sql")),
                  ("Generator", self.blob("tools/gen_sql.py", "def ", "tools/gen_sql.py")),
                  ("Schema", self.file(SCHEMA, "ecom_schema_sqlite.sql")), ("Seed", self.file(SEED, "seed.sql")),
                  ("At start", self.ref_plain("Database.initialize", "Database.initialize"))]
@@ -2035,6 +2053,21 @@ class Page:
   <h3 class="h3 sub top-gap">Visual Paradigm evidence</h3>
   <ul class="evidence">{ev_html}</ul>
   <p class="muted small">Both diagrams are in the VP project {self.file(self.vpp, "vp/tieuluan_design.vpp")}; their text was read from the SVG export.</p>
+
+  <h3 class="h3 sub top-gap">Generated by Visual Paradigm's own wizard</h3>
+  <p>On the ERD, <em>Tools → DB → Generate Database</em> with SQLite and the demo's driver, <em>Create Database</em>,
+  <em>Generate DDL</em>. The script the wizard wrote, {self.file("demo/db/vp_wizard_ddl.sql", "vp_wizard_ddl.sql")}, has
+  {"<strong>the same " + wiz.group(2) + " tables, " + wiz.group(3) + " columns, types, NOT NULL, primary keys, UNIQUE and " + wiz.group(4) + " foreign keys</strong>" if wizard_ok else '<span class="warn-text">differences</span>'}
+  as the schema of the demo ({self.file("build/schema_comparison.txt", "schema_comparison.txt")},
+  {self.blob("tools/compare_schema.py", "def compare", "compare_schema.py")}); only the {n_checks} CHECK constraints are
+  missing, because the ERD does not hold them, and {self.blob("tools/gen_sql.py", "def ", "gen_sql.py")} adds them from the same model.
+  The first run stopped on <q>The name of foreign key "is a" is duplicated</q>: the ERD now names every relationship after
+  its constraint, <code>fk_&lt;table&gt;_&lt;column&gt;</code> ({self.blob("tools/model.py", "def fk_name", "model.fk_name")}).</p>
+  <ul class="evidence">{wizard_shots}</ul>
+  <p class="muted small">Screenshots of the VP 18.1 window in the Enterprise edition's 30-day trial (title bar “Evaluation Copy”):
+  the Community Edition has no database generation, and the trial no longer reopens saved projects, so
+  {self.blob("tools/vp_generate_db.py", "def main", "tools/vp_generate_db.py")} lets it build the ERD from the same model in a
+  new project and operates the window as a person would. Only VP's own window is painted.</p>
 </section>'''
 
     # --------------------------------------------------------------------------------------------- F live demo

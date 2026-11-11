@@ -2,11 +2,14 @@
 
     python3 tools/compare_schema.py      # writes build/schema_comparison.txt, exits 1 on a real difference
 
-demo/db/vp_generated_ddl.sql is written by VP's own SQL generator (DatabaseManager.generateCreateSQL, SQLite
-dialect) from the tables of the ERD c42_erd during tools/build_vp.py. demo/db/ecom_schema_sqlite.sql is written by
-tools/gen_sql.py from model.TABLES and is the schema of demo/data/ecom.db. Both scripts are loaded into SQLite and
-compared table by table. VP's SQLite generator writes no FOREIGN KEY and no CHECK clause: those are reported
-separately and are the only accepted differences.
+Two scripts written by Visual Paradigm from the tables of the ERD c42_erd are compared:
+  demo/db/vp_wizard_ddl.sql      VP's Generate Database wizard (Tools > DB > Generate Database, SQLite, Generate DDL),
+                                 run in the window by tools/vp_generate_db.py
+  demo/db/vp_generated_ddl.sql   VP's SQL generator called by the plugin in every build (DatabaseManager.generateCreateSQL)
+with demo/db/ecom_schema_sqlite.sql, written by tools/gen_sql.py from model.TABLES (the schema of demo/data/ecom.db).
+Each script is loaded into SQLite and compared table by table: columns, types, NOT NULL, primary keys, UNIQUE and,
+when the script has them, foreign keys. Neither VP script has CHECK constraints (the ERD does not hold them), and the
+plugin's call writes no FOREIGN KEY either: those are reported as the accepted differences.
 """
 from pathlib import Path
 import re
@@ -15,6 +18,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 VP_DDL = ROOT / "demo/db/vp_generated_ddl.sql"
+WIZARD_DDL = ROOT / "demo/db/vp_wizard_ddl.sql"
+SOURCES = [("Generate Database wizard", WIZARD_DDL), ("SQL generator called in the build", VP_DDL)]
 SCHEMA = ROOT / "demo/db/ecom_schema_sqlite.sql"
 OUT = ROOT / "build/schema_comparison.txt"
 
@@ -47,14 +52,13 @@ def describe(con):
     return tables
 
 
-def main():
-    vp, run = describe(load(VP_DDL)), describe(load(SCHEMA))
-    lines = [f"VP generated DDL : {VP_DDL.relative_to(ROOT)} ({len(vp)} tables)",
-             f"Running schema   : {SCHEMA.relative_to(ROOT)} ({len(run)} tables)", ""]
+def compare(path, run):
+    """Lines of the report and the real differences for one script written by VP."""
+    vp = describe(load(path))
     problems = []
     if set(vp) != set(run):
         problems.append(f"tables only in VP: {sorted(set(vp) - set(run))}, only in schema: {sorted(set(run) - set(vp))}")
-    n_cols = n_fk = n_check = 0
+    n_cols = n_fk = n_check = vp_fk = 0
     for name in sorted(set(vp) & set(run)):
         a, b = vp[name], run[name]
         if set(a["cols"]) != set(b["cols"]):
@@ -69,16 +73,37 @@ def main():
             problems.append(f"{name}: UNIQUE VP={sorted(a['unique'])} schema={sorted(b['unique'])}")
         n_fk += len(b["fks"])
         n_check += b["checks"]
-        if a["fks"] or a["checks"]:
-            lines.append(f"  note: VP wrote {len(a['fks'])} FK and {a['checks']} CHECK for {name}")
-    lines.append(f"Same tables, columns, types, NOT NULL, primary keys and UNIQUE: {not problems} "
-                 f"({len(run)} tables, {n_cols} columns compared)")
+        vp_fk += len(a["fks"])
+        if a["fks"] and a["fks"] != b["fks"]:
+            problems.append(f"{name}: FOREIGN KEY VP={sorted(a['fks'])} schema={sorted(b['fks'])}")
+        if a["checks"]:
+            problems.append(f"{name}: VP wrote {a['checks']} CHECK")
+    with_fk = vp_fk > 0
+    if with_fk and vp_fk != n_fk:
+        problems.append(f"VP wrote {vp_fk} foreign keys, the schema has {n_fk}")
+    same = "columns, types, NOT NULL, primary keys, UNIQUE" + (" and foreign keys" if with_fk else "")
+    lines = [f"{path.relative_to(ROOT)} ({len(vp)} tables)",
+             f"  Same tables, {same}: {not problems} ({len(run)} tables, {n_cols} columns"
+             + (f", {vp_fk} foreign keys" if with_fk else "") + " compared)"]
     lines += [f"  DIFFERENCE {p}" for p in problems]
-    lines += ["",
-              f"Accepted differences: VP's SQLite generator writes no FOREIGN KEY ({n_fk} in the schema) and no CHECK "
-              f"({n_check} in the schema).",
-              "The foreign keys are the relationships drawn in the ERD c42_erd and the checks are the constraints of "
-              "model.TABLES; tools/gen_sql.py writes both from the same physical model."]
+    lines.append(f"  Accepted differences: no CHECK ({n_check} in the schema)"
+                 + ("" if with_fk else f", no FOREIGN KEY ({n_fk} in the schema)") + ".")
+    return lines, problems
+
+
+def main():
+    run = describe(load(SCHEMA))
+    lines = [f"Running schema: {SCHEMA.relative_to(ROOT)} ({len(run)} tables), written by tools/gen_sql.py", ""]
+    problems = []
+    for title, path in SOURCES:
+        if not path.exists():
+            lines += [f"{title}: {path.relative_to(ROOT)} missing", ""]
+            continue
+        part, found = compare(path, run)
+        lines += [f"{title}: " + part[0]] + part[1:] + [""]
+        problems += found
+    lines += ["The CHECK constraints are the constraints of model.TABLES (allowed values, positive amounts); the ERD does",
+              "not hold them, so tools/gen_sql.py writes them from the same physical model."]
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))

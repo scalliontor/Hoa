@@ -4,7 +4,7 @@ Every number in the guide comes from the project itself, so the guide cannot dri
   tools/model.py               requirement, use case, class, table and foreign-key counts
   build/test_results.txt       number of passing tests and the code-versus-model check line
   build/e2e_results.txt        end-to-end steps passed
-  build/schema_comparison.txt  Visual Paradigm DDL compared with the running schema
+  build/schema_comparison.txt  Visual Paradigm DDL (Generate Database wizard) compared with the running schema
   build/sql_validation.txt     constraint checks and sample rows of the generated database
   build/eval/*.json            evaluation results (search, voice, assistant, room)
   vp/diagrams.xml, figures/vp/README.md   diagrams of the VP project and the trial screenshots
@@ -221,15 +221,14 @@ def main():
         sys.exit(f"build/e2e_results.txt: only {ok}/{total} steps passed")
     macro("factEtoE", ok)
     compare = (ROOT / "build" / "schema_comparison.txt").read_text(encoding="utf-8")
-    same, _, cols = need(r"primary keys and UNIQUE: (\w+) \((\d+) tables, (\d+) columns compared\)",
-                         compare, "build/schema_comparison.txt")
-    if same != "True":
+    # The first block is the Generate Database wizard (tools/vp_generate_db.py), foreign keys included.
+    same, _, cols, fks = need(r"UNIQUE and foreign keys: (\w+) \((\d+) tables, (\d+) columns, (\d+) foreign keys compared\)",
+                              compare, "build/schema_comparison.txt")
+    if "DIFFERENCE" in compare or same != "True":
         sys.exit("build/schema_comparison.txt: the VP DDL and the schema differ")
     macro("factCmpColumns", cols)
-    vp_fk, vp_check = need(r"writes no FOREIGN KEY \((\d+) in the schema\) and no CHECK \((\d+) in the schema\)",
-                           compare, "build/schema_comparison.txt")
-    macro("factSchemaFKs", vp_fk)
-    macro("factSchemaChecks", vp_check)
+    macro("factCmpFKs", fks)
+    macro("factSchemaChecks", need(r"no CHECK \((\d+) in the schema\)", compare, "build/schema_comparison.txt")[0])
     sql = (ROOT / "build" / "sql_validation.txt").read_text(encoding="utf-8")
     macro("factSampleRows", need(r"(\d+) sample rows", sql, "build/sql_validation.txt")[0])
     macro("factCategories", need(r"^\s+category\s+(\d+) rows", sql, "build/sql_validation.txt")[0])

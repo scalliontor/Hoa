@@ -60,6 +60,10 @@ public final class TieuLuanBuilder implements VPPlugin, VPPluginCommandLineSuppo
             // VP's own SQL generator on the tables of the physical model (the ERD), when asked for.
             String ddl = System.getProperty("tieuluan.ddl");
             if (ddl != null) generateDdl(new File(ddl));
+            if (top.getAttribute("project").isEmpty()) {   // kept unsaved (screenshots of VP's own dialogs)
+                System.out.println("TIEULUAN_BUILD_SUCCESS (not saved)");
+                return;
+            }
             File target = new File(top.getAttribute("project"));
             if (!target.isAbsolute()) target = new File(root, top.getAttribute("project"));
             if (!pm.saveProjectAs(target)) throw new IllegalStateException("Cannot save " + target);
@@ -85,7 +89,8 @@ public final class TieuLuanBuilder implements VPPlugin, VPPluginCommandLineSuppo
         setting.setDialect(DatabaseSetting.DIALECT_SQLITE);
         setting.setDriver(DatabaseSetting.DRIVER_SQLITE);
         setting.setDriverClass(DatabaseSetting.DRIVER_SQLITE);
-        setting.setDriverFiles(new File(root, "demo/lib/sqlite-jdbc-3.46.1.3.jar").getAbsolutePath());
+        File repo = System.getProperty("tieuluan.repo") != null ? new File(System.getProperty("tieuluan.repo")) : root;
+        setting.setDriverFiles(new File(repo, "demo/lib/sqlite-jdbc-3.46.1.3.jar").getAbsolutePath());
         setting.setConnectionURL("jdbc:sqlite:" + new File(file.getParentFile(), "vp_generated.db").getAbsolutePath());
         setting.setSupported(true);
         setting.setDefault(true);

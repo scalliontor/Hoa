@@ -77,15 +77,15 @@ Nói câu mở ở mục~\ref{sec:gemma} trước khi bắt đầu demo, rồi �
 Nếu được hỏi ``vậy số đo có Gemma ở đâu?'': mục G của showcase và bài §3.15 (đo ngày 30/10).
 
 \subsection{Nếu thầy muốn xem VP sinh cơ sở dữ liệu ngay tại chỗ}\label{sec:vpgen}
-Bài chưa có ảnh chụp trình hướng dẫn \emph{Generate Database} của VP (mục này trong bảng nghiệm thu còn ``một phần''); file \file{demo/db/vp_generated_ddl.sql} là do bộ sinh SQL của chính VP viết ra khi dựng project. Nếu thầy muốn tận mắt thấy, làm như sau (khoảng 2 phút). Nói thật trước: \say{phần này em làm trực tiếp, bài chưa có ảnh chụp từng bước.}
+Bài đã có hai ảnh chụp trình hướng dẫn \emph{Generate Database} của chính VP (bài §4.2.4, showcase mục E). Muốn chạy lại trước mặt thầy, chỉ cần một lệnh (khoảng 2 phút):
 \begin{enumerate}[leftmargin=1.5em]
-\item Giữ lại bản cũ: \code{cp demo/db/vp_generated_ddl.sql ~/Desktop/vp_generated_ddl.bak.sql}.
-\item Mở \file{vp/tieuluan_design.vpp} bằng \key{bản dùng thử} (\file{Visual Paradigm.app}), mở sơ đồ \vp{4.2 Database - entity relationship diagram}.
-\item Menu \emph{Tools $\to$ DB $\to$ Generate Database}. Giữ cơ sở dữ liệu là \key{SQLite}, chọn \emph{Generate DDL} ra file, lưu đè lên \file{demo/db/vp_generated_ddl.sql} (đó là file công cụ so sánh đọc).
-\item Ở thư mục dự án chạy \code{python3 tools/compare_schema.py}. Mong đợi: dòng ``Same tables, columns, types, NOT NULL, primary keys and UNIQUE: True (\factCheckTables{} tables, \factCmpColumns{} columns compared)'' và câu ghi rằng VP không viết khóa ngoại và CHECK.
-\item Đóng VP, chọn \emph{Don't Save}.
+\item Đóng mọi cửa sổ Visual Paradigm.
+\item Ở thư mục dự án chạy \code{python3 tools/vp_generate_db.py}. Cửa sổ VP (bản dùng thử) tự mở, tự dựng sơ đồ quan hệ thực thể, rồi tự bấm \emph{Tools $\to$ DB $\to$ Generate Database}, chọn SQLite, \emph{Generate DDL} và OK. Trong lúc nó chạy, đừng bấm chuột vào cửa sổ VP.
+\item Khi xong, lệnh in kết quả so sánh. Mong đợi dòng ``Same tables, columns, types, NOT NULL, primary keys, UNIQUE and foreign keys: True (\factCheckTables{} tables, \factCmpColumns{} columns, \factCmpFKs{} foreign keys compared)''.
+\item Lệnh ghi đè hai ảnh và file \file{demo/db/vp_wizard_ddl.sql} bằng bản vừa chạy; muốn trả lại bản đã nộp: \code{git checkout -- figures/vp demo/db}.
 \end{enumerate}
+Đừng mở \file{vp/tieuluan_design.vpp} bằng bản dùng thử: nó báo ``Evaluation on this project has been expired''. Vì vậy công cụ để VP dựng sơ đồ từ cùng mô hình trong một project mới.
 \lab{Nói}
-Em bấm sinh cơ sở dữ liệu ngay trong Visual Paradigm, từ chính sơ đồ quan hệ thực thể. Rồi em cho công cụ so file vừa sinh với cơ sở dữ liệu cửa hàng đang chạy: giống nhau về bảng, cột, kiểu dữ liệu, khóa chính và ràng buộc duy nhất. Chỉ khác là bộ sinh của VP cho SQLite không viết khóa ngoại và ràng buộc kiểm tra, nên công cụ của em thêm chúng vào từ cùng mô hình.
+Em để Visual Paradigm tự sinh cơ sở dữ liệu từ chính sơ đồ quan hệ thực thể, bằng đúng trình hướng dẫn của nó. File nó viết ra giống cơ sở dữ liệu cửa hàng đang chạy ở mọi bảng, cột, khóa chính và khóa ngoại; chỉ thiếu các ràng buộc kiểm tra giá trị, vì sơ đồ không chứa chúng, nên công cụ của em thêm vào từ cùng mô hình. Lần đầu chạy, VP còn bắt được một lỗi của em: sáu khóa ngoại cùng tên ``is a''. Em đặt lại tên theo quy ước khóa ngoại bảng cột.
 \lab{Nếu lỗi}
-Có dòng \code{DIFFERENCE}: đọc to dòng đó và giải thích; muốn quay lại bằng chứng cũ thì \code{cp ~/Desktop/vp_generated_ddl.bak.sql demo/db/vp_generated_ddl.sql} rồi chạy lại lệnh so. Bản dùng thử không mở được: mở \file{build/schema_comparison.txt} và \file{demo/db/vp_generated_ddl.sql} để thầy xem kết quả lần trước.
+Lệnh báo lỗi hoặc VP không mở: mở hai ảnh trong showcase mục E và file \file{build/schema_comparison.txt} của lần chạy trước. Có dòng \code{DIFFERENCE}: đọc to dòng đó và giải thích.

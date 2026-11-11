@@ -18,7 +18,6 @@ import json
 import re
 import shutil
 import subprocess
-import unicodedata
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -854,172 +853,10 @@ def s_title(d):
     text(s, M, 3.05, 6.7, 1.5, "From requirements to running code.", size=40, color=TEXT, line=0.98)
     text(s, M, 4.6, 6.4, 1.0, "Analysis and design of a painting shop with multimodal search, Gemma 4 and Whisper",
          size=17, color=BODY, line=1.12)
-    members = json.loads((HERE / "members.json").read_text(encoding="utf-8"))
-    group = f" ▪ GROUP {members['group']}" if members.get("group") else ""
-    names = [(f"{m['name']} — {m['id']}" if m.get("id") else m["name"]).upper() for m in members["members"]]
-    lines = [""]
-    for name in names:
-        joined = f"{lines[-1]}   {name}" if lines[-1] else name
-        if lines[-1] and mono_width(joined, 10) > 6.7:
-            lines.append(name)
-        else:
-            lines[-1] = joined
-    mono(s, M, 6.95 - 0.21 * (len(lines) + 1), 6.7, 0.25 * (len(lines) + 1),
-         [f"INFORMATION SYSTEM ANALYSIS AND DESIGN ▪ CLASS {members['class']}{group}"] + lines, size=10, after=4)
-
-
-# ------------------------------------------------------------------ team
-def slug(name):
-    """'Bế Quốc Khánh' -> 'be-quoc-khanh' (photo file name for a member without a student id)."""
-    plain = unicodedata.normalize("NFD", name.replace("Đ", "D").replace("đ", "d"))
-    plain = "".join(c for c in plain if not unicodedata.combining(c))
-    return re.sub(r"[^a-z0-9]+", "-", plain.lower()).strip("-")
-
-
-def member_photo(m):
-    """members.json "photo" (relative to slides/), else slides/members/<id or name slug>.jpg|jpeg|png."""
-    if m.get("photo"):
-        path = HERE / m["photo"]
-        return path if path.exists() else None
-    key = m.get("id") or slug(m["name"])
-    return next((p for ext in ("jpg", "jpeg", "png", "JPG", "PNG")
-                 if (p := HERE / "members" / f"{key}.{ext}").exists()), None)
-
-
-def portrait_pending():
-    """Neutral 4:5 stand-in for a missing photo: a soft silhouette in the theme's panel tones."""
-    base, ink = (hex_rgb(PANEL), hex_rgb(LINE)) if THEME == "light" else ((30, 30, 29), (52, 52, 50))
-    path = CACHE / f"portrait_pending_{THEME}_{PANEL}.png"
-    if not path.exists():
-        CACHE.mkdir(parents=True, exist_ok=True)
-        w, h = 800, 1000
-        img = Image.new("RGB", (w, h), base)
-        draw = ImageDraw.Draw(img)
-        for y in range(h):  # a gentle vertical light falloff, like a studio backdrop
-            t = y / h
-            draw.line((0, y, w, y), fill=tuple(int(b + (i - b) * 0.25 * t) for b, i in zip(base, ink)))
-        draw.ellipse((w * 0.32, h * 0.2, w * 0.68, h * 0.53), fill=ink)
-        draw.rounded_rectangle((w * 0.16, h * 0.6, w * 0.84, h * 1.15), radius=int(w * 0.3), fill=ink)
-        img.save(path, optimize=True)
-    return path
-
-
-def gradient(shape, stops, angle=90):
-    """Linear gradient fill: stops = [(position 0-100, hex)], angle in degrees."""
-    shape.fill.gradient()
-    grad = shape.fill._xPr.find(qn("a:gradFill"))
-    gs_lst = grad.find(qn("a:gsLst"))
-    for gs in list(gs_lst):
-        gs_lst.remove(gs)
-    for pos, hex_ in stops:
-        gs = etree.SubElement(gs_lst, qn("a:gs"), pos=str(int(pos * 1000)))
-        etree.SubElement(gs, qn("a:srgbClr"), val=hex_)
-    lin = grad.find(qn("a:lin"))
-    if lin is None:
-        lin = etree.SubElement(grad, qn("a:lin"))
-    lin.set("ang", str(int(angle * 60000)))
-    lin.set("scaled", "0")
-    return shape
-
-
-def shadow(shape, blur=0.12, dist=0.05, alpha=0.35, direction=90):
-    """Soft outer drop shadow (a:outerShdw) under a shape."""
-    sp_pr = shape._element.spPr
-    eff = etree.SubElement(sp_pr, qn("a:effectLst"))
-    sh = etree.SubElement(eff, qn("a:outerShdw"), blurRad=str(int(Inches(blur))), dist=str(int(Inches(dist))),
-                          dir=str(direction * 60000), algn="t", rotWithShape="0")
-    clr = etree.SubElement(sh, qn("a:srgbClr"), val="000000")
-    etree.SubElement(clr, qn("a:alpha"), val=str(int(alpha * 100000)))
-    return shape
-
-
-def band(slide, x, y, w, h, fill=None, line=None, grad=None, angle=90, name=None):
-    """Square-cornered layer of a frame."""
-    shape = rect(slide, x, y, w, h, fill=fill, line=line, radius=0, name=name)
-    if grad:
-        gradient(shape, grad, angle)
-    return shape
-
-
-# Four frames, each (border around the 4:5 photo in inches, draw function). Every draw function gets the
-# outer box and returns the photo opening.
-def frame_gilded(s, x, y, w, h):
-    """Gilded frame: light outer lip, wide gold gradient moulding, dark bevel, thin bright inner lip."""
-    shadow(band(s, x, y, w, h, fill="8A6A22", name="Frame gilded"), blur=0.16, dist=0.07, alpha=0.4)
-    band(s, x + 0.03, y + 0.03, w - 0.06, h - 0.06, grad=[(0, "F3DE95"), (35, "C9A13B"), (65, "9C7424"),
-                                                          (100, "E2C26A")], angle=45)
-    band(s, x + 0.12, y + 0.12, w - 0.24, h - 0.24, grad=[(0, "A57E2A"), (50, "E7CB78"), (100, "B38A33")],
-         angle=225)
-    band(s, x + 0.24, y + 0.24, w - 0.48, h - 0.48, fill="5E4513")
-    band(s, x + 0.27, y + 0.27, w - 0.54, h - 0.54, fill="EBD48A")
-    return x + 0.29, y + 0.29
-
-
-def frame_gallery(s, x, y, w, h):
-    """Black gallery frame with a wide white mat and a bevelled window."""
-    edge = "3A3A38" if THEME == "dark" else None
-    shadow(band(s, x, y, w, h, fill="141414", line=edge, name="Frame gallery"), blur=0.14, dist=0.06, alpha=0.4)
-    band(s, x + 0.1, y + 0.1, w - 0.2, h - 0.2, fill="F6F3EC")
-    band(s, x + 0.43, y + 0.43, w - 0.86, h - 0.86, fill="E2DDD1")  # bevel cut of the mat
-    return x + 0.46, y + 0.46
-
-
-def frame_oak(s, x, y, w, h):
-    """Thin natural light-oak frame."""
-    shadow(band(s, x, y, w, h, grad=[(0, "D9BC8C"), (50, "C29D68"), (100, "D3B47F")], angle=0,
-                name="Frame oak"), blur=0.12, dist=0.05, alpha=0.35)
-    for k in range(4):  # a few soft grain lines along the top and bottom rails
-        band(s, x + 0.05 + k * 0.37, y + 0.04 + (k % 2) * 0.04, 0.3 + (k % 3) * 0.12, 0.01, fill="B48F5C")
-        band(s, x + 0.2 + k * 0.4, y + h - 0.07 - (k % 2) * 0.03, 0.26 + (k % 2) * 0.15, 0.01, fill="B48F5C")
-    band(s, x + 0.12, y + 0.12, w - 0.24, h - 0.24, fill="8E6A3D")
-    return x + 0.135, y + 0.135
-
-
-def frame_floating(s, x, y, w, h):
-    """Pewter floating frame: the photo floats in a shadowed gap inside the moulding."""
-    shadow(band(s, x, y, w, h, grad=[(0, "E4E5E3"), (45, "9A9C9B"), (100, "CDCECC")], angle=45,
-                name="Frame floating"), blur=0.13, dist=0.06, alpha=0.35)
-    band(s, x + 0.09, y + 0.09, w - 0.18, h - 0.18, fill="6E706F")
-    band(s, x + 0.1, y + 0.1, w - 0.2, h - 0.2, grad=[(0, "1E1E1D"), (100, "3B3B3A")], angle=90)
-    return x + 0.19, y + 0.19
-
-
-FRAMES = [(0.29, frame_gilded), (0.46, frame_gallery), (0.135, frame_oak), (0.19, frame_floating)]
-
-
-def s_team(d):
-    members = json.loads((HERE / "members.json").read_text(encoding="utf-8"))
-    group = members.get("group")
-    s = d.slide("TEAM", NOTES["team"], dark_grid=True)
-    d.title(s, [[(f"Group {group} — the people behind " if group else "The people behind ", {}),
-                 ("Họa.", {})]])
-    pw, ph = 1.92, 2.4                    # every photo is 4:5 at the same size
-    base = 5.3                            # frames hang on one bottom line
-    slot = (W - 2 * M) / 4
-    for i, m in enumerate(members["members"][:4]):
-        border, draw = FRAMES[i % len(FRAMES)]
-        fw, fh = pw + 2 * border, ph + 2 * border
-        cx = M + slot * (i + 0.5)
-        px, py = draw(s, cx - fw / 2, base - fh, fw, fh)
-        photo = member_photo(m)
-        src = cached(photo, 1200, aspect=4 / 5) if photo else portrait_pending()
-        pic = s.shapes.add_picture(str(src), Inches(px), Inches(py), Inches(pw), Inches(ph))
-        pic.name = f"Portrait {m['name']}"
-        pic._element.nvPicPr.cNvPr.set("descr", f"Portrait of {m['name']}" if photo else "Photo pending")
-        if not photo:
-            mono(s, px, py + 0.16, pw, 0.3, "PHOTO PENDING", size=9, align=PP_ALIGN.CENTER,
-                 color="6E6C66" if THEME == "light" else "8C8C88")
-        # Museum wall label, centred under the frame.
-        lw, lh, ly = 2.35, 0.82, base + 0.38
-        label = rect(s, cx - lw / 2, ly, lw, lh, fill=PANEL, line=LINE, radius=0, name=f"Label {m['name']}")
-        shadow(label, blur=0.06, dist=0.02, alpha=0.18)
-        small = " ▪ ".join(v for v in (m.get("id", ""), m.get("role", "")) if v)
-        paras = [[(m["name"], {"bold": True, "color": TEXT})]]
-        if small:
-            paras.append([(small, {"font": MONO, "size": 9.5, "color": MUTED, "tracking": 40})])
-        text(s, cx - lw / 2 + 0.16, ly, lw - 0.32, lh, paras, size=13, anchor=MSO_ANCHOR.MIDDLE, after=2)
-    mono(s, M, 6.75, W - 2 * M, 0.3, f"INFORMATION SYSTEM ANALYSIS AND DESIGN ▪ CLASS {members['class']}"
-         + (f" ▪ GROUP {group}" if group else ""), size=10, align=PP_ALIGN.CENTER)
+    author = AUTHOR
+    mono(s, M, 6.95 - 0.21 * 2, 6.7, 0.25 * 2,
+         [f"INFORMATION SYSTEM ANALYSIS AND DESIGN ▪ CLASS {author['class']}",
+          f"{author['name']} — {author['id']}".upper()], size=10, after=4)
 
 
 def s_agenda(d):
@@ -1216,7 +1053,7 @@ def s_context(d):
     table(s, x, 3.1, [1.75, W - M - x - 1.75], rows, size=12, row_h=0.38, mono_cols=(1,))
     mono(s, x, 5.15, W - M - x, 0.3, "THE BOUNDARY DECIDES", size=10.5, color=ACCENT)
     bullets(s, x, 5.45, W - M - x, 1.5, ["Whisper is inside: the voice never leaves",
-                                         "Gemma is outside: our rules check its answers",
+                                         "Gemma is outside: the shop's rules check its answers",
                                          "Payment is outside: it can say no"], size=12.5, gap=3)
 
 
@@ -1370,7 +1207,7 @@ def s_voice(d):
     limit = re.search(r"within (\d+) seconds?", statement(privacy[0])) if privacy else None
     notes = NOTES["voice"]
     if v:
-        notes += (f" We measured it on {v['n_utterances']} English test sentences: Whisper {v.get('model', '')} on the "
+        notes += (f" I measured it on {v['n_utterances']} English test sentences: Whisper {v.get('model', '')} on the "
                   f"laptop's processor needs {v['mean_seconds']:.2f} seconds on average and at most "
                   f"{v['max_seconds']:.2f} seconds" + (f", well within the {limit.group(1)} seconds of {privacy[0]}"
                                                          if limit else "") +
@@ -1848,7 +1685,9 @@ def s_folder_map(d):
           row_h=0.38)
 
 
-SLIDES = [s_title, s_team, s_agenda, s_product,
+AUTHOR = json.loads((HERE / "author.json").read_text(encoding="utf-8"))
+
+SLIDES = [s_title, s_agenda, s_product,
           s_ch1, s_business, s_chain, s_context,
           s_ch2, s_fr, s_nfr, s_usecase, s_spec, s_activity, s_consistency, s_domain, s_conceptual, s_orm,
           s_ch3, s_pipeline, s_voice, s_image, s_room, s_architecture, s_assistant, s_eval,
@@ -1857,44 +1696,43 @@ SLIDES = [s_title, s_team, s_agenda, s_product,
           s_conclusion, s_qa, s_folder_map]
 
 NOTES = {
-    "title": """Good morning. Our group presents the term essay for Information System Analysis and Design, titled "From requirements to running code". Throughout the talk we use one concrete product, Họa., an online painting shop with multimodal search: customers find a painting by typing, by speaking or by uploading a photo. It has a shopping assistant powered by Gemma 4 and speech recognition by Whisper running on the laptop itself. The talk follows the content of the course, and every concept is illustrated with an example taken from Họa.""",
-    "team": """We are group 10 of class 04. Before the content, here are the four of us, hung like the paintings our shop sells: Bế Quốc Khánh, Vũ Hùng Anh, Nguyễn Gia Đức Trung and Phạm Tuấn Anh. We built Họa. together, from the requirements and the diagrams to the Java demo you will see at the end of the talk.""",
-    "agenda": """The talk has five parts, matching the five chapters of the essay: requirement determination from Lecture 01, analysis from Lectures 02 to 04, AI in e-commerce from Assignment 06, design from Lecture 05, and finally the code with a live demo. The line at the bottom is the thread our lecturer draws in Lecture 01: from a business problem to a stakeholder need, a requirement, a use case, behaviour, a domain model, a design and finally code. Each part of the talk is one link of that chain.""",
-    "product": """Họa. sells prints of public-domain masterpieces, with images from Wikimedia Commons, together with frames, priced in US dollars. Besides the usual e-commerce functions — cart, checkout, order tracking and cancellation — the shop has five AI features that we present in Chapter 3. The numbers at the bottom, requirements, use cases, Java classes and tables, are read directly from the shared specification file of the project, so they always match the report and the code.""",
+    "title": """Good morning. I present my term essay for Information System Analysis and Design, titled "From requirements to running code". Throughout the talk I use one concrete product, Họa., an online painting shop with multimodal search: customers find a painting by typing, by speaking or by uploading a photo. It has a shopping assistant powered by Gemma 4 and speech recognition by Whisper running on the laptop itself. The talk follows the content of the course, and every concept is illustrated with an example taken from Họa.""",
+    "agenda": """The talk has five parts, matching the five chapters of the essay: requirement determination from Lecture 01, analysis from Lectures 02 to 04, AI in e-commerce from Assignment 06, design from Lecture 05, and finally the code with a live demo. The line at the bottom is the thread the lecturer draws in Lecture 01: from a business problem to a stakeholder need, a requirement, a use case, behaviour, a domain model, a design and finally code. Each part of the talk is one link of that chain.""",
+    "product": """Họa. sells prints of public-domain masterpieces, with images from Wikimedia Commons, together with frames, priced in US dollars. Besides the usual e-commerce functions — cart, checkout, order tracking and cancellation — the shop has five AI features that I present in Chapter 3. The numbers at the bottom, requirements, use cases, Java classes and tables, are read directly from the shared specification file of the project, so they always match the report and the code.""",
     "ch1": """Chapter 1 follows Lecture 01: understand the business first — its people, processes, information and problems — trace each problem to its root cause, and fix the boundary of the system in a context diagram. The requirements themselves are written in Chapter 2.""",
     "business": """Lecture 01 stresses that an information system is not just software: it is people, processes, data and technology. For Họa., the people are customers, the administrator, the warehouse and support staff; the main process is search, cart, checkout, delivery and cancellation. The table is the stakeholder analysis in the lecture's format: the goal of each stakeholder and the information they need. Who is inside the system and who is outside is drawn in the context diagram at the start of Chapter 2.""",
-    "context": """Analysis starts from the boundary. The context diagram shows Họa. Gallery as one box and the four external entities that exchange information with it: the customer, the administrator, the payment service and the Gemma 4 service. Each arrow is a flow labelled with what it carries; Visual Paradigm Community Edition has no data-flow diagram, so the flows are «flow» dependencies. We read every flow twice: what comes in must be received by a use case and kept by a concept of the domain model; what goes out must be produced by a use case. The table on the right gives the use cases of each entity. The boundary also decides three things: Whisper runs on the shop's own machine, so the customer's voice never leaves the system; Gemma is outside, so prices, stock and access rights are always decided by our own rules, with a keyword fallback; and the payment service is outside, so it can refuse a card, which is the alternative flow "card refused" of checkout.""",
-    "chain": """This is the central chain of Lectures 01 and 02. The business problem: customers like a painting but do not know its title or artist. The root cause: the old search only matches exact keywords. The stakeholder need: find a painting from a natural sentence, the voice or a photo. Only then do we write the system requirement FR03, in the pattern "the system shall plus action plus object plus condition", and the use case UC04 Search by Image. Note that "use Gemma" is a solution, not a requirement: a need is not an implementation.""",
+    "context": """Analysis starts from the boundary. The context diagram shows Họa. Gallery as one box and the four external entities that exchange information with it: the customer, the administrator, the payment service and the Gemma 4 service. Each arrow is a flow labelled with what it carries; Visual Paradigm Community Edition has no data-flow diagram, so the flows are «flow» dependencies. I read every flow twice: what comes in must be received by a use case and kept by a concept of the domain model; what goes out must be produced by a use case. The table on the right gives the use cases of each entity. The boundary also decides three things: Whisper runs on the shop's own machine, so the customer's voice never leaves the system; Gemma is outside, so prices, stock and access rights are always decided by the shop's own rules, with a keyword fallback; and the payment service is outside, so it can refuse a card, which is the alternative flow "card refused" of checkout.""",
+    "chain": """This is the central chain of Lectures 01 and 02. The business problem: customers like a painting but do not know its title or artist. The root cause: the old search only matches exact keywords. The stakeholder need: find a painting from a natural sentence, the voice or a photo. Only then do I write the system requirement FR03, in the pattern "the system shall plus action plus object plus condition", and the use case UC04 Search by Image. Note that "use Gemma" is a solution, not a requirement: a need is not an implementation.""",
     "fr": """Here is the table of functional requirements in the format of Lecture 02: an identifier, a short description, a MoSCoW priority and the related use case. The Must requirements are the core of the shop: searching, viewing details, the cart, checkout, viewing and looking up orders, and administration. The advanced AI features, such as voice and image search or the assistant, are Should; trying a painting in your room and multimodal search are Could. Real payments are Won't for this release: the payment service is only simulated.""",
     "nfr": """Lecture 02 warns about requirements like "the system shall be fast": they cannot be verified. Every non-functional requirement of Họa. has a measurable condition: text search within two seconds on the demo data, images of at most five megabytes in three formats, audio processed only on the laptop, order ownership checked on the server. Each of these requirements can therefore become a test case.""",
     "usecase": """The use case diagram shows all use cases and four actors. Customer and Administrator are primary actors; the Gemma 4 Service and the Payment Service are supporting actors that the system calls. Two points from Lecture 02: a stakeholder is not an actor — the warehouse or support staff have a stake but do not interact directly; and a use case is a goal, not a button — "Search Product", not "click search". The three search modes specialise Search Product, exactly as in the structure of Assignment 06. The last line is a trace from a requirement to a method and its test.""",
     "ch2": """Chapter 2 starts from the needs of Chapter 1. Lecture 02 turns them into functional and non-functional requirements, actors and use cases. Then Lecture 03 asks how the system behaves when an actor performs a use case: scenarios, alternative flows and activity diagrams. Lecture 04, which is Assignment 03, asks which concepts the system must manage: the domain model; and the data model, at its conceptual and logical levels, says which of them must be stored.""",
-    "spec": """This is the Checkout use case specified with the template of Lecture 03: primary and supporting actors, goal, trigger, pre- and postconditions. The main flow has five steps. Our lecturer insists that the normal flow is not enough, so we also list alternative flows: a painting out of stock, an address that does not belong to the customer, a rejected payment. Each alternative flow later becomes a decision in the activity diagram and a check in the code.""",
-    "activity": """From the scenario we draw an activity diagram with swimlanes: the customer, the Họa. system and the database. Every decision node comes from a business rule: no stock means no order, the address must belong to the customer, and an order can only be cancelled before shipment. On the right are the four questions of functional analysis from Lecture 03. The trace FR07, UC07, scenario, activity answers the question "where is this requirement represented in our model?" """,
-    "consistency": """Lecture 03 has an example of a consistency check for the requirement "a customer may cancel an order before shipment". We did exactly that exercise for Họa.: requirement FR11, the Cancel Order use case extending View Order, the decision "has the order been shipped", a state machine that allows cancellation only from PLACED or PROCESSING, and a design where cancelOrder calls Order.cancel. On the operations side, the administrator moves the order to SHIPPED, and from then on the customer can no longer cancel. The screenshot shows the cancellation in the demo.""",
+    "spec": """This is the Checkout use case specified with the template of Lecture 03: primary and supporting actors, goal, trigger, pre- and postconditions. The main flow has five steps. The lecturer insists that the normal flow is not enough, so I also list alternative flows: a painting out of stock, an address that does not belong to the customer, a rejected payment. Each alternative flow later becomes a decision in the activity diagram and a check in the code.""",
+    "activity": """From the scenario I draw an activity diagram with swimlanes: the customer, the Họa. system and the database. Every decision node comes from a business rule: no stock means no order, the address must belong to the customer, and an order can only be cancelled before shipment. On the right are the four questions of functional analysis from Lecture 03. The trace FR07, UC07, scenario, activity answers the question "where is this requirement represented in the model?" """,
+    "consistency": """Lecture 03 has an example of a consistency check for the requirement "a customer may cancel an order before shipment". I did exactly that exercise for Họa.: requirement FR11, the Cancel Order use case extending View Order, the decision "has the order been shipped", a state machine that allows cancellation only from PLACED or PROCESSING, and a design where cancelOrder calls Order.cancel. On the operations side, the administrator moves the order to SHIPPED, and from then on the customer can no longer cancel. The screenshot shows the cancellation in the demo.""",
     "domain": """This is the core of Lecture 04. On the left is the domain model drawn as the analysis class diagram: the classes of Họa. — customers, paintings, artists, carts, orders, shipping and payments — each with its attributes. Each line shows only the kind of relationship: a plain association, a composition with a filled diamond, an aggregation with a hollow diamond, a generalization with a hollow triangle, and the «create» dependency of checkout. Names and multiplicities are added one step later, in the data model. The lecture stresses that CartItem is not OrderItem: one holds temporary shopping information with the price when the item was added; the other holds persistent transaction information with the price frozen at checkout. Checkout transforms a Cart into an Order, which is why it is a «create» dependency rather than a permanent association.""",
     "ch3": """Chapter 3 covers AI in e-commerce. Họa. has five AI features: understanding natural text, voice search with Whisper running on the laptop, image search, trying a painting in your own room, and a curator assistant. The common principle: AI helps customers express what they want, while prices, stock and access rights stay under the control of business rules in the code.""",
     "pipeline": """The central principle of Assignment 06: different inputs are turned into one common representation, then candidates are retrieved, then ranked. Họa. has four inputs — text, voice, a photo of a painting and a photo of a room — and each one goes through exactly the classes and methods written in its box. They all meet in CommonQuery. SearchService retrieves candidates from ProductRepository and VectorIndex, and RankingService ranks them with the formula of the assignment. The four principles at the bottom also come from A06: one common representation, retrieval separate from ranking, the UI never touching the database, and starting simple.""",
-    "voice": """Voice search. The sequence diagram on the left has exactly the seven participants required by Assignment 06. In Họa., the recording is sent to a self-hosted Whisper model running on the laptop, so the audio never leaves the machine — that is a privacy requirement. The transcript is shown so the customer can correct it, and then it follows the same path as a typed query. If the Whisper server is not running, the system asks the customer to type instead. We deliberately do not implement text-to-speech.""",
+    "voice": """Voice search. The sequence diagram on the left has exactly the seven participants required by Assignment 06. In Họa., the recording is sent to a self-hosted Whisper model running on the laptop, so the audio never leaves the machine — that is a privacy requirement. The transcript is shown so the customer can correct it, and then it follows the same path as a typed query. If the Whisper server is not running, the system asks the customer to type instead. I deliberately do not implement text-to-speech.""",
     "image": """Image search in three plain steps. One, describe: Gemma 4 looks at the photo and describes it with three tags, the style, the subject and the main colour. Two, match: every painting in the shop carries the same three tags, so the system counts how many tags a painting shares with the photo; the more they share, the more alike they are. In the code this comparison is the cosine similarity of Assignment 06, but you can think of it as counting shared tags. Three, rank: RankingService puts the candidates in order. Text match counts 45 percent, photo match 45 percent and being in stock 10 percent, as set in the configuration file, and the best total comes first. For example, a photo of The Great Wave is described as ukiyo-e, seascape, blue, and the painting with exactly those three tags comes first. If Gemma is not available, the photo's average colour is used instead, and the result is much weaker. The sequence diagram on the right shows the order of calls from ImageUpload to RankingService.""",
     "room": """"Try it in your room" is use case UC14. The customer uploads a photo of their room, and Gemma 4 first reads it: the colours, the interior style, the mood and the light. SearchService.searchRoom then follows the two steps of Assignment 06. Retrieval: VectorIndex shortlists the twelve paintings closest to the suggested style, subject and colour by cosine similarity. Ranking: Gemma 4 sees the photo again with the shortlist, picks the three to five paintings that fit best and writes one sentence for each explaining why it fits, for example that its warm browns echo the wooden floor and the brick wall. If Gemma is unavailable, the vector ranking stays and the sentence is built from the painting's attributes. RoomPreview then hangs the chosen painting on the wall in the photo, so the customer can see how it would look. This requirement is a Could: it adds value to the experience but is not part of the core buying process.""",
-    "architecture": """Architecturally, every use of AI goes through an interface: LlmClient for Gemma and SpeechClient for Whisper. This lets us swap the model, or use a fake one in tests. The table on the right lists how Họa. reacts when AI fails: if Gemma fails or takes more than {timeout} seconds, search falls back to keyword rules; if Whisper is down, the customer types; images of the wrong type or size are rejected before Gemma is called; AI only builds filters and never decides prices or stock; order access is always checked on the server.""",
+    "architecture": """Architecturally, every use of AI goes through an interface: LlmClient for Gemma and SpeechClient for Whisper. This makes it possible to swap the model, or use a fake one in tests. The table on the right lists how Họa. reacts when AI fails: if Gemma fails or takes more than {timeout} seconds, search falls back to keyword rules; if Whisper is down, the customer types; images of the wrong type or size are rejected before Gemma is called; AI only builds filters and never decides prices or stock; order access is always checked on the server.""",
     "assistant": """The curator assistant uses Gemma 4 tool calling. AssistantService sends the question together with the list of tools — search paintings and look up orders. Gemma chooses a tool and its arguments; runTool executes it with the customer id taken from the session, not from the question, so a customer can never retrieve someone else's order. The result goes back to Gemma, which writes the answer. Customers can ask by text or by voice through Whisper; the assistant answers in text.""",
-    "eval": """Assignment 06 asks for an evaluation on a small set of queries: the number of queries, the number of successes, the rate and examples of failures. We ran the demo twice on the same sets: once with Gemma 4 online and once with Gemma switched off, so the offline keyword rules answer alone. The chart shows the result honestly. On text queries Gemma and the rules tie: 93 percent on direct requests and 67 percent on paraphrased ones, so on this small catalogue Gemma does not beat the rules. The clear gain is image search: 75 percent with Gemma against 12 percent with the local colour reader. The voice pipeline reaches 83 percent with a word error rate of about 4 percent, and the assistant answers all seven questions correctly without leaking any other customer's data. These are one run on small sets, and Gemma's results vary a little between runs, so we read them as indications, not proof. The table on the right lists the demo queries of Họa. next to the example queries of the assignment.""",
-    "ch4": """Chapter 4 is the design, following Lecture 05 and the outline 4.1 to 4.6 given by our lecturer. Analysis says what the system needs; design says how the software realises it: design classes, the database, layers and packages, and finally the code.""",
-    "transform": """This transformation table follows slide 22 of Lecture 05. The analysis classes Cart, CartItem, Order and OrderItem become domain classes with behaviour; checkout of a Cart at analysis level becomes CheckoutService.checkout at design level; the business interaction becomes a controller plus a service; the need to persist data becomes repositories. Besides the cartId of the lecture, our method also receives the customer id from the session to check ownership, the address and the payment method. On the right is the design class diagram with types, methods and navigability.""",
+    "eval": """Assignment 06 asks for an evaluation on a small set of queries: the number of queries, the number of successes, the rate and examples of failures. I ran the demo twice on the same sets: once with Gemma 4 online and once with Gemma switched off, so the offline keyword rules answer alone. The chart shows the result honestly. On text queries Gemma and the rules tie: 93 percent on direct requests and 67 percent on paraphrased ones, so on this small catalogue Gemma does not beat the rules. The clear gain is image search: 75 percent with Gemma against 12 percent with the local colour reader. The voice pipeline reaches 83 percent with a word error rate of about 4 percent, and the assistant answers all seven questions correctly without leaking any other customer's data. These are one run on small sets, and Gemma's results vary a little between runs, so I read them as indications, not proof. The table on the right lists the demo queries of Họa. next to the example queries of the assignment.""",
+    "ch4": """Chapter 4 is the design, following Lecture 05 and the outline 4.1 to 4.6 given by the lecturer. Analysis says what the system needs; design says how the software realises it: design classes, the database, layers and packages, and finally the code.""",
+    "transform": """This transformation table follows slide 22 of Lecture 05. The analysis classes Cart, CartItem, Order and OrderItem become domain classes with behaviour; checkout of a Cart at analysis level becomes CheckoutService.checkout at design level; the business interaction becomes a controller plus a service; the need to persist data becomes repositories. Besides the cartId of the lecture, my method also receives the customer id from the session to check ownership, the address and the payment method. On the right is the design class diagram with types, methods and navigability.""",
     "conceptual": """The data model is drawn at three levels; the first two belong to the analysis, and this is the first one, the conceptual data model. It is deliberately rough: the seventeen things the shop must keep, by name only, and the links between them, each with a name that reads as a sentence — a customer owns a cart, places orders, an order contains order items. There are no attributes, no multiplicities, no keys and no data types yet, and the «create» dependency of checkout is gone, because it is an operation, not something to store. The logical level adds the detail on the next slide; the physical level, with tables, keys and data types, is a design decision and comes in Chapter 4.""",
-    "orm": """The second level is the logical data model, drawn as a class diagram with the things our lecturer asks for. It adds the attributes. First, every class is marked «ORM-Persistable»: its objects are stored as records. Second, every association has a label, its name: a customer owns a cart and places orders, an order is paid by payments, an artist paints paintings. Third, every association has its multiplicities at both ends — one, zero or one, zero or many, one or many — which later decide where the foreign keys go. Because tables have no inheritance, each generalization becomes an "is a" association with multiplicity one to zero-or-one; and the «create» dependency of checkout is dropped, because it is an operation, not data. The next slide turns these classes into tables.""",
+    "orm": """The second level is the logical data model, drawn as a class diagram with the things the lecturer asks for. It adds the attributes. First, every class is marked «ORM-Persistable»: its objects are stored as records. Second, every association has a label, its name: a customer owns a cart and places orders, an order is paid by payments, an artist paints paintings. Third, every association has its multiplicities at both ends — one, zero or one, zero or many, one or many — which later decide where the foreign keys go. Because tables have no inheritance, each generalization becomes an "is a" association with multiplicity one to zero-or-one; and the «create» dependency of checkout is dropped, because it is an operation, not data. The next slide turns these classes into tables.""",
     "db": """Section 4.2: the third level of the data model, the physical data model, is a design decision. The diagram on the left shows the tables with their columns, SQL data types, primary keys, foreign keys and unique constraints. The main mapping rules: inheritance becomes a subclass table whose primary key is also a foreign key; a one-to-many association puts the foreign key on the many side; a one-to-zero-or-one association adds a unique constraint; composition, such as cart lines and order lines, uses a composite primary key and cascading deletes; money is numeric with two decimals and states are checked against their allowed values. The next slide draws the database itself.""",
-    "erd": """Still in Section 4.2: from the physical data model we draw the database as an entity relationship diagram in Visual Paradigm — the orange tables. It follows the physical model table by table, on the same grid. Every table lists all its columns with their types; the key icon marks the primary key, a key with a link marks a foreign key, N marks a column that may be empty and U a unique column. Each foreign key is a relationship with its name and crow's-foot ends: one, zero or one, zero or many, one or many. The screenshot on the right is the real SQLite database of the demo, generated from the same model — the "copy screen of DB" our lecturer asked for.""",
+    "erd": """Still in Section 4.2: from the physical data model I draw the database as an entity relationship diagram in Visual Paradigm — the orange tables. It follows the physical model table by table, on the same grid. Every table lists all its columns with their types; the key icon marks the primary key, a key with a link marks a foreign key, N marks a column that may be empty and U a unique column. Each foreign key is a relationship with its name and crow's-foot ends: one, zero or one, zero or many, one or many. The screenshot on the right is the real SQLite database of the demo, generated from the same model — the "copy screen of DB" the lecturer asked for.""",
     "layers": """Section 4.4: Họa. uses the three-layer architecture of Assignment 06 — presentation, application and data — and each layer is drawn with its classes inside. Inside the presentation layer a view calls the controller of its feature and the web server asks the session who the customer is; inside the application layer the search service coordinates the query, image and ranking services; inside the data layer each SQLite repository implements its interface and uses the database, and the Gemma and Whisper clients implement the AI interfaces. Between layers the arrows only go down: controllers call services, services call repositories and AI interfaces. The domain classes are not a layer: they are the model shared by all three layers. The UI never touches the database, and services depend only on interfaces, so the database or the AI can be replaced.""",
     "checkout_seq": """This is the checkout sequence across the layers — the central example of Lecture 05. The controller receives the request and CheckoutService coordinates: it reads the cart, checks stock, creates the Order and its OrderItems, saves the order, reduces stock and empties the cart. Business rules such as adding a cart line or computing the total live in the domain classes Cart and Order rather than in the service, which avoids the "God class" the lecture warns about.""",
     "ch5": """Chapter 5 is the code. The goal is not only that it runs, but that it matches the model name for name: classes, methods, parameters, tables and columns in the code are identical to the specification.""",
     "mapping": """This table maps the sample code of the course slides to the code of Họa. The Python code of Assignment 06 — all_products, text_query, transcribe, search_text, cosine_similarity, find_order — keeps its names following Java conventions, and so does CheckoutService.checkout from Lecture 05. The package column shows the layer of each class. The last line is the technology mapping of Lecture 05: a controller is a Java HTTP handler, a repository is JDBC on SQLite.""",
-    "code": """On the left is a representative excerpt of the real code. On the right are the four ways we verify consistency: the check_code_model tool compares class, method, parameter, table and column names between the code and the specification, and reports that everything matches; sixty-one automated tests pass; the evaluation required by Assignment 06 gives the success rates you saw; and the SQLite schema is generated from the same specification. This is how the report, the diagrams and the code stay aligned.""",
-    "demo": """This is the script of the live demo. We search by text, by voice, by image and try a painting in a room; add a painting and a frame to the cart and check out; ask the assistant about orders; cancel an order; sign in as another customer to show that their order is refused; open the administration page to change price, stock and order status; and finally switch Gemma off to show that search still works. The diagram on the right is the deployment: everything runs on the laptop except Gemma 4, which runs on the L40S server.""",
-    "conclusion": """To conclude, we kept one continuous trace: from requirement FR03 and use case UC04, through the activity and sequence diagrams, to the methods in the code, the database table and the test and evaluation results. The main lessons: understand the problem before choosing technology; analysis says what and design says how; AI is a component behind an interface with a fallback; and one shared specification keeps every artefact consistent. Limitations: payments are simulated and the evaluation set is still small.""",
-    "qa": """Thank you for listening. We are happy to answer your questions.""",
+    "code": """On the left is a representative excerpt of the real code. On the right are the four ways I verify consistency: the check_code_model tool compares class, method, parameter, table and column names between the code and the specification, and reports that everything matches; sixty-one automated tests pass; the evaluation required by Assignment 06 gives the success rates you saw; and the SQLite schema is generated from the same specification. This is how the report, the diagrams and the code stay aligned.""",
+    "demo": """This is the script of the live demo. I search by text, by voice, by image and try a painting in a room; add a painting and a frame to the cart and check out; ask the assistant about orders; cancel an order; sign in as another customer to show that their order is refused; open the administration page to change price, stock and order status; and finally switch Gemma off to show that search still works. The diagram on the right is the deployment: everything runs on the laptop except Gemma 4, which runs on the L40S server.""",
+    "conclusion": """To conclude, I kept one continuous trace: from requirement FR03 and use case UC04, through the activity and sequence diagrams, to the methods in the code, the database table and the test and evaluation results. The main lessons: understand the problem before choosing technology; analysis says what and design says how; AI is a component behind an interface with a fallback; and one shared specification keeps every artefact consistent. Limitations: payments are simulated and the evaluation set is still small.""",
+    "qa": """Thank you for listening. I am happy to answer your questions.""",
     "folders": """Backup slide, for questions about where an artefact lives: each row is a folder of tieuluan, what it contains and the chapter that uses it. The last column shows whether the folder existed when the deck was built.""",
 }
 
@@ -1978,7 +1816,7 @@ def main():
     props = deck.prs.core_properties
     props.title = "Họa. — From requirements to running code"
     props.subject = "Term essay presentation, Information System Analysis and Design"
-    props.author = "Họa. group — Class 04"
+    props.author = f"{AUTHOR['name']} ({AUTHOR['id']}) — Class {AUTHOR['class']}"
     out = Path(args.out)
     deck.prs.save(out)
     print(f"Saved {out.relative_to(ROOT) if out.is_relative_to(ROOT) else out}: {len(SLIDES)} slides")

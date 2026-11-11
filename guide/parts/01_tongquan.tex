@@ -2,11 +2,11 @@
 {\color{accent}\fontsize{30}{34}\selectfont\bfseries Họa.}\\[3pt]
 {\LARGE\bfseries Hướng dẫn thuyết trình}\\[3pt]
 {\large Từ yêu cầu đến code chạy được: phân tích và thiết kế một cửa hàng tranh có AI}\\[7pt]
-{\small Môn Phân tích và thiết kế hệ thống thông tin · Lớp 04 · Nhóm 10}
+{\small Môn Phân tích và thiết kế hệ thống thông tin · Lớp 04 · Vũ Hùng Anh (B23DCDT022)}
 \end{center}
 
 \begin{note}{Tài liệu này dành cho ai?}
-Dành cho \key{bốn bạn đứng thuyết trình}: nói gì ở từng slide, thao tác demo ra sao, trả lời thế nào khi thầy hỏi, và xử lý thế nào khi máy hoặc mạng trục trặc. Slide viết bằng tiếng Anh theo slide của môn học (\factSlides{} slide, có bản nền sáng và bản nền tối); lời nói thì bằng tiếng Việt, và tài liệu này viết sẵn.
+Dành cho \key{người thuyết trình} của bài cá nhân này, tức là em: nói gì ở từng slide, thao tác demo ra sao, trả lời thế nào khi thầy hỏi, và xử lý thế nào khi máy hoặc mạng trục trặc. Slide viết bằng tiếng Anh theo slide của môn học (\factSlides{} slide, có bản nền sáng và bản nền tối); lời nói thì bằng tiếng Việt, và tài liệu này viết sẵn.
 \textbf{Cách nói được chọn: kể chuyện, dùng lời thường, ví dụ dễ hình dung, số tròn.} Tên kỹ thuật (tên lớp, tên hàm\ldots) không đọc lên mà để ở phần ``Nhớ thêm'', chỉ dùng khi thầy hỏi.
 \end{note}
 
@@ -23,31 +23,31 @@ Dành cho \key{bốn bạn đứng thuyết trình}: nói gì ở từng slide, 
 \subsection{Ba điều để người nghe nhớ}
 Nếu thầy cô chỉ nhớ được ba điều sau buổi thuyết trình, thì đó là:
 \begin{enumerate}[leftmargin=1.6em]
-\item \key{Mọi thứ khớp nhau, từ ý tưởng đến code.} Từ vấn đề của khách, qua yêu cầu, bản vẽ, thiết kế, đến code, tên gọi ở đâu cũng giống nhau. Nhóm còn có một công cụ tự kiểm tra: \factCheckOps{} việc và \factCheckColumns{} cột dữ liệu đều khớp với thiết kế, và \factTests{} bài kiểm thử đều đạt.
+\item \key{Mọi thứ khớp nhau, từ ý tưởng đến code.} Từ vấn đề của khách, qua yêu cầu, bản vẽ, thiết kế, đến code, tên gọi ở đâu cũng giống nhau. Bài còn có một công cụ tự kiểm tra: \factCheckOps{} việc và \factCheckColumns{} cột dữ liệu đều khớp với thiết kế, và \factTests{} bài kiểm thử đều đạt.
 \item \key{AI giúp khách, nhưng không nắm quyền.} Gemma và Whisper giúp hiểu khách; còn giá, số hàng và quyền xem đơn do luật của cửa hàng quyết định. Tắt AI thì cửa hàng vẫn bán được.
-\item \key{Nói thật về kết quả.} Gemma hơn rõ ở tìm bằng ảnh (\evImageGemma{} so với \evImageLocal{}), nhưng ở tìm bằng chữ thì ngang với luật đơn giản. Những điều chưa làm được, nhóm nói thẳng (mục~\ref{sec:hanche}).
+\item \key{Nói thật về kết quả.} Gemma hơn rõ ở tìm bằng ảnh (\evImageGemma{} so với \evImageLocal{}), nhưng ở tìm bằng chữ thì ngang với luật đơn giản. Những điều chưa làm được thì nói thẳng (mục~\ref{sec:hanche}).
 \end{enumerate}
 
 \subsection{Cấu trúc bài nói và thời gian}
 Thời gian dưới đây ước tính từ độ dài \key{lời nói} ở mục~\ref{sec:slides} (khoảng \wpm{} từ mỗi phút, tức tốc độ nói vừa phải; toàn bộ lời nói dài khoảng \scriptWords{} từ), \key{chưa tính demo trực tiếp}.
 \begin{center}\small
-\begin{tabular}{@{}P{3.2cm}P{1.5cm}P{5.7cm}P{2.2cm}P{2.2cm}@{}}
+\begin{tabular}{@{}P{3.4cm}P{1.6cm}P{8.1cm}P{2.2cm}@{}}
 \toprule
-\textbf{Phần} & \textbf{Slide} & \textbf{Nội dung} & \textbf{Thời gian} & \textbf{Người nói}\\
+\textbf{Phần} & \textbf{Slide} & \textbf{Nội dung} & \textbf{Thời gian}\\
 \midrule
-Mở đầu & \slideinfo{chapterSlides}{0} & Chào, giới thiệu nhóm, sơ đồ bài nói, sản phẩm & \slideinfo{chapterTime}{0} & Người 1\\
-Chương 1 -- Yêu cầu & \slideinfo{chapterSlides}{1} & HTTTCN là gì, bên liên quan, vấn đề $\to$ nguyên nhân, sơ đồ ngữ cảnh & \slideinfo{chapterTime}{1} & Người 1\\
-Chương 2 -- Phân tích & \slideinfo{chapterSlides}{2} & \factFR{} FR, \factNFR{} NFR, use case, đặc tả, activity, nhất quán, mô hình miền, mô hình dữ liệu & \slideinfo{chapterTime}{2} & Người 1\\
-Chương 3 -- AI & \slideinfo{chapterSlides}{3} & Text, voice, ảnh, phòng, trợ lý; kiến trúc; đánh giá & \slideinfo{chapterTime}{3} & Người 2\\
-Chương 4 -- Thiết kế & \slideinfo{chapterSlides}{4} & Lớp phân tích $\to$ lớp thiết kế, CSDL (ERD), 3 tầng, sequence checkout & \slideinfo{chapterTime}{4} & Người 3\\
-Chương 5 -- Code & \slideinfo{chapterSlides}{5} & Ánh xạ code bài giảng, kiểm chứng, kịch bản demo & \slideinfo{chapterTime}{5} & Người 4\\
-Kết luận, Q\&A & \slideinfo{chapterSlides}{6} & Dấu vết liền mạch, bài học, hạn chế & \slideinfo{chapterTime}{6} & Người 4\\
+Mở đầu & \slideinfo{chapterSlides}{0} & Chào, sơ đồ bài nói, sản phẩm & \slideinfo{chapterTime}{0}\\
+Chương 1 -- Yêu cầu & \slideinfo{chapterSlides}{1} & HTTTCN là gì, bên liên quan, vấn đề $\to$ nguyên nhân, sơ đồ ngữ cảnh & \slideinfo{chapterTime}{1}\\
+Chương 2 -- Phân tích & \slideinfo{chapterSlides}{2} & \factFR{} FR, \factNFR{} NFR, use case, đặc tả, activity, nhất quán, mô hình miền, mô hình dữ liệu & \slideinfo{chapterTime}{2}\\
+Chương 3 -- AI & \slideinfo{chapterSlides}{3} & Text, voice, ảnh, phòng, trợ lý; kiến trúc; đánh giá & \slideinfo{chapterTime}{3}\\
+Chương 4 -- Thiết kế & \slideinfo{chapterSlides}{4} & Lớp phân tích $\to$ lớp thiết kế, CSDL (ERD), 3 tầng, sequence checkout & \slideinfo{chapterTime}{4}\\
+Chương 5 -- Code & \slideinfo{chapterSlides}{5} & Ánh xạ code bài giảng, kiểm chứng, kịch bản demo & \slideinfo{chapterTime}{5}\\
+Kết luận, Q\&A & \slideinfo{chapterSlides}{6} & Dấu vết liền mạch, bài học, hạn chế & \slideinfo{chapterTime}{6}\\
 \bottomrule
 \end{tabular}
 \end{center}
 
 \subsection{Một câu cho mỗi phần}
-Mỗi bạn nhớ \key{một câu} cho phần của mình; nếu quên hết, chỉ cần nói câu này rồi kể tiếp.
+Nhớ \key{một câu} cho mỗi phần; nếu quên hết, chỉ cần nói câu này rồi kể tiếp.
 \begin{center}\small
 \begin{tabular}{@{}P{3.4cm}P{12.4cm}@{}}
 \toprule
@@ -59,7 +59,7 @@ Chương 2 & Viết yêu cầu, rồi vẽ: ai làm gì, theo thứ tự nào, c
 Chương 3 & AI giúp khách tìm tranh bằng chữ, giọng nói và ảnh; AI hỏng thì cửa hàng vẫn chạy.\\
 Chương 4 & Biến bản vẽ thành thiết kế: khối code, bảng dữ liệu, ba tầng.\\
 Chương 5 & Code khớp bản thiết kế từng cái tên, và chạy thật ngay bây giờ.\\
-Kết luận & Một bản đặc tả chung giữ cho mọi thứ khớp nhau, và nhóm nói thật những điều chưa làm được.\\
+Kết luận & Một bản đặc tả chung giữ cho mọi thứ khớp nhau, và em nói thật những điều chưa làm được.\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -71,27 +71,14 @@ Kết luận & Một bản đặc tả chung giữ cho mọi thứ khớp nhau, 
 \item Hỏi giảng viên hoặc lớp trưởng \key{thời lượng thật} của buổi thi. Nếu dưới 15 phút, dùng phương án rút gọn.
 \end{itemize}
 
-\subsection{Phân công bốn người}
-Nhóm 10 có bốn thành viên (Bế Quốc Khánh, Vũ Hùng Anh, Nguyễn Gia Đức Trung, Phạm Tuấn Anh) và chia theo chương như sau.
-Phần mở đầu và kết luận chưa có ai nhận, nên tạm xếp mở đầu cho Người 1 (người nói đầu tiên) và kết luận cho Người 4 (người nói cuối); đổi nếu nhóm thấy hợp hơn.
-\begin{center}\small
-\begin{tabular}{@{}P{1.7cm}P{4.6cm}P{1.5cm}P{1.9cm}P{1.9cm}P{2.3cm}@{}}
-\toprule
-\textbf{Người} & \textbf{Phần nói} & \textbf{Slide} & \textbf{Đầy đủ} & \textbf{Rút gọn} & \textbf{Tên}\\
-\midrule
-Người 1 & Mở đầu, Chương 1, Chương 2 & \slideinfo{speakerSlides}{1} & \slideinfo{speakerFull}{1} & \slideinfo{speakerShort}{1} & \todo{điền tên}\\
-Người 2 & Chương 3 (AI) & \slideinfo{speakerSlides}{2} & \slideinfo{speakerFull}{2} & \slideinfo{speakerShort}{2} & \todo{điền tên}\\
-Người 3 & Chương 4 (Thiết kế); thao tác demo & \slideinfo{speakerSlides}{3} & \slideinfo{speakerFull}{3} & \slideinfo{speakerShort}{3} & \todo{điền tên}\\
-Người 4 & Chương 5 (Code), dẫn demo, kết luận, hỏi đáp & \slideinfo{speakerSlides}{4} & \slideinfo{speakerFull}{4} & \slideinfo{speakerShort}{4} & \todo{điền tên}\\
-\bottomrule
-\end{tabular}
-\end{center}
-Thời gian ở bảng chưa tính demo (khoảng 6--8 phút, do Người 4 dẫn).
+\subsection{Một mình vừa nói vừa demo}
+Đây là bài cá nhân: em nói cả năm chương, tự thao tác demo và tự trả lời mọi câu hỏi.
 \begin{itemize}
-\item \key{Một người nói, một người thao tác demo.} Người 4 dẫn demo, còn \key{Người 3 gõ và bấm} (ngay trước demo Người 3 đã nói xong phần của mình); Người 2 ngồi cạnh, sẵn sàng xử lý sự cố (mục~\ref{sec:suco}).
-\item \key{Trao lời giữa các bạn:} cuối mỗi phần có sẵn một câu mời bạn kế tiếp (chỗ \todo{tên}), và đầu phần sau có câu mở đầu tương ứng. Hãy điền tên thật và tập nói cả hai câu.
-\item Mỗi người phải trả lời được các câu hỏi của \key{phần mình}: Người 1 mục~\ref{sec:q1}, Người 2 mục~\ref{sec:q2}, Người 3 và Người 4 mục~\ref{sec:q3}; mọi người biết \key{tìm ở file nào} khi bị hỏi sâu (mục~\ref{sec:filemap}).
-\item Thời gian không đều: Người 1 nói nhiều nhất, Người 4 nói ít nhất nhưng dẫn thêm phần demo. Nếu muốn cân bằng, có thể chuyển phần mở đầu (slide 1--4) từ Người 1 sang Người 4.
+\item \key{Chuyển chương bằng một câu}, không cần trao lời: cuối mỗi chương trong mục~\ref{sec:slides} đã có sẵn một câu chuyển ý.
+\item \key{Demo một mình:} trước giờ nói, mở sẵn hai tab trình duyệt (tab 1 cửa hàng, tab 2 bản tắt Gemma) và dùng Cmd+Tab để qua lại với PowerPoint. Nói trước điều sắp bấm, rồi mới bấm; trong lúc chờ Gemma trả lời thì kể tiếp, đừng im lặng.
+\item \key{Sự cố:} vừa sửa vừa nói cho người nghe biết đang làm gì; quá 30 giây thì mở ảnh chụp màn hình (mục~\ref{sec:suco}).
+\item \key{Hỏi đáp:} cần nắm cả năm chương. Đọc hết mục~\ref{sec:hoidap}; khi bị hỏi sâu, mở đúng file theo mục~\ref{sec:filemap} thay vì đoán.
+\item \key{Buổi demo cá nhân và hỏi đáp} có thể ngắn hơn một buổi thuyết trình đầy đủ: khi đó dùng phương án rút gọn, hoặc nói slide 1--3 rồi đi thẳng vào demo (slide 35) và hỏi đáp.
 \end{itemize}
 
 \subsection{Mẹo để nói dễ nghe}

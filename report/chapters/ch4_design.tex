@@ -419,6 +419,19 @@ organise code. Each layer is realised by several Java packages (\code{presentati
 \code{presentation.controller}, \dots), and the shared model by the packages \code{domain.cart}, \code{domain.order},
 \dots; Table~\ref{tab:layers} in Appendix~B lists the packages and their classes.
 
+Figure~\ref{fig:c44_packages} draws the same structure as a UML package diagram. Each layer is a package that
+contains its Java sub-packages, and the domain model is a fourth package beside them. Every dependency points
+downwards or towards the domain: Presentation uses Application, Application uses Data, and every layer uses the
+domain classes, while the domain depends on no layer. Inside a layer the views and the web server use the controllers,
+\code{AssistantService} uses \code{SearchService}, and the SQLite package realises the repository interfaces, so the
+application layer never depends on SQLite directly.
+
+\begin{figure}[H]
+\centering
+\vpfig{c44_packages}{0.40\textheight}
+\caption[Design packages and their dependencies]{Design packages of Họa.: the Presentation, Application and Data layers with their Java sub-packages, and the domain model shared by all three. Visual Paradigm diagram \vpsrc{c44_packages}.}\label{fig:c44_packages}
+\end{figure}
+
 \subsection{Classes and Relationships per Layer}\label{sec:4.4.2}
 
 Figure~\ref{fig:c44_classes} places the classes in the layers and draws the relationships that cross a layer
@@ -513,6 +526,29 @@ state and control the transaction. Họa. keeps \code{cartId} as the first param
 real checkout needs: \code{customerId}, taken from the session and never from the request body, so that the
 service can check that the cart belongs to the customer (NFR01); \code{addressId}, one of the customer's addresses;
 and the \code{payment} chosen by the customer.
+
+\textbf{Two more design sequences.} The analysis sequences of Chapter~\ref{ch:analysis} (Figures~\ref{fig:c2_bce_search} and~\ref{fig:c2_bce_cancel}) return here with the real classes.
+In Figure~\ref{fig:c44_seq_search}, \code{SearchUI.submitText} sends the request to \code{SearchController.search},
+which calls \code{SearchService.searchText}; \code{QueryService.textQuery} turns the text into a \code{CommonQuery}
+by asking Gemma~4 through the \code{LlmClient} interface for the filters, and falls back to keyword rules
+(\code{parseRules}) when the call fails or times out (NFR02). The service then reads the paintings with
+\code{ProductRepository.allProducts}, rebuilds the \code{VectorIndex}, scores the candidates and lets
+\code{RankingService.rank} order them. In Figure~\ref{fig:c44_seq_cancel}, \code{OrderController.cancelOrder} passes the
+customer id from the session and the order id to \code{OrderService.cancelOrder}; the service loads the order with
+\code{OrderRepository.findOrder} and checks \code{Order.isOwnedBy}, so another customer's order is answered as not
+found (NFR01); \code{Order.cancel()} applies BR06 itself and the new status is saved with
+\code{OrderRepository.updateStatus}. As in the checkout, the rule lives in the domain class, not in the service.
+
+\begin{figure}[H]
+\centering
+\vpfig{c44_seq_search}{0.55\textheight}
+\caption[Design sequence of search by keyword]{Design sequence of UC02 Search by Keyword: from SearchUI to SearchService, Gemma 4 reading the filters with a keyword-rule fallback, then retrieval and ranking. Visual Paradigm diagram \vpsrc{c44_seq_search}.}\label{fig:c44_seq_search}
+\end{figure}
+\begin{figure}[H]
+\centering
+\vpfig{c44_seq_cancel}{0.55\textheight}
+\caption[Design sequence of cancel order]{Design sequence of UC11 Cancel Order: the ownership check in OrderService, the status rule in Order.cancel() and saving the new status. Visual Paradigm diagram \vpsrc{c44_seq_cancel}.}\label{fig:c44_seq_cancel}
+\end{figure}
 
 \textbf{Technology mapping.} Lecture~05 asks to design first and choose technology later. Table~\ref{tab:techmap} in
 Appendix~B records the choice for Họa.: plain Java classes for controllers, services and domain objects, Java

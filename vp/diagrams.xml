@@ -3341,4 +3341,1328 @@
       <pt x="1370" y="290" />
     </edge>
   </diagram>
+  <diagram id="c1_process" name="1.4 Business Process - Order to Delivery (BPMN)" kind="raw" scope="bpmn" scopeName="1 Business processes" vptype="BusinessProcessDiagram" edition="trial">
+    <node id="cust" type="BPPool" name="Customer" x="20" y="20" w="1760" h="150" />
+    <node id="hoa" type="BPPool" name="Họa. Gallery" x="20" y="230" w="1760" h="360" />
+    <node id="adm" type="BPLane" name="Administrator" x="50" y="230" w="1730" h="180" parent="hoa" />
+    <node id="wh" type="BPLane" name="Warehouse staff" x="50" y="410" w="1730" h="180" parent="hoa" />
+    <node id="pay" type="BPPool" name="Payment Service" x="600" y="660" w="520" h="60" blackBox="true" />
+    <node id="car" type="BPPool" name="Delivery carrier" x="1180" y="660" w="520" h="60" blackBox="true" />
+    <node id="c0" type="BPStartEvent" name="" x="95" y="80" w="30" h="30" parent="cust" />
+    <node id="c1" type="BPTask" name="Find a painting" x="170" y="65" w="130" h="60" parent="cust" />
+    <node id="c2" type="BPTask" name="Add prints and frames to the cart" x="350" y="65" w="150" h="60" parent="cust" />
+    <node id="c3" type="BPTask" name="Place the order" x="550" y="65" w="130" h="60" parent="cust" />
+    <node id="c4" type="BPTask" name="Receive the parcel" x="1390" y="65" w="130" h="60" parent="cust" />
+    <node id="c9" type="BPEndEvent" name="" x="1565" y="80" w="30" h="30" parent="cust" />
+    <edge type="BPSequenceFlow" from="c0" to="c1">
+      <pt x="125" y="95" />
+      <pt x="170" y="95" />
+    </edge>
+    <edge type="BPSequenceFlow" from="c1" to="c2">
+      <pt x="300" y="95" />
+      <pt x="350" y="95" />
+    </edge>
+    <edge type="BPSequenceFlow" from="c2" to="c3">
+      <pt x="500" y="95" />
+      <pt x="550" y="95" />
+    </edge>
+    <edge type="BPSequenceFlow" from="c4" to="c9">
+      <pt x="1520" y="95" />
+      <pt x="1565" y="95" />
+    </edge>
+    <node id="a0" type="BPStartEvent" name="" x="585" y="245" w="30" h="30" parent="adm" trigger="message" />
+    <node id="a1" type="BPTask" name="Check cart and stock, freeze prices" x="650" y="290" w="160" h="60" parent="adm" />
+    <node id="g1" type="BPGateway" name="" x="860" y="300" w="40" h="40" parent="adm" />
+    <node id="a2" type="BPTask" name="Request card authorisation" x="960" y="340" w="150" h="60" parent="adm" />
+    <node id="g2" type="BPGateway" name="" x="1160" y="300" w="40" h="40" parent="adm" />
+    <node id="a3" type="BPTask" name="Create the order (PLACED)" x="1240" y="290" w="150" h="60" parent="adm" />
+    <node id="a4" type="BPTask" name="Mark the order DELIVERED" x="1500" y="290" w="150" h="60" parent="adm" />
+    <node id="a9" type="BPEndEvent" name="" x="1695" y="305" w="30" h="30" parent="adm" />
+    <edge type="BPSequenceFlow" from="a0" to="a1">
+      <pt x="600" y="275" />
+      <pt x="600" y="320" />
+      <pt x="650" y="320" />
+    </edge>
+    <edge type="BPSequenceFlow" from="a1" to="g1">
+      <pt x="810" y="320" />
+      <pt x="860" y="320" />
+    </edge>
+    <edge type="BPSequenceFlow" from="g1" to="a2" name="card" labelX="900" labelY="344" labelW="49" labelH="20">
+      <pt x="880" y="340" />
+      <pt x="880" y="370" />
+      <pt x="960" y="370" />
+    </edge>
+    <edge type="BPSequenceFlow" from="a2" to="g2">
+      <pt x="1110" y="370" />
+      <pt x="1180" y="370" />
+      <pt x="1180" y="340" />
+    </edge>
+    <edge type="BPSequenceFlow" from="g1" to="g2" name="cash on delivery" labelX="974" labelY="292" labelW="112" labelH="20">
+      <pt x="900" y="320" />
+      <pt x="1160" y="320" />
+    </edge>
+    <edge type="BPSequenceFlow" from="g2" to="a3">
+      <pt x="1200" y="320" />
+      <pt x="1240" y="320" />
+    </edge>
+    <edge type="BPSequenceFlow" from="a4" to="a9">
+      <pt x="1650" y="320" />
+      <pt x="1695" y="320" />
+    </edge>
+    <node id="w1" type="BPTask" name="Pick and pack the order (PROCESSING)" x="1230" y="470" w="170" h="60" parent="wh" />
+    <node id="w2" type="BPTask" name="Hand over to the carrier (SHIPPED)" x="1460" y="470" w="170" h="60" parent="wh" />
+    <edge type="BPSequenceFlow" from="a3" to="w1">
+      <pt x="1315" y="350" />
+      <pt x="1315" y="470" />
+    </edge>
+    <edge type="BPSequenceFlow" from="w1" to="w2">
+      <pt x="1400" y="500" />
+      <pt x="1460" y="500" />
+    </edge>
+    <edge type="BPSequenceFlow" from="w2" to="a4">
+      <pt x="1575" y="470" />
+      <pt x="1575" y="350" />
+    </edge>
+    <edge type="BPMessageFlow" from="c3" to="a0" name="order" labelX="608" labelY="175" labelW="54" labelH="20">
+      <pt x="600" y="125" />
+      <pt x="600" y="245" />
+    </edge>
+    <edge type="BPMessageFlow" from="a2" to="pay" name="payment request" labelX="882" labelY="533" labelW="115" labelH="20">
+      <pt x="1005" y="400" />
+      <pt x="1005" y="660" />
+    </edge>
+    <edge type="BPMessageFlow" from="pay" to="a2" name="authorisation result" labelX="1073" labelY="533" labelW="130" labelH="20">
+      <pt x="1065" y="660" />
+      <pt x="1065" y="400" />
+    </edge>
+    <edge type="BPMessageFlow" from="w2" to="car" name="parcel, address" labelX="1553" labelY="628" labelW="107" labelH="20">
+      <pt x="1545" y="530" />
+      <pt x="1545" y="660" />
+    </edge>
+    <edge type="BPMessageFlow" from="car" to="c4" name="parcel" labelX="1674" labelY="610" labelW="58" labelH="20">
+      <pt x="1740" y="660" />
+      <pt x="1740" y="140" />
+      <pt x="1455" y="140" />
+      <pt x="1455" y="125" />
+    </edge>
+  </diagram>
+  <diagram id="c1_stakeholders" name="1.3 Stakeholder Map (ArchiMate)" kind="raw" scope="archimate" scopeName="1 Motivation" vptype="ArchiMateDiagram" edition="trial">
+    <node id="s0" type="ArchiMateStakeholder" name="Support staff" x="40" y="40" w="190" h="52" />
+    <node id="s1" type="ArchiMateStakeholder" name="Customer" x="40" y="116" w="190" h="52" />
+    <node id="s2" type="ArchiMateStakeholder" name="Payment service" x="40" y="192" w="190" h="52" />
+    <node id="s3" type="ArchiMateStakeholder" name="Shop owner" x="40" y="268" w="190" h="52" />
+    <node id="s4" type="ArchiMateStakeholder" name="Shop administrator" x="40" y="344" w="190" h="52" />
+    <node id="s5" type="ArchiMateStakeholder" name="Warehouse staff" x="40" y="420" w="190" h="52" />
+    <node id="s6" type="ArchiMateStakeholder" name="Gemma 4 AI service" x="40" y="496" w="190" h="52" />
+    <node id="s7" type="ArchiMateStakeholder" name="Developer and lecturer" x="40" y="572" w="190" h="52" />
+    <node id="c0" type="ArchiMateDriver" name="Know where an order is" x="420" y="30" w="300" h="64" />
+    <node id="g0" type="ArchiMateGoal" name="Self-service order tracking and cancellation (FR08-FR11)" x="900" y="30" w="340" h="64" />
+    <edge type="ArchiMateInfluence" from="c0" to="g0">
+      <pt x="720" y="62" />
+      <pt x="900" y="62" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s0" to="c0">
+      <pt x="230" y="66" />
+      <pt x="420" y="54" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s1" to="c0">
+      <pt x="230" y="142" />
+      <pt x="420" y="70" />
+    </edge>
+    <node id="c1" type="ArchiMateDriver" name="Find a painting without knowing its title" x="420" y="116" w="300" h="64" />
+    <node id="g1" type="ArchiMateGoal" name="Multimodal search with reasons (FR01-FR04, FR14)" x="900" y="116" w="340" h="64" />
+    <edge type="ArchiMateInfluence" from="c1" to="g1">
+      <pt x="720" y="148" />
+      <pt x="900" y="148" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s1" to="c1">
+      <pt x="230" y="142" />
+      <pt x="420" y="148" />
+    </edge>
+    <node id="c2" type="ArchiMateDriver" name="Nobody sees another person's order; card and voice stay private" x="420" y="202" w="300" h="64" />
+    <node id="g2" type="ArchiMateGoal" name="Ownership checks, no card numbers, local voice (NFR01, NFR05, NFR08)" x="900" y="202" w="340" h="64" />
+    <edge type="ArchiMateInfluence" from="c2" to="g2">
+      <pt x="720" y="234" />
+      <pt x="900" y="234" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s1" to="c2">
+      <pt x="230" y="142" />
+      <pt x="420" y="218" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s2" to="c2">
+      <pt x="230" y="218" />
+      <pt x="420" y="234" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s3" to="c2">
+      <pt x="230" y="294" />
+      <pt x="420" y="250" />
+    </edge>
+    <node id="c3" type="ArchiMateDriver" name="Increase revenue, see best sellers" x="420" y="288" w="300" h="64" />
+    <node id="g3" type="ArchiMateGoal" name="Back office for paintings and orders (FR12, FR13)" x="900" y="288" w="340" h="64" />
+    <edge type="ArchiMateInfluence" from="c3" to="g3">
+      <pt x="720" y="320" />
+      <pt x="900" y="320" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s3" to="c3">
+      <pt x="230" y="294" />
+      <pt x="420" y="320" />
+    </edge>
+    <node id="c4" type="ArchiMateDriver" name="Correct catalogue, prices and stock" x="420" y="374" w="300" h="64" />
+    <node id="g4" type="ArchiMateGoal" name="Accurate stock at checkout (FR07)" x="900" y="374" w="340" h="64" />
+    <edge type="ArchiMateInfluence" from="c4" to="g4">
+      <pt x="720" y="406" />
+      <pt x="900" y="406" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s4" to="c4">
+      <pt x="230" y="370" />
+      <pt x="420" y="398" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s5" to="c4">
+      <pt x="230" y="446" />
+      <pt x="420" y="414" />
+    </edge>
+    <node id="c5" type="ArchiMateDriver" name="AI can be slow or unavailable" x="420" y="460" w="300" h="64" />
+    <node id="g5" type="ArchiMateGoal" name="Keyword fallback when AI fails (NFR02)" x="900" y="460" w="340" h="64" />
+    <edge type="ArchiMateInfluence" from="c5" to="g5">
+      <pt x="720" y="492" />
+      <pt x="900" y="492" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s6" to="c5">
+      <pt x="230" y="522" />
+      <pt x="420" y="492" />
+    </edge>
+    <node id="c6" type="ArchiMateDriver" name="Model follows the lectures; demo runs" x="420" y="546" w="300" h="64" />
+    <node id="g6" type="ArchiMateGoal" name="One shared specification for diagrams, code and data" x="900" y="546" w="340" h="64" />
+    <edge type="ArchiMateInfluence" from="c6" to="g6">
+      <pt x="720" y="578" />
+      <pt x="900" y="578" />
+    </edge>
+    <edge type="ArchiMateAssociation" from="s7" to="c6">
+      <pt x="230" y="598" />
+      <pt x="420" y="578" />
+    </edge>
+  </diagram>
+  <diagram id="c1_problems" name="1.6 Problem Tree (ArchiMate)" kind="raw" scope="archimate" scopeName="1 Motivation" vptype="ArchiMateDiagram" edition="trial">
+    <node id="i0" type="ArchiMateOutcome" name="Lost customers, long consultations" x="40" y="40" w="220" h="70" />
+    <node id="p0" type="ArchiMateAssessment" name="P1 Customers cannot find a suitable painting" x="40" y="230" w="220" h="70" />
+    <node id="c0" type="ArchiMateAssessment" name="Search by title only; no style, subject or colour data; photos and speech unusable" x="40" y="420" w="220" h="90" />
+    <edge type="ArchiMateInfluence" from="c0" to="p0">
+      <pt x="150" y="420" />
+      <pt x="150" y="300" />
+    </edge>
+    <edge type="ArchiMateInfluence" from="p0" to="i0">
+      <pt x="150" y="230" />
+      <pt x="150" y="110" />
+    </edge>
+    <node id="i1" type="ArchiMateOutcome" name="Cancelled or late orders, lost trust" x="300" y="40" w="220" h="70" />
+    <node id="p1" type="ArchiMateAssessment" name="P2 Sold-out prints are sold" x="300" y="230" w="220" h="70" />
+    <node id="c1" type="ArchiMateAssessment" name="Stock updated by hand, separate from orders" x="300" y="420" w="220" h="90" />
+    <edge type="ArchiMateInfluence" from="c1" to="p1">
+      <pt x="410" y="420" />
+      <pt x="410" y="300" />
+    </edge>
+    <edge type="ArchiMateInfluence" from="p1" to="i1">
+      <pt x="410" y="230" />
+      <pt x="410" y="110" />
+    </edge>
+    <node id="i2" type="ArchiMateOutcome" name="Repeated questions, overloaded staff" x="560" y="40" w="220" h="70" />
+    <node id="p2" type="ArchiMateAssessment" name="P3 Customers do not know where their order is" x="560" y="230" w="220" h="70" />
+    <node id="c2" type="ArchiMateAssessment" name="Order status only in a staff spreadsheet" x="560" y="420" w="220" h="90" />
+    <edge type="ArchiMateInfluence" from="c2" to="p2">
+      <pt x="670" y="420" />
+      <pt x="670" y="300" />
+    </edge>
+    <edge type="ArchiMateInfluence" from="p2" to="i2">
+      <pt x="670" y="230" />
+      <pt x="670" y="110" />
+    </edge>
+    <node id="i3" type="ArchiMateOutcome" name="Wrong prices, slow delivery" x="820" y="40" w="220" h="70" />
+    <node id="p3" type="ArchiMateAssessment" name="P4 Orders and prices handled by hand" x="820" y="230" w="220" h="70" />
+    <node id="c3" type="ArchiMateAssessment" name="No administration tool" x="820" y="420" w="220" h="90" />
+    <edge type="ArchiMateInfluence" from="c3" to="p3">
+      <pt x="930" y="420" />
+      <pt x="930" y="300" />
+    </edge>
+    <edge type="ArchiMateInfluence" from="p3" to="i3">
+      <pt x="930" y="230" />
+      <pt x="930" y="110" />
+    </edge>
+    <node id="i4" type="ArchiMateOutcome" name="Legal risk, loss of trust" x="1080" y="40" w="220" h="70" />
+    <node id="p4" type="ArchiMateAssessment" name="P5 Risk of leaking order and payment data" x="1080" y="230" w="220" h="70" />
+    <node id="c4" type="ArchiMateAssessment" name="Customers identified by an order id in a message; card numbers written down" x="1080" y="420" w="220" h="90" />
+    <edge type="ArchiMateInfluence" from="c4" to="p4">
+      <pt x="1190" y="420" />
+      <pt x="1190" y="300" />
+    </edge>
+    <edge type="ArchiMateInfluence" from="p4" to="i4">
+      <pt x="1190" y="230" />
+      <pt x="1190" y="110" />
+    </edge>
+    <node id="t_Impacts" type="Note" name="Impacts" x="1350" y="57" w="106" h="38" />
+    <node id="t_Problems" type="Note" name="Problems" x="1350" y="247" w="113" h="38" />
+    <node id="t_Root causes" type="Note" name="Root causes" x="1350" y="447" w="128" h="38" />
+  </diagram>
+  <diagram id="c1_dfd0" name="1.7 Context Diagram - DFD Level 0" kind="raw" scope="dfd" scopeName="1 Data flows" vptype="DataFlowDiagram" edition="trial">
+    <node id="P0" type="DFProcess" name="Họa. Gallery" x="560" y="300" w="200" h="120" number="0" />
+    <node id="Customer" type="DFExternalEntity" name="Customer" x="40" y="330" w="150" h="60" />
+    <node id="Payment" type="DFExternalEntity" name="Payment Service" x="1130" y="330" w="170" h="60" />
+    <node id="Admin" type="DFExternalEntity" name="Administrator" x="575" y="40" w="170" h="60" />
+    <node id="Gemma" type="DFExternalEntity" name="Gemma 4 Service" x="575" y="640" w="170" h="60" />
+    <edge type="DFDataFlow" from="Customer" to="P0" name="search queries (text, voice, image), cart, orders" labelX="236" labelY="318" labelW="277" labelH="20">
+      <pt x="190" y="346" />
+      <pt x="560" y="346" />
+    </edge>
+    <edge type="DFDataFlow" from="P0" to="Customer" name="search results, order status, assistant answers" labelX="239" labelY="382" labelW="272" labelH="20">
+      <pt x="560" y="374" />
+      <pt x="190" y="374" />
+    </edge>
+    <edge type="DFDataFlow" from="P0" to="Payment" name="payment request (order id, amount)" labelX="837" labelY="318" labelW="216" labelH="20">
+      <pt x="760" y="346" />
+      <pt x="1130" y="346" />
+    </edge>
+    <edge type="DFDataFlow" from="Payment" to="P0" name="authorisation result" labelX="880" labelY="382" labelW="130" labelH="20">
+      <pt x="1130" y="374" />
+      <pt x="760" y="374" />
+    </edge>
+    <edge type="DFDataFlow" from="Admin" to="P0" name="paintings, prices, stock, order status" labelX="417" labelY="190" labelW="221" labelH="20">
+      <pt x="646" y="100" />
+      <pt x="646" y="300" />
+    </edge>
+    <edge type="DFDataFlow" from="P0" to="Admin" name="painting and order lists" labelX="682" labelY="190" labelW="150" labelH="20">
+      <pt x="674" y="300" />
+      <pt x="674" y="100" />
+    </edge>
+    <edge type="DFDataFlow" from="P0" to="Gemma" name="prompts, photos, tool definitions" labelX="435" labelY="520" labelW="203" labelH="20">
+      <pt x="646" y="420" />
+      <pt x="646" y="640" />
+    </edge>
+    <edge type="DFDataFlow" from="Gemma" to="P0" name="filters, photo descriptions, tool calls, answers" labelX="682" labelY="520" labelW="269" labelH="20">
+      <pt x="674" y="640" />
+      <pt x="674" y="420" />
+    </edge>
+  </diagram>
+  <diagram id="c2_dfd1" name="2.9c Data Flow Diagram - Level 1" kind="raw" scope="dfd" scopeName="1 Data flows" vptype="DataFlowDiagram" edition="trial">
+    <node id="P1" type="DFProcess" name="Find paintings and answer questions" x="420" y="120" w="190" h="130" number="1" />
+    <node id="P3" type="DFProcess" name="Follow and cancel orders" x="420" y="520" w="190" h="110" number="3" />
+    <node id="Customer" type="DFExternalEntity" name="Customer" x="40" y="120" w="150" h="510" />
+    <node id="Gemma" type="DFExternalEntity" name="Gemma 4 Service" x="815" y="20" w="170" h="60" />
+    <node id="D1" type="DFDataStore" name="Paintings and artists" x="800" y="205" w="200" h="40" number="1" />
+    <node id="D2" type="DFDataStore" name="Carts" x="800" y="375" w="200" h="40" number="2" />
+    <node id="D3" type="DFDataStore" name="Orders, payments, shipping" x="800" y="545" w="200" h="40" number="3" />
+    <node id="P2" type="DFProcess" name="Shop and check out" x="1190" y="180" w="190" h="430" number="2" />
+    <node id="Customer2" type="DFExternalEntity" name="Customer" x="1620" y="220" w="170" h="60" />
+    <node id="Payment" type="DFExternalEntity" name="Payment Service" x="1620" y="470" w="170" h="60" />
+    <node id="P4" type="DFProcess" name="Administer catalogue and orders" x="805" y="720" w="190" h="120" number="4" />
+    <node id="D1b" type="DFDataStore" name="Paintings and artists" x="420" y="760" w="200" h="40" number="1" />
+    <node id="Admin" type="DFExternalEntity" name="Administrator" x="1250" y="750" w="190" h="60" />
+    <edge type="DFDataFlow" from="Customer" to="P1" name="search query, question" labelX="232" labelY="140" labelW="147" labelH="20">
+      <pt x="190" y="168" />
+      <pt x="420" y="168" />
+    </edge>
+    <edge type="DFDataFlow" from="P1" to="Customer" name="ranked paintings, answers" labelX="222" labelY="208" labelW="166" labelH="20">
+      <pt x="420" y="200" />
+      <pt x="190" y="200" />
+    </edge>
+    <edge type="DFDataFlow" from="Customer" to="P3" name="order id, cancel request" labelX="229" labelY="532" labelW="152" labelH="20">
+      <pt x="190" y="560" />
+      <pt x="420" y="560" />
+    </edge>
+    <edge type="DFDataFlow" from="P3" to="Customer" name="order status" labelX="260" labelY="600" labelW="90" labelH="20">
+      <pt x="420" y="592" />
+      <pt x="190" y="592" />
+    </edge>
+    <edge type="DFDataFlow" from="P1" to="Gemma" name="prompts, photos, tools" labelX="628" labelY="107" labelW="148" labelH="20">
+      <pt x="610" y="135" />
+      <pt x="840" y="135" />
+      <pt x="840" y="80" />
+    </edge>
+    <edge type="DFDataFlow" from="Gemma" to="P1" name="filters, descriptions, tool calls" labelX="693" labelY="158" labelW="184" labelH="20">
+      <pt x="960" y="80" />
+      <pt x="960" y="150" />
+      <pt x="610" y="150" />
+    </edge>
+    <edge type="DFDataFlow" from="D1" to="P1" name="painting data" labelX="657" labelY="197" labelW="96" labelH="20">
+      <pt x="800" y="225" />
+      <pt x="610" y="225" />
+    </edge>
+    <edge type="DFDataFlow" from="D3" to="P1" name="own orders" labelX="728" labelY="306" labelW="85" labelH="20">
+      <pt x="800" y="552" />
+      <pt x="720" y="552" />
+      <pt x="720" y="238" />
+      <pt x="610" y="238" />
+    </edge>
+    <edge type="DFDataFlow" from="D3" to="P3" name="orders" labelX="698" labelY="576" labelW="60" labelH="20">
+      <pt x="800" y="568" />
+      <pt x="610" y="568" />
+    </edge>
+    <edge type="DFDataFlow" from="P3" to="D3" name="status CANCELLED" labelX="647" labelY="620" labelW="124" labelH="20">
+      <pt x="610" y="612" />
+      <pt x="830" y="612" />
+      <pt x="830" y="585" />
+    </edge>
+    <edge type="DFDataFlow" from="D1" to="P2" name="price, stock" labelX="1052" labelY="187" labelW="87" labelH="20">
+      <pt x="1000" y="215" />
+      <pt x="1190" y="215" />
+    </edge>
+    <edge type="DFDataFlow" from="P2" to="D1" name="stock decrease" labelX="1042" labelY="243" labelW="105" labelH="20">
+      <pt x="1190" y="235" />
+      <pt x="1000" y="235" />
+    </edge>
+    <edge type="DFDataFlow" from="D2" to="P2" name="cart lines" labelX="1058" labelY="357" labelW="74" labelH="20">
+      <pt x="1000" y="385" />
+      <pt x="1190" y="385" />
+    </edge>
+    <edge type="DFDataFlow" from="P2" to="D2" name="cart changes" labelX="1048" labelY="413" labelW="93" labelH="20">
+      <pt x="1190" y="405" />
+      <pt x="1000" y="405" />
+    </edge>
+    <edge type="DFDataFlow" from="P2" to="D3" name="new order, payment" labelX="1029" labelY="537" labelW="132" labelH="20">
+      <pt x="1190" y="565" />
+      <pt x="1000" y="565" />
+    </edge>
+    <edge type="DFDataFlow" from="Customer2" to="P2" name="cart, address, payment method" labelX="1404" labelY="212" labelW="192" labelH="20">
+      <pt x="1620" y="240" />
+      <pt x="1380" y="240" />
+    </edge>
+    <edge type="DFDataFlow" from="P2" to="Customer2" name="order confirmation" labelX="1437" labelY="270" labelW="126" labelH="20">
+      <pt x="1380" y="262" />
+      <pt x="1620" y="262" />
+    </edge>
+    <edge type="DFDataFlow" from="P2" to="Payment" name="payment request" labelX="1442" labelY="462" labelW="115" labelH="20">
+      <pt x="1380" y="490" />
+      <pt x="1620" y="490" />
+    </edge>
+    <edge type="DFDataFlow" from="Payment" to="P2" name="authorisation result" labelX="1435" labelY="520" labelW="130" labelH="20">
+      <pt x="1620" y="512" />
+      <pt x="1380" y="512" />
+    </edge>
+    <edge type="DFDataFlow" from="D3" to="P4" name="orders" labelX="802" labelY="649" labelW="60" labelH="20">
+      <pt x="870" y="585" />
+      <pt x="870" y="720" />
+    </edge>
+    <edge type="DFDataFlow" from="P4" to="D3" name="new status" labelX="938" labelY="649" labelW="83" labelH="20">
+      <pt x="930" y="720" />
+      <pt x="930" y="585" />
+    </edge>
+    <edge type="DFDataFlow" from="P4" to="D1b" name="painting changes" labelX="654" labelY="752" labelW="117" labelH="20">
+      <pt x="805" y="780" />
+      <pt x="620" y="780" />
+    </edge>
+    <edge type="DFDataFlow" from="Admin" to="P4" name="paintings, prices, stock, status" labelX="1028" labelY="742" labelW="189" labelH="20">
+      <pt x="1250" y="770" />
+      <pt x="995" y="770" />
+    </edge>
+    <edge type="DFDataFlow" from="P4" to="Admin" name="painting and order lists" labelX="1048" labelY="803" labelW="150" labelH="20">
+      <pt x="995" y="795" />
+      <pt x="1250" y="795" />
+    </edge>
+  </diagram>
+  <diagram id="c2_uc_search" name="2.4a Use Cases - Search and Discovery" kind="usecase" scope="c2_uc_search" scopeName="1 Use cases - 2.4a Search and Discovery">
+    <node id="system" type="System" name="Họa. Gallery" x="280" y="30" w="703" h="385" />
+    <node id="UC02" type="UseCase" name="UC02 Search by Keyword" x="696" y="77" w="237" h="46" parent="system" />
+    <node id="UC03" type="UseCase" name="UC03 Search by Voice" x="696" y="161" w="237" h="46" parent="system" />
+    <node id="UC04" type="UseCase" name="UC04 Search by Image" x="696" y="245" w="237" h="46" parent="system" />
+    <node id="UC14" type="UseCase" name="UC14 Find Painting for My Room" x="696" y="329" w="237" h="46" parent="system" />
+    <node id="UC01" type="UseCase" name="UC01 Search Product" x="330" y="203" w="176" h="46" parent="system" abstract="true" />
+    <node id="UC05" type="UseCase" name="UC05 View Product" x="330" y="329" w="176" h="46" parent="system" />
+    <node id="Customer" type="Actor" name="Customer" x="120" y="255" w="40" h="80" />
+    <node id="Gemma 4 Service" type="Actor" name="Gemma 4 Service" x="1103" y="192" w="40" h="80" />
+    <edge type="Association" from="Customer" to="UC01">
+      <pt x="160" y="289" />
+      <pt x="330" y="226" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC05">
+      <pt x="160" y="289" />
+      <pt x="330" y="352" />
+    </edge>
+    <edge type="Association" from="Gemma 4 Service" to="UC02">
+      <pt x="1103" y="226" />
+      <pt x="933" y="100" />
+    </edge>
+    <edge type="Association" from="Gemma 4 Service" to="UC03">
+      <pt x="1103" y="226" />
+      <pt x="933" y="184" />
+    </edge>
+    <edge type="Association" from="Gemma 4 Service" to="UC04">
+      <pt x="1103" y="226" />
+      <pt x="933" y="268" />
+    </edge>
+    <edge type="Association" from="Gemma 4 Service" to="UC14">
+      <pt x="1103" y="226" />
+      <pt x="933" y="352" />
+    </edge>
+    <edge type="Generalization" from="UC02" to="UC01">
+      <pt x="696" y="100" />
+      <pt x="601" y="100" />
+      <pt x="601" y="226" />
+      <pt x="506" y="226" />
+    </edge>
+    <edge type="Generalization" from="UC03" to="UC01">
+      <pt x="696" y="184" />
+      <pt x="601" y="184" />
+      <pt x="601" y="226" />
+      <pt x="506" y="226" />
+    </edge>
+    <edge type="Generalization" from="UC04" to="UC01">
+      <pt x="696" y="268" />
+      <pt x="601" y="268" />
+      <pt x="601" y="226" />
+      <pt x="506" y="226" />
+    </edge>
+    <edge type="Extend" from="UC05" to="UC01" labelX="428" labelY="279" labelW="97" labelH="20">
+      <pt x="418" y="329" />
+      <pt x="418" y="249" />
+    </edge>
+    <edge type="Generalization" from="UC14" to="UC01">
+      <pt x="696" y="352" />
+      <pt x="601" y="352" />
+      <pt x="601" y="226" />
+      <pt x="506" y="226" />
+    </edge>
+  </diagram>
+  <diagram id="c2_uc_purchase" name="2.4b Use Cases - Cart, Checkout and Orders" kind="usecase" scope="c2_uc_purchase" scopeName="1 Use cases - 2.4b Cart, Checkout and Orders">
+    <node id="system" type="System" name="Họa. Gallery" x="280" y="30" w="266" h="469" />
+    <node id="UC06" type="UseCase" name="UC06 Manage Cart" x="330" y="77" w="166" h="46" parent="system" />
+    <node id="UC07" type="UseCase" name="UC07 Checkout" x="330" y="161" w="166" h="46" parent="system" />
+    <node id="UC09" type="UseCase" name="UC09 Search Order" x="330" y="245" w="166" h="46" parent="system" />
+    <node id="UC08" type="UseCase" name="UC08 View Order" x="330" y="329" w="166" h="46" parent="system" />
+    <node id="UC11" type="UseCase" name="UC11 Cancel Order" x="330" y="413" w="166" h="46" parent="system" />
+    <node id="Customer" type="Actor" name="Customer" x="120" y="234" w="40" h="80" />
+    <node id="Payment Service" type="Actor" name="Payment Service" x="666" y="144" w="40" h="80" />
+    <edge type="Association" from="Customer" to="UC06">
+      <pt x="160" y="268" />
+      <pt x="330" y="100" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC07">
+      <pt x="160" y="268" />
+      <pt x="330" y="184" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC09">
+      <pt x="160" y="268" />
+      <pt x="330" y="268" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC08">
+      <pt x="160" y="268" />
+      <pt x="330" y="352" />
+    </edge>
+    <edge type="Association" from="Customer" to="UC11">
+      <pt x="160" y="268" />
+      <pt x="330" y="436" />
+    </edge>
+    <edge type="Association" from="Payment Service" to="UC07">
+      <pt x="666" y="184" />
+      <pt x="496" y="184" />
+    </edge>
+    <edge type="Include" from="UC07" to="UC06" labelX="423" labelY="132" labelW="99" labelH="20">
+      <pt x="413" y="161" />
+      <pt x="413" y="123" />
+    </edge>
+    <edge type="Extend" from="UC11" to="UC08" labelX="423" labelY="384" labelW="97" labelH="20">
+      <pt x="413" y="413" />
+      <pt x="413" y="375" />
+    </edge>
+  </diagram>
+  <diagram id="c2_uc_assistant_admin" name="2.4c Use Cases - Assistant and Administration" kind="usecase" scope="c2_uc_assistant_admin" scopeName="1 Use cases - 2.4c Assistant and Administration">
+    <node id="system" type="System" name="Họa. Gallery" x="280" y="30" w="322" h="489" />
+    <node id="UC09" type="UseCase" name="UC09 Search Order" x="330" y="77" w="222" h="46" parent="system" />
+    <node id="UC10" type="UseCase" name="UC10 Ask Shopping Assistant" x="330" y="161" w="222" h="46" parent="system" />
+    <node id="UC01" type="UseCase" name="UC01 Search Product" x="330" y="245" w="222" h="46" parent="system" abstract="true" />
+    <node id="UC12" type="UseCase" name="UC12 Manage Products" x="330" y="349" w="222" h="46" parent="system" />
+    <node id="UC13" type="UseCase" name="UC13 Update Order Status" x="330" y="433" w="222" h="46" parent="system" />
+    <node id="Customer" type="Actor" name="Customer" x="120" y="150" w="40" h="80" />
+    <node id="Administrator" type="Actor" name="Administrator" x="120" y="380" w="40" h="80" />
+    <node id="Gemma 4 Service" type="Actor" name="Gemma 4 Service" x="722" y="144" w="40" h="80" />
+    <edge type="Association" from="Customer" to="UC10">
+      <pt x="160" y="184" />
+      <pt x="330" y="184" />
+    </edge>
+    <edge type="Association" from="Administrator" to="UC12">
+      <pt x="160" y="414" />
+      <pt x="330" y="372" />
+    </edge>
+    <edge type="Association" from="Administrator" to="UC13">
+      <pt x="160" y="414" />
+      <pt x="330" y="456" />
+    </edge>
+    <edge type="Association" from="Gemma 4 Service" to="UC10">
+      <pt x="722" y="184" />
+      <pt x="552" y="184" />
+    </edge>
+    <edge type="Include" from="UC10" to="UC01" labelX="451" labelY="216" labelW="99" labelH="20">
+      <pt x="441" y="207" />
+      <pt x="441" y="245" />
+    </edge>
+    <edge type="Include" from="UC10" to="UC09" labelX="451" labelY="132" labelW="99" labelH="20">
+      <pt x="441" y="161" />
+      <pt x="441" y="123" />
+    </edge>
+  </diagram>
+  <diagram id="c2_activity_image" name="2.2c Activity - Search by Image (UC04)" kind="activity" scope="activity" scopeName="2 Behaviour">
+    <node id="lanes" type="Swimlane" name="" x="20" y="20" w="1040" h="1190" header="34">
+      <lane name="Customer" w="260" />
+      <lane name="Họa. system" w="500" />
+      <lane name="Gemma 4 Service" w="280" />
+    </node>
+    <node id="start" type="Initial" name="" x="139" y="74" w="22" h="22" lane="0" />
+    <node id="choose" type="Action" name="Choose a photo and start the search" x="50" y="124" w="200" h="52" lane="0" />
+    <node id="check" type="Action" name="validate(file): JPEG, PNG or WebP, at most 5 MB" x="391" y="131" w="278" h="38" lane="1" />
+    <node id="valid" type="Decision" name="" x="512" y="218" w="36" h="44" lane="1" />
+    <node id="refuse" type="Action" name="See the refusal with the allowed formats and size" x="50" y="214" w="200" h="52" lane="0" />
+    <node id="end1" type="Final" name="" x="139" y="314" w="22" h="22" lane="0" />
+    <node id="describe" type="Action" name="describe(image, &quot;artwork&quot;)" x="445" y="314" w="170" h="52" lane="1" />
+    <node id="gemma" type="Action" name="Describe style, subject and dominant colour in the shop's vocabulary" x="810" y="307" w="220" h="66" lane="2" />
+    <node id="ai" type="Decision" name="" x="512" y="428" w="36" h="44" lane="1" />
+    <node id="local" type="Action" name="Read the average colour locally, name the closest catalogue colour (NFR02)" x="300" y="507" w="200" h="66" lane="1" />
+    <node id="m" type="Merge" name="" x="512" y="608" w="36" h="44" lane="1" />
+    <node id="vector" type="Action" name="toVector(style, subject, color): one-hot vector of 10 + 8 + 10 = 28 values" x="405" y="684" w="250" h="52" lane="1" />
+    <node id="nearest" type="Action" name="nearest(queryEmbedding, k): cosine similarity, keep scores above 0" x="405" y="774" w="250" h="52" lane="1" />
+    <node id="rank" type="Action" name="rank(query, candidates, limit)" x="437" y="866" w="186" h="38" lane="1" />
+    <node id="found" type="Decision" name="" x="512" y="948" w="36" h="44" lane="1" />
+    <node id="results" type="Action" name="See the paintings, each with its similarity and reason" x="55" y="944" w="190" h="52" lane="0" />
+    <node id="empty" type="Action" name="See an empty state instead of a noisy list" x="55" y="1039" w="190" h="52" lane="0" />
+    <node id="end" type="Final" name="" x="139" y="1139" w="22" h="22" lane="0" />
+    <edge type="ControlFlow" from="start" to="choose">
+      <pt x="150" y="96" />
+      <pt x="150" y="124" />
+    </edge>
+    <edge type="ControlFlow" from="choose" to="check">
+      <pt x="250" y="150" />
+      <pt x="391" y="150" />
+    </edge>
+    <edge type="ControlFlow" from="check" to="valid">
+      <pt x="530" y="169" />
+      <pt x="530" y="225" />
+    </edge>
+    <edge type="ControlFlow" from="valid" to="refuse" guard="wrong type or over 5 MB" labelX="314" labelY="213" labelW="164" labelH="20">
+      <pt x="515" y="240" />
+      <pt x="250" y="240" />
+    </edge>
+    <edge type="ControlFlow" from="refuse" to="end1">
+      <pt x="150" y="266" />
+      <pt x="150" y="314" />
+    </edge>
+    <edge type="ControlFlow" from="valid" to="describe" guard="valid image" labelX="538" labelY="274" labelW="94" labelH="20">
+      <pt x="530" y="255" />
+      <pt x="530" y="314" />
+    </edge>
+    <edge type="ControlFlow" from="describe" to="gemma">
+      <pt x="615" y="340" />
+      <pt x="810" y="340" />
+    </edge>
+    <edge type="ControlFlow" from="gemma" to="ai">
+      <pt x="920" y="373" />
+      <pt x="920" y="400" />
+      <pt x="530" y="400" />
+      <pt x="530" y="435" />
+    </edge>
+    <edge type="ControlFlow" from="ai" to="local" guard="error or timeout" labelX="382" labelY="423" labelW="119" labelH="20">
+      <pt x="515" y="450" />
+      <pt x="400" y="450" />
+      <pt x="400" y="507" />
+    </edge>
+    <edge type="ControlFlow" from="ai" to="m" guard="description received" labelX="538" labelY="530" labelW="140" labelH="20">
+      <pt x="530" y="465" />
+      <pt x="530" y="615" />
+    </edge>
+    <edge type="ControlFlow" from="local" to="m">
+      <pt x="400" y="573" />
+      <pt x="400" y="630" />
+      <pt x="515" y="630" />
+    </edge>
+    <edge type="ControlFlow" from="m" to="vector">
+      <pt x="530" y="645" />
+      <pt x="530" y="684" />
+    </edge>
+    <edge type="ControlFlow" from="vector" to="nearest">
+      <pt x="530" y="736" />
+      <pt x="530" y="774" />
+    </edge>
+    <edge type="ControlFlow" from="nearest" to="rank">
+      <pt x="530" y="826" />
+      <pt x="530" y="866" />
+    </edge>
+    <edge type="ControlFlow" from="rank" to="found">
+      <pt x="530" y="904" />
+      <pt x="530" y="955" />
+    </edge>
+    <edge type="ControlFlow" from="found" to="results" guard="similar paintings" labelX="335" labelY="943" labelW="122" labelH="20">
+      <pt x="515" y="970" />
+      <pt x="245" y="970" />
+    </edge>
+    <edge type="ControlFlow" from="found" to="empty" guard="nothing close" labelX="538" labelY="1015" labelW="105" labelH="20">
+      <pt x="530" y="985" />
+      <pt x="530" y="1065" />
+      <pt x="245" y="1065" />
+    </edge>
+    <edge type="ControlFlow" from="empty" to="end">
+      <pt x="150" y="1091" />
+      <pt x="150" y="1139" />
+    </edge>
+    <edge type="ControlFlow" from="results" to="end">
+      <pt x="55" y="970" />
+      <pt x="36" y="970" />
+      <pt x="36" y="1150" />
+      <pt x="139" y="1150" />
+    </edge>
+  </diagram>
+  <diagram id="c2_activity_cancel" name="2.2d Activity - Cancel Order (UC11)" kind="activity" scope="activity" scopeName="2 Behaviour">
+    <node id="lanes" type="Swimlane" name="" x="20" y="20" w="1040" h="800" header="34">
+      <lane name="Customer" w="270" />
+      <lane name="Họa. system" w="490" />
+      <lane name="Database" w="280" />
+    </node>
+    <node id="start" type="Initial" name="" x="144" y="74" w="22" h="22" lane="0" />
+    <node id="open" type="Action" name="Open my orders and choose an order" x="40" y="131" w="229" h="38" lane="0" />
+    <node id="ask" type="Action" name="Ask to cancel the order" x="78" y="216" w="154" h="38" lane="0" />
+    <node id="request" type="Action" name="cancelOrder(customerId, orderId), customerId from the session" x="435" y="209" w="240" h="52" lane="1" />
+    <node id="read" type="Action" name="Read the order (table orders)" x="828" y="216" w="184" h="38" lane="2" />
+    <node id="own" type="Decision" name="" x="537" y="323" w="36" h="44" lane="1" />
+    <node id="notfound" type="Action" name="See &quot;order not found in your account&quot;" x="40" y="326" w="231" h="38" lane="0" />
+    <node id="end1" type="Final" name="" x="144" y="409" w="22" h="22" lane="0" />
+    <node id="status" type="Decision" name="" x="537" y="473" w="36" h="44" lane="1" />
+    <node id="refuse" type="Action" name="See why the order cannot be cancelled; nothing changes" x="55" y="469" w="200" h="52" lane="0" />
+    <node id="end2" type="Final" name="" x="144" y="564" w="22" h="22" lane="0" />
+    <node id="cancel" type="Action" name="cancel(): the status becomes CANCELLED" x="435" y="574" w="240" h="52" lane="1" />
+    <node id="save" type="Action" name="Save the status CANCELLED (updateStatus)" x="820" y="574" w="200" h="52" lane="2" />
+    <node id="back" type="Action" name="Return the Order (CANCELLED)" x="458" y="671" w="193" h="38" lane="1" />
+    <node id="seen" type="Action" name="See the order as CANCELLED" x="64" y="671" w="183" h="38" lane="0" />
+    <node id="end" type="Final" name="" x="144" y="754" w="22" h="22" lane="0" />
+    <edge type="ControlFlow" from="start" to="open">
+      <pt x="155" y="96" />
+      <pt x="155" y="131" />
+    </edge>
+    <edge type="ControlFlow" from="open" to="ask">
+      <pt x="155" y="169" />
+      <pt x="155" y="216" />
+    </edge>
+    <edge type="ControlFlow" from="ask" to="request">
+      <pt x="232" y="235" />
+      <pt x="435" y="235" />
+    </edge>
+    <edge type="ControlFlow" from="request" to="read">
+      <pt x="675" y="235" />
+      <pt x="828" y="235" />
+    </edge>
+    <edge type="ControlFlow" from="read" to="own">
+      <pt x="920" y="254" />
+      <pt x="920" y="295" />
+      <pt x="555" y="295" />
+      <pt x="555" y="330" />
+    </edge>
+    <edge type="ControlFlow" from="own" to="notfound" guard="not found or not owned" labelX="334" labelY="318" labelW="160" labelH="20">
+      <pt x="540" y="345" />
+      <pt x="270" y="345" />
+    </edge>
+    <edge type="ControlFlow" from="notfound" to="end1">
+      <pt x="155" y="364" />
+      <pt x="155" y="409" />
+    </edge>
+    <edge type="ControlFlow" from="own" to="status" guard="owned by the customer" labelX="563" labelY="410" labelW="158" labelH="20">
+      <pt x="555" y="360" />
+      <pt x="555" y="480" />
+    </edge>
+    <edge type="ControlFlow" from="status" to="refuse" guard="SHIPPED, DELIVERED or CANCELLED" labelX="302" labelY="468" labelW="222" labelH="20">
+      <pt x="540" y="495" />
+      <pt x="255" y="495" />
+    </edge>
+    <edge type="ControlFlow" from="refuse" to="end2">
+      <pt x="155" y="521" />
+      <pt x="155" y="564" />
+    </edge>
+    <edge type="ControlFlow" from="status" to="cancel" guard="PLACED or PROCESSING" labelX="563" labelY="532" labelW="158" labelH="20">
+      <pt x="555" y="510" />
+      <pt x="555" y="574" />
+    </edge>
+    <edge type="ControlFlow" from="cancel" to="save">
+      <pt x="675" y="600" />
+      <pt x="820" y="600" />
+    </edge>
+    <edge type="ControlFlow" from="save" to="back">
+      <pt x="920" y="626" />
+      <pt x="920" y="690" />
+      <pt x="652" y="690" />
+    </edge>
+    <edge type="ControlFlow" from="back" to="seen">
+      <pt x="458" y="690" />
+      <pt x="246" y="690" />
+    </edge>
+    <edge type="ControlFlow" from="seen" to="end">
+      <pt x="155" y="709" />
+      <pt x="155" y="754" />
+    </edge>
+  </diagram>
+  <diagram id="c2_activity_admin" name="2.2e Activity - Update Order Status (UC13)" kind="activity" scope="activity" scopeName="2 Behaviour">
+    <node id="lanes" type="Swimlane" name="" x="20" y="20" w="1040" h="800" header="34">
+      <lane name="Administrator" w="270" />
+      <lane name="Họa. system" w="490" />
+      <lane name="Database" w="280" />
+    </node>
+    <node id="start" type="Initial" name="" x="144" y="74" w="22" h="22" lane="0" />
+    <node id="open" type="Action" name="Open the back office and select an order" x="70" y="124" w="170" h="52" lane="0" />
+    <node id="choose" type="Action" name="Choose the next status" x="78" y="216" w="153" h="38" lane="0" />
+    <node id="request" type="Action" name="updateOrderStatus(orderId, status)" x="447" y="216" w="216" h="38" lane="1" />
+    <node id="read" type="Action" name="Read the order (table orders)" x="828" y="216" w="184" h="38" lane="2" />
+    <node id="check" type="Action" name="Check that the new status is the next step of PLACED → PROCESSING → SHIPPED → DELIVERED; CANCELLED and DELIVERED are final" x="410" y="307" w="290" h="66" lane="1" />
+    <node id="valid" type="Decision" name="" x="537" y="423" w="36" h="44" lane="1" />
+    <node id="refuse" type="Action" name="See the refusal: the order of statuses is wrong" x="55" y="419" w="200" h="52" lane="0" />
+    <node id="end1" type="Final" name="" x="144" y="514" w="22" h="22" lane="0" />
+    <node id="advance" type="Action" name="advanceTo(next): set the new status" x="444" y="541" w="222" h="38" lane="1" />
+    <node id="save" type="Action" name="Save the new status (updateStatus)" x="820" y="534" w="200" h="52" lane="2" />
+    <node id="back" type="Action" name="Return the Order with its new status" x="443" y="636" w="223" h="38" lane="1" />
+    <node id="seen" type="Action" name="See the new status in the list" x="63" y="636" w="183" h="38" lane="0" />
+    <node id="end" type="Final" name="" x="144" y="724" w="22" h="22" lane="0" />
+    <edge type="ControlFlow" from="start" to="open">
+      <pt x="155" y="96" />
+      <pt x="155" y="124" />
+    </edge>
+    <edge type="ControlFlow" from="open" to="choose">
+      <pt x="155" y="176" />
+      <pt x="155" y="216" />
+    </edge>
+    <edge type="ControlFlow" from="choose" to="request">
+      <pt x="232" y="235" />
+      <pt x="447" y="235" />
+    </edge>
+    <edge type="ControlFlow" from="request" to="read">
+      <pt x="663" y="235" />
+      <pt x="828" y="235" />
+    </edge>
+    <edge type="ControlFlow" from="read" to="check">
+      <pt x="920" y="254" />
+      <pt x="920" y="340" />
+      <pt x="700" y="340" />
+    </edge>
+    <edge type="ControlFlow" from="check" to="valid">
+      <pt x="555" y="373" />
+      <pt x="555" y="430" />
+    </edge>
+    <edge type="ControlFlow" from="valid" to="refuse" guard="invalid transition" labelX="352" labelY="418" labelW="122" labelH="20">
+      <pt x="540" y="445" />
+      <pt x="255" y="445" />
+    </edge>
+    <edge type="ControlFlow" from="refuse" to="end1">
+      <pt x="155" y="471" />
+      <pt x="155" y="514" />
+    </edge>
+    <edge type="ControlFlow" from="valid" to="advance" guard="valid transition" labelX="563" labelY="490" labelW="112" labelH="20">
+      <pt x="555" y="460" />
+      <pt x="555" y="541" />
+    </edge>
+    <edge type="ControlFlow" from="advance" to="save">
+      <pt x="666" y="560" />
+      <pt x="820" y="560" />
+    </edge>
+    <edge type="ControlFlow" from="save" to="back">
+      <pt x="920" y="586" />
+      <pt x="920" y="655" />
+      <pt x="667" y="655" />
+    </edge>
+    <edge type="ControlFlow" from="back" to="seen">
+      <pt x="443" y="655" />
+      <pt x="247" y="655" />
+    </edge>
+    <edge type="ControlFlow" from="seen" to="end">
+      <pt x="155" y="674" />
+      <pt x="155" y="724" />
+    </edge>
+  </diagram>
+  <diagram id="c2_bce_search" name="2.6a Analysis Sequence - Search by Keyword (UC02)" kind="sequence" scope="analysis" scopeName="4.1 Analysis model" numbers="true">
+    <node id="Customer" type="SeqActor" name="Customer" x="138" y="40" w="40" h="788" />
+    <node id="SearchUI" type="Lifeline" name="" x="326" y="40" w="100" h="788" classifier="SearchUI" stereotype="boundary" />
+    <node id="SearchControl" type="Lifeline" name="" x="477" y="40" w="116" h="788" classifier="SearchControl" stereotype="control" />
+    <node id="Painting" type="Lifeline" name="" x="698" y="40" w="100" h="788" classifier="Painting" stereotype="entity" />
+    <node id="Artist" type="Lifeline" name="" x="838" y="40" w="100" h="788" classifier="Artist" stereotype="entity" />
+    <node id="frag7" type="Fragment" name="" x="16" y="418" w="708" h="340" operator="alt" covers="Customer,SearchUI,SearchControl">
+      <operand guard="paintings found" y="435" h="199" />
+      <operand guard="no match" y="634" h="124" />
+    </node>
+    <edge type="Message" from="Customer" to="SearchUI" name="enter search text" labelX="202" labelY="103" labelW="130" labelH="20">
+      <pt x="158" y="130" />
+      <pt x="376" y="130" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="SearchControl" name="search(text)" labelX="404" labelY="143" labelW="102" labelH="20">
+      <pt x="376" y="170" />
+      <pt x="535" y="170" />
+    </edge>
+    <edge type="Message" from="SearchControl" to="SearchControl" name="interpret request" labelX="579" labelY="209" labelW="130" labelH="20" self="true">
+      <pt x="535" y="210" />
+      <pt x="569" y="210" />
+      <pt x="569" y="228" />
+      <pt x="535" y="228" />
+    </edge>
+    <edge type="Message" from="SearchControl" to="Painting" name="findCandidates(conditions)" labelX="550" labelY="241" labelW="183" labelH="20">
+      <pt x="535" y="268" />
+      <pt x="748" y="268" />
+    </edge>
+    <edge type="Message" from="Painting" to="Artist" name="getName()" labelX="771" labelY="281" labelW="94" labelH="20">
+      <pt x="748" y="308" />
+      <pt x="888" y="308" />
+    </edge>
+    <edge type="Message" from="Artist" to="Painting" name="artist name" return="true" labelX="768" labelY="321" labelW="100" labelH="20">
+      <pt x="888" y="348" />
+      <pt x="748" y="348" />
+    </edge>
+    <edge type="Message" from="Painting" to="SearchControl" name="candidate paintings" return="true" labelX="569" labelY="361" labelW="144" labelH="20">
+      <pt x="748" y="388" />
+      <pt x="535" y="388" />
+    </edge>
+    <edge type="Message" from="SearchControl" to="SearchControl" name="rank by relevance" labelX="579" labelY="491" labelW="133" labelH="20" self="true">
+      <pt x="535" y="492" />
+      <pt x="569" y="492" />
+      <pt x="569" y="510" />
+      <pt x="535" y="510" />
+    </edge>
+    <edge type="Message" from="SearchControl" to="SearchUI" name="ranked paintings" return="true" labelX="391" labelY="523" labelW="129" labelH="20">
+      <pt x="535" y="550" />
+      <pt x="376" y="550" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="Customer" name="show results and reasons" return="true" labelX="176" labelY="563" labelW="182" labelH="20">
+      <pt x="376" y="590" />
+      <pt x="158" y="590" />
+    </edge>
+    <edge type="Message" from="SearchControl" to="SearchUI" name="no result" return="true" labelX="408" labelY="665" labelW="94" labelH="20">
+      <pt x="535" y="692" />
+      <pt x="376" y="692" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="Customer" name="show empty state and hint" return="true" labelX="173" labelY="705" labelW="188" labelH="20">
+      <pt x="376" y="732" />
+      <pt x="158" y="732" />
+    </edge>
+    <activation on="Artist" y1="308" y2="348" />
+    <activation on="Painting" y1="268" y2="388" />
+    <activation on="SearchControl" y1="170" y2="692" />
+    <activation on="SearchUI" y1="130" y2="732" />
+  </diagram>
+  <diagram id="c2_bce_checkout" name="2.6b Analysis Sequence - Checkout (UC07)" kind="sequence" scope="analysis" scopeName="4.1 Analysis model" numbers="true">
+    <node id="Customer" type="SeqActor" name="Customer" x="144" y="40" w="40" h="1060" />
+    <node id="CheckoutUI" type="Lifeline" name="" x="311" y="40" w="102" h="1060" classifier="CheckoutUI" stereotype="boundary" />
+    <node id="CheckoutControl" type="Lifeline" name="" x="512" y="40" w="131" h="1060" classifier="CheckoutControl" stereotype="control" />
+    <node id="Cart" type="Lifeline" name="" x="719" y="40" w="100" h="1060" classifier="Cart" stereotype="entity" />
+    <node id="Painting" type="Lifeline" name="" x="819" y="40" w="100" h="1060" classifier="Painting" stereotype="entity" />
+    <node id="Order" type="Lifeline" name="" x="919" y="40" w="100" h="1060" classifier="Order" stereotype="entity" />
+    <node id="OrderItem" type="Lifeline" name="" x="1106" y="40" w="100" h="1060" classifier="OrderItem" stereotype="entity" />
+    <node id="Payment" type="Lifeline" name="" x="1206" y="40" w="100" h="1060" classifier="Payment" stereotype="entity" />
+    <node id="frag4" type="Fragment" name="" x="430" y="280" w="469" h="140" operator="loop" covers="CheckoutControl,Cart,Painting">
+      <operand guard="for each cart line" y="297" h="123" />
+    </node>
+    <node id="frag6" type="Fragment" name="" x="16" y="450" w="1270" h="580" operator="alt" covers="Customer,CheckoutUI,CheckoutControl,Cart,Painting,Order,OrderItem,Payment">
+      <operand guard="item out of stock" y="467" h="141" />
+      <operand guard="all items in stock" y="608" h="422" />
+    </node>
+    <edge type="Message" from="Customer" to="CheckoutUI" name="confirm order" labelX="207" labelY="103" labelW="113" labelH="20">
+      <pt x="164" y="130" />
+      <pt x="362" y="130" />
+    </edge>
+    <edge type="Message" from="CheckoutUI" to="CheckoutControl" name="checkout(address, method)" labelX="377" labelY="143" labelW="185" labelH="20">
+      <pt x="362" y="170" />
+      <pt x="577" y="170" />
+    </edge>
+    <edge type="Message" from="CheckoutControl" to="Cart" name="getLines()" labelX="628" labelY="183" labelW="91" labelH="20">
+      <pt x="577" y="210" />
+      <pt x="769" y="210" />
+    </edge>
+    <edge type="Message" from="Cart" to="CheckoutControl" name="cart lines" return="true" labelX="629" labelY="223" labelW="88" labelH="20">
+      <pt x="769" y="250" />
+      <pt x="577" y="250" />
+    </edge>
+    <edge type="Message" from="CheckoutControl" to="Painting" name="checkStock(quantity)" labelX="598" labelY="327" labelW="150" labelH="20">
+      <pt x="577" y="354" />
+      <pt x="869" y="354" />
+    </edge>
+    <edge type="Message" from="Painting" to="CheckoutControl" name="stock, current price" return="true" labelX="602" labelY="367" labelW="143" labelH="20">
+      <pt x="869" y="394" />
+      <pt x="577" y="394" />
+    </edge>
+    <edge type="Message" from="CheckoutControl" to="CheckoutUI" name="refused, item name" return="true" labelX="398" labelY="497" labelW="143" labelH="20">
+      <pt x="577" y="524" />
+      <pt x="362" y="524" />
+    </edge>
+    <edge type="Message" from="CheckoutUI" to="Customer" name="show item out of stock" return="true" labelX="182" labelY="537" labelW="162" labelH="20">
+      <pt x="362" y="564" />
+      <pt x="164" y="564" />
+    </edge>
+    <edge type="Message" from="CheckoutControl" to="Order" name="create(cart lines)" labelX="609" labelY="639" labelW="128" labelH="20">
+      <pt x="577" y="666" />
+      <pt x="969" y="666" />
+    </edge>
+    <edge type="Message" from="Order" to="OrderItem" name="create(frozen price)" labelX="987" labelY="679" labelW="151" labelH="20">
+      <pt x="969" y="706" />
+      <pt x="1156" y="706" />
+    </edge>
+    <edge type="Message" from="Order" to="Order" name="calculateTotal()" labelX="1013" labelY="745" labelW="127" labelH="20" self="true">
+      <pt x="969" y="746" />
+      <pt x="1003" y="746" />
+      <pt x="1003" y="764" />
+      <pt x="969" y="764" />
+    </edge>
+    <edge type="Message" from="Order" to="CheckoutControl" name="order" return="true" labelX="636" labelY="777" labelW="75" labelH="20">
+      <pt x="969" y="804" />
+      <pt x="577" y="804" />
+    </edge>
+    <edge type="Message" from="CheckoutControl" to="Payment" name="record(total, method)" labelX="593" labelY="817" labelW="160" labelH="20">
+      <pt x="577" y="844" />
+      <pt x="1256" y="844" />
+    </edge>
+    <edge type="Message" from="CheckoutControl" to="Painting" name="reduceStock(quantity)" labelX="592" labelY="857" labelW="162" labelH="20">
+      <pt x="577" y="884" />
+      <pt x="869" y="884" />
+    </edge>
+    <edge type="Message" from="CheckoutControl" to="Cart" name="empty()" labelX="630" labelY="897" labelW="87" labelH="20">
+      <pt x="577" y="924" />
+      <pt x="769" y="924" />
+    </edge>
+    <edge type="Message" from="CheckoutControl" to="CheckoutUI" name="order id, PLACED" return="true" labelX="401" labelY="937" labelW="137" labelH="20">
+      <pt x="577" y="964" />
+      <pt x="362" y="964" />
+    </edge>
+    <edge type="Message" from="CheckoutUI" to="Customer" name="show order id, PLACED" return="true" labelX="179" labelY="977" labelW="168" labelH="20">
+      <pt x="362" y="1004" />
+      <pt x="164" y="1004" />
+    </edge>
+    <activation on="Cart" y1="210" y2="250" />
+    <activation on="Painting" y1="354" y2="394" />
+    <activation on="CheckoutControl" y1="170" y2="964" />
+    <activation on="CheckoutUI" y1="130" y2="1004" />
+    <activation on="OrderItem" y1="706" y2="724" />
+    <activation on="Order" y1="666" y2="804" />
+    <activation on="Payment" y1="844" y2="862" />
+    <activation on="Painting" y1="884" y2="902" />
+    <activation on="Cart" y1="924" y2="942" />
+  </diagram>
+  <diagram id="c2_bce_cancel" name="2.6c Analysis Sequence - Cancel Order (UC11)" kind="sequence" scope="analysis" scopeName="4.1 Analysis model" numbers="true">
+    <node id="Customer" type="SeqActor" name="Customer" x="185" y="40" w="40" h="1014" />
+    <node id="OrderUI" type="Lifeline" name="" x="403" y="40" w="100" h="1014" classifier="OrderUI" stereotype="boundary" />
+    <node id="CancelOrderControl" type="Lifeline" name="" x="581" y="40" w="147" h="1014" classifier="CancelOrderControl" stereotype="control" />
+    <node id="Order" type="Lifeline" name="" x="829" y="40" w="100" h="1014" classifier="Order" stereotype="entity" />
+    <node id="frag5" type="Fragment" name="" x="16" y="338" w="893" h="646" operator="alt" covers="Customer,OrderUI,CancelOrderControl,Order">
+      <operand guard="not the customer's order" y="355" h="141" />
+      <operand guard="already shipped" y="496" h="142" />
+      <operand guard="already cancelled" y="638" h="142" />
+      <operand guard="PLACED or PROCESSING" y="780" h="204" />
+    </node>
+    <edge type="Message" from="Customer" to="OrderUI" name="cancel order" labelX="277" labelY="103" labelW="105" labelH="20">
+      <pt x="205" y="130" />
+      <pt x="453" y="130" />
+    </edge>
+    <edge type="Message" from="OrderUI" to="CancelOrderControl" name="cancel(orderId)" labelX="494" labelY="143" labelW="119" labelH="20">
+      <pt x="453" y="170" />
+      <pt x="654" y="170" />
+    </edge>
+    <edge type="Message" from="CancelOrderControl" to="Order" name="find(orderId)" labelX="714" labelY="183" labelW="106" labelH="20">
+      <pt x="654" y="210" />
+      <pt x="879" y="210" />
+    </edge>
+    <edge type="Message" from="Order" to="CancelOrderControl" name="order, owner, status" return="true" labelX="693" labelY="223" labelW="147" labelH="20">
+      <pt x="879" y="250" />
+      <pt x="654" y="250" />
+    </edge>
+    <edge type="Message" from="CancelOrderControl" to="CancelOrderControl" name="check owner and status" labelX="698" labelY="289" labelW="165" labelH="20" self="true">
+      <pt x="654" y="290" />
+      <pt x="688" y="290" />
+      <pt x="688" y="308" />
+      <pt x="654" y="308" />
+    </edge>
+    <edge type="Message" from="CancelOrderControl" to="OrderUI" name="not found" return="true" labelX="508" labelY="385" labelW="92" labelH="20">
+      <pt x="654" y="412" />
+      <pt x="453" y="412" />
+    </edge>
+    <edge type="Message" from="OrderUI" to="Customer" name="show &quot;not found in your account&quot;" return="true" labelX="220" labelY="425" labelW="218" labelH="20">
+      <pt x="453" y="452" />
+      <pt x="205" y="452" />
+    </edge>
+    <edge type="Message" from="CancelOrderControl" to="OrderUI" name="refused: already shipped" return="true" labelX="468" labelY="527" labelW="171" labelH="20">
+      <pt x="654" y="554" />
+      <pt x="453" y="554" />
+    </edge>
+    <edge type="Message" from="OrderUI" to="Customer" name="show why it cannot be cancelled" return="true" labelX="223" labelY="567" labelW="212" labelH="20">
+      <pt x="453" y="594" />
+      <pt x="205" y="594" />
+    </edge>
+    <edge type="Message" from="CancelOrderControl" to="OrderUI" name="already cancelled" return="true" labelX="485" labelY="669" labelW="138" labelH="20">
+      <pt x="654" y="696" />
+      <pt x="453" y="696" />
+    </edge>
+    <edge type="Message" from="OrderUI" to="Customer" name="show &quot;already cancelled&quot;" return="true" labelX="240" labelY="709" labelW="178" labelH="20">
+      <pt x="453" y="736" />
+      <pt x="205" y="736" />
+    </edge>
+    <edge type="Message" from="CancelOrderControl" to="Order" name="cancel()" labelX="723" labelY="811" labelW="87" labelH="20">
+      <pt x="654" y="838" />
+      <pt x="879" y="838" />
+    </edge>
+    <edge type="Message" from="Order" to="CancelOrderControl" name="status CANCELLED" return="true" labelX="694" labelY="851" labelW="145" labelH="20">
+      <pt x="879" y="878" />
+      <pt x="654" y="878" />
+    </edge>
+    <edge type="Message" from="CancelOrderControl" to="OrderUI" name="cancelled" return="true" labelX="506" labelY="891" labelW="96" labelH="20">
+      <pt x="654" y="918" />
+      <pt x="453" y="918" />
+    </edge>
+    <edge type="Message" from="OrderUI" to="Customer" name="show status CANCELLED" return="true" labelX="241" labelY="931" labelW="176" labelH="20">
+      <pt x="453" y="958" />
+      <pt x="205" y="958" />
+    </edge>
+    <activation on="Order" y1="210" y2="250" />
+    <activation on="CancelOrderControl" y1="170" y2="918" />
+    <activation on="OrderUI" y1="130" y2="958" />
+    <activation on="Order" y1="838" y2="878" />
+  </diagram>
+  <diagram id="c44_packages" name="4.4c Package Diagram - Design Packages" kind="raw" scope="design" scopeName="4.3-4.5 Design model" vptype="PackageDiagram">
+    <node id="layer_presentation" type="Package" name="Presentation Layer" x="40" y="40" w="752" h="144" transparent="true" />
+    <node id="layer_application" type="Package" name="Application Layer" x="40" y="254" w="752" h="144" transparent="true" />
+    <node id="layer_data" type="Package" name="Data Layer" x="40" y="468" w="752" h="254" transparent="true" />
+    <node id="pkg_presentation_view" type="Package" name="presentation.view" x="70" y="96" w="150" h="60" parent="layer_presentation" />
+    <node id="pkg_presentation_controller" type="Package" name="presentation.controller" x="330" y="96" w="172" h="60" parent="layer_presentation" />
+    <node id="pkg_presentation_web" type="Package" name="presentation.web" x="612" y="96" w="150" h="60" parent="layer_presentation" />
+    <node id="pkg_application_service" type="Package" name="application.service" x="211" y="310" w="150" h="60" parent="layer_application" />
+    <node id="pkg_application_search" type="Package" name="application.search" x="471" y="310" w="150" h="60" parent="layer_application" />
+    <node id="pkg_infrastructure_repository" type="Package" name="infrastructure.repository" x="130" y="524" w="180" h="60" parent="layer_data" />
+    <node id="pkg_infrastructure_search" type="Package" name="infrastructure.search" x="350" y="524" w="161" h="60" parent="layer_data" />
+    <node id="pkg_infrastructure_ai" type="Package" name="infrastructure.ai" x="552" y="524" w="150" h="60" parent="layer_data" />
+    <node id="pkg_infrastructure_repository_sqlite" type="Package" name="infrastructure.repository.sqlite" x="130" y="634" w="213" h="60" parent="layer_data" />
+    <node id="domain_model" type="Package" name="Domain Model" x="922" y="40" w="210" h="682" transparent="true" />
+    <node id="pkg_domain_customer" type="Package" name="domain.customer" x="952" y="96" w="150" h="60" parent="domain_model" />
+    <node id="pkg_domain_product" type="Package" name="domain.product" x="952" y="230" w="150" h="60" parent="domain_model" />
+    <node id="pkg_domain_cart" type="Package" name="domain.cart" x="952" y="365" w="150" h="60" parent="domain_model" />
+    <node id="pkg_domain_order" type="Package" name="domain.order" x="952" y="500" w="150" h="60" parent="domain_model" />
+    <node id="pkg_domain_payment" type="Package" name="domain.payment" x="952" y="634" w="150" h="60" parent="domain_model" />
+    <edge type="Dependency" from="pkg_presentation_view" to="pkg_presentation_controller" stereotype="use" labelX="236" labelY="109" labelW="79" labelH="20">
+      <pt x="220" y="136" />
+      <pt x="330" y="136" />
+    </edge>
+    <edge type="Dependency" from="pkg_presentation_web" to="pkg_presentation_controller" stereotype="use" labelX="518" labelY="109" labelW="79" labelH="20">
+      <pt x="612" y="136" />
+      <pt x="502" y="136" />
+    </edge>
+    <edge type="Dependency" from="pkg_application_service" to="pkg_application_search" stereotype="use" labelX="376" labelY="323" labelW="79" labelH="20">
+      <pt x="361" y="350" />
+      <pt x="471" y="350" />
+    </edge>
+    <edge type="Dependency" from="pkg_infrastructure_repository_sqlite" to="pkg_infrastructure_repository" stereotype="use" labelX="152" labelY="599" labelW="79" labelH="20">
+      <pt x="144" y="634" />
+      <pt x="144" y="584" />
+    </edge>
+    <edge type="Dependency" from="layer_presentation" to="layer_application" stereotype="use" labelX="118" labelY="209" labelW="79" labelH="20">
+      <pt x="110" y="184" />
+      <pt x="110" y="254" />
+    </edge>
+    <edge type="Dependency" from="layer_application" to="layer_data" stereotype="use" labelX="118" labelY="423" labelW="79" labelH="20">
+      <pt x="110" y="398" />
+      <pt x="110" y="468" />
+    </edge>
+    <edge type="Dependency" from="layer_presentation" to="domain_model" stereotype="use" labelX="818" labelY="57" labelW="79" labelH="20">
+      <pt x="792" y="84" />
+      <pt x="922" y="84" />
+    </edge>
+    <edge type="Dependency" from="layer_application" to="domain_model" stereotype="use" labelX="818" labelY="271" labelW="79" labelH="20">
+      <pt x="792" y="298" />
+      <pt x="922" y="298" />
+    </edge>
+    <edge type="Dependency" from="layer_data" to="domain_model" stereotype="use" labelX="818" labelY="485" labelW="79" labelH="20">
+      <pt x="792" y="512" />
+      <pt x="922" y="512" />
+    </edge>
+  </diagram>
+  <diagram id="c44_seq_search" name="4.4d Design Sequence - Search by Keyword (UC02)" kind="sequence" scope="design" scopeName="4.3-4.5 Design model" numbers="true">
+    <node id="Customer" type="SeqActor" name="Customer" x="80" y="40" w="40" h="1046" />
+    <node id="SearchUI" type="Lifeline" name="" x="208" y="40" w="100" h="1046" classifier="SearchUI" />
+    <node id="SearchController" type="Lifeline" name="" x="328" y="40" w="130" h="1046" classifier="SearchController" />
+    <node id="SearchService" type="Lifeline" name="" x="509" y="40" w="113" h="1046" classifier="SearchService" />
+    <node id="QueryService" type="Lifeline" name="" x="763" y="40" w="110" h="1046" classifier="QueryService" />
+    <node id="LlmClient" type="Lifeline" name="" x="957" y="40" w="100" h="1046" classifier="LlmClient" />
+    <node id="ProductRepository" type="Lifeline" name="" x="1077" y="40" w="138" h="1046" classifier="ProductRepository" />
+    <node id="VectorIndex" type="Lifeline" name="" x="1235" y="40" w="105" h="1046" classifier="VectorIndex" />
+    <node id="RankingService" type="Lifeline" name="" x="1360" y="40" w="121" h="1046" classifier="RankingService" />
+    <node id="frag5" type="Fragment" name="" x="582" y="338" w="455" h="260" operator="alt" covers="QueryService,LlmClient">
+      <operand guard="Gemma 4 replies" y="355" h="141" />
+      <operand guard="error or timeout → keyword rules" y="496" h="102" />
+    </node>
+    <edge type="Message" from="Customer" to="SearchUI" name="submitText(text)" labelX="114" labelY="103" labelW="129" labelH="20">
+      <pt x="100" y="130" />
+      <pt x="258" y="130" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="SearchController" name="search(text)" labelX="274" labelY="143" labelW="102" labelH="20">
+      <pt x="258" y="170" />
+      <pt x="393" y="170" />
+    </edge>
+    <edge type="Message" from="SearchController" to="SearchService" name="searchText(text)" labelX="416" labelY="183" labelW="126" labelH="20">
+      <pt x="393" y="210" />
+      <pt x="566" y="210" />
+    </edge>
+    <edge type="Message" from="SearchService" to="QueryService" name="textQuery(text)" labelX="631" labelY="223" labelW="121" labelH="20">
+      <pt x="566" y="250" />
+      <pt x="818" y="250" />
+    </edge>
+    <edge type="Message" from="QueryService" to="QueryService" name="understand(query)" labelX="862" labelY="289" labelW="137" labelH="20" self="true">
+      <pt x="818" y="290" />
+      <pt x="852" y="290" />
+      <pt x="852" y="308" />
+      <pt x="818" y="308" />
+    </edge>
+    <edge type="Message" from="QueryService" to="LlmClient" name="chat(messages, tools)" labelX="835" labelY="385" labelW="155" labelH="20">
+      <pt x="818" y="412" />
+      <pt x="1007" y="412" />
+    </edge>
+    <edge type="Message" from="LlmClient" to="QueryService" name="LlmReply (JSON filters)" return="true" labelX="833" labelY="425" labelW="159" labelH="20">
+      <pt x="1007" y="452" />
+      <pt x="818" y="452" />
+    </edge>
+    <edge type="Message" from="QueryService" to="QueryService" name="parseRules(query)" labelX="862" labelY="553" labelW="135" labelH="20" self="true">
+      <pt x="818" y="554" />
+      <pt x="852" y="554" />
+      <pt x="852" y="572" />
+      <pt x="818" y="572" />
+    </edge>
+    <edge type="Message" from="QueryService" to="SearchService" name="CommonQuery" return="true" labelX="632" labelY="611" labelW="120" labelH="20">
+      <pt x="818" y="638" />
+      <pt x="566" y="638" />
+    </edge>
+    <edge type="Message" from="SearchService" to="SearchService" name="retrieve(query)" labelX="610" labelY="677" labelW="124" labelH="20" self="true">
+      <pt x="566" y="678" />
+      <pt x="600" y="678" />
+      <pt x="600" y="696" />
+      <pt x="566" y="696" />
+    </edge>
+    <edge type="Message" from="SearchService" to="ProductRepository" name="allProducts()" labelX="636" labelY="709" labelW="112" labelH="20">
+      <pt x="566" y="736" />
+      <pt x="1146" y="736" />
+    </edge>
+    <edge type="Message" from="ProductRepository" to="SearchService" name="List&lt;Product&gt;" return="true" labelX="851" labelY="749" labelW="123" labelH="20">
+      <pt x="1146" y="776" />
+      <pt x="566" y="776" />
+    </edge>
+    <edge type="Message" from="SearchService" to="VectorIndex" name="build(products)" labelX="628" labelY="789" labelW="128" labelH="20">
+      <pt x="566" y="816" />
+      <pt x="1288" y="816" />
+    </edge>
+    <edge type="Message" from="SearchService" to="RankingService" name="rank(query, candidates, limit)" labelX="590" labelY="829" labelW="203" labelH="20">
+      <pt x="566" y="856" />
+      <pt x="1421" y="856" />
+    </edge>
+    <edge type="Message" from="RankingService" to="SearchService" name="List&lt;SearchResult&gt;" return="true" labelX="837" labelY="869" labelW="151" labelH="20">
+      <pt x="1421" y="896" />
+      <pt x="566" y="896" />
+    </edge>
+    <edge type="Message" from="SearchService" to="SearchController" name="List&lt;SearchResult&gt;" return="true" labelX="404" labelY="909" labelW="151" labelH="20">
+      <pt x="566" y="936" />
+      <pt x="393" y="936" />
+    </edge>
+    <edge type="Message" from="SearchController" to="SearchUI" name="JSON" return="true" labelX="289" labelY="949" labelW="72" labelH="20">
+      <pt x="393" y="976" />
+      <pt x="258" y="976" />
+    </edge>
+    <edge type="Message" from="SearchUI" to="Customer" name="ranked paintings" return="true" labelX="111" labelY="989" labelW="136" labelH="20">
+      <pt x="258" y="1016" />
+      <pt x="100" y="1016" />
+    </edge>
+    <activation on="SearchUI" y1="130" y2="1016" />
+    <activation on="SearchController" y1="170" y2="976" />
+    <activation on="SearchService" y1="210" y2="936" />
+    <activation on="QueryService" y1="250" y2="638" />
+    <activation on="LlmClient" y1="412" y2="452" />
+    <activation on="ProductRepository" y1="736" y2="776" />
+    <activation on="VectorIndex" y1="816" y2="834" />
+    <activation on="RankingService" y1="856" y2="896" />
+    <node id="seq_note" type="Note" name="QueryService only knows the LlmClient interface; at run time it is GemmaClient, which calls Gemma 4&#10;(vLLM, OpenAI-compatible API) with a time limit. A text query has no image embedding: retrieve()&#10;scores keywords and attributes, and VectorIndex.nearest() is not called. SearchUI shows the&#10;results with SearchResultView.render(results)." x="40" y="1110" w="664" h="80" />
+  </diagram>
+  <diagram id="c44_seq_cancel" name="4.4e Design Sequence - Cancel Order (UC11)" kind="sequence" scope="design" scopeName="4.3-4.5 Design model" numbers="true">
+    <node id="Customer" type="SeqActor" name="Customer" x="80" y="40" w="40" h="1112" />
+    <node id="OrderView" type="Lifeline" name="" x="388" y="40" w="100" h="1112" classifier="OrderView" />
+    <node id="OrderController" type="Lifeline" name="" x="614" y="40" w="125" h="1112" classifier="OrderController" />
+    <node id="OrderService" type="Lifeline" name="" x="860" y="40" w="109" h="1112" classifier="OrderService" />
+    <node id="OrderRepository" type="Lifeline" name="" x="1104" y="40" w="128" h="1112" classifier="OrderRepository" />
+    <node id="Order" type="Lifeline" name="" x="1252" y="40" w="100" h="1112" classifier="Order" />
+    <node id="frag8" type="Fragment" name="" x="116" y="458" w="1216" h="584" operator="alt" covers="OrderView,OrderController,OrderService,OrderRepository,Order">
+      <operand guard="not the customer's order → not found" y="475" h="141" />
+      <operand guard="not cancellable: SHIPPED, DELIVERED, CANCELLED" y="616" h="222" />
+      <operand guard="PLACED or PROCESSING → cancel ok" y="838" h="204" />
+    </node>
+    <edge type="Message" from="Customer" to="OrderView" name="click Cancel order and confirm" labelX="168" labelY="103" labelW="203" labelH="20">
+      <pt x="100" y="130" />
+      <pt x="438" y="130" />
+    </edge>
+    <edge type="Message" from="OrderView" to="OrderController" name="cancelOrder(customerId, orderId)" labelX="449" labelY="143" labelW="216" labelH="20">
+      <pt x="438" y="170" />
+      <pt x="676" y="170" />
+    </edge>
+    <edge type="Message" from="OrderController" to="OrderService" name="cancelOrder(customerId, orderId)" labelX="687" labelY="183" labelW="216" labelH="20">
+      <pt x="676" y="210" />
+      <pt x="914" y="210" />
+    </edge>
+    <edge type="Message" from="OrderService" to="OrderService" name="getOrder(customerId, orderId)" labelX="958" labelY="249" labelW="200" labelH="20" self="true">
+      <pt x="914" y="250" />
+      <pt x="948" y="250" />
+      <pt x="948" y="268" />
+      <pt x="914" y="268" />
+    </edge>
+    <edge type="Message" from="OrderService" to="OrderRepository" name="findOrder(orderId)" labelX="973" labelY="281" labelW="137" labelH="20">
+      <pt x="914" y="308" />
+      <pt x="1168" y="308" />
+    </edge>
+    <edge type="Message" from="OrderRepository" to="OrderService" name="Order" return="true" labelX="1006" labelY="321" labelW="70" labelH="20">
+      <pt x="1168" y="348" />
+      <pt x="914" y="348" />
+    </edge>
+    <edge type="Message" from="OrderService" to="Order" name="isOwnedBy(customerId)" labelX="959" labelY="361" labelW="164" labelH="20">
+      <pt x="914" y="388" />
+      <pt x="1302" y="388" />
+    </edge>
+    <edge type="Message" from="Order" to="OrderService" name="boolean" return="true" labelX="1194" labelY="401" labelW="82" labelH="20">
+      <pt x="1302" y="428" />
+      <pt x="914" y="428" />
+    </edge>
+    <edge type="Message" from="OrderService" to="OrderController" name="NoSuchElementException" return="true" labelX="708" labelY="505" labelW="174" labelH="20">
+      <pt x="914" y="532" />
+      <pt x="676" y="532" />
+    </edge>
+    <edge type="Message" from="OrderController" to="OrderView" name="404 Not Found" return="true" labelX="494" labelY="545" labelW="126" labelH="20">
+      <pt x="676" y="572" />
+      <pt x="438" y="572" />
+    </edge>
+    <edge type="Message" from="OrderService" to="Order" name="cancel()" labelX="998" labelY="647" labelW="87" labelH="20">
+      <pt x="914" y="674" />
+      <pt x="1302" y="674" />
+    </edge>
+    <edge type="Message" from="Order" to="OrderService" name="IllegalStateException" return="true" labelX="963" labelY="687" labelW="157" labelH="20">
+      <pt x="1302" y="714" />
+      <pt x="914" y="714" />
+    </edge>
+    <edge type="Message" from="OrderService" to="OrderController" name="IllegalStateException" return="true" labelX="717" labelY="727" labelW="157" labelH="20">
+      <pt x="914" y="754" />
+      <pt x="676" y="754" />
+    </edge>
+    <edge type="Message" from="OrderController" to="OrderView" name="409 Conflict" return="true" labelX="501" labelY="767" labelW="112" labelH="20">
+      <pt x="676" y="794" />
+      <pt x="438" y="794" />
+    </edge>
+    <edge type="Message" from="OrderService" to="Order" name="cancel()" labelX="998" labelY="869" labelW="87" labelH="20">
+      <pt x="914" y="896" />
+      <pt x="1302" y="896" />
+    </edge>
+    <edge type="Message" from="OrderService" to="OrderRepository" name="updateStatus(orderId, CANCELLED)" labelX="925" labelY="909" labelW="232" labelH="20">
+      <pt x="914" y="936" />
+      <pt x="1168" y="936" />
+    </edge>
+    <edge type="Message" from="OrderService" to="OrderController" name="void" return="true" labelX="761" labelY="949" labelW="69" labelH="20">
+      <pt x="914" y="976" />
+      <pt x="676" y="976" />
+    </edge>
+    <edge type="Message" from="OrderController" to="OrderView" name="Order (CANCELLED)" return="true" labelX="482" labelY="989" labelW="150" labelH="20">
+      <pt x="676" y="1016" />
+      <pt x="438" y="1016" />
+    </edge>
+    <edge type="Message" from="OrderView" to="Customer" name="show the result message" return="true" labelX="180" labelY="1055" labelW="179" labelH="20">
+      <pt x="438" y="1082" />
+      <pt x="100" y="1082" />
+    </edge>
+    <activation on="OrderView" y1="130" y2="1082" />
+    <activation on="OrderController" y1="170" y2="1016" />
+    <activation on="OrderService" y1="210" y2="976" />
+    <activation on="OrderRepository" y1="308" y2="348" />
+    <activation on="Order" y1="388" y2="428" />
+    <activation on="Order" y1="674" y2="714" />
+    <activation on="Order" y1="896" y2="914" />
+    <activation on="OrderRepository" y1="936" y2="954" />
+    <node id="seq_note" type="Note" name="WebServer takes customerId from the session (SessionManager), never from the page. It answers&#10;NoSuchElementException with 404 and IllegalStateException with 409; after a cancel it returns&#10;OrderController.viewOrder(customerId, orderId), the order with its new status." x="40" y="1176" w="640" h="66" />
+  </diagram>
 </diagrams>

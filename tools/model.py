@@ -58,9 +58,9 @@ REQUIREMENT_DETAILS = {
     "NFR01": ("Must", "Customer, Administrator", "The system shall take the identity from the signed-in session and check order ownership on the server."),
     "NFR02": ("Must", "Customer", "The system shall still find paintings with keyword rules when the Gemma service fails or times out."),
     "NFR03": ("Must", "Administrator", "The system shall reject uploaded images that are not JPEG, PNG or WebP or are larger than 5 MB."),
-    "NFR04": ("Must", "Development team", "The system shall separate presentation, application, domain and infrastructure; the user interface shall not access the database directly."),
+    "NFR04": ("Must", "Developer", "The system shall separate presentation, application, domain and infrastructure; the user interface shall not access the database directly."),
     "NFR05": ("Must", "Customer", "The system shall not store full card numbers; only the last four digits and the authorisation code are kept."),
-    "NFR06": ("Should", "Lecturer, Development team", "The system shall run on one machine with a SQLite database and need the network only to call Gemma."),
+    "NFR06": ("Should", "Lecturer, Developer", "The system shall run on one machine with a SQLite database and need the network only to call Gemma."),
     "NFR07": ("Should", "Customer", "The system shall return text search results within 2 seconds on the demo data."),
     "NFR08": ("Must", "Customer", "The system shall process audio on the local machine with self-hosted Whisper, never send audio outside, and transcribe a 5-second sentence within 3 seconds."),
 }

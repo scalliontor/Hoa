@@ -2,7 +2,7 @@
 \addcontentsline{toc}{chapter}{Conclusion}
 \markboth{Conclusion}{}
 
-\textbf{What the group built.} This essay followed one product, the online gallery Họa., through the five steps of
+\textbf{What I built.} This essay followed one product, the online gallery Họa., through the five steps of
 the course. Chapter~1 investigated the business, traced five concrete problems to their root causes and fixed the
 boundary of the system in a context diagram. Chapter~2 turned the needs into \nFR{} functional and \nNFR{}
 non-functional requirements, four actors and \nUseCases{} use cases, each requirement written as ``The system
@@ -22,7 +22,7 @@ server on the laptop instead of a cloud service, English and US dollars everywhe
 customer's room -- each change was made once and appeared everywhere, and the traceability tables were regenerated
 rather than edited by hand.
 
-\textbf{What the group learned about AI in an information system.} The AI features were useful only because the
+\textbf{What I learned about AI in an information system.} The AI features were useful only because the
 analysis came first. Gemma~4 understands ``Monet paintings under 100 dollars'' far better than keyword rules, but the
 price limit is still applied by \code{SearchService}, the order is still checked by \code{OrderService}, and the
 assistant still receives the customer id from the session, not from the model. Every AI call can fail, so every AI
@@ -31,7 +31,7 @@ model showed that a non-functional requirement -- the customer's voice must not 
 architecture as strongly as any functional one.
 
 \textbf{Limits and next steps.} The demo is a study project: payment and delivery are simulated, the image vectors
-encode attributes rather than appearance, and the evaluation uses the group's own data. The next steps follow
+encode attributes rather than appearance, and the evaluation uses my own data. The next steps follow
 directly from the models: learned image embeddings behind the same \code{VectorIndex} interface, one transaction
 around the whole checkout, a decision of the owner on stock and refunds when an order is cancelled, and an
 evaluation with real customers and real rooms.

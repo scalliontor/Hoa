@@ -26,9 +26,6 @@ from pptx import Presentation  # noqa: E402
 OUT = ROOT / "build" / "guide"
 WORDS_PER_MINUTE = 160  # Vietnamese syllable-words per minute at a calm presentation pace
 SKIM_SECONDS = 8  # a slide that is only shown, not explained, in the short version
-# Who says what (group 10): person 1 opens and does chapters 1-2, person 2 chapter 3, person 3 chapter 4,
-# person 4 chapter 5, the demo and the conclusion. Slide 39 is the backup slide and belongs to nobody.
-SPEAKERS = {"1": (1, 18), "2": (19, 26), "3": (27, 32), "4": (33, 38)}
 CHAPTER_NAMES = {"1": "Requirement Determination", "2": "Analysis", "3": "AI in e-commerce", "4": "Design",
                  "5": "Code"}
 SPECIAL = {"\\": r"\textbackslash{}", "&": r"\&", "%": r"\%", "#": r"\#", "_": r"\_", "$": r"\$", "{": r"\{",
@@ -277,13 +274,6 @@ def main():
         seconds = sum(s for n, _, s, _ in slides if first <= n <= last)
         out.append(f"\\expandafter\\def\\csname chapterTime{chapter}\\endcsname{{{minutes_text(seconds)}}}")
         out.append(f"\\expandafter\\def\\csname chapterSlides{chapter}\\endcsname{{{first}--{last}}}")
-    for person, (first, last) in SPEAKERS.items():
-        in_range = [n for n, _, _, _ in slides if first <= n <= last]
-        full_s = sum(full.get(n, 0.0) for n in in_range)
-        short_s = sum(core[n] if n in must else SKIM_SECONDS for n in in_range)
-        out.append(f"\\expandafter\\def\\csname speakerSlides{person}\\endcsname{{{first}--{last}}}")
-        out.append(f"\\expandafter\\def\\csname speakerFull{person}\\endcsname{{{minutes_text(full_s)}}}")
-        out.append(f"\\expandafter\\def\\csname speakerShort{person}\\endcsname{{{minutes_text(short_s)}}}")
     (OUT / "facts.tex").write_text("\n".join(out) + "\n", encoding="utf-8")
     print(f"guide facts: {len(slides)} slides, ~{total / 60:.0f} min full, ~{short / 60:.0f} min short "
           f"({len(must)} must-say slides)")

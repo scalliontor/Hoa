@@ -105,7 +105,7 @@ one need?
 \small Support staff & \small Answer customers quickly and correctly & \small Order status, cancellation policy & \small Medium\\
 \small Payment service & \small Process transactions safely & \small Amount, transaction id, authorisation code & \small Medium\\
 \small Gemma 4 AI service & \small Serve inference requests within its resources & \small Queries, images to describe, list of tools & \small Medium\\
-\small Development team, lecturer & \small A correct model that follows the lectures; a demo that runs & \small Requirements, diagrams, source code, test results & \small High\\
+\small Developer (the author), lecturer & \small A correct model that follows the lectures; a demo that runs & \small Requirements, diagrams, source code, test results & \small High\\
 \bottomrule
 \end{longtable}
 
@@ -115,6 +115,13 @@ Customers want to search with photos and voice at any time, while the AI service
 conflicts become requirements NFR01 and NFR02 in Section~\ref{sec:frnfr}. A third, quieter conflict concerns
 voice: speaking is convenient, but a recording of a customer's voice is personal data. It becomes NFR08 (audio
 never leaves the machine).
+
+Figure~\ref{fig:c1_stakeholders} draws the same analysis as an ArchiMate stakeholder map. Every stakeholder is
+linked to the concerns (drivers) it has, and every concern to the goal of the system that answers it, with the
+requirements in brackets. The privacy concern is shared by the customer, the owner and the payment service: this is
+where the conflicts above meet, and why NFR01, NFR05 and NFR08 are all Must.
+
+\landscapefig{c1_stakeholders}{Stakeholder map of Họa. (ArchiMate)}{Stakeholder map of Họa.: stakeholders, their concerns and the goals of the system that answer them. \trialshot{ArchiMate diagrams}. Diagram \vpsrc{c1_stakeholders}.}{\label{fig:c1_stakeholders}}
 
 %% =========================================================================
 \section{Business Processes}\label{sec:1.4}
@@ -142,6 +149,15 @@ output.
 \small After-sales support & \small Customer question, order id & \small Look up status, cancel an order that is not shipped & \small Answer, order CANCELLED\\
 \bottomrule
 \end{longtable}
+
+Figure~\ref{fig:c1_process} draws the central process, from the order to the delivery, in BPMN. The customer
+and the gallery are pools; inside the gallery the administrator and the warehouse staff are lanes; the payment
+service and the delivery carrier are black-box pools that only exchange messages with the gallery. A message start
+event receives the order; an exclusive gateway separates card payment from cash on delivery; the order then moves
+through the statuses PLACED, PROCESSING, SHIPPED and DELIVERED, which Chapter~\ref{ch:analysis} models as the state
+machine of \code{Order} (Figure~\ref{fig:c2_state_order}).
+
+\landscapefig{c1_process}{Business process from order to delivery (BPMN)}{Business process of Họa. from order to delivery: pools, lanes, the payment gateway and the message flows with the payment service and the carrier. \trialshot{BPMN diagrams}. Diagram \vpsrc{c1_process}.}{\label{fig:c1_process}}
 
 \subsection{Order processing and its exceptions}
 
@@ -209,7 +225,7 @@ together with the version of the encoding (Chapter~4).
 \section{Business Problems and Root Causes}\label{sec:1.6}
 
 The analyst must point out problems, not only describe activities. From observing the message-based sales process
-the group recorded five problems: (P1) customers cannot find a suitable painting when they do not know its title;
+I recorded five problems: (P1) customers cannot find a suitable painting when they do not know its title;
 (P2) sold-out prints are sometimes sold; (P3) customers do not know where their order is and ask again and
 again; (P4) staff process orders and update the catalogue by hand; (P5) order and payment details can leak when
 customers are identified through messages.
@@ -254,27 +270,32 @@ way to understand queries given as natural sentences, speech or images}. This is
 \end{longtable}
 
 %% =========================================================================
+Figure~\ref{fig:c1_problems} arranges Table~\ref{tab:pcin} as a problem tree: each root cause at the bottom
+influences a problem, and each problem an impact on the business at the top. The requirements of
+Chapter~\ref{ch:analysis} attack the causes, not the symptoms: structured painting data and multimodal search for P1,
+stock decreased in the same step as the order for P2, self-service order tracking for P3, a back office for P4 and
+ownership checks for P5.
+
+\landscapefig{c1_problems}{Problem tree of Họa. (ArchiMate)}{Problem tree of Họa.: root causes, the five problems P1--P5 and their impacts. \trialshot{ArchiMate diagrams}. Diagram \vpsrc{c1_problems}.}{\label{fig:c1_problems}}
+
+%% =========================================================================
 \section{System Scope, Boundary and Context Diagram}\label{sec:1.7}
 
 Before designing, the analyst must decide what is inside the system and what is outside. Inside the boundary of
 \emph{Họa. Gallery} are the painting catalogue, customers, carts, orders, stock and the search services. Outside
 are four parties: the \textbf{Customer}, the \textbf{Administrator}, the \textbf{Payment Service} and the
-\textbf{Gemma 4 Service}. Gemma is outside because the group does not control the model and only calls it
+\textbf{Gemma 4 Service}. Gemma is outside because the shop does not control the model and only calls it
 through an API; every decision about price, stock and access rights stays inside Họa. The Whisper speech server,
 on the other hand, runs on the shop's own machine and is therefore \emph{inside} the boundary: a customer's
 voice never leaves the system (NFR08). Figure~\ref{fig:context} is the context diagram of Lecture~01 for Họa.
 
 \subsection{System Context Diagram}\label{sec:1.7.1}
 
-Each arrow of the context diagram is a flow of information, labelled with what it carries. Visual Paradigm
-Community Edition has no data-flow diagram, so the flows are drawn as «flow» dependencies between the system and
-the four external entities.
+The context diagram is the level~0 data flow diagram (DFD): the whole system is the single process~0, the four
+external entities are drawn around it, and each arrow is a flow of information labelled with what it carries. Level~1
+(Section~\ref{sec:dfd1}) opens process~0 and must show the same flows again.
 
-\begin{figure}[H]
-\centering
-\vpfig{c1_context}{0.42\textheight}
-\caption[Context diagram of Họa.]{Context diagram of Họa.: the system as one box, the four external entities and the flows of information in each direction. Visual Paradigm diagram \vpsrc{c1_context}.}\label{fig:c1_context}\label{fig:context}
-\end{figure}
+\landscapefig{c1_dfd0}{Context diagram of Họa. (DFD level 0)}{Context diagram of Họa. (DFD level 0): the system as process 0, the four external entities and the flows of information in each direction. \trialshot{data flow diagrams}. Diagram \vpsrc{c1_dfd0}.}{\label{fig:c1_dfd0}\label{fig:context}}
 
 \subsection{External Information Inflows and Outflows}\label{sec:1.7.2}
 

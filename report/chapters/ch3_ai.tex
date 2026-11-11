@@ -16,7 +16,7 @@ without taking over its business rules. The central principle is the one of Assi
 \label{eq:a06pipeline}
 \end{equation}
 Họa. follows this pipeline with two AI models. \textbf{Gemma~4}, served on a remote L40S GPU server,
-understands sentences, reads photos and calls tools \cite{gemma,vllm}. \textbf{Whisper}, hosted by the group on the
+understands sentences, reads photos and calls tools \cite{gemma,vllm}. \textbf{Whisper}, self-hosted on the
 same laptop as the shop, turns speech into text \cite{whisper,fasterwhisper}. Everything else (prices, stock,
 orders, ownership) stays in deterministic code and in the SQLite database.
 
@@ -228,7 +228,7 @@ to ``voice'') and by the image path (\code{QueryService.imageQuery}, which store
 \subsection{Path of the Audio}
 
 In the A06 prototype, \code{SpeechService.transcribe(audio_input)} only returned the text it was given, because
-speech recognition was simulated. Họa. replaces the simulation with a real speech-to-text model that the group
+speech recognition was simulated. Họa. replaces the simulation with a real speech-to-text model that the shop
 hosts itself:
 \begin{enumerate}
 \item The browser view \code{VoiceInput} records the customer with the MediaRecorder API (\code{start},
@@ -252,7 +252,7 @@ brief; the self-hosted model sits behind \code{SpeechService}.
 
 \subsection{Why the Voice Model Is Self-hosted}
 
-Three architectures were compared (Table~\ref{tab:sttcompare}). The group chose self-hosting because of NFR08: audio
+Three architectures were compared (Table~\ref{tab:sttcompare}). I chose self-hosting because of NFR08: audio
 is personal data, and a voice recorded in a living room can contain other people and private conversations.
 
 \begin{longtable}{@{}P{3.1cm}P{3.9cm}P{3.9cm}P{4.1cm}@{}}
@@ -269,7 +269,7 @@ is personal data, and a voice recorded in a living room can contain other people
 \small Works offline & \small No & \small No & \small Yes, after the model is downloaded once (NFR06)\\
 \small Browser support & \small Depends on the browser & \small Any & \small Any browser that can record audio\\
 \small Cost & \small Free & \small Per minute of audio & \small Free; uses the CPU of the laptop\\
-\small Control & \small None & \small Limited & \small Model size, language and decoding chosen by the group\\
+\small Control & \small None & \small Limited & \small Model size, language and decoding chosen by the developer\\
 \small Latency & \small Low & \small Network dependent & \small Measured (Section~\ref{sec:3.12}); target 3~s for 5~s of speech\\
 \bottomrule
 \end{longtable}
@@ -637,7 +637,7 @@ code (NFR05). The API key is in the configuration file, not in the source code.
 \textbf{Function} & \textbf{Application in Họa.}\\
 \midrule
 \endhead
-\small GOVERN & \small The group decides that AI only suggests and explains; prices, stock, ownership and order states are rules (BR11). Prompts, vocabulary and weights are versioned with the code.\\
+\small GOVERN & \small The shop decides that AI only suggests and explains; prices, stock, ownership and order states are rules (BR11). Prompts, vocabulary and weights are versioned with the code.\\
 \small MAP & \small The customer is the person affected; the possible harms are wrong suggestions, exposure of another customer's order and leaks of audio or photos. Each is mapped to a requirement (FR01, NFR01, NFR08).\\
 \small MEASURE & \small Labelled queries for each mode, success rate and latency (Section~\ref{sec:3.12}); every result shows its reason and whether AI was used.\\
 \small MANAGE & \small Fallback paths (Table~\ref{tab:fallback}), editable transcripts, read-only tools, timeouts and input validation of uploads.\\

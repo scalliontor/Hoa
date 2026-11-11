@@ -15,7 +15,7 @@ slides/.cache/
 slides/qa/
 slides/qa-dark/
 build/report/*
-!build/report/tieuluan_V2_*.pdf
+!build/report/tieuluan_V*_*.pdf
 build/guide/
 
 # Visual Paradigm backups
@@ -27,3 +27,4 @@ build/guide/
 
 # Browser automation output
 .playwright-mcp/
+vp/.vp.lock

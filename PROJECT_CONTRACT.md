@@ -26,7 +26,7 @@ nút viền "XEM TẤT CẢ", footer có wordmark khổng lồ "Họa.", nút đ
   SpeechService.transcribe; ImageService; SearchService.searchText; RankingService S = α·Stext + β·Simage + γ·Sbusiness;
   ProductRepository.allProducts; OrderRepository.findOrder; VectorIndex.cosineSimilarity).
 
-## Quy tắc đặt tên (bắt buộc, theo yêu cầu của nhóm)
+## Quy tắc đặt tên (bắt buộc)
 - Tên lớp, tên phương thức, tên tham số, tên thuộc tính/biến thành viên trong Java và tên hàm trong JS
   phải **giống hệt** `DESIGN` trong model.py (không đổi, không viết tắt, không thêm public method ngoài thiết kế;
   hàm private phụ trợ thì được).
@@ -129,4 +129,4 @@ số đúng, tỉ lệ thành công, ví dụ sai — cho chế độ text, voic
 Tiểu luận 5 chương theo bảng của thầy (Chapter 1 Requirement Determination, 2 Analysis, 3 AI in e-commerce,
 4 Design, 5 Code), mỗi chương ~15 trang; định dạng trang trọng như `chapter4/design_04.tex`; Chương 4 theo dàn ý
 4.1–4.6 trên bảng (có "Copy screen of DB" và "Present code + structure Packages/Classes").
-Tên file theo bảng: `tieuluan_V2_04_<nhóm>_<TênSV>.pdf` — thông tin nhóm để trong `report/members.tex` (chưa có danh sách).
+Tên file theo bảng: `tieuluan_V<phiên bản>_04_10_<TÊNSV>_<3 số cuối mã SV>.pdf`, hiện là `tieuluan_V3_04_10_VUHUNGANH_022.pdf`. Đây là bài cá nhân (từ 11/11/2026); tên, mã sinh viên và phiên bản để trong `report/author.tex`.

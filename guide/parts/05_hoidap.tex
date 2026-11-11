@@ -1,7 +1,7 @@
 \section{Câu hỏi thường gặp}\label{sec:hoidap}
 Mỗi câu có hai tầng. \key{Nói ngắn} là câu trả lời bằng lời thường, đủ cho phần lớn trường hợp; hãy nói câu này trước. \emph{Nếu thầy hỏi tiếp} mới dùng đến phần kỹ thuật bên dưới. Nói thẳng điều chưa làm được, và đừng đoán; chưa chắc thì mở đúng mục ở bảng ``hỏi gì mở file nào'' (mục~\ref{sec:filemap}).
 
-\key{Ai trả lời câu nào:} Người 1 trả lời mục~\ref{sec:q1}; Người 2 trả lời mục~\ref{sec:q2}; Người 3 trả lời các câu về thiết kế (bốn tầng, chuyển khối code thành bảng) trong mục~\ref{sec:q3}; Người 4 trả lời các câu về code, kiểm chứng và hạn chế (mục~\ref{sec:q3} và \ref{sec:hanche}). Câu liên quan tới phần của bạn khác thì nhường cho bạn đó.
+\key{Bài cá nhân nên em trả lời mọi câu}, từ Chương 1 đến Chương 5. Câu hỏi được xếp theo chương: yêu cầu và phân tích (mục~\ref{sec:q1}), AI (mục~\ref{sec:q2}), thiết kế và code (mục~\ref{sec:q3}), và các hạn chế (mục~\ref{sec:hanche}).
 
 \subsection{Yêu cầu và phân tích (Chương 1--2)}\label{sec:q1}
 \qa{Bên liên quan và tác nhân khác nhau thế nào?}{
@@ -16,8 +16,8 @@ Yêu cầu FR03 chỉ nói: trả về các tranh giống nhất với ảnh kh�
 Ba cách tìm (chữ, giọng nói, ảnh) và cả thử tranh vào phòng đều là các kiểu của một việc chung là ``tìm tranh''. Đặt hàng luôn kéo theo quản lý giỏ. Hủy đơn là phần thêm tùy chọn của xem đơn.}{
 \emph{Generalization:} UC02, UC03, UC04, UC14 là các cách cụ thể của UC01 Search Product (trừu tượng). \emph{Include:} UC07 Checkout luôn dùng UC06 Manage Cart; UC10 trợ lý luôn dùng tra đơn (UC09) và tìm tranh (UC01). \emph{Extend:} UC11 Cancel Order mở rộng UC08 View Order; UC05 View Product mở rộng UC01.}
 
-\qa{Yêu cầu chất lượng (phi chức năng) của nhóm đo thế nào?}{
-Mỗi yêu cầu có một con số hoặc điều kiện kiểm tra được. Ví dụ tìm bằng chữ phải trả lời trong hai giây, và nhóm đo được chỉ khoảng nửa giây khi có Gemma. Câu nói năm giây phải được nghe ra chữ trong ba giây, và nhóm đo được trung bình chưa đầy một giây, lâu nhất khoảng một giây rưỡi.}{
+\qa{Yêu cầu chất lượng (phi chức năng) của em đo thế nào?}{
+Mỗi yêu cầu có một con số hoặc điều kiện kiểm tra được. Ví dụ tìm bằng chữ phải trả lời trong hai giây, và em đo được chỉ khoảng nửa giây khi có Gemma. Câu nói năm giây phải được nghe ra chữ trong ba giây, và em đo được trung bình chưa đầy một giây, lâu nhất khoảng một giây rưỡi.}{
 NFR07: trung bình \evTextSecGemma{} giây với Gemma và \evTextSecRules{} giây với luật từ khóa. NFR08: trung bình \evSttMean{} giây, tối đa \evSttMax{} giây. NFR03 (ảnh JPEG, PNG, WebP, tối đa 5 MB) và NFR01 (quyền xem đơn) có kiểm thử tự động.}
 
 \qa{Vì sao món trong giỏ khác món trong đơn?}{
@@ -32,7 +32,7 @@ Cart khác Order về bản chất; quan hệ chỉ tồn tại lúc tạo, nên
 Để vẽ ranh giới trước khi nhìn vào bên trong: cửa hàng là một hộp kín, bên ngoài có bốn bên, và mỗi mũi tên ghi thứ đi vào hoặc đi ra. Mỗi thứ đi vào phải có một việc nhận nó và một khái niệm giữ nó; mỗi thứ đi ra phải có một việc tạo ra nó. Ranh giới cũng cho biết Whisper ở trong, Gemma và dịch vụ thanh toán ở ngoài.}{
 Bốn external entity: Customer, Administrator, Payment Service, Gemma 4 Service; tám luồng «flow». Visual Paradigm bản Community không có DFD nên luồng vẽ bằng dependency «flow». Báo cáo mục 1.7.}
 
-\qa{Kiểm tra nhất quán là gì? Nhóm làm thế nào?}{
+\qa{Kiểm tra nhất quán là gì? Em làm thế nào?}{
 Là lần theo một yêu cầu qua mọi bản vẽ để xem có chỗ nào mâu thuẫn không. Ví dụ ``khách được hủy đơn trước khi giao'': nó xuất hiện ở yêu cầu, ở việc Hủy đơn, ở sơ đồ từng bước, ở sơ đồ trạng thái và ở thiết kế, và cả năm đều khớp.}{
 FR11; UC11 mở rộng UC08; quyết định ``đã giao chưa'' trong activity; máy trạng thái chỉ cho hủy từ PLACED hoặc PROCESSING; \code{OrderService.cancelOrder} gọi \code{Order.cancel}.}
 
@@ -42,19 +42,19 @@ Gemma giúp \emph{hiểu}: hiểu câu khách gõ, hiểu ảnh, hiểu căn ph�
 (1) Đổi câu của khách thành bộ lọc (phong cách, chủ đề, màu, họa sĩ, giá tối đa); (2) mô tả ảnh thành phong cách, chủ đề, màu; (3) đọc ảnh phòng, chọn tranh, viết lý do; (4) làm trợ lý chọn công cụ và viết câu trả lời.}
 
 \qa{Nếu Gemma không phản hồi thì sao?}{
-Cửa hàng vẫn chạy. Mỗi lần gọi Gemma chờ tối đa mười lăm giây; quá hạn hoặc lỗi thì chuyển sang luật đơn giản. Nhóm sẽ cho thầy cô thấy ngay trong demo, ở bước 9.}{
+Cửa hàng vẫn chạy. Mỗi lần gọi Gemma chờ tối đa mười lăm giây; quá hạn hoặc lỗi thì chuyển sang luật đơn giản. Em sẽ cho thầy cô thấy ngay trong demo, ở bước 9.}{
 Tìm bằng chữ chuyển sang luật từ khóa; tìm bằng ảnh chuyển sang đọc màu trung bình; trợ lý trả lời bằng luật; ảnh phòng xếp theo màu. Đây là NFR02.}
 
-\qa{Cách nhóm ``hiểu ảnh'' có phải là AI học sâu không?}{
-Chưa. Gemma nhìn ảnh và tả bằng ba nhãn (phong cách, chủ đề, màu), rồi cửa hàng so nhãn. Với ba mươi hai bức tranh thì cách này đủ dùng và dễ giải thích. Nhóm nói thật rằng đây chưa phải cách hiểu ảnh sâu như các mô hình chuyên về ảnh, và hướng phát triển là thay bằng mô hình tốt hơn.}{
+\qa{Cách em ``hiểu ảnh'' có phải là AI học sâu không?}{
+Chưa. Gemma nhìn ảnh và tả bằng ba nhãn (phong cách, chủ đề, màu), rồi cửa hàng so nhãn. Với ba mươi hai bức tranh thì cách này đủ dùng và dễ giải thích. Em nói thật rằng đây chưa phải cách hiểu ảnh sâu như các mô hình chuyên về ảnh, và hướng phát triển là thay bằng mô hình tốt hơn.}{
 Vector one-hot gồm 10 phong cách, 8 chủ đề, 10 màu, do \code{VectorIndex.toVector} tạo; độ giống là cosine. Bảng \code{product_feature} có cột \code{model_version} để sau này thay bằng embedding học được.}
 
-\qa{Công thức xếp hạng của bài tập A06 là gì, và nhóm chọn trọng số thế nào?}{
-Điểm của mỗi tranh gồm ba phần: độ khớp theo chữ, độ khớp theo ảnh, và việc còn hàng; cộng lại với trọng số 45\%, 45\% và 10\%. Nhóm chọn tay, chưa tinh chỉnh bằng dữ liệu.}{
+\qa{Công thức xếp hạng của bài tập A06 là gì, và em chọn trọng số thế nào?}{
+Điểm của mỗi tranh gồm ba phần: độ khớp theo chữ, độ khớp theo ảnh, và việc còn hàng; cộng lại với trọng số 45\%, 45\% và 10\%. Em chọn tay, chưa tinh chỉnh bằng dữ liệu.}{
 $S = \alpha S_{text} + \beta S_{image} + \gamma S_{business}$ với $\alpha=0{,}45$, $\beta=0{,}45$, $\gamma=0{,}10$ trong \code{demo/config/app.properties}. $S_{business}$ bằng 0 nếu hết hàng, tăng theo tồn kho và đạt tối đa khi còn từ 5 chiếc.}
 
 \qa{Kết quả đánh giá có đáng tin không?}{
-Chưa thể coi là chứng minh: đó là một lần đo trên bộ câu hỏi nhỏ, và Gemma có thể cho kết quả hơi khác giữa các lần. Nhóm chỉ khẳng định hai điều có chứng cứ rõ: ảnh thì Gemma hơn rõ (\evImageGemma{} so với \evImageLocal{}); chữ thì Gemma không hơn luật đơn giản (\evTextDirectGemma{} so với \evTextDirectRules{}).}{
+Chưa thể coi là chứng minh: đó là một lần đo trên bộ câu hỏi nhỏ, và Gemma có thể cho kết quả hơi khác giữa các lần. Em chỉ khẳng định hai điều có chứng cứ rõ: ảnh thì Gemma hơn rõ (\evImageGemma{} so với \evImageLocal{}); chữ thì Gemma không hơn luật đơn giản (\evTextDirectGemma{} so với \evTextDirectRules{}).}{
 Số câu: \evTextDirectN{} truy vấn trực tiếp, \evTextParaN{} diễn đạt lại, \evVoiceN{} bản ghi giọng nói, \evImageN{} ảnh, \evAssistantN{} câu hỏi trợ lý. Danh sách thất bại và tiêu chí đúng sai nằm trong Chương 3.}
 
 \qa{Vì sao slide giọng nói ghi sai khoảng 2\% mà slide đánh giá ghi khoảng 4\%?}{
@@ -62,11 +62,11 @@ Vì đo hai thứ khác nhau. Hai phần trăm là chỉ riêng chương trình 
 \evSttWer{} trên \evSttN{} câu thử Whisper; \evVoiceWer{} trên \evVoiceUtterances{} bản ghi trong đánh giá đầu cuối. Ví dụ \say{Klimt} bị nghe thành \say{Climbed}.}
 
 \qa{Vì sao tự chạy Whisper trên máy, và vì sao không làm đọc thành tiếng?}{
-Để âm thanh của khách không rời khỏi máy, để nhanh, và không phụ thuộc dịch vụ bên ngoài. Nhóm không làm đọc thành tiếng vì không có yêu cầu nào cần đến nó; trợ lý trả lời bằng chữ.}{
+Để âm thanh của khách không rời khỏi máy, để nhanh, và không phụ thuộc dịch vụ bên ngoài. Em không làm đọc thành tiếng vì không có yêu cầu nào cần đến nó; trợ lý trả lời bằng chữ.}{
 NFR08 (quyền riêng tư giọng nói). Cái giá: cần máy đủ mạnh và tải mô hình một lần.}
 
 \qa{Gemma có thể bịa lý do khi nói vì sao tranh hợp với phòng không?}{
-Có thể sai chi tiết vì đó là văn bản do mô hình viết. Nhóm giảm rủi ro bằng vài chốt chặn: Gemma chỉ được chọn trong mười hai bức đã đưa ra; câu giải thích quá ngắn hoặc chung chung thì bị thay bằng câu dựng từ thông tin của chính bức tranh.}{
+Có thể sai chi tiết vì đó là văn bản do mô hình viết. Em giảm rủi ro bằng vài chốt chặn: Gemma chỉ được chọn trong mười hai bức đã đưa ra; câu giải thích quá ngắn hoặc chung chung thì bị thay bằng câu dựng từ thông tin của chính bức tranh.}{
 Câu dài 15--25 từ và phải nêu chi tiết cụ thể; mã ngoài danh sách bị bỏ. Trong đánh giá, \evRoomConcrete{} trên \evRoomPicks{} câu được xem là cụ thể.}
 
 \qa{Làm sao khách không xem được đơn của người khác? Vì sao trả lời ``không tìm thấy''?}{
@@ -87,7 +87,7 @@ Ba quy tắc chính. Một thứ là một loại của thứ khác (khách VIP 
 Kế thừa: \code{customer}, \code{customer_vip}, \code{customer_new}. Một-nhiều: \code{address.customer_id}. Một-không-hoặc-một: UNIQUE ở \code{shipping.order_id}. Composition: khóa ghép và \code{ON DELETE CASCADE} ở \code{order_item}. Có \factTables{} bảng và \factFKs{} khóa ngoại.}
 
 \qa{Làm sao bảo đảm code khớp thiết kế?}{
-Nhóm có một file thiết kế chung. Từ đó sinh ra sơ đồ, cơ sở dữ liệu và khung code. Rồi một công cụ tự so code thật với thiết kế và báo mọi thứ đều khớp; thêm \factTests{} bài kiểm thử tự động đều đạt.}{
+Em có một file thiết kế chung. Từ đó sinh ra sơ đồ, cơ sở dữ liệu và khung code. Rồi một công cụ tự so code thật với thiết kế và báo mọi thứ đều khớp; thêm \factTests{} bài kiểm thử tự động đều đạt.}{
 \code{tools/model.py} là file chung; \code{tools/check_code_model.py} so: \factCheckClasses{} lớp, \factCheckFields{} trường, \factCheckOps{} hàm, \factCheckColumns{} cột.}
 
 \qa{Vì sao dùng Java và SQLite, không dùng framework?}{
@@ -104,13 +104,13 @@ Nguồn và giấy phép từng ảnh nằm trong \file{demo/data/ATTRIBUTION.md
 
 \needspace{9\baselineskip}
 \subsection{Hạn chế đã biết: nói thẳng}\label{sec:hanche}
-Thầy đánh giá cao việc nhóm \key{biết rõ giới hạn của mình}. Nếu bị hỏi hoặc còn thời gian, hãy nói các điều sau, mỗi điều kèm cách sửa:
+Thầy đánh giá cao việc em \key{biết rõ giới hạn của mình}. Nếu bị hỏi hoặc còn thời gian, hãy nói các điều sau, mỗi điều kèm cách sửa:
 \begin{itemize}
 \item \key{Đặt hàng chưa nằm gọn trong một giao dịch cơ sở dữ liệu.} Việc lưu đơn là một giao dịch, nhưng trừ kho và làm rỗng giỏ là các lệnh riêng; nếu sập giữa chừng, có thể có đơn đã lưu mà kho chưa trừ. \emph{Cách sửa:} gói cả ba việc vào một giao dịch.
 \item \key{Hủy đơn chưa hoàn lại số hàng vào kho.} Hiện chỉ đổi trạng thái đơn. \emph{Cách sửa:} thêm thao tác ``trả hàng vào kho'' ngược với ``trừ kho''.
 \item \key{Thanh toán chỉ mô phỏng;} chưa có cổng thanh toán thật, và chưa có mật khẩu (tài khoản demo chọn từ danh sách).
 \item \key{Đánh giá nhỏ, một lần đo;} cần nhiều câu hỏi và ảnh thật của khách hơn.
-\item \key{Cách hiểu ảnh còn đơn giản} (ba nhãn do nhóm tự định ra), chưa sâu như các mô hình chuyên về ảnh.
+\item \key{Cách hiểu ảnh còn đơn giản} (ba nhãn do em tự định ra), chưa sâu như các mô hình chuyên về ảnh.
 \item \key{Phụ thuộc máy chủ Gemma từ xa;} mất mạng thì chạy bằng luật đơn giản (kém hơn ở tìm bằng ảnh).
 \item \key{Một máy, một file SQLite;} chưa dành cho nhiều người dùng cùng lúc.
 \end{itemize}

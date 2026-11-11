@@ -1,10 +1,10 @@
-% Group course essay "Họa." (one PDF): five chapters as on the instructor's board. Build with report/build.sh
+% Individual course essay "Họa." (one PDF): five chapters as on the instructor's board. Build with report/build.sh
 % (it regenerates the tables from tools/model.py, then runs tectonic).
 % Names of classes, methods, tables and requirements come from tools/model.py (report/generated);
 % figures, screenshots, code excerpts and numbers come from the VP project and the demo build.
 \documentclass[12pt,a4paper,oneside,openany]{report}
 \input{preamble}
-\input{members}
+\input{author}
 \input{generated/paths}
 \input{generated/schema}
 \input{generated/config_values}
@@ -13,7 +13,7 @@
 \input{generated/eval_values}
 
 \hypersetup{pdftitle={Hoa. -- An Online Painting Gallery with Multimodal Search},
-  pdfauthor={Group \groupNumber{} -- Class 04}, pdfsubject={Information System Analysis and Design -- Group Course Essay}}
+  pdfauthor={\authorName{} (\studentId{}) -- Class \className{}}, pdfsubject={Information System Analysis and Design -- Course Essay}}
 
 \begin{document}
 \pagenumbering{roman}

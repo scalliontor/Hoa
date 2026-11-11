@@ -6,15 +6,41 @@ editable Visual Paradigm 18.1 project
 The figures use VP's default style. Every label is placed explicitly so that no text touches a shape,
 a line or other text, and every PNG was checked by eye after export.
 
-Rebuild: `python3 tools/build_vp.py` (about 25 s; VP runs headless; PyMuPDF crops each PDF to the diagram).
-The current exports were made while VP ran as an evaluation copy, so they carry VP's evaluation watermark; a run
-with an activated Community Edition replaces it with the small "Powered by" footer. `python3 tools/build_vp.py --check`
-runs only the geometric self-check of the layouts. Layouts live in `tools/vp_diagrams/ch1.py` ... `ch5.py`
-(shared helpers in `common.py`; the five class models share one grid in `classmodel.py`).
+Rebuild: `python3 tools/build_vp.py` (a few minutes; PyMuPDF crops each PDF to the diagram).
+`python3 tools/build_vp.py --check` runs only the geometric self-check of the layouts, and
+`python3 tools/build_vp.py --only id1,id2 --out DIR` test-builds some diagrams into DIR without touching this folder.
+Layouts live in `tools/vp_diagrams/ch1.py` ... `ch5.py` and `x_*.py` (shared helpers in `common.py`; the five class
+models share one grid in `classmodel.py`).
+
+Two editions of VP 18.1 are used:
+- **Community Edition** for every UML and ERD figure: PNG (3x), cropped vector PDF and SVG, with VP's small
+  "Powered by Visual Paradigm Community Edition" footer and no watermark.
+- **Enterprise edition, 30-day trial** for the BPMN, ArchiMate and DFD figures, which the Community Edition refuses
+  to draw. Its exports carry an "evaluation copy" watermark, so these figures are screenshots of the VP window
+  instead (title bar "Visual Paradigm Enterprise (Evaluation Copy)"), taken by `tools/vp_shots.py` with the plugin in
+  `vp/shots_plugin`. They exist only as PNG, and every caption in the essay says that they come from the trial.
+  The trial edition also saves the complete project, so `vp/tieuluan_design.vpp` holds every diagram.
 
 | id | Chapter | What it shows |
 |---|---|---|
-| c1_context | 1 Requirement Determination (1.7) | Context diagram: the Họa. Gallery system as one box; Customer, Administrator, Payment Service and Gemma 4 Service with the «flow» of information in each direction |
+| c1_stakeholders | 1 Requirement Determination (1.3) | *Trial screenshot.* Stakeholder map in ArchiMate: the eight stakeholders, their concerns (drivers) and the goals of the system that answer them, with requirement ids |
+| c1_process | 1 Requirement Determination (1.4) | *Trial screenshot.* Business process from order to delivery in BPMN: Customer pool, Họa. Gallery pool with Administrator and Warehouse staff lanes, Payment Service and Delivery carrier as black-box pools, message flows, card / cash gateway |
+| c1_problems | 1 Requirement Determination (1.6) | *Trial screenshot.* Problem tree in ArchiMate: five root causes influence the problems P1-P5, which influence their impacts |
+| c1_dfd0 | 1 Requirement Determination (1.7) | *Trial screenshot.* Context diagram as DFD level 0: process 0 Họa. Gallery, the four external entities and eight labelled flows |
+| c2_dfd1 | 2 Analysis (DFD level 1) | *Trial screenshot.* DFD level 1, balanced with level 0: four processes, data stores D1 Paintings and artists, D2 Carts, D3 Orders, payments, shipping; customer and D1 drawn twice |
+| c2_uc_search | 2 Analysis (2.4) | Use cases of search and discovery: abstract UC01 with UC02, UC03, UC04, UC14 as specialisations, UC05 «extend», Gemma 4 Service as supporting actor |
+| c2_uc_purchase | 2 Analysis (2.4) | Use cases of cart, checkout and orders: UC07 «include» UC06, UC11 «extend» UC08, Payment Service supporting UC07 |
+| c2_uc_assistant_admin | 2 Analysis (2.4) | Use cases of the assistant (UC10 «include» UC01 and UC09, Gemma 4 Service) and of the administrator (UC12, UC13) |
+| c2_activity_image | 2 Analysis (UC04) | Activity of search by image (ACT-04): file check (BR10), Gemma description or local colour fallback (NFR02), retrieval, ranking, empty state |
+| c2_activity_cancel | 2 Analysis (UC11) | Activity of cancel order (ACT-11): ownership check (BR08) and status check (BR06) |
+| c2_activity_admin | 2 Analysis (UC13) | Activity of update order status (ACT-13): transition check against the order state machine (BR07) |
+| c2_bce_search | 2 Analysis (UC02) | Analysis sequence in boundary-control-entity style: SearchUI «boundary», SearchControl «control», Painting and Artist «entity»; alt ranked results / empty state |
+| c2_bce_checkout | 2 Analysis (UC07) | Analysis sequence of checkout: CheckoutUI, CheckoutControl, Cart, Painting, Order, OrderItem, Payment; loop over the cart lines, alt out of stock / order created |
+| c2_bce_cancel | 2 Analysis (UC11) | Analysis sequence of cancel order: OrderUI, CancelOrderControl, Order; alt not the customer's / shipped / already cancelled / cancel |
+| c44_packages | 4 Design (4.4.1) | Package diagram: Presentation, Application and Data layers with their Java sub-packages and the shared Domain model, «use» dependencies downwards and to the domain |
+| c44_seq_search | 4 Design (4.4) | Design sequence of UC02: SearchUI.submitText -> SearchController.search -> SearchService.searchText -> QueryService.textQuery (LlmClient, keyword-rule fallback) -> ProductRepository.allProducts, VectorIndex.build -> RankingService.rank |
+| c44_seq_cancel | 4 Design (4.4) | Design sequence of UC11: OrderController.cancelOrder -> OrderService.cancelOrder/getOrder -> OrderRepository.findOrder, Order.isOwnedBy, Order.cancel(), OrderRepository.updateStatus |
+| c1_context | 1 (kept for the slides) | Context diagram: the Họa. Gallery system as one box; Customer, Administrator, Payment Service and Gemma 4 Service with the «flow» of information in each direction |
 | c1_usecase | 2 Analysis (2.4) | Use case diagram: 4 actors, UC01–UC14 inside the Họa. Gallery boundary; generalization of the search use cases, «Include» UC07→UC06, UC10→UC01, UC10→UC09, «Extend» UC05→UC01, UC11→UC08; supporting actors on the right; no crossing actor lines |
 | c2_domain | 2 Analysis (2.8) | Domain model drawn as the analysis class diagram: the 17 classes with their attributes; relationships by kind only (association, composition, aggregation, generalization, «create» from Cart to Order), no names, no multiplicities |
 | c2_activity_checkout | 2 Analysis | Checkout activity in three swimlanes (Customer / Họa. system / Database): cart and stock checks with guards, order creation, saving orders, order_item, payment and shipping in one transaction, then decreasing stock and clearing the cart |

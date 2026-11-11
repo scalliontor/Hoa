@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="ptit.tieuluan.shots" name="PTIT Tieu Luan window screenshots"
+        description="Opens listed diagrams in the Visual Paradigm window and saves a screenshot of the window"
+        provider="Local coursework" class="TieuLuanShots">
+  <runtime><library path="classes" relativePath="true"/></runtime>
+</plugin>

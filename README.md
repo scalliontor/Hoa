@@ -7,7 +7,7 @@ Requirement Determination, Analysis, AI in E-commerce, Design, Code.
 
 | What | Path |
 |---|---|
-| Essay (PDF) | `build/report/tieuluan_V2_04_<group>_<NAME>.pdf` (rebuild: `report/build.sh`) |
+| Essay (PDF) | `build/report/tieuluan_V3_04_10_VUHUNGANH_022.pdf`, individual essay of Vũ Hùng Anh, B23DCDT022 (rebuild: `report/build.sh`; author and version in `report/author.tex`) |
 | Essay (LaTeX source) | `report/main.tex`, `report/chapters/ch1_requirements.tex` … `ch5_code.tex` |
 | Presentation | `slides/thuyettrinh_Hoa.pptx` (rebuild: `slides/.venv/bin/python slides/build_slides.py`) |
 | Presentation guide (Vietnamese, PDF) | `guide/guide_thuyet_trinh_Hoa.pdf`: script for every slide, demo steps, Q&A, troubleshooting (rebuild: `guide/build.sh`) |

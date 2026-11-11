@@ -148,6 +148,8 @@ public final class TieuLuanBuilder implements VPPlugin, VPPluginCommandLineSuppo
                 case "flowchart": type = "Flowchart"; break;
                 case "dfd": type = "GaneSarsonDFD"; break;
                 case "deployment": type = IDiagramTypeConstants.DIAGRAM_TYPE_DEPLOYMENT_DIAGRAM; break;
+                // Any other VP diagram type by its name (BusinessProcessDiagram, DataFlowDiagram, ArchiMate4Diagram...).
+                case "raw": type = spec.getAttribute("vptype"); break;
                 default: throw new IllegalArgumentException("Unknown diagram kind " + kind);
             }
             diagram = dm.createDiagram(type);
@@ -348,6 +350,19 @@ public final class TieuLuanBuilder implements VPPlugin, VPPluginCommandLineSuppo
                 if (model instanceof IUseCase && yes(n, "abstract")) ((IUseCase) model).setAbstract(true);
                 if (model instanceof IGsDfdProcess && n.hasAttribute("number"))
                     ((IGsDfdProcess) model).setDfId(n.getAttribute("number"));
+                // DFD: process number and data store id; BPMN: message events.
+                if (model instanceof IDFProcess && n.hasAttribute("number")) ((IDFProcess) model).setDfId(n.getAttribute("number"));
+                if (model instanceof IDFDataStore && n.hasAttribute("number")) ((IDFDataStore) model).setDfId(n.getAttribute("number"));
+                if ("message".equals(n.getAttribute("trigger"))) {
+                    IModelElement trigger = factory.create("BPMessageTrigger");
+                    if (model instanceof IBPStartEvent) ((IBPStartEvent) model).setTrigger(trigger);
+                    if (model instanceof IBPIntermediateEvent) ((IBPIntermediateEvent) model).setTrigger(trigger);
+                }
+                if (view instanceof com.vp.plugin.diagram.shape.IBPPoolUIModel) {
+                    com.vp.plugin.diagram.shape.IBPPoolUIModel pool = (com.vp.plugin.diagram.shape.IBPPoolUIModel) view;
+                    pool.setAutoStretch(com.vp.plugin.diagram.shape.IBPPoolUIModel.AUTO_STRETCH_OFF);
+                    if (yes(n, "blackBox")) pool.setBlackBox(com.vp.plugin.diagram.shape.IBPPoolUIModel.BLACK_BOX_YES);
+                }
                 if (n.hasAttribute("doc")) model.setDocumentation(n.getAttribute("doc"));
 
                 // Containment: use cases sit in their system, classes in packages,
@@ -358,7 +373,8 @@ public final class TieuLuanBuilder implements VPPlugin, VPPluginCommandLineSuppo
                     IShapeUIModel ownerView = views.get(parent);
                     if (owner == null || ownerView == null)
                         throw new IllegalStateException("Unknown parent " + parent);
-                    if (!(model instanceof IActor) || !shared.containsValue(model) || owner instanceof IPackage)
+                    if (model instanceof IBPLane && owner instanceof IBPPool) ((IBPPool) owner).addBPLane((IBPLane) model);
+                    else if (!(model instanceof IActor) || !shared.containsValue(model) || owner instanceof IPackage)
                         tryAddChild(owner, model);
                     // nest="false": owned by the package in the model, drawn on top of it without nesting views.
                     if (!"false".equals(n.getAttribute("nest"))) ownerView.addChild(view);

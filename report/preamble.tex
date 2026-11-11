@@ -28,11 +28,11 @@
 % Running head: essay title on the left, current chapter on the right.
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\itshape Information System Analysis and Design -- Group Course Essay}
+\fancyhead[L]{\small\itshape Information System Analysis and Design -- Course Essay}
 \fancyhead[R]{\small\itshape\nouppercase{\leftmark}}
 \fancyfoot[C]{\thepage}
 \renewcommand{\chaptermark}[1]{\markboth{Chapter \thechapter. #1}{}}
-\fancypagestyle{plain}{\fancyhf{}\fancyhead[L]{\small\itshape Information System Analysis and Design -- Group Course Essay}%
+\fancypagestyle{plain}{\fancyhf{}\fancyhead[L]{\small\itshape Information System Analysis and Design -- Course Essay}%
   \fancyhead[R]{\small\itshape\nouppercase{\leftmark}}\fancyfoot[C]{\thepage}}
 
 % Headings: "CHAPTER 1" over the title; "1.1." and "1.1.1." in black bold.
@@ -104,6 +104,10 @@
 \newcommand{\txtfile}[1]{\IfFileExists{#1}{\VerbatimInput{#1}}{\assetbox{Output written by the demo build}{#1}}}
 % Captions name the exported file, so a reader can find every figure in tieuluan/.
 \newcommand{\vpsrc}[1]{\texttt{figures/vp/\detokenize{#1}.png}}
+% BPMN, DFD and ArchiMate diagrams: the Community Edition cannot draw them, so the figure is a screenshot of the
+% Visual Paradigm window running the Enterprise edition as a 30-day trial (tools/vp_shots.py), not an export.
+\newcommand{\trialshot}[1]{Screenshot of the Visual Paradigm 18.1 window in the Enterprise edition's 30-day trial
+(title bar ``Evaluation Copy''); the Community Edition used for the other figures cannot draw #1}
 \newcommand{\demosrc}[1]{\texttt{figures/demo/\detokenize{#1}.png}}
 % Code excerpts: the listing title shows the real source file (report/generated/paths.tex).
 \makeatletter

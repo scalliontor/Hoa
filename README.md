@@ -7,7 +7,7 @@ Requirement Determination, Analysis, AI in E-commerce, Design, Code.
 
 | What | Path |
 |---|---|
-| **Defense showcase** (start here) | `showcase/index.html`, sections A–G with links to every artefact (rebuild: `python3 tools/build_showcase.py`) |
+| **Defense showcase** (start here) | https://scalliontor.github.io/Hoa/showcase/ (GitHub Pages from `main`, folder `/`); source `showcase/index.html`, sections A–G with links to every artefact (rebuild: `python3 tools/build_showcase.py`) |
 | Acceptance checklist | `ACCEPTANCE.md`: requirement matrix, diagram inventory, plan, status with evidence |
 | Essay (PDF) | `build/report/tieuluan_V3_04_10_VUHUNGANH_022.pdf`, individual essay of Vũ Hùng Anh, B23DCDT022 (rebuild: `report/build.sh`; author and version in `report/author.tex`) |
 | Essay (LaTeX source) | `report/main.tex`, `report/chapters/ch1_requirements.tex` … `ch5_code.tex` |

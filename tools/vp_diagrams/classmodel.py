@@ -12,9 +12,11 @@ import model
 CELLS = {"CustomerVIP": (0, 0), "CustomerNew": (0, 2), "FullName": (1, 0), "Customer": (1, 1), "Cart": (2, 1),
          "CartItem": (3, 1), "Product": (3, 2), "Order": (2, 3), "OrderItem": (3, 3), "Painting": (4, 1),
          "Frame": (4, 3), "Artist": (5, 1), "Address": (0, 4), "Shipping": (1, 4), "Payment": (3, 4),
-         "Feature": (4, 2), "OrderStatus": (2, 2), "ShippingStatus": (1, 5), "PaymentStatus": (4, 4)}
+         "Category": (4, 2), "DetailKind": (5, 2),
+         "Feature": (2, 2), "OrderStatus": (2, 2), "ShippingStatus": (1, 5), "PaymentStatus": (4, 4)}
 TABLE = {"Customer": "customer", "CustomerVIP": "customer_vip", "CustomerNew": "customer_new",
-         "Address": "address", "Product": "product", "Artist": "artist", "Painting": "painting", "Frame": "frame",
+         "Address": "address", "Category": "category", "Product": "product", "Artist": "artist",
+         "Painting": "painting", "Frame": "frame",
          "Feature": "product_feature", "Cart": "cart", "CartItem": "cart_item", "Order": "orders",
          "OrderItem": "order_item", "Shipping": "shipping", "Payment": "payment", "PayCash": "pay_cash",
          "PayCredit": "pay_credit"}
@@ -46,7 +48,7 @@ def _members(mode):
         return list(TABLE)
     names = list(model.ANALYSIS)
     if mode == "design":
-        names += ["OrderStatus", "ShippingStatus", "PaymentStatus"]
+        names += ["OrderStatus", "ShippingStatus", "PaymentStatus", "DetailKind"]
     return names
 
 
@@ -129,11 +131,15 @@ def routes(B, Y):
         ("Order", "Payment"): [(o.cx + 24, o.b), (o.cx + 24, pay.cy), (pay.x, pay.cy)],
         ("Shipping", "Address"): [(sh.x, sh.cy), (ad.r, sh.cy)],
         ("Artist", "Painting"): [(ar.x, ar.cy), (pt.r, ar.cy)],
+        # A short Product box (names only) leaves no room beside the Painting / Frame branches: the line then
+        # gets a collinear break just right of their trunk and the name sits on the Category side of it.
+        ("Category", "Product"): ([(B["Category"].x, p.cy), (p.r, p.cy)] if p.h >= 60 else
+                                  [(B["Category"].x, p.cy), ((p.r + pt.x) / 2 + 4, p.cy), (p.r, p.cy)]),
     }
     if "FullName" in B:
         R[("Customer", "FullName")] = [(c.cx, c.y), (c.cx, B["FullName"].b)]
     if "Feature" in B:
-        R[("Product", "Feature")] = [(p.r, p.cy), (B["Feature"].x, p.cy)]
+        R[("Product", "Feature")] = [(p.x, p.cy), (B["Feature"].r, p.cy)]
     return R
 
 
@@ -144,7 +150,7 @@ SIDES = {("Customer", "FullName"): (1, -1, None), ("Customer", "Cart"): (1, -1, 
          ("OrderItem", "Product"): (1, -1, None), ("Order", "OrderItem"): (1, -1, None),
          ("Order", "Shipping"): (-1, -1, 1), ("Order", "Payment"): (1, -1, 1),
          ("Shipping", "Address"): (1, -1, None), ("Artist", "Painting"): (1, -1, None),
-         ("Product", "Feature"): (1, -1, None)}
+         ("Product", "Feature"): (1, -1, None), ("Category", "Product"): (1, -1, 0)}
 END_SIDES = {("Customer", "Address"): (-1, 1), ("Order", "Shipping"): (-1, 1), ("Order", "Payment"): (1, 1),
              ("Customer", "Order"): (1, 1)}
 
@@ -172,9 +178,11 @@ def gen_tree(d, B, ids, as_assoc=None):
         for child in ("CustomerVIP", "CustomerNew"):
             r = B[child]
             d.edge("Generalization", ids[child], ids["Customer"], [(r.r, r.cy), (xc, r.cy), (xc, c.cy), (c.x, c.cy)])
-        for child in ("Painting", "Frame"):
+        # Painting enters Product above and Frame below its middle, which belongs to the Category line.
+        off = min(18, p.h / 4)
+        for child, y in (("Painting", p.y + off), ("Frame", p.b - off)):
             r = B[child]
-            d.edge("Generalization", ids[child], ids["Product"], [(r.x, r.cy), (xp, r.cy), (xp, p.cy), (p.r, p.cy)])
+            d.edge("Generalization", ids[child], ids["Product"], [(r.x, r.cy), (xp, r.cy), (xp, y), (p.r, y)])
         for child in ("PayCash", "PayCredit"):
             r = B[child]
             d.edge("Generalization", ids[child], ids["Payment"],

@@ -248,7 +248,7 @@ function painting(params, id) {
     app.innerHTML = `<section class="page wrap"><div class="empty"><p class="h3">This work is not in the collection</p><a class="btn" href="#/collection">Back to the collection</a></div></section>`;
     return;
   }
-  const isPainting = product.category === "PAINTING";
+  const isPainting = product.kind === "PAINTING";
   let chosenFrame = null;
   let quantity = 1;
   const stock = product.stockQuantity;
@@ -260,7 +260,7 @@ function painting(params, id) {
     <div class="detail">
       <div class="detail-wall" id="detail-wall"></div>
       <div class="detail-info">
-        <span class="label">${isPainting ? `Painting ▪ ${esc(product.style)} ▪ ${esc(product.yearCreated)}` : `Frame ▪ ${esc(product.material)}`}</span>
+        <span class="label">${esc(product.category.name)} ▪ ${isPainting ? `${esc(product.style)} ▪ ${esc(product.yearCreated)}` : esc(product.material)}</span>
         <h1>${esc(product.name)}</h1>
         <div class="detail-artist">${isPainting ? `${esc(product.artist.name)} — ${esc(product.artist.nationality)}, ${esc(product.artist.lifeYears)}` : esc(product.sizeLabel)}</div>
         <div class="row" style="justify-content:space-between">

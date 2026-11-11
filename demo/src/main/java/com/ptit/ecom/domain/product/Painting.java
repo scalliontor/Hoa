@@ -15,8 +15,8 @@ public class Painting extends Product {
     private Artist artist;
 
     @Override
-    public String getCategory() {
-        return "PAINTING";
+    public DetailKind getDetailKind() {
+        return DetailKind.PAINTING;
     }
 
     @Override

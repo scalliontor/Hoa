@@ -1,6 +1,8 @@
 package com.ptit.ecom.infrastructure.repository.sqlite;
 
 import com.ptit.ecom.domain.product.Artist;
+import com.ptit.ecom.domain.product.Category;
+import com.ptit.ecom.domain.product.DetailKind;
 import com.ptit.ecom.domain.product.Frame;
 import com.ptit.ecom.domain.product.Painting;
 import com.ptit.ecom.domain.product.Product;
@@ -20,10 +22,14 @@ import java.util.List;
 /**
  * ProductRepository implemented with SQLite (slide A06: Product Database).
  * Table product keeps the common part; painting / frame keep the subclass part (inheritance, section 4.2).
+ * The category of a product names the detail table that holds that part (category.detail_kind).
  */
 public class SqliteProductRepository implements ProductRepository {
-    private static final String PRODUCT_COLUMNS =
-            "product_id, product_type, name, price, stock_quantity, image_url, description";
+    /** Read by column number, because product and category both have name and description. */
+    private static final String PRODUCT_ROWS = "SELECT category.category_id, category.name, category.detail_kind, "
+            + "category.description, product.product_id, product.name, product.price, product.stock_quantity, "
+            + "product.image_url, product.description FROM product "
+            + "JOIN category ON category.category_id = product.category_id";
     private Database database;
 
     public SqliteProductRepository(Database database) {
@@ -36,7 +42,7 @@ public class SqliteProductRepository implements ProductRepository {
         List<Product> products = new ArrayList<>();
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(
-                     "SELECT " + PRODUCT_COLUMNS + " FROM product ORDER BY product_type DESC, product_id");
+                     PRODUCT_ROWS + " ORDER BY category.detail_kind DESC, product.product_id");
              ResultSet rows = statement.executeQuery()) {
             while (rows.next()) products.add(toProduct(connection, rows));
         } catch (SQLException e) {
@@ -49,7 +55,7 @@ public class SqliteProductRepository implements ProductRepository {
     public Product findById(String productId) {
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(
-                     "SELECT " + PRODUCT_COLUMNS + " FROM product WHERE product_id = ?")) {
+                     PRODUCT_ROWS + " WHERE product.product_id = ?")) {
             statement.setString(1, productId);
             try (ResultSet row = statement.executeQuery()) {
                 return row.next() ? toProduct(connection, row) : null;
@@ -89,16 +95,41 @@ public class SqliteProductRepository implements ProductRepository {
     }
 
     private Product toProduct(Connection connection, ResultSet row) throws SQLException {
-        String productId = row.getString("product_id");
-        Product product = "PAINTING".equals(row.getString("product_type"))
-                ? loadPainting(connection, productId) : loadFrame(connection, productId);
+        Category category = toCategory(row);
+        String productId = row.getString(5);
+        Product product = switch (category.getDetailKind()) {
+            case PAINTING -> loadPainting(connection, productId);
+            case FRAME -> loadFrame(connection, productId);
+        };
+        product.setCategory(category);
         product.setProductId(productId);
-        product.setName(row.getString("name"));
-        product.setPrice(row.getBigDecimal("price"));
-        product.setStockQuantity(row.getInt("stock_quantity"));
-        product.setImageUrl(row.getString("image_url"));
-        product.setDescription(row.getString("description"));
+        product.setName(row.getString(6));
+        product.setPrice(row.getBigDecimal(7));
+        product.setStockQuantity(row.getInt(8));
+        product.setImageUrl(row.getString(9));
+        product.setDescription(row.getString(10));
         return product;
+    }
+
+    /** category_id, name, detail_kind and description in the first four columns. */
+    private static Category toCategory(ResultSet row) throws SQLException {
+        Category category = new Category();
+        category.setCategoryId(row.getString(1));
+        category.setName(row.getString(2));
+        category.setDetailKind(DetailKind.valueOf(row.getString(3)));
+        category.setDescription(row.getString(4));
+        return category;
+    }
+
+    /** The stored category, not the caller's copy, decides which products it accepts. */
+    private Category findCategory(Connection connection, String categoryId) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT category_id, name, detail_kind, description FROM category WHERE category_id = ?")) {
+            statement.setString(1, categoryId);
+            try (ResultSet row = statement.executeQuery()) {
+                return row.next() ? toCategory(row) : null;
+            }
+        }
     }
 
     private Painting loadPainting(Connection connection, String productId) throws SQLException {
@@ -169,10 +200,18 @@ public class SqliteProductRepository implements ProductRepository {
     }
 
     private void insertProduct(Connection connection, Product product) throws SQLException {
-        String sql = "INSERT INTO product (" + PRODUCT_COLUMNS + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String categoryId = product.getCategory() == null ? null : product.getCategory().getCategoryId();
+        Category category = findCategory(connection, categoryId);
+        if (category == null || !category.accepts(product)) {
+            throw new IllegalArgumentException(String.format("Product %s is a %s and cannot go in category %s",
+                    product.getProductId(), product.getDetailKind(), categoryId));
+        }
+        product.setCategory(category);
+        String sql = "INSERT INTO product (product_id, category_id, name, price, stock_quantity, image_url, "
+                + "description) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, product.getProductId());
-            statement.setString(2, product.getCategory());
+            statement.setString(2, category.getCategoryId());
             statement.setString(3, product.getName());
             statement.setBigDecimal(4, product.getPrice());
             statement.setInt(5, product.getStockQuantity());

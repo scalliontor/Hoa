@@ -13,7 +13,7 @@ from vp_diagrams import common, ch1, ch2, ch3, ch4, ch5
 CHAPTERS = [ch1, ch2, ch3, ch4, ch5]
 # Diagrams of the 2026-11-11 catalogue, one module per group. While they are being written, a module that
 # fails is reported and skipped, so the other groups can still be test-built (set STRICT for the real build).
-EXTRA = ["x_business", "x_usecases", "x_activities", "x_bce", "x_design"]
+EXTRA = ["x_business", "x_usecases", "x_activities", "x_bce", "x_design", "x_components"]
 STRICT = True
 
 

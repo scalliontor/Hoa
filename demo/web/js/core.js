@@ -69,8 +69,8 @@ export async function loadCredits() {
   return credits;
 }
 
-export const paintings = () => state.products.filter((product) => product.category === "PAINTING");
-export const frames = () => state.products.filter((product) => product.category === "FRAME");
+export const paintings = () => state.products.filter((product) => product.kind === "PAINTING");
+export const frames = () => state.products.filter((product) => product.kind === "FRAME");
 
 // -------------------------------------------------------------- formatting
 
@@ -197,23 +197,23 @@ export function framedHtml(product, frame, { framePx = 14, matPx = 0, width = ""
 // -------------------------------------------------------------- templates
 
 export function artistLine(product) {
-  if (product.category !== "PAINTING") return `${esc(cap(product.material))} ▪ ${esc(product.sizeLabel)}`;
+  if (product.kind !== "PAINTING") return `${esc(cap(product.material))} ▪ ${esc(product.sizeLabel)}`;
   return `${esc(product.artist?.name)} ▪ ${esc(product.yearCreated)}`;
 }
 
 export function productCard(product, result) {
-  const image = product.category === "PAINTING"
+  const image = product.kind === "PAINTING"
     ? `<img src="${esc(product.imageUrl)}" alt="${esc(product.name)}" loading="lazy">`
     : `<div class="frame-swatch" style="background:${frameLook(product)}"><div></div></div>`;
   const reason = result ? humanReason(result.reason, product) : "";
-  const tags = product.category === "PAINTING"
+  const tags = product.kind === "PAINTING"
     ? `${esc(cap(product.style))} · ${esc(cap(product.subject))}`
     : `${esc(cap(product.material))} frame · ${esc(product.sizeLabel)}`;
   return `<a class="card" href="#/painting/${esc(product.productId)}">
     <div class="art">${image}<span class="view">View ↗</span></div>
     <div class="card-body">
       <div><h3 class="card-title">${esc(product.name)}</h3>
-        <div class="card-meta">${product.category === "PAINTING" ? `${esc(product.artist?.name)}, ${esc(product.yearCreated)}` : "Frame"}</div>
+        <div class="card-meta">${product.kind === "PAINTING" ? `${esc(product.artist?.name)}, ${esc(product.yearCreated)}` : "Frame"}</div>
         <div class="card-reason${reason ? " match" : ""}">${reason ? esc(reason) : tags}</div></div>
       <div class="price">${money(product.price)}</div>
     </div>

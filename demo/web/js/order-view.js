@@ -10,7 +10,7 @@ function orderHtml(order) {
   const address = shipping.address;
   const minis = order.items.map((item) => {
     const p = item.product;
-    const inner = p.category === "PAINTING"
+    const inner = p.kind === "PAINTING"
       ? `<img src="${esc(p.imageUrl)}" alt="${esc(p.name)}">`
       : `<div style="width:38px;height:48px;padding:5px;background:${frameLook(p)}"><div style="width:100%;height:100%;background:#2b3440"></div></div>`;
     return `<a class="mini" href="#/painting/${esc(p.productId)}" title="${esc(p.name)} × ${item.quantity}">${inner}</a>`;

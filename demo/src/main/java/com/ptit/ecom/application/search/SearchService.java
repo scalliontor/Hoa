@@ -89,7 +89,8 @@ public class SearchService {
         return rankingService.rank(query, retrieve(query), LIMIT);
     }
 
-    /** Candidate retrieval: hard price filter, then text and image scores for each product. */
+    /** Candidate retrieval: the hard conditions of UC02 (maximum price; for a typed or spoken request also the
+     *  artist it names), then text and image scores for each product. */
     private List<SearchResult> retrieve(CommonQuery query) {
         List<Product> products = repository.allProducts();
         vectorIndex.build(products);
@@ -98,6 +99,7 @@ public class SearchService {
         List<SearchResult> candidates = new ArrayList<>();
         for (Product product : products) {
             if (query.getMaxPrice() != null && product.getPrice().compareTo(query.getMaxPrice()) > 0) continue;
+            if (namesArtist(query) && !matches(attributePairs(query, product)[3])) continue;
             SearchResult result = new SearchResult(product);
             result.setTextScore(textScore(query, product));
             result.setImageScore(similar.getOrDefault(product.getProductId(), 0.0));
@@ -105,6 +107,11 @@ public class SearchService {
             if (isCandidate(query, result)) candidates.add(result);
         }
         return candidates;
+    }
+
+    /** A photo can look like a painter's work without being by that painter, so only words make the artist a filter. */
+    private static boolean namesArtist(CommonQuery query) {
+        return query.getArtist() != null && ("text".equals(query.getType()) || "voice".equals(query.getType()));
     }
 
     private boolean isCandidate(CommonQuery query, SearchResult result) {

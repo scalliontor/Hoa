@@ -104,8 +104,9 @@ page picks one by `productId`.
 ## 5. JSON shapes
 
 ### Product (`Painting` or `Frame`)
-`category` tells the subclass (`"PAINTING"` or `"FRAME"`); fields are those of the model classes
-`Product`, `Painting`, `Artist` and `Frame`.
+`kind` tells the subclass (`"PAINTING"` or `"FRAME"`, from `Product.getDetailKind()`); `category` is the
+product's `Category`, whose `detailKind` names the detail table of its products. Other fields are those of the
+model classes `Product`, `Painting`, `Artist` and `Frame`.
 
 ```json
 {
@@ -128,7 +129,13 @@ page picks one by `productId`.
   "stockQuantity": 6,
   "imageUrl": "/img/P01.jpg",
   "description": "Museum-quality fine art paper of the 1872 original by Claude Monet.",
-  "category": "PAINTING"
+  "category": {
+    "categoryId": "CAT-PRINTS",
+    "name": "Fine-art prints",
+    "detailKind": "PAINTING",
+    "description": "Museum-quality prints of public-domain paintings"
+  },
+  "kind": "PAINTING"
 }
 ```
 
@@ -142,7 +149,13 @@ page picks one by `productId`.
   "price": 45,
   "stockQuantity": 20,
   "description": "Natural oak frame 40 x 60 in oak, anti-glare glass and hanging kit included.",
-  "category": "FRAME"
+  "category": {
+    "categoryId": "CAT-FRAMES",
+    "name": "Frames",
+    "detailKind": "FRAME",
+    "description": "Frames sized for the prints of the shop"
+  },
+  "kind": "FRAME"
 }
 ```
 
@@ -175,7 +188,13 @@ limit and the visual match, joined by ` ▪ `. When browsing (`/api/products`, o
     "stockQuantity": 6,
     "imageUrl": "/img/P01.jpg",
     "description": "Museum-quality fine art paper of the 1872 original by Claude Monet.",
-    "category": "PAINTING"
+    "category": {
+      "categoryId": "CAT-PRINTS",
+      "name": "Fine-art prints",
+      "detailKind": "PAINTING",
+      "description": "Museum-quality prints of public-domain paintings"
+    },
+    "kind": "PAINTING"
   },
   "textScore": 1.0,
   "imageScore": 0.0,
@@ -248,7 +267,13 @@ limit and the visual match, joined by ` ▪ `. When browsing (`/api/products`, o
         "stockQuantity": 5,
         "imageUrl": "/img/P03.jpg",
         "description": "Museum-quality canvas print of the 1875 original by Claude Monet.",
-        "category": "PAINTING"
+        "category": {
+          "categoryId": "CAT-PRINTS",
+          "name": "Fine-art prints",
+          "detailKind": "PAINTING",
+          "description": "Museum-quality prints of public-domain paintings"
+        },
+        "kind": "PAINTING"
       }
     },
     {
@@ -274,7 +299,13 @@ limit and the visual match, joined by ` ▪ `. When browsing (`/api/products`, o
         "stockQuantity": 7,
         "imageUrl": "/img/P05.jpg",
         "description": "Museum-quality canvas print of the 1889 original by Vincent van Gogh.",
-        "category": "PAINTING"
+        "category": {
+          "categoryId": "CAT-PRINTS",
+          "name": "Fine-art prints",
+          "detailKind": "PAINTING",
+          "description": "Museum-quality prints of public-domain paintings"
+        },
+        "kind": "PAINTING"
       }
     }
   ]
@@ -311,7 +342,7 @@ A card payment (`PayCredit`) has `cardHolder`, `bankName`, `cardLast4`, `authori
         "productId": "F03",
         "name": "Matte black aluminium frame 40 x 60",
         "price": 35,
-        "category": "FRAME",
+        "kind": "FRAME",
         "…": "full Product object"
       }
     },
@@ -322,7 +353,7 @@ A card payment (`PayCredit`) has `cardHolder`, `bankName`, `cardLast4`, `authori
         "productId": "P10",
         "name": "The Great Wave off Kanagawa",
         "price": 75,
-        "category": "PAINTING",
+        "kind": "PAINTING",
         "…": "full Product object"
       }
     }
@@ -424,7 +455,13 @@ Text search (UC01, slide A06 `search_text`). Gemma 4 turns the text into a `Comm
       "stockQuantity": 6,
       "imageUrl": "/img/P01.jpg",
       "description": "Museum-quality fine art paper of the 1872 original by Claude Monet.",
-      "category": "PAINTING"
+      "category": {
+        "categoryId": "CAT-PRINTS",
+        "name": "Fine-art prints",
+        "detailKind": "PAINTING",
+        "description": "Museum-quality prints of public-domain paintings"
+      },
+      "kind": "PAINTING"
     },
     "textScore": 1.0,
     "imageScore": 0.0,
@@ -453,7 +490,13 @@ Text search (UC01, slide A06 `search_text`). Gemma 4 turns the text into a `Comm
       "stockQuantity": 8,
       "imageUrl": "/img/P02.jpg",
       "description": "Museum-quality canvas print of the 1906 original by Claude Monet.",
-      "category": "PAINTING"
+      "category": {
+        "categoryId": "CAT-PRINTS",
+        "name": "Fine-art prints",
+        "detailKind": "PAINTING",
+        "description": "Museum-quality prints of public-domain paintings"
+      },
+      "kind": "PAINTING"
     },
     "textScore": 1.0,
     "imageScore": 0.0,
@@ -513,7 +556,13 @@ Gemma 4 vision reads style, subject, colour and artist; the reading becomes a ve
       "stockQuantity": 6,
       "imageUrl": "/img/P06.jpg",
       "description": "Museum-quality canvas print of the 1888 original by Vincent van Gogh.",
-      "category": "PAINTING"
+      "category": {
+        "categoryId": "CAT-PRINTS",
+        "name": "Fine-art prints",
+        "detailKind": "PAINTING",
+        "description": "Museum-quality prints of public-domain paintings"
+      },
+      "kind": "PAINTING"
     },
     "textScore": 1.0,
     "imageScore": 1.0000000000000002,
@@ -542,7 +591,13 @@ Gemma 4 vision reads style, subject, colour and artist; the reading becomes a ve
       "stockQuantity": 5,
       "imageUrl": "/img/P07.jpg",
       "description": "Museum-quality canvas print of the 1888 original by Vincent van Gogh.",
-      "category": "PAINTING"
+      "category": {
+        "categoryId": "CAT-PRINTS",
+        "name": "Fine-art prints",
+        "detailKind": "PAINTING",
+        "description": "Museum-quality prints of public-domain paintings"
+      },
+      "kind": "PAINTING"
     },
     "textScore": 0.75,
     "imageScore": 0.6666666666666667,
@@ -619,7 +674,7 @@ after describe; products shortened):
       "productId": "P01",
       "name": "Impression, Sunrise",
       "price": 79,
-      "category": "PAINTING",
+      "kind": "PAINTING",
       "…": "full Product object"
     },
     "textScore": 0.667,
@@ -633,7 +688,7 @@ after describe; products shortened):
       "productId": "P03",
       "name": "Woman with a Parasol",
       "price": 89,
-      "category": "PAINTING",
+      "kind": "PAINTING",
       "…": "full Product object"
     },
     "textScore": 0.667,
@@ -647,7 +702,7 @@ after describe; products shortened):
       "productId": "P12",
       "name": "Sudden Shower over Shin-Ōhashi Bridge",
       "price": 59,
-      "category": "PAINTING",
+      "kind": "PAINTING",
       "…": "full Product object"
     },
     "textScore": 0.667,
@@ -661,7 +716,7 @@ after describe; products shortened):
       "productId": "P17",
       "name": "Bal du moulin de la Galette",
       "price": 139,
-      "category": "PAINTING",
+      "kind": "PAINTING",
       "…": "full Product object"
     },
     "textScore": 0.667,
@@ -675,7 +730,7 @@ after describe; products shortened):
       "productId": "P21",
       "name": "Wanderer above the Sea of Fog",
       "price": 109,
-      "category": "PAINTING",
+      "kind": "PAINTING",
       "…": "full Product object"
     },
     "textScore": 0.333,
@@ -767,7 +822,7 @@ fee, saves the order, decreases stock and empties the cart (slide A05). Response
         "productId": "F03",
         "name": "Matte black aluminium frame 40 x 60",
         "price": 35,
-        "category": "FRAME",
+        "kind": "FRAME",
         "…": "full Product object"
       }
     },
@@ -778,7 +833,7 @@ fee, saves the order, decreases stock and empties the cart (slide A05). Response
         "productId": "P03",
         "name": "Woman with a Parasol",
         "price": 89,
-        "category": "PAINTING",
+        "kind": "PAINTING",
         "…": "full Product object"
       }
     }
@@ -825,11 +880,14 @@ orders, otherwise `409 Only placed or processing orders can be cancelled`.
 
 `PUT /api/admin/products/P05` `{"price": 129, "stockQuantity": 7}` → the updated product; negative values → `400`.
 
-`POST /api/admin/paintings` — all fields required; `artistId` may be new (then `artistName` creates the artist);
+`POST /api/admin/paintings` — all fields required; `categoryId` must name a category whose `detailKind` is
+`PAINTING`, otherwise `400 Product P33 is a PAINTING and cannot go in category CAT-FRAMES`; `artistId` may be new
+(then `artistName` creates the artist);
 `imageUrl` must be an image already in `web/img` (no upload); the new id is the next free `P` number.
 
 ```json
 {
+  "categoryId": "CAT-PRINTS",
   "artistId": "A02",
   "artistName": "Vincent van Gogh",
   "name": "Almond Blossoms",
@@ -867,7 +925,13 @@ Response:
   "stockQuantity": 5,
   "imageUrl": "/img/P06.jpg",
   "description": "Museum-quality canvas print of the 1890 original by Vincent van Gogh.",
-  "category": "PAINTING"
+  "category": {
+    "categoryId": "CAT-PRINTS",
+    "name": "Fine-art prints",
+    "detailKind": "PAINTING",
+    "description": "Museum-quality prints of public-domain paintings"
+  },
+  "kind": "PAINTING"
 }
 ```
 

@@ -6,6 +6,10 @@ import static com.ptit.ecom.test.TestRunner.check;
 import static com.ptit.ecom.test.TestRunner.same;
 import static com.ptit.ecom.test.TestRunner.test;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ptit.ecom.application.search.SearchService;
 import com.ptit.ecom.application.search.SpeechService;
 import com.ptit.ecom.application.service.AssistantService;
@@ -105,6 +109,32 @@ final class WebServerTest {
             same(200, admin.statusCode(), "administrator");
             check(admin.body().contains("20261003") && admin.body().contains("20261001"), "all orders");
         });
+        test("Product JSON has the kind and the whole category", () -> {
+            JsonArray results = JsonParser.parseString(call("GET", "/api/products", null, null).body()).getAsJsonArray();
+            JsonObject p01 = product(results, "P01");
+            same("PAINTING", p01.get("kind").getAsString(), "P01 kind");
+            same("{\"categoryId\":\"CAT-PRINTS\",\"name\":\"Fine-art prints\",\"detailKind\":\"PAINTING\","
+                    + "\"description\":\"Museum-quality prints of public-domain paintings\"}",
+                    p01.get("category").toString(), "P01 category");
+            JsonObject f01 = product(results, "F01");
+            same("FRAME", f01.get("kind").getAsString(), "F01 kind");
+            same("Frames", f01.getAsJsonObject("category").get("name").getAsString(), "F01 category name");
+        });
+        test("A new painting is saved only in a category that holds paintings (UC12)", () -> {
+            String admin = login("ADMIN");
+            String painting = "{\"name\": \"Almond Blossoms\", \"artistId\": \"A02\", \"artistName\": \"Vincent van Gogh\", "
+                    + "\"style\": \"Post-Impressionism\", \"subject\": \"flowers\", \"dominantColor\": \"blue\", "
+                    + "\"medium\": \"Canvas print\", \"yearCreated\": 1890, \"widthCm\": 92, \"heightCm\": 73, "
+                    + "\"price\": 99, \"stockQuantity\": 5, \"imageUrl\": \"/img/P06.jpg\", \"categoryId\": \"%s\"}";
+            HttpResponse<String> frames = call("POST", "/api/admin/paintings", String.format(painting, "CAT-FRAMES"), admin);
+            same(400, frames.statusCode(), "painting in Frames");
+            same("{\"error\":\"Product P33 is a PAINTING and cannot go in category CAT-FRAMES\"}", frames.body(), "error");
+            HttpResponse<String> prints = call("POST", "/api/admin/paintings", String.format(painting, "CAT-PRINTS"), admin);
+            same(200, prints.statusCode(), "painting in Fine-art prints");
+            JsonObject saved = JsonParser.parseString(prints.body()).getAsJsonObject();
+            same("P33", saved.get("productId").getAsString(), "new id");
+            same("Fine-art prints", saved.getAsJsonObject("category").get("name").getAsString(), "category");
+        });
         test("Voice: transcript to correct; nothing heard (200, empty); Whisper down (503)", () -> {
             HttpRequest request = HttpRequest.newBuilder(URI.create(base + "/api/voice/transcribe"))
                     .POST(HttpRequest.BodyPublishers.ofByteArray(new byte[] {1, 2, 3, 4})).build();
@@ -120,6 +150,14 @@ final class WebServerTest {
             check(down.body().contains("Voice search is unavailable"), down.body());
             WHISPER.transcript = "blue landscape paintings.";
         });
+    }
+
+    private static JsonObject product(JsonArray results, String productId) {
+        for (JsonElement result : results) {
+            JsonObject product = result.getAsJsonObject().getAsJsonObject("product");
+            if (product.get("productId").getAsString().equals(productId)) return product;
+        }
+        throw new AssertionError(productId + " is not in the catalogue");
     }
 
     private HttpResponse<String> image(String dataUrl) throws Exception {

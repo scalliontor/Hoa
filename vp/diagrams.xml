@@ -233,6 +233,11 @@
       <attr name="cardLast4" type="String" />
       <attr name="authorizationCode" type="String" />
     </node>
+    <node id="Category" type="Class" name="Category" x="1320" y="451" w="131" h="67" hideOperations="true">
+      <attr name="categoryId" type="String" />
+      <attr name="name" type="String" />
+      <attr name="description" type="String" />
+    </node>
     <node id="Product" type="Class" name="Product" x="1006" y="430" w="131" h="109" abstract="true" hideOperations="true">
       <attr name="productId" type="String" />
       <attr name="name" type="String" />
@@ -314,6 +319,10 @@
       <pt x="1631" y="268" />
       <pt x="1461" y="268" />
     </edge>
+    <edge type="Association" from="Category" to="Product">
+      <pt x="1320" y="484" />
+      <pt x="1136" y="484" />
+    </edge>
     <edge type="Generalization" from="CustomerVIP" to="Customer">
       <pt x="188" y="74" />
       <pt x="286" y="74" />
@@ -329,14 +338,14 @@
     <edge type="Generalization" from="Painting" to="Product">
       <pt x="1309" y="268" />
       <pt x="1223" y="268" />
-      <pt x="1223" y="484" />
-      <pt x="1136" y="484" />
+      <pt x="1223" y="448" />
+      <pt x="1136" y="448" />
     </edge>
     <edge type="Generalization" from="Frame" to="Product">
       <pt x="1324" y="680" />
       <pt x="1223" y="680" />
-      <pt x="1223" y="484" />
-      <pt x="1136" y="484" />
+      <pt x="1223" y="521" />
+      <pt x="1136" y="521" />
     </edge>
     <edge type="Generalization" from="PayCash" to="Payment">
       <pt x="900" y="1043" />
@@ -1118,6 +1127,11 @@
       <attr name="cardLast4" type="String" />
       <attr name="authorizationCode" type="String" />
     </node>
+    <node id="Category" type="Class" name="Category" x="1320" y="451" w="131" h="67" hideOperations="true">
+      <attr name="categoryId" type="String" />
+      <attr name="name" type="String" />
+      <attr name="description" type="String" />
+    </node>
     <node id="Product" type="Class" name="Product" x="1006" y="430" w="131" h="109" abstract="true" hideOperations="true">
       <attr name="productId" type="String" />
       <attr name="name" type="String" />
@@ -1199,6 +1213,10 @@
       <pt x="1631" y="268" />
       <pt x="1461" y="268" />
     </edge>
+    <edge type="Association" from="Category" to="Product">
+      <pt x="1320" y="484" />
+      <pt x="1136" y="484" />
+    </edge>
     <edge type="Generalization" from="CustomerVIP" to="Customer">
       <pt x="188" y="74" />
       <pt x="286" y="74" />
@@ -1214,14 +1232,14 @@
     <edge type="Generalization" from="Painting" to="Product">
       <pt x="1309" y="268" />
       <pt x="1223" y="268" />
-      <pt x="1223" y="484" />
-      <pt x="1136" y="484" />
+      <pt x="1223" y="448" />
+      <pt x="1136" y="448" />
     </edge>
     <edge type="Generalization" from="Frame" to="Product">
       <pt x="1324" y="680" />
       <pt x="1223" y="680" />
-      <pt x="1223" y="484" />
-      <pt x="1136" y="484" />
+      <pt x="1223" y="521" />
+      <pt x="1136" y="521" />
     </edge>
     <edge type="Generalization" from="PayCash" to="Payment">
       <pt x="900" y="1043" />
@@ -1310,6 +1328,11 @@
       <attr name="cardLast4" type="String" />
       <attr name="authorizationCode" type="String" />
     </node>
+    <node id="Category" type="Class" name="Category" x="1240" y="272" w="131" h="26" hideMembers="true" hideOperations="true">
+      <attr name="categoryId" type="String" />
+      <attr name="name" type="String" />
+      <attr name="description" type="String" />
+    </node>
     <node id="Product" type="Class" name="Product" x="946" y="272" w="131" h="26" abstract="true" hideMembers="true" hideOperations="true">
       <attr name="productId" type="String" />
       <attr name="name" type="String" />
@@ -1391,6 +1414,11 @@
       <pt x="1531" y="169" />
       <pt x="1381" y="169" />
     </edge>
+    <edge type="Association" from="Category" to="Product" name="classifies" labelX="1161" labelY="258" labelW="74" labelH="20">
+      <pt x="1240" y="285" />
+      <pt x="1157" y="285" />
+      <pt x="1076" y="285" />
+    </edge>
     <edge type="Generalization" from="CustomerVIP" to="Customer">
       <pt x="188" y="53" />
       <pt x="276" y="53" />
@@ -1406,14 +1434,14 @@
     <edge type="Generalization" from="Painting" to="Product">
       <pt x="1229" y="169" />
       <pt x="1153" y="169" />
-      <pt x="1153" y="285" />
-      <pt x="1076" y="285" />
+      <pt x="1153" y="278" />
+      <pt x="1076" y="278" />
     </edge>
     <edge type="Generalization" from="Frame" to="Product">
       <pt x="1244" y="401" />
       <pt x="1153" y="401" />
-      <pt x="1153" y="285" />
-      <pt x="1076" y="285" />
+      <pt x="1153" y="292" />
+      <pt x="1076" y="292" />
     </edge>
     <edge type="Generalization" from="PayCash" to="Payment">
       <pt x="850" y="620" />
@@ -1498,6 +1526,11 @@
       <attr name="cardLast4" type="String" />
       <attr name="authorizationCode" type="String" />
     </node>
+    <node id="Category" type="Class" name="Category" x="1416" y="499" w="147" h="81" stereotype="ORM-Persistable" hideOperations="true">
+      <attr name="categoryId" type="String" />
+      <attr name="name" type="String" />
+      <attr name="description" type="String" />
+    </node>
     <node id="Product" type="Class" name="Product" x="1077" y="478" w="147" h="123" stereotype="ORM-Persistable" abstract="true" hideOperations="true">
       <attr name="productId" type="String" />
       <attr name="name" type="String" />
@@ -1579,6 +1612,10 @@
       <pt x="1756" y="300" />
       <pt x="1566" y="300" />
     </edge>
+    <edge type="Association" from="Category" to="Product" name="classifies" fromMult="1" toMult="0..*" labelX="1283" labelY="512" labelW="74" labelH="20" fromMultX="1390" fromMultY="546" fromMultW="17" fromMultH="18" toMultX="1234" toMultY="546" toMultW="29" toMultH="18">
+      <pt x="1416" y="540" />
+      <pt x="1224" y="540" />
+    </edge>
     <edge type="Association" from="Customer" to="CustomerVIP" name="is a" fromMult="1" toMult="0..1" labelX="232" labelY="165" labelW="44" labelH="20" fromMultX="371" fromMultY="277" fromMultW="17" fromMultH="18" toMultX="204" toMultY="56" toMultW="31" toMultH="18">
       <pt x="398" y="270" />
       <pt x="284" y="270" />
@@ -1645,22 +1682,28 @@
       <attr name="district" type="varchar(60)" vis="public" />
       <attr name="city" type="varchar(60)" vis="public" />
     </node>
+    <node id="Category" type="Class" name="category" x="1727" y="541" w="208" h="95" stereotype="table" hideOperations="true">
+      <attr name="category_id" type="varchar(20) {PK}" vis="public" />
+      <attr name="name" type="varchar(60) {U}" vis="public" />
+      <attr name="detail_kind" type="varchar(12)" vis="public" />
+      <attr name="description" type="varchar(300) {NULL}" vis="public" />
+    </node>
     <node id="Product" type="Class" name="product" x="1317" y="520" w="208" h="137" stereotype="table" hideOperations="true">
       <attr name="product_id" type="varchar(20) {PK}" vis="public" />
-      <attr name="product_type" type="varchar(12)" vis="public" />
+      <attr name="category_id" type="varchar(20) {FK}" vis="public" />
       <attr name="name" type="varchar(200)" vis="public" />
       <attr name="price" type="numeric(12,2)" vis="public" />
       <attr name="stock_quantity" type="integer" vis="public" />
       <attr name="image_url" type="varchar(255) {NULL}" vis="public" />
       <attr name="description" type="varchar(500) {NULL}" vis="public" />
     </node>
-    <node id="Artist" type="Class" name="artist" x="2131" y="280" w="197" h="95" stereotype="table" hideOperations="true">
+    <node id="Artist" type="Class" name="artist" x="2135" y="280" w="197" h="95" stereotype="table" hideOperations="true">
       <attr name="artist_id" type="varchar(20) {PK}" vis="public" />
       <attr name="name" type="varchar(120)" vis="public" />
       <attr name="nationality" type="varchar(60) {NULL}" vis="public" />
       <attr name="life_years" type="varchar(20) {NULL}" vis="public" />
     </node>
-    <node id="Painting" type="Class" name="painting" x="1727" y="245" w="204" h="165" stereotype="table" hideOperations="true">
+    <node id="Painting" type="Class" name="painting" x="1729" y="245" w="204" h="165" stereotype="table" hideOperations="true">
       <attr name="product_id" type="varchar(20) {PK, FK}" vis="public" />
       <attr name="artist_id" type="varchar(20) {FK}" vis="public" />
       <attr name="style" type="varchar(40)" vis="public" />
@@ -1671,16 +1714,16 @@
       <attr name="width_cm" type="integer" vis="public" />
       <attr name="height_cm" type="integer" vis="public" />
     </node>
-    <node id="Frame" type="Class" name="frame" x="1727" y="774" w="204" h="95" stereotype="table" hideOperations="true">
+    <node id="Frame" type="Class" name="frame" x="1729" y="774" w="204" h="95" stereotype="table" hideOperations="true">
       <attr name="product_id" type="varchar(20) {PK, FK}" vis="public" />
       <attr name="material" type="varchar(40)" vis="public" />
       <attr name="color" type="varchar(20)" vis="public" />
       <attr name="size_label" type="varchar(20)" vis="public" />
     </node>
-    <node id="Feature" type="Class" name="product_feature" x="1727" y="541" w="204" h="95" stereotype="table" hideOperations="true">
+    <node id="Feature" type="Class" name="product_feature" x="910" y="541" w="204" h="95" stereotype="table" hideOperations="true">
       <attr name="product_id" type="varchar(20) {PK, FK}" vis="public" />
       <attr name="model_version" type="varchar(40)" vis="public" />
-      <attr name="feature_vector" type="bytea" vis="public" />
+      <attr name="feature_vector" type="blob" vis="public" />
       <attr name="updated_at" type="timestamp" vis="public" />
     </node>
     <node id="Cart" type="Class" name="cart" x="908" y="280" w="207" h="95" stereotype="table" hideOperations="true">
@@ -1744,13 +1787,17 @@
       <pt x="158" y="931" />
       <pt x="158" y="1000" />
     </edge>
-    <edge type="Association" from="Artist" to="Painting" name="paints (artist_id)" fromMult="1" toMult="0..*" labelX="1975" labelY="300" labelW="112" labelH="20" fromMultX="2104" fromMultY="334" fromMultW="17" fromMultH="18" toMultX="1941" toMultY="334" toMultW="29" toMultH="18">
-      <pt x="2131" y="328" />
-      <pt x="1931" y="328" />
-    </edge>
-    <edge type="Association" from="Product" to="Feature" name="indexed by (product_id)" fromMult="1" toMult="0..1" labelX="1550" labelY="562" labelW="152" labelH="20" fromMultX="1535" fromMultY="596" fromMultW="17" fromMultH="18" toMultX="1686" toMultY="596" toMultW="31" toMultH="18">
-      <pt x="1525" y="588" />
+    <edge type="Association" from="Category" to="Product" name="classifies (category_id)" fromMult="1" toMult="0..*" labelX="1553" labelY="562" labelW="146" labelH="20" fromMultX="1700" fromMultY="596" fromMultW="17" fromMultH="18" toMultX="1535" toMultY="596" toMultW="29" toMultH="18">
       <pt x="1727" y="588" />
+      <pt x="1525" y="588" />
+    </edge>
+    <edge type="Association" from="Artist" to="Painting" name="paints (artist_id)" fromMult="1" toMult="0..*" labelX="1978" labelY="300" labelW="112" labelH="20" fromMultX="2108" fromMultY="334" fromMultW="17" fromMultH="18" toMultX="1943" toMultY="334" toMultW="29" toMultH="18">
+      <pt x="2135" y="328" />
+      <pt x="1933" y="328" />
+    </edge>
+    <edge type="Association" from="Product" to="Feature" name="indexed by (product_id)" fromMult="1" toMult="0..1" labelX="1139" labelY="562" labelW="152" labelH="20" fromMultX="1290" fromMultY="596" fromMultW="17" fromMultH="18" toMultX="1124" toMultY="596" toMultW="31" toMultH="18">
+      <pt x="1317" y="588" />
+      <pt x="1114" y="588" />
     </edge>
     <edge type="Association" from="Customer" to="Cart" name="owns (customer_id)" fromMult="1" toMult="0..1" labelX="739" labelY="300" labelW="129" labelH="20" fromMultX="708" fromMultY="334" fromMultW="17" fromMultH="18" toMultX="867" toMultY="334" toMultW="31" toMultH="18">
       <pt x="698" y="328" />
@@ -1803,17 +1850,17 @@
       <pt x="387" y="588" />
       <pt x="276" y="588" />
     </edge>
-    <edge type="Association" from="Product" to="Painting" name="is a (product_id)" fromMult="1" toMult="0..1" labelX="1634" labelY="423" labelW="112" labelH="20" fromMultX="1535" fromMultY="513" fromMultW="17" fromMultH="18" toMultX="1686" toMultY="334" toMultW="31" toMultH="18">
+    <edge type="Association" from="Product" to="Painting" name="is a (product_id)" fromMult="1" toMult="0..1" labelX="1635" labelY="423" labelW="112" labelH="20" fromMultX="1535" fromMultY="513" fromMultW="17" fromMultH="18" toMultX="1688" toMultY="334" toMultW="31" toMultH="18">
       <pt x="1525" y="538" />
-      <pt x="1626" y="538" />
-      <pt x="1626" y="328" />
-      <pt x="1727" y="328" />
+      <pt x="1627" y="538" />
+      <pt x="1627" y="328" />
+      <pt x="1729" y="328" />
     </edge>
-    <edge type="Association" from="Product" to="Frame" name="is a (product_id)" fromMult="1" toMult="0..1" labelX="1634" labelY="720" labelW="112" labelH="20" fromMultX="1535" fromMultY="646" fromMultW="17" fromMultH="18" toMultX="1686" toMultY="828" toMultW="31" toMultH="18">
+    <edge type="Association" from="Product" to="Frame" name="is a (product_id)" fromMult="1" toMult="0..1" labelX="1635" labelY="720" labelW="112" labelH="20" fromMultX="1535" fromMultY="646" fromMultW="17" fromMultH="18" toMultX="1688" toMultY="828" toMultW="31" toMultH="18">
       <pt x="1525" y="639" />
-      <pt x="1626" y="639" />
-      <pt x="1626" y="822" />
-      <pt x="1727" y="822" />
+      <pt x="1627" y="639" />
+      <pt x="1627" y="822" />
+      <pt x="1729" y="822" />
     </edge>
     <edge type="Association" from="Payment" to="PayCash" name="is a (payment_id)" fromMult="1" toMult="0..1" labelX="1244" labelY="1165" labelW="116" labelH="20" fromMultX="1380" fromMultY="1133" fromMultW="17" fromMultH="18" toMultX="1160" toMultY="1233" toMultW="31" toMultH="18">
       <pt x="1405" y="1123" />
@@ -1857,22 +1904,28 @@
       <column name="district" type="varchar" length="60" />
       <column name="city" type="varchar" length="60" />
     </node>
+    <node id="category" type="DBTable" name="category" x="1727" y="541" w="248" h="102" captionX="0" captionY="0" captionW="248" captionH="22">
+      <column name="category_id" type="varchar" length="20" pk="true" />
+      <column name="name" type="varchar" length="60" unique="true" />
+      <column name="detail_kind" type="varchar" length="12" />
+      <column name="description" type="varchar" length="300" nullable="true" />
+    </node>
     <node id="product" type="DBTable" name="product" x="1317" y="520" w="248" h="156" captionX="0" captionY="0" captionW="248" captionH="22">
       <column name="product_id" type="varchar" length="20" pk="true" />
-      <column name="product_type" type="varchar" length="12" />
+      <column name="category_id" type="varchar" length="20" fk="category.category_id" />
       <column name="name" type="varchar" length="200" />
       <column name="price" type="numeric" length="12" scale="2" />
       <column name="stock_quantity" type="integer" />
       <column name="image_url" type="varchar" length="255" nullable="true" />
       <column name="description" type="varchar" length="500" nullable="true" />
     </node>
-    <node id="artist" type="DBTable" name="artist" x="2131" y="280" w="237" h="102" captionX="0" captionY="0" captionW="237" captionH="22">
+    <node id="artist" type="DBTable" name="artist" x="2135" y="280" w="237" h="102" captionX="0" captionY="0" captionW="237" captionH="22">
       <column name="artist_id" type="varchar" length="20" pk="true" />
       <column name="name" type="varchar" length="120" />
       <column name="nationality" type="varchar" length="60" nullable="true" />
       <column name="life_years" type="varchar" length="20" nullable="true" />
     </node>
-    <node id="painting" type="DBTable" name="painting" x="1727" y="245" w="244" h="192" captionX="0" captionY="0" captionW="244" captionH="22">
+    <node id="painting" type="DBTable" name="painting" x="1729" y="245" w="244" h="192" captionX="0" captionY="0" captionW="244" captionH="22">
       <column name="product_id" type="varchar" length="20" pk="true" fk="product.product_id" />
       <column name="artist_id" type="varchar" length="20" fk="artist.artist_id" />
       <column name="style" type="varchar" length="40" />
@@ -1883,16 +1936,16 @@
       <column name="width_cm" type="integer" />
       <column name="height_cm" type="integer" />
     </node>
-    <node id="frame" type="DBTable" name="frame" x="1727" y="774" w="244" h="102" captionX="0" captionY="0" captionW="244" captionH="22">
+    <node id="frame" type="DBTable" name="frame" x="1729" y="774" w="244" h="102" captionX="0" captionY="0" captionW="244" captionH="22">
       <column name="product_id" type="varchar" length="20" pk="true" fk="product.product_id" />
       <column name="material" type="varchar" length="40" />
       <column name="color" type="varchar" length="20" />
       <column name="size_label" type="varchar" length="20" />
     </node>
-    <node id="product_feature" type="DBTable" name="product_feature" x="1727" y="541" w="244" h="102" captionX="0" captionY="0" captionW="244" captionH="22">
+    <node id="product_feature" type="DBTable" name="product_feature" x="910" y="541" w="244" h="102" captionX="0" captionY="0" captionW="244" captionH="22">
       <column name="product_id" type="varchar" length="20" pk="true" fk="product.product_id" />
       <column name="model_version" type="varchar" length="40" />
-      <column name="feature_vector" type="bytea" />
+      <column name="feature_vector" type="blob" />
       <column name="updated_at" type="timestamp" />
     </node>
     <node id="cart" type="DBTable" name="cart" x="908" y="280" w="247" h="102" captionX="0" captionY="0" captionW="247" captionH="22">
@@ -1953,6 +2006,7 @@
     <edge type="DBForeignKey" from="customer" to="customer_vip" name="is a" fromMult="1" toMult="0..1" toColumn="customer_id" identifying="true" />
     <edge type="DBForeignKey" from="customer" to="customer_new" name="is a" fromMult="1" toMult="0..1" toColumn="customer_id" identifying="true" />
     <edge type="DBForeignKey" from="customer" to="address" name="has" fromMult="1" toMult="1..*" toColumn="customer_id" />
+    <edge type="DBForeignKey" from="category" to="product" name="classifies" fromMult="1" toMult="0..*" toColumn="category_id" />
     <edge type="DBForeignKey" from="product" to="painting" name="is a" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" />
     <edge type="DBForeignKey" from="artist" to="painting" name="paints" fromMult="1" toMult="0..*" toColumn="artist_id" />
     <edge type="DBForeignKey" from="product" to="frame" name="is a" fromMult="1" toMult="0..1" toColumn="product_id" identifying="true" />
@@ -2074,6 +2128,13 @@
       <op name="process" vis="public" params="" ret="boolean" />
       <op name="maskedCard" vis="public" params="" ret="String" />
     </node>
+    <node id="Category" type="Class" name="Category" x="2005" y="565" w="226" h="100">
+      <attr name="categoryId" type="String" vis="private" />
+      <attr name="name" type="String" vis="private" />
+      <attr name="detailKind" type="DetailKind" vis="private" />
+      <attr name="description" type="String" vis="private" />
+      <op name="accepts" vis="public" params="product: Product" ret="boolean" />
+    </node>
     <node id="Product" type="Class" name="Product" x="1520" y="530" w="218" h="170" abstract="true">
       <attr name="productId" type="String" vis="private" />
       <attr name="name" type="String" vis="private" />
@@ -2083,17 +2144,17 @@
       <attr name="description" type="String" vis="private" />
       <op name="isAvailable" vis="public" params="quantity: int" ret="boolean" />
       <op name="decreaseStock" vis="public" params="quantity: int" ret="void" />
-      <op name="getCategory" vis="public" params="" ret="String" abstract="true" />
+      <op name="getDetailKind" vis="public" params="" ret="DetailKind" abstract="true" />
       <op name="keywords" vis="public" params="" ret="String" />
     </node>
-    <node id="Artist" type="Class" name="Artist" x="2357" y="285" w="168" h="100">
+    <node id="Artist" type="Class" name="Artist" x="2431" y="285" w="168" h="100">
       <attr name="artistId" type="String" vis="private" />
       <attr name="name" type="String" vis="private" />
       <attr name="nationality" type="String" vis="private" />
       <attr name="lifeYears" type="String" vis="private" />
       <op name="getDisplayName" vis="public" params="" ret="String" />
     </node>
-    <node id="Painting" type="Class" name="Painting" x="2005" y="250" w="152" h="170">
+    <node id="Painting" type="Class" name="Painting" x="2030" y="250" w="177" h="170">
       <attr name="style" type="String" vis="private" />
       <attr name="subject" type="String" vis="private" />
       <attr name="dominantColor" type="String" vis="private" />
@@ -2101,15 +2162,15 @@
       <attr name="yearCreated" type="int" vis="private" />
       <attr name="widthCm" type="int" vis="private" />
       <attr name="heightCm" type="int" vis="private" />
-      <op name="getCategory" vis="public" params="" ret="String" />
+      <op name="getDetailKind" vis="public" params="" ret="DetailKind" />
       <op name="keywords" vis="public" params="" ret="String" />
       <op name="sizeLabel" vis="public" params="" ret="String" />
     </node>
-    <node id="Frame" type="Class" name="Frame" x="2008" y="845" w="146" h="100">
+    <node id="Frame" type="Class" name="Frame" x="2030" y="845" w="177" h="100">
       <attr name="material" type="String" vis="private" />
       <attr name="color" type="String" vis="private" />
       <attr name="sizeLabel" type="String" vis="private" />
-      <op name="getCategory" vis="public" params="" ret="String" />
+      <op name="getDetailKind" vis="public" params="" ret="DetailKind" />
       <op name="keywords" vis="public" params="" ret="String" />
     </node>
     <node id="OrderStatus" type="Class" name="OrderStatus" x="1027" y="558" w="126" h="109" stereotype="enumeration">
@@ -2124,10 +2185,14 @@
       <literal name="IN_TRANSIT" />
       <literal name="DELIVERED" />
     </node>
-    <node id="PaymentStatus" type="Class" name="PaymentStatus" x="2018" y="1118" w="126" h="81" stereotype="enumeration">
+    <node id="PaymentStatus" type="Class" name="PaymentStatus" x="2055" y="1118" w="126" h="81" stereotype="enumeration">
       <literal name="PENDING" />
       <literal name="SUCCEEDED" />
       <literal name="FAILED" />
+    </node>
+    <node id="DetailKind" type="Class" name="DetailKind" x="2452" y="579" w="126" h="67" stereotype="enumeration">
+      <literal name="PAINTING" />
+      <literal name="FRAME" />
     </node>
     <edge type="Association" from="Customer" to="FullName" name="has" fromMult="1" toMult="1" navigable="true" fromNav="non" toRole="fullName" aggregation="composite" labelX="533" labelY="188" labelW="44" labelH="20" toRoleBoxX="593" toRoleBoxY="169" toRoleBoxW="58" toRoleBoxH="18" fromMultX="593" fromMultY="236" fromMultW="17" fromMultH="18" toMultX="593" toMultY="143" toMultW="17" toMultH="18">
       <pt x="585" y="264" />
@@ -2178,9 +2243,13 @@
       <pt x="1114" y="1161" />
       <pt x="1534" y="1161" />
     </edge>
-    <edge type="Association" from="Painting" to="Artist" name="painted by" fromMult="0..*" toMult="1" navigable="true" fromNav="non" toRole="artist" labelX="2216" labelY="308" labelW="82" labelH="20" toRoleBoxX="2284" toRoleBoxY="342" toRoleBoxW="38" toRoleBoxH="18" fromMultX="2167" fromMultY="342" fromMultW="29" fromMultH="18" toMultX="2330" toMultY="342" toMultW="17" toMultH="18">
-      <pt x="2157" y="335" />
-      <pt x="2357" y="335" />
+    <edge type="Association" from="Painting" to="Artist" name="painted by" fromMult="0..*" toMult="1" navigable="true" fromNav="non" toRole="artist" labelX="2278" labelY="308" labelW="82" labelH="20" toRoleBoxX="2358" toRoleBoxY="342" toRoleBoxW="38" toRoleBoxH="18" fromMultX="2216" fromMultY="342" fromMultW="29" fromMultH="18" toMultX="2404" toMultY="342" toMultW="17" toMultH="18">
+      <pt x="2206" y="335" />
+      <pt x="2431" y="335" />
+    </edge>
+    <edge type="Association" from="Product" to="Category" name="classified in" fromMult="0..*" toMult="1" navigable="true" fromNav="non" toRole="category" labelX="1827" labelY="588" labelW="89" labelH="20" toRoleBoxX="1914" toRoleBoxY="622" toRoleBoxW="56" toRoleBoxH="18" fromMultX="1748" fromMultY="622" fromMultW="29" fromMultH="18" toMultX="1978" toMultY="622" toMultW="17" toMultH="18">
+      <pt x="1738" y="615" />
+      <pt x="2005" y="615" />
     </edge>
     <edge type="Generalization" from="CustomerVIP" to="Customer">
       <pt x="239" y="90" />
@@ -2195,16 +2264,16 @@
       <pt x="460" y="335" />
     </edge>
     <edge type="Generalization" from="Painting" to="Product">
-      <pt x="2005" y="335" />
-      <pt x="1871" y="335" />
-      <pt x="1871" y="615" />
-      <pt x="1738" y="615" />
+      <pt x="2030" y="335" />
+      <pt x="1884" y="335" />
+      <pt x="1884" y="548" />
+      <pt x="1738" y="548" />
     </edge>
     <edge type="Generalization" from="Frame" to="Product">
-      <pt x="2008" y="895" />
-      <pt x="1871" y="895" />
-      <pt x="1871" y="615" />
-      <pt x="1738" y="615" />
+      <pt x="2030" y="895" />
+      <pt x="1884" y="895" />
+      <pt x="1884" y="682" />
+      <pt x="1738" y="682" />
     </edge>
     <edge type="Generalization" from="PayCash" to="Payment">
       <pt x="1438" y="1363" />
@@ -3306,7 +3375,7 @@
     </edge>
     <node id="layers_note" type="Note" name="Dashed arrow: «use» dependency. Dashed arrow with a hollow triangle: realization.&#10;Not drawn, to keep the figure readable: WebServer passes each request to the&#10;controller of the page; AdminController also uses OrderService; AssistantService&#10;calls SearchService and OrderService as tools.&#10;The domain classes (Customer, Product, Cart, Order, Payment ...) are the model&#10;shared by all three layers: see the design class diagram." x="240" y="1080" w="568" h="108" />
   </diagram>
-  <diagram id="c5_deployment" name="5.1 Deployment - offline demo, Whisper and Gemma 4 server" kind="deployment" scope="deployment" scopeName="5 Deployment">
+  <diagram id="c5_deployment" name="5.1 Deployment - offline demo, Whisper and Gemma 4 service" kind="deployment" scope="deployment" scopeName="5 Deployment">
     <node id="laptop" type="Node" name="Demo laptop (macOS)" x="40" y="40" w="860" h="470" stereotype="device" />
     <node id="browser" type="Node" name="Web browser" x="70" y="110" w="280" h="170" stereotype="executionEnvironment" parent="laptop" />
     <node id="ui" type="Artifact" name="web UI (index.html, js)" x="100" y="190" w="220" h="60" parent="browser" />
@@ -3315,10 +3384,10 @@
     <node id="db" type="Artifact" name="ecom.db (SQLite)" x="700" y="380" w="170" h="60" parent="laptop" />
     <node id="python" type="Node" name="Python voice server 127.0.0.1:9000" x="70" y="340" w="280" h="140" stereotype="executionEnvironment" parent="laptop" />
     <node id="whisper" type="Artifact" name="faster-whisper (small)" x="100" y="406" w="220" h="56" parent="python" />
-    <node id="server" type="Node" name="L40S GPU server 171.226.10.121" x="1200" y="40" w="340" h="470" stereotype="device" />
-    <node id="nginx" type="Node" name="Nginx :8000 (/llm/v1/)" x="1230" y="110" w="280" h="90" stereotype="executionEnvironment" parent="server" />
-    <node id="vllm" type="Node" name="vLLM" x="1230" y="290" w="280" h="180" stereotype="executionEnvironment" parent="server" />
-    <node id="gemma" type="Artifact" name="Gemma 4 (model gemma-4)" x="1260" y="370" w="220" h="60" parent="vllm" />
+    <node id="server" type="Node" name="DeepInfra cloud (api.deepinfra.com)" x="1200" y="40" w="340" h="470" stereotype="device" />
+    <node id="nginx" type="Node" name="OpenAI-compatible API (/v1/openai/)" x="1230" y="110" w="280" h="90" stereotype="executionEnvironment" parent="server" />
+    <node id="vllm" type="Node" name="Model server" x="1230" y="290" w="280" h="180" stereotype="executionEnvironment" parent="server" />
+    <node id="gemma" type="Artifact" name="Gemma 4 31B (gemma-4-31B-it-turbo)" x="1245" y="370" w="250" h="60" parent="vllm" />
     <edge type="Association" from="browser" to="jvm" name="HTTP localhost:8686" labelX="382" labelY="123" labelW="137" labelH="20">
       <pt x="350" y="150" />
       <pt x="550" y="150" />
@@ -3332,11 +3401,11 @@
       <pt x="590" y="410" />
       <pt x="350" y="410" />
     </edge>
-    <edge type="Association" from="jvm" to="nginx" name="HTTP + API key: /llm/v1/chat/completions" labelX="922" labelY="128" labelW="255" labelH="20">
+    <edge type="Association" from="jvm" to="nginx" name="HTTPS + API key: /v1/openai/chat/completions" labelX="910" labelY="128" labelW="280" labelH="20">
       <pt x="870" y="155" />
       <pt x="1230" y="155" />
     </edge>
-    <edge type="Association" from="nginx" to="vllm" name="reverse proxy" labelX="1378" labelY="235" labelW="98" labelH="20">
+    <edge type="Association" from="nginx" to="vllm" name="inference" labelX="1378" labelY="235" labelW="75" labelH="20">
       <pt x="1370" y="200" />
       <pt x="1370" y="290" />
     </edge>
@@ -4166,6 +4235,160 @@
       <pt x="155" y="724" />
     </edge>
   </diagram>
+  <diagram id="c2_activity_products" name="2.2f Activity - Manage Products (UC12)" kind="activity" scope="activity" scopeName="2 Behaviour">
+    <node id="lanes" type="Swimlane" name="" x="20" y="20" w="1060" h="1230" header="34">
+      <lane name="Administrator" w="300" />
+      <lane name="Họa. system" w="480" />
+      <lane name="Database" w="280" />
+    </node>
+    <node id="start" type="Initial" name="" x="159" y="74" w="22" h="22" lane="0" />
+    <node id="open" type="Action" name="Open the back office" x="100" y="131" w="141" h="38" lane="0" />
+    <node id="session" type="Decision" name="" x="422" y="128" w="36" h="44" lane="1" />
+    <node id="list" type="Action" name="listProducts()" x="615" y="131" w="100" h="38" lane="1" />
+    <node id="read" type="Action" name="Read every product with its category, price and stock" x="840" y="124" w="200" h="52" lane="2" />
+    <node id="denied" type="Action" name="See that access is refused" x="87" y="209" w="167" h="38" lane="0" />
+    <node id="end1" type="Final" name="" x="159" y="287" w="22" h="22" lane="0" />
+    <node id="seen" type="Action" name="See the products with their category, price and stock" x="70" y="346" w="200" h="52" lane="0" />
+    <node id="choice" type="Decision" name="" x="152" y="436" w="36" h="44" lane="0" />
+    <node id="edit" type="Action" name="Change the price or stock of a product" x="92" y="524" w="155" h="52" lane="0" />
+    <node id="enter" type="Action" name="Enter a new painting with its category, artist, style, subject, colour, size and image" x="70" y="607" w="200" h="66" lane="0" />
+    <node id="update" type="Action" name="updatePriceAndStock(productId, price, stock): check price and stock" x="555" y="524" w="220" h="52" lane="1" />
+    <node id="add" type="Action" name="addPainting(painting): check title, artist, price and stock" x="345" y="614" w="200" h="52" lane="1" />
+    <node id="m1" type="Merge" name="" x="542" y="700" w="36" h="44" lane="1" />
+    <node id="valid" type="Decision" name="" x="542" y="780" w="36" h="44" lane="1" />
+    <node id="refuse" type="Action" name="See the refusal naming the wrong field" x="80" y="776" w="180" h="52" lane="0" />
+    <node id="end2" type="Final" name="" x="159" y="863" w="22" h="22" lane="0" />
+    <node id="save" type="Action" name="save(product): UPDATE price and stock of the product row" x="840" y="776" w="200" h="52" lane="2" />
+    <node id="accepts" type="Action" name="Category.accepts(painting): does the chosen category hold paintings?" x="440" y="866" w="240" h="52" lane="1" />
+    <node id="cat" type="Decision" name="" x="542" y="958" w="36" h="44" lane="1" />
+    <node id="wrong" type="Action" name="See the refusal: wrong category, nothing is written" x="70" y="954" w="200" h="52" lane="0" />
+    <node id="end3" type="Final" name="" x="159" y="1044" w="22" h="22" lane="0" />
+    <node id="insert" type="Action" name="save(painting): INSERT the product row, its painting row and its feature vector in one transaction" x="840" y="940" w="200" h="80" lane="2" />
+    <node id="m2" type="Merge" name="" x="922" y="1098" w="36" h="44" lane="2" />
+    <node id="show" type="Action" name="listProducts(): show the updated list" x="449" y="1101" w="222" h="38" lane="1" />
+    <node id="updated" type="Action" name="See the updated list" x="102" y="1101" w="136" h="38" lane="0" />
+    <node id="end" type="Final" name="" x="159" y="1184" w="22" h="22" lane="0" />
+    <edge type="ControlFlow" from="start" to="open">
+      <pt x="170" y="96" />
+      <pt x="170" y="131" />
+    </edge>
+    <edge type="ControlFlow" from="open" to="session">
+      <pt x="240" y="150" />
+      <pt x="425" y="150" />
+    </edge>
+    <edge type="ControlFlow" from="session" to="list" guard="administrator session" labelX="462" labelY="123" labelW="148" labelH="20">
+      <pt x="455" y="150" />
+      <pt x="615" y="150" />
+    </edge>
+    <edge type="ControlFlow" from="list" to="read">
+      <pt x="715" y="150" />
+      <pt x="840" y="150" />
+    </edge>
+    <edge type="ControlFlow" from="session" to="denied" guard="not an administrator session" labelX="448" labelY="186" labelW="186" labelH="20">
+      <pt x="440" y="165" />
+      <pt x="440" y="228" />
+      <pt x="253" y="228" />
+    </edge>
+    <edge type="ControlFlow" from="denied" to="end1">
+      <pt x="170" y="247" />
+      <pt x="170" y="287" />
+    </edge>
+    <edge type="ControlFlow" from="read" to="seen">
+      <pt x="940" y="176" />
+      <pt x="940" y="372" />
+      <pt x="270" y="372" />
+    </edge>
+    <edge type="ControlFlow" from="seen" to="choice">
+      <pt x="170" y="398" />
+      <pt x="170" y="443" />
+    </edge>
+    <edge type="ControlFlow" from="choice" to="edit" guard="price or stock" labelX="178" labelY="488" labelW="106" labelH="20">
+      <pt x="170" y="473" />
+      <pt x="170" y="524" />
+    </edge>
+    <edge type="ControlFlow" from="choice" to="enter" guard="new painting" labelX="35" labelY="431" labelW="102" labelH="20">
+      <pt x="155" y="458" />
+      <pt x="36" y="458" />
+      <pt x="36" y="640" />
+      <pt x="70" y="640" />
+    </edge>
+    <edge type="ControlFlow" from="edit" to="update">
+      <pt x="248" y="550" />
+      <pt x="555" y="550" />
+    </edge>
+    <edge type="ControlFlow" from="enter" to="add">
+      <pt x="270" y="640" />
+      <pt x="345" y="640" />
+    </edge>
+    <edge type="ControlFlow" from="update" to="m1">
+      <pt x="665" y="576" />
+      <pt x="665" y="722" />
+      <pt x="575" y="722" />
+    </edge>
+    <edge type="ControlFlow" from="add" to="m1">
+      <pt x="445" y="666" />
+      <pt x="445" y="722" />
+      <pt x="545" y="722" />
+    </edge>
+    <edge type="ControlFlow" from="m1" to="valid">
+      <pt x="560" y="737" />
+      <pt x="560" y="787" />
+    </edge>
+    <edge type="ControlFlow" from="valid" to="refuse" guard="negative value or missing field" labelX="333" labelY="775" labelW="196" labelH="20">
+      <pt x="545" y="802" />
+      <pt x="260" y="802" />
+    </edge>
+    <edge type="ControlFlow" from="refuse" to="end2">
+      <pt x="170" y="828" />
+      <pt x="170" y="863" />
+    </edge>
+    <edge type="ControlFlow" from="valid" to="save" guard="valid price or stock change" labelX="601" labelY="775" labelW="176" labelH="20">
+      <pt x="575" y="802" />
+      <pt x="840" y="802" />
+    </edge>
+    <edge type="ControlFlow" from="valid" to="accepts" guard="valid new painting" labelX="568" labelY="832" labelW="130" labelH="20">
+      <pt x="560" y="817" />
+      <pt x="560" y="866" />
+    </edge>
+    <edge type="ControlFlow" from="accepts" to="cat">
+      <pt x="560" y="918" />
+      <pt x="560" y="965" />
+    </edge>
+    <edge type="ControlFlow" from="cat" to="wrong" guard="category of another kind" labelX="349" labelY="953" labelW="164" labelH="20">
+      <pt x="545" y="980" />
+      <pt x="270" y="980" />
+    </edge>
+    <edge type="ControlFlow" from="wrong" to="end3">
+      <pt x="170" y="1006" />
+      <pt x="170" y="1044" />
+    </edge>
+    <edge type="ControlFlow" from="cat" to="insert" guard="category accepts a painting" labelX="600" labelY="953" labelW="179" labelH="20">
+      <pt x="575" y="980" />
+      <pt x="840" y="980" />
+    </edge>
+    <edge type="ControlFlow" from="save" to="m2">
+      <pt x="1040" y="802" />
+      <pt x="1060" y="802" />
+      <pt x="1060" y="1120" />
+      <pt x="955" y="1120" />
+    </edge>
+    <edge type="ControlFlow" from="insert" to="m2">
+      <pt x="940" y="1020" />
+      <pt x="940" y="1105" />
+    </edge>
+    <edge type="ControlFlow" from="m2" to="show">
+      <pt x="925" y="1120" />
+      <pt x="671" y="1120" />
+    </edge>
+    <edge type="ControlFlow" from="show" to="updated">
+      <pt x="449" y="1120" />
+      <pt x="238" y="1120" />
+    </edge>
+    <edge type="ControlFlow" from="updated" to="end">
+      <pt x="170" y="1139" />
+      <pt x="170" y="1184" />
+    </edge>
+  </diagram>
   <diagram id="c2_bce_search" name="2.6a Analysis Sequence - Search by Keyword (UC02)" kind="sequence" scope="analysis" scopeName="4.1 Analysis model" numbers="true">
     <node id="Customer" type="SeqActor" name="Customer" x="138" y="40" w="40" h="788" />
     <node id="SearchUI" type="Lifeline" name="" x="326" y="40" w="100" h="788" classifier="SearchUI" stereotype="boundary" />
@@ -4664,5 +4887,88 @@
     <activation on="Order" y1="896" y2="914" />
     <activation on="OrderRepository" y1="936" y2="954" />
     <node id="seq_note" type="Note" name="WebServer takes customerId from the session (SessionManager), never from the page. It answers&#10;NoSuchElementException with 404 and IllegalStateException with 409; after a cancel it returns&#10;OrderController.viewOrder(customerId, orderId), the order with its new status." x="40" y="1176" w="640" h="66" />
+  </diagram>
+  <diagram id="c44_components" name="4.4a Three Logical Components" kind="raw" scope="components" scopeName="4.4 Components" vptype="ComponentDiagram">
+    <node id="L_Presentation" type="Component" name="Presentation layer" x="40" y="40" w="1310" h="146" stereotype="layer" />
+    <node id="presentation.view" type="Component" name="Browser views" x="150" y="100" w="190" h="60" parent="L_Presentation" />
+    <node id="presentation.controller" type="Component" name="Controllers" x="750" y="100" w="190" h="60" parent="L_Presentation" />
+    <node id="presentation.web" type="Component" name="Web server and session" x="450" y="100" w="190" h="60" parent="L_Presentation" />
+    <node id="L_Application" type="Component" name="Application layer" x="40" y="282" w="1310" h="146" stereotype="layer" />
+    <node id="application.service" type="Component" name="Shop services" x="450" y="342" w="190" h="60" parent="L_Application" />
+    <node id="application.search" type="Component" name="Search and AI services" x="750" y="342" w="190" h="60" parent="L_Application" />
+    <node id="L_Data" type="Component" name="Data layer" x="40" y="524" w="1310" h="146" stereotype="layer" />
+    <node id="infrastructure.repository" type="Component" name="Repository interfaces" x="450" y="584" w="190" h="60" parent="L_Data" />
+    <node id="infrastructure.repository.sqlite" type="Component" name="SQLite repositories" x="150" y="584" w="190" h="60" parent="L_Data" />
+    <node id="infrastructure.search" type="Component" name="Vector index" x="750" y="584" w="190" h="60" parent="L_Data" />
+    <node id="infrastructure.ai" type="Component" name="AI clients" x="1050" y="584" w="190" h="60" parent="L_Data" />
+    <node id="db" type="Component" name="SQLite database ecom.db" x="150" y="766" w="190" h="60" stereotype="external" />
+    <node id="gemma" type="Component" name="Gemma 4 service (vLLM)" x="750" y="766" w="190" h="60" stereotype="external" />
+    <node id="whisper" type="Component" name="Whisper speech server" x="1050" y="766" w="190" h="60" stereotype="external" />
+    <node id="domain" type="Component" name="Domain model: customer, product, cart, order, payment" x="1480" y="40" w="230" h="630" stereotype="shared" />
+    <edge type="Dependency" from="presentation.view" to="presentation.web" name="HTTP, JSON" labelX="352" labelY="102" labelW="87" labelH="20">
+      <pt x="340" y="130" />
+      <pt x="450" y="130" />
+    </edge>
+    <edge type="Dependency" from="presentation.web" to="presentation.controller" name="dispatch" labelX="660" labelY="102" labelW="71" labelH="20">
+      <pt x="640" y="130" />
+      <pt x="750" y="130" />
+    </edge>
+    <edge type="Dependency" from="presentation.controller" to="application.search" name="calls" labelX="853" labelY="232" labelW="49" labelH="20">
+      <pt x="845" y="160" />
+      <pt x="845" y="342" />
+    </edge>
+    <edge type="Dependency" from="presentation.controller" to="application.service" name="calls" labelX="488" labelY="286" labelW="49" labelH="20">
+      <pt x="780" y="160" />
+      <pt x="780" y="221" />
+      <pt x="545" y="221" />
+      <pt x="545" y="342" />
+    </edge>
+    <edge type="Dependency" from="application.service" to="application.search" name="assistant" labelX="658" labelY="344" labelW="73" labelH="20">
+      <pt x="640" y="372" />
+      <pt x="750" y="372" />
+    </edge>
+    <edge type="Dependency" from="application.service" to="infrastructure.repository" name="repository interfaces" labelX="553" labelY="474" labelW="135" labelH="20">
+      <pt x="545" y="402" />
+      <pt x="545" y="584" />
+    </edge>
+    <edge type="Dependency" from="application.search" to="infrastructure.search" name="vectors" labelX="853" labelY="474" labelW="64" labelH="20">
+      <pt x="845" y="402" />
+      <pt x="845" y="584" />
+    </edge>
+    <edge type="Dependency" from="application.search" to="infrastructure.ai" name="LlmClient, SpeechClient" labelX="1153" labelY="457" labelW="151" labelH="20">
+      <pt x="940" y="372" />
+      <pt x="1145" y="372" />
+      <pt x="1145" y="584" />
+    </edge>
+    <edge type="Dependency" from="infrastructure.repository.sqlite" to="infrastructure.repository" name="implements" labelX="351" labelY="586" labelW="88" labelH="20">
+      <pt x="340" y="614" />
+      <pt x="450" y="614" />
+    </edge>
+    <edge type="Dependency" from="infrastructure.repository.sqlite" to="db" name="SQL over JDBC" labelX="253" labelY="695" labelW="101" labelH="20">
+      <pt x="245" y="644" />
+      <pt x="245" y="766" />
+    </edge>
+    <edge type="Dependency" from="infrastructure.ai" to="gemma" name="HTTPS, OpenAI-compatible API" labelX="645" labelY="712" labelW="192" labelH="20">
+      <pt x="1080" y="644" />
+      <pt x="1080" y="657" />
+      <pt x="845" y="657" />
+      <pt x="845" y="766" />
+    </edge>
+    <edge type="Dependency" from="infrastructure.ai" to="whisper" name="HTTP, audio" labelX="1218" labelY="695" labelW="90" labelH="20">
+      <pt x="1210" y="644" />
+      <pt x="1210" y="766" />
+    </edge>
+    <edge type="Dependency" from="L_Presentation" to="domain" name="uses" labelX="1390" labelY="85" labelW="50" labelH="20">
+      <pt x="1350" y="113" />
+      <pt x="1480" y="113" />
+    </edge>
+    <edge type="Dependency" from="L_Application" to="domain" name="uses" labelX="1390" labelY="327" labelW="50" labelH="20">
+      <pt x="1350" y="355" />
+      <pt x="1480" y="355" />
+    </edge>
+    <edge type="Dependency" from="L_Data" to="domain" name="uses" labelX="1390" labelY="569" labelW="50" labelH="20">
+      <pt x="1350" y="597" />
+      <pt x="1480" y="597" />
+    </edge>
   </diagram>
 </diagrams>

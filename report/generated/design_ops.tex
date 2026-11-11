@@ -19,15 +19,17 @@
 \footnotesize \code{CustomerVIP} & \footnotesize \code{+getDiscountRate(): BigDecimal} & \footnotesize Discount rate of the VIP tier (polymorphism)\\
 \footnotesize \code{CustomerVIP} & \footnotesize \code{+addPoints(points: int): void} & \footnotesize Adds reward points, refuses negative values\\
 \footnotesize \code{CustomerNew} & \footnotesize \code{+hasWelcomeVoucher(): boolean} & \footnotesize Tells whether the new customer still has a voucher\\
+\footnotesize \code{DetailKind}\newline\emph{«enumeration»} & \footnotesize \code{PAINTING}, \code{FRAME} & \footnotesize Valid status values\\
+\footnotesize \code{Category} & \footnotesize \code{+accepts(product: Product): boolean} & \footnotesize Tells whether a product has the kind of detail the category names\\
 \footnotesize \code{Product} & \footnotesize \code{+isAvailable(quantity: int): boolean} & \footnotesize Checks that enough stock is left for a quantity\\
 \footnotesize \code{Product} & \footnotesize \code{+decreaseStock(quantity: int): void} & \footnotesize Decreases stock when ordered; refuses to oversell\\
-\footnotesize \code{Product} & \footnotesize \code{+getCategory(): String} \{abstract\} & \footnotesize Kind of product, decided by the subclass (abstract)\\
+\footnotesize \code{Product} & \footnotesize \code{+getDetailKind(): DetailKind} \{abstract\} & \footnotesize Kind of detail of the product, decided by the subclass (abstract)\\
 \footnotesize \code{Product} & \footnotesize \code{+keywords(): String} & \footnotesize Keywords used by text search\\
 \footnotesize \code{Artist} & \footnotesize \code{+getDisplayName(): String} & \footnotesize Artist name with years of birth and death\\
-\footnotesize \code{Painting} & \footnotesize \code{+getCategory(): String} & \footnotesize Returns PAINTING\\
+\footnotesize \code{Painting} & \footnotesize \code{+getDetailKind(): DetailKind} & \footnotesize Returns PAINTING\\
 \footnotesize \code{Painting} & \footnotesize \code{+keywords(): String} & \footnotesize Adds style, subject, colour, medium and artist name to the keywords\\
 \footnotesize \code{Painting} & \footnotesize \code{+sizeLabel(): String} & \footnotesize Print size as "width x height cm"\\
-\footnotesize \code{Frame} & \footnotesize \code{+getCategory(): String} & \footnotesize Returns FRAME\\
+\footnotesize \code{Frame} & \footnotesize \code{+getDetailKind(): DetailKind} & \footnotesize Returns FRAME\\
 \footnotesize \code{Frame} & \footnotesize \code{+keywords(): String} & \footnotesize Adds frame material and colour to the keywords\\
 \footnotesize \code{Cart} & \footnotesize \code{+addItem(product: Product, quantity: int): void} & \footnotesize Adds a product; merges with an existing line of the same product\\
 \footnotesize \code{Cart} & \footnotesize \code{+updateQuantity(productId: String, quantity: int): void} & \footnotesize Changes a quantity; 0 removes the line\\

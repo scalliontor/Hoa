@@ -15,7 +15,7 @@ export const SearchResultView = {
     this.results = results || [];
     const grid = document.getElementById("results");
     if (!grid) return;
-    const shown = this.results.filter((r) => this.filter === "ALL" || r.product.category === this.filter);
+    const shown = this.results.filter((r) => this.filter === "ALL" || r.product.kind === this.filter);
     renderMeta(this, shown.length);
     if (!shown.length) {
       this.renderEmpty("Try fewer words, another colour or artist — or browse everything.");

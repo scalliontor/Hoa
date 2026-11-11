@@ -38,6 +38,8 @@ com/ptit/ecom/
 │   │   └── PaymentStatus.java
 │   └── product/
 │       ├── Artist.java
+│       ├── Category.java
+│       ├── DetailKind.java
 │       ├── Frame.java
 │       ├── Painting.java
 │       └── Product.java

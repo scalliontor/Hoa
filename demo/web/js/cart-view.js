@@ -7,7 +7,7 @@ const SHIPPING_FEE = 8;   // flat fee used by CheckoutService
 
 function lineHtml(item) {
   const product = item.product;
-  const thumb = product.category === "PAINTING"
+  const thumb = product.kind === "PAINTING"
     ? `<img src="${esc(product.imageUrl)}" alt="">`
     : `<div style="width:56px;height:72px;padding:7px;background:${frameLook(product)}"><div style="width:100%;height:100%;background:#2b3440"></div></div>`;
   return `<div class="line" data-product="${esc(product.productId)}">

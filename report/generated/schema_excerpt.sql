@@ -1,12 +1,13 @@
 CREATE TABLE product (
     product_id varchar(20) NOT NULL,
-    product_type varchar(12) NOT NULL CHECK (product_type IN ('PAINTING','FRAME')),
+    category_id varchar(20) NOT NULL,
     name varchar(200) NOT NULL,
     price numeric(12,2) NOT NULL CHECK (price >= 0),
     stock_quantity integer NOT NULL CHECK (stock_quantity >= 0),
     image_url varchar(255),
     description varchar(500),
-    PRIMARY KEY (product_id)
+    PRIMARY KEY (product_id),
+    FOREIGN KEY (category_id) REFERENCES category (category_id)
 );
 
 CREATE TABLE painting (

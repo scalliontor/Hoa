@@ -1,4 +1,4 @@
-"""Activity diagrams of UC04 Search by Image, UC11 Cancel Order and UC13 Update Order Status.
+"""Activity diagrams of UC04 Search by Image, UC11 Cancel Order, UC13 Update Order Status and UC12 Manage Products.
 
 Vertical swimlanes in the style of ch2.activity_checkout / ch2.activity_search: the actor on the left, the
 Họa. system in the middle, the supporting party (Gemma 4 Service or the database) on the right. Every decision
@@ -190,7 +190,104 @@ def activity_admin(root):
     flow(d, "seen", "end", [N["seen"].bottom, N["end"].top])
 
 
+# ------------------------------------------------------------------ UC12
+def activity_products(root):
+    d = Diagram(root, "c2_activity_products", "2.2f Activity - Manage Products (UC12)", "activity", "activity",
+                "2 Behaviour")
+    lanes = [("Administrator", 300), (LANE_SYSTEM, 480), ("Database", 280)]
+    L0, L1, L2 = swimlanes(d, lanes, X0, Y0, 1230)
+    sys_x, db_x = _borders(lanes)[1:]
+    s = L1 - 120                                   # session check, left of listProducts()
+    a, b = L1 - 115, L1 + 105                      # system columns of the new painting and of the price change
+    side = X0 + 16                                 # [new painting] runs down beside the left border
+    far = db_x + 260                               # the saved price change runs down beside the right border
+    n = {}
+    n["start"] = act_node(d, "start", "Initial", L0, 85, lane=0)
+    n["open"] = act_node(d, "open", "Action", L0, 150, "Open the back office", lane=0)
+    n["session"] = act_node(d, "session", "Decision", s, 150, lane=1)
+    n["list"] = act_node(d, "list", "Action", b, 150, "listProducts()", lane=1)
+    n["read"] = act_node(d, "read", "Action", L2, 150, "Read every product with its category, price and stock",
+                         lane=2, width=200)
+    n["denied"] = act_node(d, "denied", "Action", L0, 228, "See that access is refused", lane=0, width=200)
+    n["end1"] = act_node(d, "end1", "Final", L0, 298, lane=0)
+    n["seen"] = act_node(d, "seen", "Action", L0, 372, "See the products with their category, price and stock",
+                         lane=0, width=200)
+    n["choice"] = act_node(d, "choice", "Decision", L0, 458, lane=0)
+    n["edit"] = act_node(d, "edit", "Action", L0, 550, "Change the price or stock of a product", lane=0,
+                         width=155)
+    n["enter"] = act_node(d, "enter", "Action", L0, 640,
+                          "Enter a new painting with its category, artist, style, subject, colour, size and image",
+                          lane=0, width=200)
+    n["update"] = act_node(d, "update", "Action", b, 550,
+                           "updatePriceAndStock(productId, price, stock): check price and stock", lane=1,
+                           width=220)
+    n["add"] = act_node(d, "add", "Action", a, 640, "addPainting(painting): check title, artist, price and stock",
+                        lane=1, width=200)
+    n["m1"] = act_node(d, "m1", "Merge", L1, 722, lane=1)
+    n["valid"] = act_node(d, "valid", "Decision", L1, 802, lane=1)
+    n["refuse"] = act_node(d, "refuse", "Action", L0, 802, "See the refusal naming the wrong field", lane=0,
+                           width=180)
+    n["end2"] = act_node(d, "end2", "Final", L0, 874, lane=0)
+    n["save"] = act_node(d, "save", "Action", L2, 802, "save(product): UPDATE price and stock of the product row",
+                         lane=2, width=200)
+    n["accepts"] = act_node(d, "accepts", "Action", L1, 892,
+                            "Category.accepts(painting): does the chosen category hold paintings?", lane=1,
+                            width=240)
+    n["cat"] = act_node(d, "cat", "Decision", L1, 980, lane=1)
+    n["wrong"] = act_node(d, "wrong", "Action", L0, 980, "See the refusal: wrong category, nothing is written",
+                          lane=0, width=200)
+    n["end3"] = act_node(d, "end3", "Final", L0, 1055, lane=0)
+    n["insert"] = act_node(d, "insert", "Action", L2, 980,
+                           "save(painting): INSERT the product row, its painting row and its feature vector in one "
+                           "transaction", lane=2, width=200)
+    n["m2"] = act_node(d, "m2", "Merge", L2, 1120, lane=2)
+    n["show"] = act_node(d, "show", "Action", L1, 1120, "listProducts(): show the updated list", lane=1,
+                         width=240)
+    n["updated"] = act_node(d, "updated", "Action", L0, 1120, "See the updated list", lane=0)
+    n["end"] = act_node(d, "end", "Final", L0, 1195, lane=0)
+    N = n
+
+    def right_guard(frm, to, pts, guard, decision, until=db_x):
+        """Guard of a flow leaving a decision to the right: centred above the segment, between the diamond
+        and `until` (the database lane border or the next action), so it stays inside the system lane."""
+        flow(d, frm, to, pts, guard=guard, at=((decision.x + decision.w + until) / 2, decision.cy - 17))
+
+    flow(d, "start", "open", [N["start"].bottom, N["open"].top])
+    flow(d, "open", "session", [N["open"].right, N["session"].left])
+    right_guard("session", "list", [N["session"].right, N["list"].left], "administrator session", N["session"],
+                until=N["list"].x)
+    flow(d, "list", "read", [N["list"].right, N["read"].left])
+    flow(d, "session", "denied", [N["session"].bottom, (s, N["denied"].cy), N["denied"].right],
+         guard="not an administrator session")
+    flow(d, "denied", "end1", [N["denied"].bottom, N["end1"].top])
+    flow(d, "read", "seen", [N["read"].bottom, (L2, N["seen"].cy), N["seen"].right])
+    flow(d, "seen", "choice", [N["seen"].bottom, N["choice"].top])
+    flow(d, "choice", "edit", [N["choice"].bottom, N["edit"].top], guard="price or stock")
+    flow(d, "choice", "enter", [N["choice"].left, (side, N["choice"].cy), (side, N["enter"].cy), N["enter"].left],
+         guard="new painting", at=((X0 + N["choice"].x) / 2, N["choice"].cy - 17))
+    flow(d, "edit", "update", [N["edit"].right, N["update"].left])
+    flow(d, "enter", "add", [N["enter"].right, N["add"].left])
+    flow(d, "update", "m1", [N["update"].bottom, (b, N["m1"].cy), N["m1"].right])
+    flow(d, "add", "m1", [N["add"].bottom, (a, N["m1"].cy), N["m1"].left])
+    flow(d, "m1", "valid", [N["m1"].bottom, N["valid"].top])
+    _left_guard(d, "valid", "refuse", [N["valid"].left, N["refuse"].right], "negative value or missing field",
+                sys_x, N["valid"])
+    flow(d, "refuse", "end2", [N["refuse"].bottom, N["end2"].top])
+    right_guard("valid", "save", [N["valid"].right, N["save"].left], "valid price or stock change", N["valid"])
+    flow(d, "valid", "accepts", [N["valid"].bottom, N["accepts"].top], guard="valid new painting")
+    flow(d, "accepts", "cat", [N["accepts"].bottom, N["cat"].top])
+    _left_guard(d, "cat", "wrong", [N["cat"].left, N["wrong"].right], "category of another kind", sys_x, N["cat"])
+    flow(d, "wrong", "end3", [N["wrong"].bottom, N["end3"].top])
+    right_guard("cat", "insert", [N["cat"].right, N["insert"].left], "category accepts a painting", N["cat"])
+    flow(d, "save", "m2", [N["save"].right, (far, N["save"].cy), (far, N["m2"].cy), N["m2"].right])
+    flow(d, "insert", "m2", [N["insert"].bottom, N["m2"].top])
+    flow(d, "m2", "show", [N["m2"].left, N["show"].right])
+    flow(d, "show", "updated", [N["show"].left, N["updated"].right])
+    flow(d, "updated", "end", [N["updated"].bottom, N["end"].top])
+
+
 def build(root):
     activity_image(root)
     activity_cancel(root)
     activity_admin(root)
+    activity_products(root)

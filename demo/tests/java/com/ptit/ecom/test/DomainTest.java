@@ -1,5 +1,6 @@
 package com.ptit.ecom.test;
 
+import static com.ptit.ecom.test.Fixtures.category;
 import static com.ptit.ecom.test.Fixtures.customer;
 import static com.ptit.ecom.test.Fixtures.frame;
 import static com.ptit.ecom.test.Fixtures.painting;
@@ -21,6 +22,8 @@ import com.ptit.ecom.domain.order.Shipping;
 import com.ptit.ecom.domain.payment.PayCash;
 import com.ptit.ecom.domain.payment.PayCredit;
 import com.ptit.ecom.domain.payment.PaymentStatus;
+import com.ptit.ecom.domain.product.Category;
+import com.ptit.ecom.domain.product.DetailKind;
 import com.ptit.ecom.domain.product.Painting;
 import java.math.BigDecimal;
 
@@ -100,6 +103,11 @@ final class DomainTest {
             painting.decreaseStock(2);
             same(0, painting.getStockQuantity(), "stock");
             check(!painting.isAvailable(1), "sold out");
+        });
+        test("Category.accepts only products of its detail kind", () -> {
+            Category frames = category("CAT-FRAMES", "Frames", DetailKind.FRAME);
+            same(true, frames.accepts(frame("F03", "35")), "frame in Frames");
+            same(false, frames.accepts(painting("P01", "79", 5)), "painting in Frames");
         });
         test("Payment.process is polymorphic: card needs an authorisation, cash needs enough money", () -> {
             PayCredit card = new PayCredit();

@@ -57,6 +57,9 @@ public final class TieuLuanBuilder implements VPPlugin, VPPluginCommandLineSuppo
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xml);
             Element top = doc.getDocumentElement();
             for (Element spec : children(top, "diagram")) new DiagramBuild(spec).run();
+            // VP's own SQL generator on the tables of the physical model (the ERD), when asked for.
+            String ddl = System.getProperty("tieuluan.ddl");
+            if (ddl != null) generateDdl(new File(ddl));
             File target = new File(top.getAttribute("project"));
             if (!target.isAbsolute()) target = new File(root, top.getAttribute("project"));
             if (!pm.saveProjectAs(target)) throw new IllegalStateException("Cannot save " + target);
@@ -65,6 +68,35 @@ public final class TieuLuanBuilder implements VPPlugin, VPPluginCommandLineSuppo
             error.printStackTrace();
             throw new RuntimeException(error);
         }
+    }
+
+    /** CREATE TABLE statements written by Visual Paradigm (DatabaseManager, SQLite dialect) for every DB table. */
+    private void generateDdl(File file) throws Exception {
+        List<IModelElement> tables = new ArrayList<>();
+        Iterator<?> it = ApplicationManager.instance().getProjectManager().getProject()
+            .allLevelModelElementIterator(IModelElementFactory.MODEL_TYPE_DB_TABLE);
+        while (it.hasNext()) tables.add((IModelElement) it.next());
+        // The project's database configuration (Tools > DB > Database Configuration): SQLite with the driver of the demo.
+        DatabaseSetting setting = new DatabaseSetting();
+        // VP writes every field of the setting into the project file; a null field breaks its XML.
+        for (java.lang.reflect.Method m : DatabaseSetting.class.getMethods())
+            if (m.getName().startsWith("set") && m.getParameterCount() == 1 && m.getParameterTypes()[0] == String.class)
+                m.invoke(setting, "");
+        setting.setDialect(DatabaseSetting.DIALECT_SQLITE);
+        setting.setDriver(DatabaseSetting.DRIVER_SQLITE);
+        setting.setDriverClass(DatabaseSetting.DRIVER_SQLITE);
+        setting.setDriverFiles(new File(root, "demo/lib/sqlite-jdbc-3.46.1.3.jar").getAbsolutePath());
+        setting.setConnectionURL("jdbc:sqlite:" + new File(file.getParentFile(), "vp_generated.db").getAbsolutePath());
+        setting.setSupported(true);
+        setting.setDefault(true);
+        ProjectManager pm = ApplicationManager.instance().getProjectManager();
+        pm.saveDatabaseSetting(pm.getProject(), DatabaseType.SQLite, DatabaseLanguage.Java, setting);
+        String sql = ApplicationManager.instance().getDatabaseManager()
+            .generateCreateSQL(DatabaseType.SQLite, tables.toArray(new IModelElement[0]));
+        if (sql == null || sql.trim().isEmpty()) throw new IllegalStateException("VP generated no SQL");
+        file.getParentFile().mkdirs();
+        java.nio.file.Files.write(file.toPath(), sql.getBytes("UTF-8"));
+        System.out.println("TIEULUAN_DDL " + tables.size() + " tables -> " + file.getAbsolutePath());
     }
 
     // ------------------------------------------------------------------ XML

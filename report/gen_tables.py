@@ -38,6 +38,10 @@ NFR_CHECK = {
     "NFR06": "The application runs on one machine with a SQLite file; its only outside connection is the Gemma 4 server.",
     "NFR07": "searchText is timed on the demo data; a Gemma call is cut after the timeoutSeconds of GemmaClient.",
     "NFR08": "Audio is sent only to the Whisper server on 127.0.0.1; the time to transcribe a 5-second sentence is measured (build/eval/voice_eval.txt).",
+    "NFR09": "tools/e2e_check.py checks the answers of an empty cart, a foreign address, another customer's order and a shipped order; the browser shows them as messages (Chapter 5 screenshots).",
+    "NFR11": "tools/gen_sql.py runs statements that break a key, a CHECK or a category and expects SQLite to refuse them (build/sql_validation.txt); stock is decreased by a conditional UPDATE; tests refuse a product its category does not accept.",
+    "NFR12": "tools/e2e_check.py starts a second server whose Gemma address is unreachable and places an order with it (build/e2e_results.txt).",
+    "NFR10": "tools/check_code_model.py compares every class, method, parameter, table, column and SQL statement of the code with tools/model.py; demo/test.sh runs it.",
 }
 CLASS_TEXT = {
     "FullName": "Name of a customer, a value object", "Customer": "A customer with an account",
@@ -80,13 +84,14 @@ OP_TEXT = {
     "CustomerNew.hasWelcomeVoucher": "Tells whether the new customer still has a voucher",
     "Product.isAvailable": "Checks that enough stock is left for a quantity",
     "Product.decreaseStock": "Decreases stock when ordered; refuses to oversell",
-    "Product.getCategory": "Kind of product, decided by the subclass (abstract)",
+    "Category.accepts": "Tells whether a product has the kind of detail the category names",
+    "Product.getDetailKind": "Kind of detail of the product, decided by the subclass (abstract)",
     "Product.keywords": "Keywords used by text search",
     "Artist.getDisplayName": "Artist name with years of birth and death",
-    "Painting.getCategory": "Returns PAINTING",
+    "Painting.getDetailKind": "Returns PAINTING",
     "Painting.keywords": "Adds style, subject, colour, medium and artist name to the keywords",
     "Painting.sizeLabel": "Print size as \"width x height cm\"",
-    "Frame.getCategory": "Returns FRAME",
+    "Frame.getDetailKind": "Returns FRAME",
     "Frame.keywords": "Adds frame material and colour to the keywords",
     "Cart.addItem": "Adds a product; merges with an existing line of the same product",
     "Cart.updateQuantity": "Changes a quantity; 0 removes the line",
@@ -657,14 +662,14 @@ def main():
     ordered = sorted(reqs, key=lambda r: (r[1] != "FR", int(r[0][-2:])))
 
     def req_rows(kind):
-        return [[r"\textbf{" + rid + "}", esc(model.REQUIREMENT_DETAILS[rid][2]), kind, PRIORITY[rid],
-                 esc(model.REQUIREMENT_DETAILS[rid][1]), ", ".join(ucs)]
+        return [[r"\textbf{" + rid + "}", esc(model.REQUIREMENT_DETAILS[rid][2]), esc(model.REQUIREMENT_AREAS[rid]),
+                 PRIORITY[rid], esc(model.REQUIREMENT_DETAILS[rid][1]), ", ".join(ucs)]
                 for rid, k, title, ucs in ordered if k == kind]
-    header = ["ID", "Requirement", "Type", "Priority", "Source", "Use case"]
-    spec = "P{1.2cm}P{6.7cm}P{0.9cm}P{1.3cm}P{2.6cm}P{1.8cm}"
-    write("req_fr.tex", longtable(spec, "Functional requirements (ID / Type / Priority / Source)", "tab:fr",
+    header = ["ID", "Requirement", "Area", "Priority", "Source", "Use case"]
+    spec = "P{1.2cm}P{5.5cm}P{2.4cm}P{1.35cm}P{2.3cm}P{1.75cm}"
+    write("req_fr.tex", longtable(spec, "Functional requirements (ID / Area / Priority / Source)", "tab:fr",
                                   header, req_rows("FR")))
-    write("req_nfr.tex", longtable(spec, "Non-functional requirements (ID / Type / Priority / Source)", "tab:nfr",
+    write("req_nfr.tex", longtable(spec, "Non-functional requirements (ID / Area / Priority / Source)", "tab:nfr",
                                    header, req_rows("NFR")))
     write("nfr_check.tex", longtable(
         "P{1.3cm}P{5.0cm}P{8.7cm}", "How the non-functional requirements are verified", "tab:nfrcheck",

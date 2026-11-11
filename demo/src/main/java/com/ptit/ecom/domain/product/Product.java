@@ -13,6 +13,7 @@ public abstract class Product {
     private int stockQuantity;
     private String imageUrl;
     private String description;
+    private Category category;
 
     public boolean isAvailable(int quantity) {
         return quantity > 0 && stockQuantity >= quantity;
@@ -23,10 +24,10 @@ public abstract class Product {
         stockQuantity -= quantity;
     }
 
-    public abstract String getCategory();
+    public abstract DetailKind getDetailKind();
 
     public String keywords() {
-        StringBuilder text = new StringBuilder(name).append(' ').append(getCategory());
+        StringBuilder text = new StringBuilder(name).append(' ').append(getDetailKind().name());
         if (description != null) text.append(' ').append(description);
         return text.toString().toLowerCase();
     }
@@ -77,5 +78,13 @@ public abstract class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

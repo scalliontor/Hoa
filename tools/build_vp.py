@@ -35,6 +35,7 @@ APP = next((c for c in _CANDIDATES if c.exists()), _CANDIDATES[-1]) / "Contents/
 TRIAL_APP = Path("/Applications/Visual Paradigm.app/Contents/Resources/app")
 VPS = Path.home() / "Library/Application Support/VisualParadigm"
 LOCK = ROOT / "vp/.vp.lock"
+VP_DDL = ROOT / "demo/db/vp_generated_ddl.sql"     # written by VP from the physical model, see compare_schema.py
 
 
 @contextlib.contextmanager
@@ -67,16 +68,17 @@ INSTALL = Path.home() / "Library/Application Support/VisualParadigm/plugins" / P
 LOG = ROOT / "vp/vp_build.log"
 
 
-def run_vp(xml_path, out_dir, log=LOG, app=None):
-    """Compile the plugin and let VP build the project described by xml_path; exports go to out_dir."""
+def run_vp(xml_path, out_dir, log=LOG, app=None, ddl=None):
+    """Compile the plugin and let VP build the project described by xml_path; exports go to out_dir.
+    With ddl, VP also writes the CREATE TABLE statements of every database table to that file."""
     with vp_lock():
         if app is not None and app != APP:
             with trial_marker():
-                return _run_vp(xml_path, out_dir, log, app)
-        return _run_vp(xml_path, out_dir, log, APP)
+                return _run_vp(xml_path, out_dir, log, app, ddl)
+        return _run_vp(xml_path, out_dir, log, APP, ddl)
 
 
-def _run_vp(xml_path, out_dir, log, APP):
+def _run_vp(xml_path, out_dir, log, APP, ddl=None):
     JRE = APP.parent / "jre.bundle/Contents/Home/bin"
     trial = INSTALL.parent.parent / ".eval"
     if "CE.app" in str(APP) and trial.exists():
@@ -107,6 +109,7 @@ def _run_vp(xml_path, out_dir, log, APP):
                                  + [str(APP / "bin")])
             cmd = [str(JRE / "java"), "-Xmx2048m", "-Dfile.encoding=UTF-8", "-Djava.awt.headless=true",
                    f"-Dtieuluan.root={ROOT}", f"-Dtieuluan.xml={xml_path}", f"-Dtieuluan.out={out_dir}",
+                   *([f"-Dtieuluan.ddl={ddl}"] if ddl else []),
                    "-cp", classpath, "com.vp.cmd.Plugin",
                    "-project", str(seed), "-upgrade-project", "-pluginid", PLUGIN_ID]
             with Path(log).open("w") as out:
@@ -173,7 +176,8 @@ def main():
         tmp = Path(tmp)
         # 1. Community Edition: every diagram it supports, with clean exports.
         subset(xml_path, {d["id"] for d in spec} - trial_ids, tmp / "ce.vpp", tmp / "ce.xml")
-        run_vp(tmp / "ce.xml", out_dir)
+        # VP also writes the CREATE TABLE statements of the physical model (ERD) with its own SQL generator.
+        run_vp(tmp / "ce.xml", out_dir, ddl=VP_DDL)
         for d in spec:
             if d["id"] in trial_ids or not d.get("export", True):
                 continue
@@ -192,7 +196,8 @@ def main():
         project = Path(ET.parse(xml_path).getroot().get("project"))
         project = project if project.is_absolute() else ROOT / project
         if trial_ids:
-            run_vp(xml_path, tmp / "trial_exports", log=ROOT / "vp/vp_build_full.log", app=TRIAL_APP)
+            run_vp(xml_path, tmp / "trial_exports", log=ROOT / "vp/vp_build_full.log", app=TRIAL_APP,
+                   ddl=tmp / "trial_exports/ddl.sql")    # keeps the SQLite database configuration in the project
         else:
             shutil.copy2(tmp / "ce.vpp", project)
 
@@ -203,6 +208,7 @@ def main():
         raise SystemExit(f"Diagram list mismatch.\nmissing={expected - names}\nextra={names - expected}")
     print(f"Built {project.name}: {len(names)} editable diagrams ({len(trial_ids)} as trial screenshots), "
           f"exports in figures/vp/")
+    subprocess.run([sys.executable, str(ROOT / "tools/compare_schema.py")], check=True)
 
 
 WATERMARK = ("evaluation copy",)      # text VP stamps over the page when it runs as an evaluation copy

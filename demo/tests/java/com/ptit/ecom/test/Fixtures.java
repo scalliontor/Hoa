@@ -7,6 +7,8 @@ import com.ptit.ecom.application.search.SearchService;
 import com.ptit.ecom.domain.customer.Address;
 import com.ptit.ecom.domain.customer.Customer;
 import com.ptit.ecom.domain.product.Artist;
+import com.ptit.ecom.domain.product.Category;
+import com.ptit.ecom.domain.product.DetailKind;
 import com.ptit.ecom.domain.product.Frame;
 import com.ptit.ecom.domain.product.Painting;
 import com.ptit.ecom.infrastructure.ai.LlmClient;
@@ -47,12 +49,21 @@ final class Fixtures {
                 new ImageService(gemma), new VectorIndex(), new RankingService(0.45, 0.45, 0.10));
     }
 
+    static Category category(String id, String name, DetailKind detailKind) {
+        Category category = new Category();
+        category.setCategoryId(id);
+        category.setName(name);
+        category.setDetailKind(detailKind);
+        return category;
+    }
+
     static Painting painting(String id, String price, int stock) {
         Artist artist = new Artist();
         artist.setArtistId("A01");
         artist.setName("Claude Monet");
         Painting painting = new Painting();
         painting.setProductId(id);
+        painting.setCategory(category("CAT-PRINTS", "Fine-art prints", DetailKind.PAINTING));
         painting.setName("Painting " + id);
         painting.setPrice(new BigDecimal(price));
         painting.setStockQuantity(stock);
@@ -66,6 +77,7 @@ final class Fixtures {
     static Frame frame(String id, String price) {
         Frame frame = new Frame();
         frame.setProductId(id);
+        frame.setCategory(category("CAT-FRAMES", "Frames", DetailKind.FRAME));
         frame.setName("Frame " + id);
         frame.setPrice(new BigDecimal(price));
         frame.setStockQuantity(10);

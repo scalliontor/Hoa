@@ -255,7 +255,7 @@ def check_database():
             continue
         for row, column in zip(info, table["columns"]):
             declared = row[2].lower()
-            expected = {"bytea": "blob"}.get(column["type"], column["type"])
+            expected = column["type"]
             if not declared.startswith(expected) or (not column["nullable"] and not row[3]):
                 fail(f"table {name}.{column['name']}: declared {row[2]} notnull={row[3]}")
         fks = {(r[3], f"{r[2]}.{r[4]}") for r in connection.execute(f"PRAGMA foreign_key_list({name})")}

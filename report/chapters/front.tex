@@ -47,7 +47,8 @@ whenever the AI service is slow.
 fine-art prints of public-domain paintings together with frames. Customers can find paintings with keywords
 or a natural sentence, by speaking, with a photo, or with a photo of their own room; they can ask an AI
 curator, add prints to the cart, place an order and follow it until delivery. The AI part uses the
-\textbf{Gemma 4} model served by vLLM on a remote L40S GPU server through an OpenAI-compatible interface, and
+\textbf{Gemma 4} model reached through an OpenAI-compatible interface (a self-hosted vLLM server during the
+evaluation, DeepInfra for the demo), and
 a \textbf{self-hosted Whisper} model that turns speech into text on the laptop itself. Everything else
 (web pages, Java application, SQLite database) runs on one machine, so the demo works without any cloud
 service. All prices are in US dollars.

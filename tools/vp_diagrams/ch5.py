@@ -1,4 +1,5 @@
-"""Chapter 5 (Code): deployment of the demo (laptop) and of Gemma 4 (L40S server)."""
+"""Chapter 5 (Code): deployment of the demo (laptop) and of Gemma 4 (DeepInfra's OpenAI-compatible API).
+Until 11/11/2026 the same API was served by vLLM on a self-hosted L40S server; only the configuration changed."""
 from .common import LINE, Diagram, caption_size, text_w
 
 
@@ -9,7 +10,7 @@ def _title(d, nid, lines, r):
 
 
 def deployment(root):
-    d = Diagram(root, "c5_deployment", "5.1 Deployment - offline demo, Whisper and Gemma 4 server", "deployment",
+    d = Diagram(root, "c5_deployment", "5.1 Deployment - offline demo, Whisper and Gemma 4 service", "deployment",
                 "deployment", "5 Deployment")
 
     def node(nid, type_, name, x, y, w, h, stereotype=None, parent=None, frame=False):
@@ -34,12 +35,14 @@ def deployment(root):
     wh = node("whisper", "Artifact", "faster-whisper (small)", py.x + 30, py.y + 66, 220, 56, parent="python")
 
     sx = lap.r + 300
-    srv = node("server", "Node", "L40S GPU server 171.226.10.121", sx, ly, 340, lh, stereotype="device", frame=True)
-    ng = node("nginx", "Node", "Nginx :8000 (/llm/v1/)", sx + 30, ly + 70, 280, 90,
+    srv = node("server", "Node", "DeepInfra cloud (api.deepinfra.com)", sx, ly, 340, lh, stereotype="device",
+               frame=True)
+    ng = node("nginx", "Node", "OpenAI-compatible API (/v1/openai/)", sx + 30, ly + 70, 280, 90,
               stereotype="executionEnvironment", parent="server")
-    vl = node("vllm", "Node", "vLLM", sx + 30, ly + 250, 280, 180, stereotype="executionEnvironment",
+    vl = node("vllm", "Node", "Model server", sx + 30, ly + 250, 280, 180, stereotype="executionEnvironment",
               parent="server", frame=True)
-    gm = node("gemma", "Artifact", "Gemma 4 (model gemma-4)", vl.x + 30, vl.y + 80, 220, 60, parent="vllm")
+    gm = node("gemma", "Artifact", "Gemma 4 31B (gemma-4-31B-it-turbo)", vl.x + 15, vl.y + 80, 250, 60,
+              parent="vllm")
 
     def link(type_, a, b, pts, text, at):
         d.edge(type_, a, b, pts, label=[text], at=at, name=text)
@@ -57,11 +60,11 @@ def deployment(root):
     x = jvm.x + 40
     link("Association", "jvm", "python", [(x, jvm.b), (x, py.cy), (py.r, py.cy)], t,
          ((py.r + x) / 2, py.cy - h / 2 - 7))
-    t = "HTTP + API key: /llm/v1/chat/completions"
+    t = "HTTPS + API key: /v1/openai/chat/completions"
     w, h = caption_size([t])
     y = ng.cy
     link("Association", "jvm", "nginx", [(jvm.r, y), (ng.x, y)], t, ((lap.r + srv.x) / 2, y - h / 2 - 7))
-    t = "reverse proxy"
+    t = "inference"
     w, h = caption_size([t])
     link("Association", "nginx", "vllm", [(ng.cx, ng.b), (ng.cx, vl.y)], t, (ng.cx + 8 + w / 2, (ng.b + vl.y) / 2))
 

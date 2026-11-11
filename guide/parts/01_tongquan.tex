@@ -1,93 +1,51 @@
 \begin{center}
-{\color{accent}\fontsize{30}{34}\selectfont\bfseries Họa.}\\[3pt]
-{\LARGE\bfseries Hướng dẫn thuyết trình}\\[3pt]
-{\large Từ yêu cầu đến code chạy được: phân tích và thiết kế một cửa hàng tranh có AI}\\[7pt]
-{\small Môn Phân tích và thiết kế hệ thống thông tin · Lớp 04 · Vũ Hùng Anh (B23DCDT022)}
+{\color{accent}\fontsize{28}{32}\selectfont\bfseries Họa.}\\[2pt]
+{\LARGE\bfseries Hướng dẫn bảo vệ tiểu luận}\\[2pt]
+{\normalsize Phân tích và thiết kế một cửa hàng tranh có AI: từ yêu cầu đến code chạy được}\\[4pt]
+{\small Môn Phân tích và thiết kế hệ thống thông tin · Lớp 04 · Vũ Hùng Anh (B23DCDT022) · 18:00 thứ Năm 12/11/2026}
 \end{center}
 
-\begin{note}{Tài liệu này dành cho ai?}
-Dành cho \key{người thuyết trình} của bài cá nhân này, tức là em: nói gì ở từng slide, thao tác demo ra sao, trả lời thế nào khi thầy hỏi, và xử lý thế nào khi máy hoặc mạng trục trặc. Slide viết bằng tiếng Anh theo slide của môn học (\factSlides{} slide, có bản nền sáng và bản nền tối); lời nói thì bằng tiếng Việt, và tài liệu này viết sẵn.
-\textbf{Cách nói được chọn: kể chuyện, dùng lời thường, ví dụ dễ hình dung, số tròn.} Tên kỹ thuật (tên lớp, tên hàm\ldots) không đọc lên mà để ở phần ``Nhớ thêm'', chỉ dùng khi thầy hỏi.
-\end{note}
+\section{Tổng quan ngắn}\label{sec:tongquan}
+\textbf{Trình bày gì.} Một mình em kể lại một sản phẩm, cửa hàng tranh Họa., đi qua đủ năm bước của môn: yêu cầu, phân tích, thiết kế, code, kiểm chứng. \key{Không dùng slide.} Công cụ chính là trang \key{Technical Defense Showcase}; khi thầy muốn xem tận nơi thì mở thẳng hiện vật thật bên dưới. Lời nói bằng tiếng Việt, mọi hiện vật bằng tiếng Anh.
 
-\section{Tổng quan}\label{sec:tongquan}
-\subsection{Cách dùng tài liệu}
-\begin{itemize}
-\item \key{Đọc mục này một lần}, rồi \key{tập nói} từng slide ở mục~\ref{sec:slides}. Ở mỗi slide chỉ cần nhớ \key{ý chính (một câu)}; phần ``Nói thế này'' là gợi ý, hãy nói lại bằng lời của mình, như đang kể cho một người bạn nghe.
-\item \key{Đừng đọc tên hàm, tên lớp lên.} Slide có nhiều tên kỹ thuật là để thầy đối chiếu; người nói chỉ cần nói ý. Ai cần tên chính xác thì xem ``Nhớ thêm'' dưới mỗi slide.
-\item \key{Tập demo ít nhất ba lần} theo mục~\ref{sec:demo}, rồi đặt lại dữ liệu mẫu (mục~\ref{sec:reset}).
-\item \key{Đọc mục~\ref{sec:hoidap}} (hỏi đáp) trước hôm thi: mỗi câu có một câu trả lời ngắn bằng lời thường, và phần kỹ thuật chỉ dùng khi thầy hỏi tiếp. Mục~\ref{sec:suco} (sự cố) chỉ mở khi cần.
-\item Số liệu và tên slide trong tài liệu được lấy tự động từ dự án lúc dựng PDF (\file{guide/build.sh}); nếu code hoặc slide đổi, chạy lại lệnh này.
-\end{itemize}
+\begin{center}\small
+\begin{tabular}{@{}P{3.3cm}P{6.6cm}P{6.9cm}@{}}
+\toprule
+\textbf{Hiện vật} & \textbf{Mở ở đâu} & \textbf{Dùng để}\\
+\midrule
+Showcase (mục A--G) & \file{showcase/index.html}, qua \code{http://localhost:8000/showcase/} & đường đi chính của bài nói; mỗi mục có liên kết tới hiện vật gốc\\
+Project Visual Paradigm & \file{vp/tieuluan_design.vpp} (\factDiagrams{} sơ đồ) & cho thầy thấy sơ đồ là bản gốc, mở và sửa được\\
+IDE (VS Code) & \file{tools/model.py} và vài file Java (mục~\ref{sec:cuaso}) & chỉ đúng dòng code của một phương thức trong thiết kế\\
+Cơ sở dữ liệu & \file{demo/data/ecom.db} (sqlite-web hoặc \code{sqlite3}) & bảng \code{category}, \code{product} và khóa ngoại thật\\
+Cửa hàng chạy thật & \code{http://127.0.0.1:8686} (bản tắt AI: cổng 8687) & demo trực tiếp (mục~\ref{sec:demo})\\
+Bài tiểu luận & \file{build/report/tieuluan_V3_04_10_VUHUNGANH_022.pdf} & tra khi bị hỏi sâu (mục~\ref{sec:filemap})\\
+\bottomrule
+\end{tabular}
+\end{center}
 
-\subsection{Ba điều để người nghe nhớ}
-Nếu thầy cô chỉ nhớ được ba điều sau buổi thuyết trình, thì đó là:
-\begin{enumerate}[leftmargin=1.6em]
-\item \key{Mọi thứ khớp nhau, từ ý tưởng đến code.} Từ vấn đề của khách, qua yêu cầu, bản vẽ, thiết kế, đến code, tên gọi ở đâu cũng giống nhau. Bài còn có một công cụ tự kiểm tra: \factCheckOps{} việc và \factCheckColumns{} cột dữ liệu đều khớp với thiết kế, và \factTests{} bài kiểm thử đều đạt.
-\item \key{AI giúp khách, nhưng không nắm quyền.} Gemma và Whisper giúp hiểu khách; còn giá, số hàng và quyền xem đơn do luật của cửa hàng quyết định. Tắt AI thì cửa hàng vẫn bán được.
-\item \key{Nói thật về kết quả.} Gemma hơn rõ ở tìm bằng ảnh (\evImageGemma{} so với \evImageLocal{}), nhưng ở tìm bằng chữ thì ngang với luật đơn giản. Những điều chưa làm được thì nói thẳng (mục~\ref{sec:hanche}).
+\textbf{Ba điều thầy nên nhớ sau buổi bảo vệ.}
+\begin{enumerate}[leftmargin=1.5em]
+\item \key{Một đường liền từ vấn đề đến code.} Mỗi yêu cầu có use case, mỗi use case có sơ đồ, mỗi sơ đồ thành lớp và bảng, mỗi lớp và bảng có dòng code và bài kiểm thử. Mọi tên gọi chỉ viết một lần trong một bản đặc tả, và một công cụ tự so code với bản đặc tả: \factCheckOps{} phương thức, \factCheckColumns{} cột đều khớp; \factTests{} bài kiểm thử và \factEtoE{} bước chạy thử đầu cuối đều đạt.
+\item \key{Cơ sở dữ liệu làm theo góp ý của thầy và được sinh ra từ mô hình.} Danh mục, một bảng sản phẩm chung, và bảng chi tiết cho từng loại. Visual Paradigm sinh câu lệnh tạo bảng; em so với cơ sở dữ liệu đang chạy: giống hệt, chỉ thiếu khóa ngoại và ràng buộc kiểm tra mà bộ sinh của VP cho SQLite không viết, và em bổ sung chúng từ cùng mô hình.
+\item \key{AI giúp khách nhưng không nắm quyền; tắt AI cửa hàng vẫn bán.} Giá, số hàng, quyền xem đơn do luật của cửa hàng quyết. Em nói thật kết quả: Gemma hơn rõ khi tìm bằng ảnh (\evImageGemma{} so với \evImageLocal{}), nhưng tìm bằng chữ thì ngang luật đơn giản (\evTextDirectGemma{} cả hai).
 \end{enumerate}
 
-\subsection{Cấu trúc bài nói và thời gian}
-Thời gian dưới đây ước tính từ độ dài \key{lời nói} ở mục~\ref{sec:slides} (khoảng \wpm{} từ mỗi phút, tức tốc độ nói vừa phải; toàn bộ lời nói dài khoảng \scriptWords{} từ), \key{chưa tính demo trực tiếp}.
+\textbf{Thời gian.} Hỏi thầy thời lượng ngay khi lên. Bảy bước của mục~\ref{sec:kichban}, hai phương án:
 \begin{center}\small
-\begin{tabular}{@{}P{3.4cm}P{1.6cm}P{8.1cm}P{2.2cm}@{}}
+\begin{tabular}{@{}P{0.6cm}P{5.2cm}P{6.3cm}P{1.6cm}P{1.9cm}@{}}
 \toprule
-\textbf{Phần} & \textbf{Slide} & \textbf{Nội dung} & \textbf{Thời gian}\\
+& \textbf{Bước} & \textbf{Mở chính} & \textbf{6--7 phút} & \textbf{3--4 phút}\\
 \midrule
-Mở đầu & \slideinfo{chapterSlides}{0} & Chào, sơ đồ bài nói, sản phẩm & \slideinfo{chapterTime}{0}\\
-Chương 1 -- Yêu cầu & \slideinfo{chapterSlides}{1} & HTTTCN là gì, bên liên quan, vấn đề $\to$ nguyên nhân, sơ đồ ngữ cảnh & \slideinfo{chapterTime}{1}\\
-Chương 2 -- Phân tích & \slideinfo{chapterSlides}{2} & \factFR{} FR, \factNFR{} NFR, use case, đặc tả, activity, nhất quán, mô hình miền, mô hình dữ liệu & \slideinfo{chapterTime}{2}\\
-Chương 3 -- AI & \slideinfo{chapterSlides}{3} & Text, voice, ảnh, phòng, trợ lý; kiến trúc; đánh giá & \slideinfo{chapterTime}{3}\\
-Chương 4 -- Thiết kế & \slideinfo{chapterSlides}{4} & Lớp phân tích $\to$ lớp thiết kế, CSDL (ERD), 3 tầng, sequence checkout & \slideinfo{chapterTime}{4}\\
-Chương 5 -- Code & \slideinfo{chapterSlides}{5} & Ánh xạ code bài giảng, kiểm chứng, kịch bản demo & \slideinfo{chapterTime}{5}\\
-Kết luận, Q\&A & \slideinfo{chapterSlides}{6} & Dấu vết liền mạch, bài học, hạn chế & \slideinfo{chapterTime}{6}\\
+1 & Vấn đề và yêu cầu & showcase A & 45 giây & 20 giây\\
+2 & Các sơ đồ chính & showcase B, VP: use case, activity & 1 phút & 40 giây\\
+3 & Từ phân tích sang thiết kế & showcase C, VP: lớp, ba tầng & 45 giây & (gộp vào 2)\\
+4 & Cơ sở dữ liệu & showcase E, VP: ERD, bảng \code{category} & 50 giây & 30 giây\\
+5 & Từ đặc tả đến code & showcase D, IDE & 45 giây & 20 giây\\
+6 & Demo trực tiếp & cửa hàng & 1 phút 45 & 1 phút\\
+7 & Kiểm thử và kết luận & showcase G & 30 giây & 20 giây\\
+\midrule
+& \textbf{Tổng} & & \textbf{≈ 6 phút 20} & \textbf{≈ 3 phút 10}\\
 \bottomrule
 \end{tabular}
 \end{center}
-
-\subsection{Một câu cho mỗi phần}
-Nhớ \key{một câu} cho mỗi phần; nếu quên hết, chỉ cần nói câu này rồi kể tiếp.
-\begin{center}\small
-\begin{tabular}{@{}P{3.4cm}P{12.4cm}@{}}
-\toprule
-\textbf{Phần} & \textbf{Một câu để nhớ}\\
-\midrule
-Mở đầu & Họa. là một cửa hàng tranh biết nghe, biết nhìn, và bài nói này kể cách nó đi từ ý tưởng đến sản phẩm chạy thật.\\
-Chương 1 & Hiểu khách cần gì trước, rồi mới nói đến công nghệ.\\
-Chương 2 & Viết yêu cầu, rồi vẽ: ai làm gì, theo thứ tự nào, cần quản lý và cất những thứ gì.\\
-Chương 3 & AI giúp khách tìm tranh bằng chữ, giọng nói và ảnh; AI hỏng thì cửa hàng vẫn chạy.\\
-Chương 4 & Biến bản vẽ thành thiết kế: khối code, bảng dữ liệu, ba tầng.\\
-Chương 5 & Code khớp bản thiết kế từng cái tên, và chạy thật ngay bây giờ.\\
-Kết luận & Một bản đặc tả chung giữ cho mọi thứ khớp nhau, và em nói thật những điều chưa làm được.\\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\subsection{Hai phương án thời lượng}
-\begin{itemize}
-\item \key{Đầy đủ:} cả \factSlides{} slide, khoảng \timeFull{} phút nói, cộng 6--8 phút demo (mục~\ref{sec:demo}).
-\item \key{Rút gọn:} chỉ nói các slide đánh dấu \key{[NÊN NÓI]} ở mục~\ref{sec:slides} (\factMustSlides{} slide), \emph{bỏ các đoạn có nhãn \textbf{[nếu còn giờ]}} trong lời nói, và lướt qua các slide còn lại trong vài giây mỗi slide: khoảng \timeShort{} phút nói, cộng khoảng 5 phút demo (bỏ các bước đánh dấu \emph{có thể bỏ} ở mục~\ref{sec:demo}).
-\item Hỏi giảng viên hoặc lớp trưởng \key{thời lượng thật} của buổi thi. Nếu dưới 15 phút, dùng phương án rút gọn.
-\end{itemize}
-
-\subsection{Một mình vừa nói vừa demo}
-Đây là bài cá nhân: em nói cả năm chương, tự thao tác demo và tự trả lời mọi câu hỏi.
-\begin{itemize}
-\item \key{Chuyển chương bằng một câu}, không cần trao lời: cuối mỗi chương trong mục~\ref{sec:slides} đã có sẵn một câu chuyển ý.
-\item \key{Demo một mình:} trước giờ nói, mở sẵn hai tab trình duyệt (tab 1 cửa hàng, tab 2 bản tắt Gemma) và dùng Cmd+Tab để qua lại với PowerPoint. Nói trước điều sắp bấm, rồi mới bấm; trong lúc chờ Gemma trả lời thì kể tiếp, đừng im lặng.
-\item \key{Sự cố:} vừa sửa vừa nói cho người nghe biết đang làm gì; quá 30 giây thì mở ảnh chụp màn hình (mục~\ref{sec:suco}).
-\item \key{Hỏi đáp:} cần nắm cả năm chương. Đọc hết mục~\ref{sec:hoidap}; khi bị hỏi sâu, mở đúng file theo mục~\ref{sec:filemap} thay vì đoán.
-\item \key{Buổi demo cá nhân và hỏi đáp} có thể ngắn hơn một buổi thuyết trình đầy đủ: khi đó dùng phương án rút gọn, hoặc nói slide 1--3 rồi đi thẳng vào demo (slide 35) và hỏi đáp.
-\end{itemize}
-
-\subsection{Mẹo để nói dễ nghe}
-\begin{itemize}
-\item \key{Kể chuyện, đừng đọc.} Một bức tranh, một người khách, một câu hỏi ``nếu\ldots thì sao?'' dễ nghe hơn một danh sách. Mở mỗi chương bằng một câu hỏi, đóng bằng một câu chuyển ý.
-\item \key{Nói số tròn}: ``khoảng chín mươi ba phần trăm'', ``chưa đầy một giây'', ``hơn năm mươi lớp code''. Số tròn dễ nhớ; số chính xác nằm sẵn trên slide.
-\item \key{Mỗi slide một ý.} Slide dày chữ: chỉ vào đúng chỗ cần nhấn (đã ghi trong ngoặc vuông), phần còn lại cứ để slide làm nhiệm vụ của nó.
-\item \key{Dùng ví dụ The Great Wave} xuyên suốt: nó là bức ảnh trong phần tìm bằng ảnh, và là ví dụ trong demo. Ví dụ quen thì người nghe theo kịp.
-\item \key{Nhìn người nghe, không nhìn slide.} Hỏi người nghe một câu khi mở đầu, ví dụ ``ai từng thích một bức tranh mà không biết tên nó?''.
-\item \key{Khi demo}, phóng to trình duyệt (Cmd/Ctrl và dấu +) để người cuối phòng nhìn rõ; nói trước điều sắp bấm, rồi mới bấm.
-\item \key{Nếu bị hỏi điều chưa chắc}: nói ``phần này em xin kiểm tra lại trong báo cáo'' và mở đúng mục (mục~\ref{sec:filemap}). Đừng đoán.
-\end{itemize}
+Lời nói của bảy bước dài khoảng \scriptWords{} từ, tức chừng \timeSpeech{} phút ở tốc độ \wpm{} từ mỗi phút; phần còn lại là thời gian chuyển cửa sổ và thao tác. Nếu thầy ngắt để hỏi: trả lời ngắn, rồi đi tiếp bước sau, không cần nói lại từ đầu.

@@ -38,7 +38,31 @@ REQUIREMENTS = [
     ("FR13", "FR", "The administrator moves an order PLACED → PROCESSING → SHIPPED → DELIVERED", ["UC13"]),
     ("FR14", "FR", "Find a painting for my room: Gemma 4 reads the room photo (palette, style) to suggest paintings and preview them on the wall", ["UC14"]),
     ("NFR08", "NFR", "Voice privacy: audio is processed only on the machine by self-hosted Whisper; a 5-second sentence is transcribed within 3 seconds", ["UC03"]),
+    # Behaviour the shop already had but the first list folded into FR05-FR13 (Assignment 02 asks for >= 20 FR, >= 10 NFR).
+    ("FR15", "FR", "VIP customers get their discount rate on the order total at checkout", ["UC07"]),
+    ("FR16", "FR", "Choose one of my addresses, or add a new one, during checkout", ["UC07"]),
+    ("FR17", "FR", "A flat shipping fee is added to every order", ["UC07"]),
+    ("FR18", "FR", "Every suggested painting shows why it was suggested", ["UC02", "UC04", "UC14"]),
+    ("FR19", "FR", "Every product belongs to one category; results can be filtered by category", ["UC01", "UC05", "UC12"]),
+    ("FR20", "FR", "The administrator sees the orders of all customers, newest first", ["UC13"]),
+    ("NFR09", "NFR", "Usability: every search, cart and order action ends in a visible result, empty state or error that says what to do", ["UC02", "UC06", "UC07"]),
+    ("NFR10", "NFR", "Maintainability: class, method, table and column names of the code match the design model, checked automatically", ["UC01"]),
+    ("NFR11", "NFR", "Data integrity: keys and constraints enforced, stock never negative, a product's details in the table its category names", ["UC07", "UC12"]),
+    ("NFR12", "NFR", "Availability: catalogue, cart, checkout, orders and administration work without the AI services", ["UC05", "UC07", "UC08", "UC13"]),
 ]
+# Functional area of each requirement (the "category" column of Assignment 02).
+REQUIREMENT_AREAS = {
+    "FR01": "Search", "FR02": "Search", "FR03": "Search", "FR04": "Search", "FR18": "Search", "FR14": "Search",
+    "FR05": "Catalogue", "FR19": "Catalogue",
+    "FR06": "Cart and checkout", "FR07": "Cart and checkout", "FR15": "Cart and checkout",
+    "FR16": "Cart and checkout", "FR17": "Cart and checkout",
+    "FR08": "Orders", "FR09": "Orders", "FR11": "Orders",
+    "FR10": "Assistant",
+    "FR12": "Administration", "FR13": "Administration", "FR20": "Administration",
+    "NFR01": "Security", "NFR02": "Reliability", "NFR03": "Security", "NFR04": "Maintainability",
+    "NFR05": "Privacy", "NFR06": "Portability", "NFR07": "Performance", "NFR08": "Privacy",
+    "NFR09": "Usability", "NFR10": "Maintainability", "NFR11": "Data integrity", "NFR12": "Availability",
+}
 # Slide 02: "The system shall + action + object + condition", with priority (MoSCoW) and source stakeholder.
 REQUIREMENT_DETAILS = {
     "FR01": ("Must", "Customer", "The system shall allow customers to search paintings by keyword or natural sentence and filter them by style, subject, colour, artist and maximum price."),
@@ -63,6 +87,16 @@ REQUIREMENT_DETAILS = {
     "NFR06": ("Should", "Lecturer, Developer", "The system shall run on one machine with a SQLite database and need the network only to call Gemma."),
     "NFR07": ("Should", "Customer", "The system shall return text search results within 2 seconds on the demo data."),
     "NFR08": ("Must", "Customer", "The system shall process audio on the local machine with self-hosted Whisper, never send audio outside, and transcribe a 5-second sentence within 3 seconds."),
+    "FR15": ("Must", "Customer, Shop owner", "The system shall apply the discount rate of a VIP customer to the order total at checkout."),
+    "FR16": ("Should", "Customer", "The system shall let the customer choose one of their addresses or add a new address during checkout."),
+    "FR17": ("Must", "Shop owner", "The system shall add a flat shipping fee of 8 USD to every order."),
+    "FR18": ("Should", "Customer", "The system shall show, for each suggested painting, the reason why it was suggested."),
+    "FR19": ("Must", "Shop owner, Administrator", "The system shall classify every product in exactly one category and let customers filter the results by category."),
+    "FR20": ("Must", "Administrator", "The system shall list the orders of all customers to the administrator, newest first, with their status."),
+    "NFR09": ("Should", "Customer", "The system shall end every search, cart and order action in a visible result, an empty state with a hint, or an error message that says what to do."),
+    "NFR10": ("Must", "Developer, Lecturer", "The system shall keep the class, method, table and column names of the code identical to the design model and check this automatically before each release."),
+    "NFR11": ("Must", "Shop owner, Administrator", "The system shall enforce every key and constraint of the physical data model, never let stock become negative, and keep the details of each product in the table its category names."),
+    "NFR12": ("Must", "Customer, Shop owner", "The system shall keep the catalogue, cart, checkout, orders and administration working when the Gemma or Whisper service is unavailable."),
 }
 ACTORS = [("Customer", "Customer of the gallery"), ("Administrator", "Gallery administrator"),
           ("Gemma 4 Service", "Gemma 4 AI service (L40S server)"), ("Payment Service", "Payment service (simulated)")]
@@ -100,8 +134,10 @@ DEMO_QUERIES = ["blue landscape paintings", "Monet paintings under 100 dollars",
 
 # --------------------------------------------------------------- 4.1 analysis
 # The customer, cart, order, shipping and payment classes of Kiem tra 01; the
-# product side is replaced by the painting shop of the demo (Product, Painting,
-# Frame, Artist).
+# product side is replaced by the painting shop of the demo (Category, Product,
+# Painting, Frame, Artist). Following the lecturer's feedback, a Category
+# classifies every product: Product keeps what all products share, and the
+# specialisations Painting and Frame keep what only one kind of product has.
 ANALYSIS = {
     "FullName": ["firstName: String", "middleName: String", "lastName: String"],
     "Customer": ["customerId: String", "email: String", "phone: String", "dateOfBirth: Date"],
@@ -117,6 +153,7 @@ ANALYSIS = {
     "Payment": ["paymentId: String", "amount: float", "paymentDate: Date", "status: String"],
     "PayCash": ["cashReceived: float", "changeAmount: float"],
     "PayCredit": ["cardHolder: String", "bankName: String", "cardLast4: String", "authorizationCode: String"],
+    "Category": ["categoryId: String", "name: String", "description: String"],
     "Product": ["productId: String", "name: String", "price: float", "stockQuantity: int", "imageUrl: String",
                 "description: String"],
     "Artist": ["artistId: String", "name: String", "nationality: String", "lifeYears: String"],
@@ -125,7 +162,7 @@ ANALYSIS = {
     "Frame": ["material: String", "color: String", "sizeLabel: String"],
 }
 ANALYSIS_ABSTRACT = {"Payment", "Product"}
-NEW_IN_41 = {"Product", "Artist", "Painting", "Frame"}
+NEW_IN_41 = {"Category", "Product", "Artist", "Painting", "Frame"}
 
 # (child, parent)
 ANALYSIS_GENERALIZATIONS = [
@@ -148,6 +185,7 @@ ANALYSIS_ASSOCIATIONS = [
     dict(a="Shipping", b="Address", name="ships to", a_mult="0..*", b_mult="1", kind="association"),
     dict(a="Order", b="Payment", name="is paid by", a_mult="1", b_mult="0..*", kind="association"),
     dict(a="Artist", b="Painting", name="paints", a_mult="1", b_mult="0..*", kind="association"),
+    dict(a="Category", b="Product", name="classifies", a_mult="1", b_mult="0..*", kind="association"),
 ]
 # (client, supplier, stereotype, name)
 ANALYSIS_DEPENDENCIES = [("Cart", "Order", "create", "checkout")]
@@ -234,6 +272,11 @@ rewardPoints += points;""")],
         extends="Customer"),
 
     # ----------------------------------------------------- domain.product
+    # The kind of detail a product has: which specialisation (and which detail table) holds its own attributes.
+    cls("DetailKind", "domain.product", kind="enum", literals=["PAINTING", "FRAME"]),
+    cls("Category", "domain.product",
+        ["-categoryId: String", "-name: String", "-detailKind: DetailKind", "-description: String"],
+        [op("+accepts(product: Product): boolean", "return product.getDetailKind() == detailKind;")]),
     cls("Product", "domain.product",
         ["-productId: String", "-name: String", "-price: BigDecimal", "-stockQuantity: int", "-imageUrl: String",
          "-description: String"],
@@ -241,9 +284,9 @@ rewardPoints += points;""")],
          op("+decreaseStock(quantity: int): void", """
 if (!isAvailable(quantity)) throw new IllegalStateException("Not enough stock for " + productId);
 stockQuantity -= quantity;"""),
-         op("+getCategory(): String {abstract}"),
+         op("+getDetailKind(): DetailKind {abstract}"),
          op("+keywords(): String", """
-StringBuilder text = new StringBuilder(name).append(' ').append(getCategory());
+StringBuilder text = new StringBuilder(name).append(' ').append(getDetailKind().name());
 if (description != null) text.append(' ').append(description);
 return text.toString().toLowerCase();""")],
         abstract=True),
@@ -253,7 +296,7 @@ return text.toString().toLowerCase();""")],
     cls("Painting", "domain.product",
         ["-style: String", "-subject: String", "-dominantColor: String", "-medium: String", "-yearCreated: int",
          "-widthCm: int", "-heightCm: int"],
-        [op("+getCategory(): String", 'return "PAINTING";'),
+        [op("+getDetailKind(): DetailKind", "return DetailKind.PAINTING;"),
          op("+keywords(): String", """
 StringBuilder text = new StringBuilder(super.keywords());
 for (String part : new String[] {style, subject, dominantColor, medium, artist == null ? null : artist.getName()}) {
@@ -263,7 +306,7 @@ return text.toString();"""),
          op("+sizeLabel(): String", 'return widthCm + " x " + heightCm + " cm";')],
         extends="Product"),
     cls("Frame", "domain.product", ["-material: String", "-color: String", "-sizeLabel: String"],
-        [op("+getCategory(): String", 'return "FRAME";'),
+        [op("+getDetailKind(): DetailKind", "return DetailKind.FRAME;"),
          op("+keywords(): String", 'return (super.keywords() + " " + material + " " + color).toLowerCase();')],
         extends="Product"),
 
@@ -655,6 +698,8 @@ DESIGN_ASSOCIATIONS = [
     dict(src="Shipping", dst="Address", role="address", src_mult="0..*", mult="1", kind="association", name="ships to"),
     dict(src="Order", dst="Payment", role="payments", src_mult="1", mult="0..*", kind="association", name="paid by"),
     dict(src="Painting", dst="Artist", role="artist", src_mult="0..*", mult="1", kind="association", name="painted by"),
+    dict(src="Product", dst="Category", role="category", src_mult="0..*", mult="1", kind="association",
+         name="classified in"),
 ]
 
 # (client, supplier, stereotype) dependencies shown in 4.3 and 4.4.
@@ -743,10 +788,12 @@ TABLES = [
         _id("address_id", pk=True), _id("customer_id", fk="customer.customer_id"),
         col("house_number", "varchar", 20), col("street", "varchar", 100),
         col("district", "varchar", 60), col("city", "varchar", 60)]),
+    dict(name="category", source="Category", columns=[
+        _id("category_id", pk=True), col("name", "varchar", 60, unique=True),
+        col("detail_kind", "varchar", 12, check="detail_kind IN ('PAINTING','FRAME')"),
+        col("description", "varchar", 300, nullable=True)]),
     dict(name="product", source="Product", columns=[
-        _id("product_id", pk=True),
-        col("product_type", "varchar", 12,
-            check="product_type IN ('PAINTING','FRAME')"),
+        _id("product_id", pk=True), _id("category_id", fk="category.category_id"),
         col("name", "varchar", 200), _money("price", check="price >= 0"),
         col("stock_quantity", "integer", check="stock_quantity >= 0"),
         col("image_url", "varchar", 255, nullable=True), col("description", "varchar", 500, nullable=True)]),
@@ -763,7 +810,7 @@ TABLES = [
         col("color", "varchar", 20), col("size_label", "varchar", 20)]),
     dict(name="product_feature", source="VectorIndex (search)", columns=[
         _id("product_id", pk=True, fk="product.product_id"), col("model_version", "varchar", 40),
-        col("feature_vector", "bytea"), col("updated_at", "timestamp")]),
+        col("feature_vector", "blob"), col("updated_at", "timestamp")]),
     dict(name="cart", source="Cart", columns=[
         _id("cart_id", pk=True), _id("customer_id", fk="customer.customer_id", unique=True),
         col("created_date", "timestamp"), col("updated_date", "timestamp")]),
@@ -804,6 +851,7 @@ FK_LABELS = {
     "customer_vip.customer_id": ("is a", "1", "0..1"),
     "customer_new.customer_id": ("is a", "1", "0..1"),
     "address.customer_id": ("has", "1", "1..*"),
+    "product.category_id": ("classifies", "1", "0..*"),
     "painting.product_id": ("is a", "1", "0..1"),
     "painting.artist_id": ("paints", "1", "0..*"),
     "frame.product_id": ("is a", "1", "0..1"),
@@ -832,7 +880,7 @@ def foreign_keys():
 
 
 if __name__ == "__main__":
-    assert len(ANALYSIS) == 17, len(ANALYSIS)
+    assert len(ANALYSIS) == 18, len(ANALYSIS)
     names = set(DESIGN_BY_NAME)
     for a in DESIGN_ASSOCIATIONS:
         assert a["src"] in names and a["dst"] in names, a

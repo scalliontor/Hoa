@@ -5,11 +5,11 @@ import { api, date, esc, loadProducts, money, state, toast } from "./core.js";
 const NEXT_STATUS = { PLACED: "PROCESSING", PROCESSING: "SHIPPED", SHIPPED: "DELIVERED" };
 
 function productRow(product) {
-  const thumb = product.category === "PAINTING" ? `<img src="${esc(product.imageUrl)}" alt="">` : "";
+  const thumb = product.kind === "PAINTING" ? `<img src="${esc(product.imageUrl)}" alt="">` : "";
   return `<tr data-product="${esc(product.productId)}">
     <td><div class="thumb">${thumb}</div></td>
     <td><span class="mono">${esc(product.productId)}</span></td>
-    <td>${esc(product.name)}<div class="card-meta">${product.category === "PAINTING" ? esc(product.artist?.name) : "Frame"}</div></td>
+    <td>${esc(product.name)}<div class="card-meta">${esc(product.category.name)}${product.kind === "PAINTING" ? ` ▪ ${esc(product.artist?.name)}` : ""}</div></td>
     <td><input class="input" type="number" min="0" step="1" data-field="price" value="${esc(product.price)}"></td>
     <td><input class="input" type="number" min="0" step="1" data-field="stock" value="${esc(product.stockQuantity)}"></td>
     <td><button type="button" class="btn small" data-save>Save</button></td>
@@ -36,7 +36,7 @@ function orderRow(order) {
 async function addPainting(form) {
   const value = (name) => form.elements[name].value.trim();
   const body = {
-    name: value("name"), artistId: value("artistId"), artistName: form.elements.artistId.selectedOptions[0].textContent,
+    name: value("name"), categoryId: value("categoryId"), artistId: value("artistId"), artistName: form.elements.artistId.selectedOptions[0].textContent,
     style: value("style"), subject: value("subject"), dominantColor: value("dominantColor"), medium: value("medium"),
     yearCreated: Number(value("yearCreated")), widthCm: Number(value("widthCm")), heightCm: Number(value("heightCm")),
     price: Number(value("price")), stockQuantity: Number(value("stockQuantity")), imageUrl: value("imageUrl"),
@@ -53,7 +53,8 @@ async function addPainting(form) {
 }
 
 function addFormHtml() {
-  const paintings = state.products.filter((p) => p.category === "PAINTING");
+  const paintings = state.products.filter((p) => p.kind === "PAINTING");
+  const categories = [...new Map(paintings.map((p) => [p.category.categoryId, p.category])).values()];
   const artists = [...new Map(paintings.map((p) => [p.artist.artistId, p.artist])).values()]
     .sort((a, b) => a.name.localeCompare(b.name));
   const images = paintings.map((p) => `<option value="${esc(p.imageUrl)}">${esc(p.imageUrl)}</option>`).join("");
@@ -61,6 +62,7 @@ function addFormHtml() {
     <span class="label">Add a painting</span>
     <div class="form-grid" style="margin-top:16px">
       <div class="field wide"><label>Title</label><input class="input" name="name" required placeholder="Water Lilies"></div>
+      <div class="field wide"><label>Category</label><select class="input" name="categoryId">${categories.map((c) => `<option value="${esc(c.categoryId)}">${esc(c.name)}</option>`).join("")}</select></div>
       <div class="field wide"><label>Artist</label><select class="input" name="artistId">${artists.map((a) => `<option value="${esc(a.artistId)}">${esc(a.name)}</option>`).join("")}</select></div>
       <div class="field"><label>Style</label><input class="input" name="style" required placeholder="Impressionism"></div>
       <div class="field"><label>Subject</label><input class="input" name="subject" required placeholder="landscape"></div>

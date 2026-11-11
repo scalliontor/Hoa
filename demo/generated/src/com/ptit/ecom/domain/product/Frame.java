@@ -10,8 +10,8 @@ public class Frame extends Product {
     private String sizeLabel;
 
     @Override
-    public String getCategory() {
-        return "FRAME";
+    public DetailKind getDetailKind() {
+        return DetailKind.FRAME;
     }
 
     @Override

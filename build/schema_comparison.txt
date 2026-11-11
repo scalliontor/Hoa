@@ -1,0 +1,7 @@
+VP generated DDL : demo/db/vp_generated_ddl.sql (18 tables)
+Running schema   : demo/db/ecom_schema_sqlite.sql (18 tables)
+
+Same tables, columns, types, NOT NULL, primary keys and UNIQUE: True (18 tables, 91 columns compared)
+
+Accepted differences: VP's SQLite generator writes no FOREIGN KEY (19 in the schema) and no CHECK (20 in the schema).
+The foreign keys are the relationships drawn in the ERD c42_erd and the checks are the constraints of model.TABLES; tools/gen_sql.py writes both from the same physical model.

@@ -28,3 +28,9 @@ build/guide/
 # Browser automation output
 .playwright-mcp/
 vp/.vp.lock
+
+# Course material, classmates' essays and class photos: kept locally, never published
+PT&TKHTTT/
+PT&TKHTTT-*.zip
+tieuluan_v4_*.pdf
+assigment_03_*.pdf

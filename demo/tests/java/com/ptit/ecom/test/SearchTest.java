@@ -83,16 +83,19 @@ final class SearchTest {
             same(0, new BigDecimal("100").compareTo(monet.getMaxPrice()), "max price");
             same(null, rules.textQuery("a hundred flowers").getColor(), "'red' is not read inside 'hundred'");
         });
-        test("Offline search still puts Monet first and respects the price limit", () -> {
+        test("Offline search keeps only Monet under $100 (UC02 hard conditions)", () -> {
             List<SearchResult> results = searchService(freshDatabase(), FakeLlmClient.offline())
                     .searchText("Monet paintings under 100 dollars");
-            for (SearchResult result : results.subList(0, 3)) {
-                same("Claude Monet", ((Painting) result.getProduct()).getArtist().getName(), "artist");
+            same(List.of("P01", "P02", "P03"), ids(results), "Monet prints at most $100");
+            for (SearchResult result : results) {
                 check(result.getReason().startsWith("Keyword rules"), "reason " + result.getReason());
             }
-            for (SearchResult result : results) {
-                check(result.getProduct().getPrice().compareTo(new BigDecimal("100")) <= 0, "price filter");
-            }
+        });
+        test("With Gemma the named artist stays a filter although a style is guessed too", () -> {
+            FakeLlmClient gemma = FakeLlmClient.online().answer("{\"style\": \"Impressionism\", \"subject\": null, "
+                    + "\"color\": null, \"artist\": \"Claude Monet\", \"max_price\": 100}");
+            List<SearchResult> results = searchService(freshDatabase(), gemma).searchText("Monet paintings under 100 dollars");
+            same(List.of("P01", "P02", "P03"), ids(results), "no other Impressionist");
         });
         test("Text search with Gemma: blue landscape paintings", () -> {
             FakeLlmClient gemma = FakeLlmClient.online().answer("{\"subject\": \"landscape\", \"color\": \"blue\"}");

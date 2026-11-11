@@ -1,11 +1,11 @@
 == Code versus model (tools/check_code_model.py)
 == Java classes of DESIGN (tools/model.py) ==
-OK    ... 55 lines of this section, one per element, all OK
+OK    ... 56 lines of this section, one per element, all OK
 == Browser views (web/js) ==
 OK    ... 9 lines of this section, one per element, all OK
 == Database ==
-OK    database data/ecom.db: 17 tables, 87 columns, keys and foreign keys as in TABLES
-OK    SQL of the repositories: 60 statements, 82 model identifiers used
+OK    database data/ecom.db: 18 tables, 91 columns, keys and foreign keys as in TABLES
+OK    SQL of the repositories: 62 statements, 84 model identifiers used
 == Dependencies ==
 OK    36/36 Java dependencies of DESIGN_DEPENDENCIES_44 found in the code
 OK    layer Application -> Data: 9 file(s)
@@ -17,4 +17,4 @@ NOTE  application.search.ImageService: private helper field(s) described
 NOTE  presentation.web.WebServer: private helper field(s) server
 NOTE  layer Presentation -> Data: 1 file(s) (EcomApplication, the composition root)
 
-Model check: 58 Java classes, 162 fields, 184 operations, 26 view functions, 17 tables, 87 columns, 60 SQL statements -> all match the model
+Model check: 60 Java classes, 169 fields, 185 operations, 26 view functions, 18 tables, 91 columns, 62 SQL statements -> all match the model

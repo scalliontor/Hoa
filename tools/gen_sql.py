@@ -22,7 +22,16 @@ SHIPPING_FEE = 8  # USD, flat rate per order
 CASCADE = {"cart_item.cart_id", "order_item.order_id", "customer_vip.customer_id", "customer_new.customer_id",
            "painting.product_id", "frame.product_id", "pay_cash.payment_id", "pay_credit.payment_id",
            "product_feature.product_id"}
-SQLITE_TYPE = {"bytea": "blob"}
+SQLITE_TYPE = {}                  # model.TABLES already uses SQLite types
+# The shop's two product lines. A category names the detail table that holds its products' own attributes;
+# a new line with the same attributes (posters, canvas prints) is one more row, not one more table.
+CATEGORIES = [
+    dict(category_id="CAT-PRINTS", name="Fine-art prints", detail_kind="PAINTING",
+         description="Museum-quality prints of public-domain paintings"),
+    dict(category_id="CAT-FRAMES", name="Frames", detail_kind="FRAME",
+         description="Frames sized for the prints of the shop"),
+]
+CATEGORY_OF = {c["detail_kind"]: c["category_id"] for c in CATEGORIES}
 # Vocabulary of the attribute vectors; VectorIndex.java keeps the same lists (checked by the tests).
 STYLES = ["Impressionism", "Post-Impressionism", "Ukiyo-e", "Art Nouveau", "Baroque", "Romanticism",
           "Expressionism", "Abstract", "Realism", "Naive art"]
@@ -119,13 +128,15 @@ def seed_rows(catalog):
                district="Dong Da", city="Hanoi"),
         insert("address", address_id="A003", customer_id="C002", house_number="96A", street="Tran Phu Street",
                district="Ha Dong", city="Hanoi"),
-        "", "-- Artists and paintings (prints of public-domain works).",
+        "", "-- Categories: each one says which detail table holds the attributes of its products.",
     ]
+    rows += [insert("category", **c) for c in CATEGORIES]
+    rows += ["", "-- Artists and paintings (prints of public-domain works)."]
     for a in catalog["artists"]:
         rows.append(insert("artist", artist_id=a["artistId"], name=a["name"], nationality=a["nationality"],
                            life_years=a["lifeYears"]))
     for p in catalog["paintings"]:
-        rows.append(insert("product", product_id=p["productId"], product_type="PAINTING", name=p["name"],
+        rows.append(insert("product", product_id=p["productId"], category_id=CATEGORY_OF["PAINTING"], name=p["name"],
                            price=p["price"], stock_quantity=p["stockQuantity"], image_url=p["imageUrl"],
                            description=p["description"]))
         rows.append(insert("painting", product_id=p["productId"], artist_id=p["artistId"], style=p["style"],
@@ -135,7 +146,7 @@ def seed_rows(catalog):
                            feature_vector=feature_vector(p), updated_at="2026-10-29 09:00:00"))
     rows += ["", "-- Frames."]
     for f in catalog["frames"]:
-        rows.append(insert("product", product_id=f["productId"], product_type="FRAME", name=f["name"],
+        rows.append(insert("product", product_id=f["productId"], category_id=CATEGORY_OF["FRAME"], name=f["name"],
                            price=f["price"], stock_quantity=f["stockQuantity"], image_url=f["imageUrl"],
                            description=f["description"]))
         rows.append(insert("frame", product_id=f["productId"], material=f["material"], color=f["color"],
@@ -194,6 +205,8 @@ def validate(schema, seed):
         ("unknown product in order_item", "INSERT INTO order_item VALUES ('20261003', 'P999', 1, 100)"),
         ("second cart for C001", "INSERT INTO cart VALUES ('CART-X', 'C001', '2026-10-29', '2026-10-29')"),
         ("unknown order status", "UPDATE orders SET status = 'LOST' WHERE order_id = '20261001'"),
+        ("product in an unknown category", "UPDATE product SET category_id = 'CAT-NONE' WHERE product_id = 'P01'"),
+        ("category with an unknown detail kind", "INSERT INTO category VALUES ('CAT-X', 'Sculpture', 'STATUE', NULL)"),
     ]
     lines = [f"SQLite {sqlite3.sqlite_version}, PRAGMA foreign_keys = ON",
              f"{len(tables)} tables created; {sum(counts.values())} sample rows", ""]
@@ -208,7 +221,18 @@ def validate(schema, seed):
             rejected += 1
             lines.append(f"  Rejected as expected ({label}): {error}")
     lines.append(f"\n{rejected}/{len(bad)} statements that break a constraint were rejected")
-    return "\n".join(lines) + "\n", len(tables), rejected == len(bad)
+    # Every product has exactly one detail row, in the table its category names.
+    mismatched = con.execute("""
+        SELECT p.product_id FROM product p JOIN category c ON c.category_id = p.category_id
+        WHERE (c.detail_kind = 'PAINTING') != EXISTS (SELECT 1 FROM painting d WHERE d.product_id = p.product_id)
+           OR (c.detail_kind = 'FRAME') != EXISTS (SELECT 1 FROM frame d WHERE d.product_id = p.product_id)""").fetchall()
+    per_category = con.execute("""
+        SELECT c.name, c.detail_kind, COUNT(p.product_id) FROM category c
+        LEFT JOIN product p ON p.category_id = c.category_id GROUP BY c.category_id ORDER BY c.category_id""").fetchall()
+    lines.append("")
+    lines += [f"  category {name!r} ({kind}): {n} products" for name, kind, n in per_category]
+    lines.append(f"  products whose detail row is not in the table of their category: {len(mismatched)}")
+    return "\n".join(lines) + "\n", len(tables), rejected == len(bad) and not mismatched
 
 
 def main():

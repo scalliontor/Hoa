@@ -12,7 +12,7 @@ the endpoint, configuration and view tables are generated from the code itself w
 
 I chose a stack that a student laptop can run without installation work: plain Java with the HTTP server
 of the JDK, a SQLite file, and browser pages without a framework. Only two parts need more than the laptop: the
-Gemma~4 model~\cite{gemma}, which needs a data-centre GPU and is served by vLLM~\cite{vllm}, and the Whisper
+Gemma~4 model~\cite{gemma}, which needs a data-centre GPU and is reached through an OpenAI-compatible API, and the Whisper
 model~\cite{whisper,fasterwhisper}, which needs a one-time download.
 Table~\ref{tab:techmap} in Section~4.4 maps each design concept to its technology; Table~\ref{tab:techstack} adds the
 versions and the folders.
@@ -31,7 +31,7 @@ versions and the folders.
 \small Database & \small SQLite~\cite{sqlite} through sqlite-jdbc~3.46.1.3~\cite{sqlitejdbc} & \small \code{demo/db}, \code{demo/data}\\
 \small Browser views & \small HTML, CSS and JavaScript without a framework; \code{MediaRecorder}~\cite{mediarecorder} for the microphone & \small \code{demo/web}\\
 \small Speech-to-text & \small faster-whisper~1.2.1, Whisper model \code{small} on the CPU (int8), small HTTP server in Python & \small \code{demo/voice-server}\\
-\small Language model & \small Gemma~4 MoE 26B served by vLLM in a Docker container on an NVIDIA L40S server, behind Nginx; OpenAI-compatible API & \small Remote server (Section~\ref{sec:5.2})\\
+\small Language model & \small Gemma~4 31B (\codex{\cfgGemmaModel}) through DeepInfra's OpenAI-compatible API; the measurements of Chapter~3 used Gemma~4 MoE 26B served by vLLM~\cite{vllm} on a self-hosted NVIDIA L40S server & \small Remote service (Section~\ref{sec:5.2})\\
 \small Build and tools & \small Shell scripts calling \code{javac} (no build tool); Python generators of the SQL and the Java skeleton & \small \code{demo/scripts}, \code{tools}\\
 \small Modelling & \small Visual Paradigm~\cite{visualparadigm}, one project for every diagram & \small \code{vp}, \code{figures/vp}\\
 \bottomrule
@@ -43,18 +43,35 @@ Chapter~4 can be found in the code. Second, the AI services are reached through 
 \code{LlmClient} and \code{SpeechClient}; nothing outside \code{infrastructure.ai} knows that the model is Gemma or
 that speech is handled by Whisper.
 
+Assignment~06~\cite{slidesA06} asks for a Python prototype, yet the application is written in Java, for four
+reasons. (1) The design of Chapter~4 and the Assignment~05 slides~\cite{slidesL05} are made of typed classes and
+operations such as \code{CheckoutService.checkout(cartID) : Order}, grouped into controllers, services and
+repositories; these map one to one onto Java classes and packages, and the same slides list Java next to Python
+among the possible technologies. (2) One language holds the domain classes and the server side of all three layers,
+so the generated skeleton and the checker \code{tools/check_code_model.py} compare one code base with one model
+(NFR10). (3) The names of the Python sample are kept: Table~\ref{tab:slide2code} maps each of its elements to the
+Java class and method that replaces it, written in camelCase instead of snake\_case. (4) Python is still used
+where it fits: the self-hosted Whisper server in \code{demo/voice-server} is a small Python program, and the
+generators of the SQL, the Java skeleton and the essay tables are Python scripts.
+
 %% =========================================================================
 \section{Deployment}\label{sec:5.2}
 
 Figure~\ref{fig:c5_deployment} shows where each part runs. The laptop runs the browser, the Java application with
-its SQLite file, and the Whisper voice server; the L40S server runs Nginx and the vLLM container with Gemma~4. The
-only connection that leaves the laptop is the HTTP call from \code{GemmaClient} to Nginx; the customer's voice goes
-only to \code{127.0.0.1} (NFR08) and the database never leaves the laptop (NFR06).
+its SQLite file, and the Whisper voice server; Gemma~4 runs at DeepInfra behind an OpenAI-compatible API. The
+only connection that leaves the laptop is the HTTPS call from \code{GemmaClient} to that API; the customer's voice
+goes only to \code{127.0.0.1} (NFR08) and the database never leaves the laptop (NFR06).
+
+Until 11/11/2026 the same API was served by vLLM on a self-hosted L40S GPU server, where the evaluation of
+Chapter~3 was measured. When that server stopped answering (HTTP 502), the demo moved to Gemma~4 at DeepInfra by
+changing only \code{gemma.baseUrl} and \code{gemma.model} in \code{demo/config/app.properties} and the key in the
+local file; no class changed, because every call goes through the \code{LlmClient} interface (NFR04). The
+end-to-end check of Section~\ref{sec:5.10} was run again against the new service.
 
 \begin{figure}[H]
 \centering
 \vpfig{c5_deployment}{0.30\textheight}
-\caption[Deployment diagram of Họa.]{Deployment diagram of Họa.: the demo laptop and the L40S server. Visual Paradigm diagram \vpsrc{c5_deployment}.}\label{fig:c5_deployment}
+\caption[Deployment diagram of Họa.]{Deployment diagram of Họa.: the demo laptop and the Gemma~4 service. Visual Paradigm diagram \vpsrc{c5_deployment}.}\label{fig:c5_deployment}
 \end{figure}
 
 \begin{longtable}{@{}P{2.6cm}P{4.6cm}P{3.6cm}P{4.2cm}@{}}
@@ -68,11 +85,10 @@ only to \code{127.0.0.1} (NFR08) and the database never leaves the laptop (NFR06
 \midrule
 \endhead
 \small Laptop & \small Browser with the views of \code{demo/web} & \small \codex{http://127.0.0.1:\cfgServerPort} & \small The user\\
-\small Laptop & \small Java application: \code{EcomApplication}, \code{WebServer} & \small \codex{127.0.0.1:\cfgServerPort} only & \small \code{demo/scripts/run.sh}\\
+\small Laptop & \small Java application: \code{EcomApplication}, \code{WebServer} & \small \codex{127.0.0.1:\cfgServerPort} only & \small \code{demo/run.sh}\\
 \small Laptop & \small SQLite database file & \small \codex{demo/\cfgDbPath} & \small Created by \code{Database.initialize} at start\\
 \small Laptop & \small Whisper voice server (faster-whisper, model \codex{\cfgWhisperModel}) & \small \codex{\cfgWhisperBaseUrl} & \small \code{demo/voice-server/run_voice.sh} (called by \code{run.sh})\\
-\small L40S server & \small Nginx gateway & \small port 8000, path \code{/llm/v1/} & \small Server administrator\\
-\small L40S server & \small vLLM container \code{gemma_4_moe} serving model \codex{\cfgGemmaModel} (context 16\,384 tokens) & \small port 8080, reached only through Nginx & \small Docker on the server\\
+\small DeepInfra & \small OpenAI-compatible API serving model \codex{\cfgGemmaModel} & \small \codex{\cfgGemmaBaseUrl} & \small Key in \code{demo/config/app.local.properties} (not in git)\\
 \bottomrule
 \end{longtable}
 
@@ -149,7 +165,7 @@ and how far.
 \small 4. Semantic text embeddings & \small Not done & \small Gemma~4 extracts structured filters instead (Chapter~3).\\
 \small 5. Multimodal fusion & \small Done & \small \code{SearchService.searchMultimodal(text, image)} scores text and image in one query.\\
 \small 6. Filtering by price & \small Done & \small \code{CommonQuery.maxPrice} is a hard filter in \code{retrieve}.\\
-\small 7. Filtering by category & \small Done & \small Style, subject, colour and artist of \code{Painting}.\\
+\small 7. Filtering by category & \small Done & \small The A06 ``category'' filters are the attributes style, subject, colour and artist of \code{Painting}; the product \code{Category} (prints or frames, FR19) filters the result list.\\
 \small 8. Stock-aware ranking & \small Done & \small \code{RankingService.businessScore}: sold-out prints sink to the bottom.\\
 \small 9. Order-status search & \small Done & \small \code{OrderService.getOrder}, \code{latestOrder} and the assistant tools.\\
 \small 10. Web user interface & \small Done & \small The views of Table~\ref{tab:views} (Section~\ref{sec:5.9}).\\
@@ -424,20 +440,30 @@ check of the code against the model is reproduced in Section~4.5.
 
 \txtfileor{generated/test_scenarios.txt}{../build/test_results.txt}
 
+\paragraph{End-to-end check.} The unit and integration tests call the classes; \code{tools/e2e_check.py} checks
+the running system the way the browser uses it. It starts the real server on a new database built from the schema
+and the seed (so the demo data is never touched), calls the HTTP API for each main flow and compares every answer
+with a literal value of the specification, then starts a second server whose Gemma address is unreachable to check
+the fallbacks. Its last run is reproduced below: every use case of the demo script, the business rules BR03, BR06,
+BR07 and BR08, the ownership rule NFR01 (including a request to the assistant for another customer's orders), the
+fallback NFR02 and the availability rule NFR12.
+
+\txtfile{../build/e2e_results.txt}
+
 %% =========================================================================
 \section{Running the Demo}\label{sec:5.11}
 
 The demo needs a JDK~17 or newer and Python~3 on the laptop; the first start of the voice server needs Internet
 access once to download the Whisper model, after which everything except Gemma runs offline.
 \begin{enumerate}
-\item Build the Java application: \code{demo/scripts/build.sh} (it compiles every file of \code{demo/src/main/java}
+\item Build the Java application: \code{demo/build.sh} (it compiles every file of \code{demo/src/main/java}
       against the jars of \code{demo/lib}).
-\item Start everything: \code{demo/scripts/run.sh}. It starts the Whisper server on \codex{\cfgWhisperBaseUrl} if
+\item Start everything: \code{demo/run.sh}. It starts the Whisper server on \codex{\cfgWhisperBaseUrl} if
       it is not running, creates \codex{demo/\cfgDbPath} from \code{demo/db/ecom_schema_sqlite.sql} and
       \code{demo/db/seed.sql} on the first start, and prints whether Gemma~4 and Whisper are online.
 \item Open \codex{http://127.0.0.1:\cfgServerPort} and sign in with a demo account: C001 (VIP customer), C002 (new
       customer) or ADMIN.
-\item Without network access to the L40S server the application still runs: search uses keyword rules, image
+\item Without network access to the Gemma service the application still runs: search uses keyword rules, image
       search reads only the main colour of the photo, and the assistant answers order questions without AI.
 \item Rebuild this essay with \code{report/build.sh}; it regenerates every table from \code{tools/model.py} and the
       code before compiling.

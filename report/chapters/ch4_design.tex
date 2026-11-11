@@ -49,6 +49,7 @@ customer, cart, order, shipping and payment classes are kept; the product side i
 \endhead
 \small Products & \small \code{Book}, \code{Clothes}, \code{Shoes}, \code{Electronics}, \code{Laptop}, \code{Mobile} & \small Abstract \code{Product} with the subclasses \code{Painting} and \code{Frame} & \small Họa. sells prints of paintings and frames for them\\
 \small Artist & \small -- & \small New class \code{Artist}; an artist \emph{paints} 0..* paintings & \small Customers search by painter (``Monet paintings under 100 dollars'')\\
+\small Category & \small The kind of product was only the class of the object & \small New class \code{Category}; a category \emph{classifies} 0..* products & \small Lecturer's feedback: classify products by category instead of one product table holding every detail; the shop browses and manages products by category\\
 \small Line items & \small \code{CartItem} and \code{OrderItem} each had four links to the product classes with a \{xor\} constraint & \small One link \emph{refers to} \code{Product}, multiplicity 0..* -- 1 & \small A line always points to exactly one product; the model of Lecture~04 is Cart $\rightarrow$ CartItem $\rightarrow$ Product\\
 \small Common attributes & \small Identifier, price and stock repeated in each product class & \small \code{productId}, \code{name}, \code{price}, \code{stockQuantity}, \code{imageUrl}, \code{description} in \code{Product} & \small No duplication; image and description are needed by the AI search\\
 \small Card data & \small \code{PayCredit} stored \code{cardNumber} and \code{expiryDate} & \small \code{cardLast4} and \code{authorizationCode} & \small The system shall not store full card numbers (NFR05)\\
@@ -68,8 +69,9 @@ Figure~\ref{fig:c41_analysis} has four groups of classes.
 delivery. Two kinds of customers specialise \code{Customer}: \code{CustomerVIP} with a VIP level, a discount rate
 and reward points, and \code{CustomerNew} with a registration date and an optional welcome voucher.
 
-\textbf{Products.} \code{Product} is abstract: it holds what every item of the shop has, namely identifier, name,
-price, stock quantity, image and description. A \code{Painting} is a print of a painting, described by its style,
+\textbf{Products.} Every product belongs to one \code{Category} (identifier, name, description), the line of
+the shop it is sold under: fine-art prints or frames. \code{Product} is abstract: it holds what every item of the
+shop has, namely identifier, name, price, stock quantity, image and description. A \code{Painting} is a print of a painting, described by its style,
 subject, dominant colour, medium, year of creation and size in centimetres; each painting is by one \code{Artist},
 who has a name, a nationality and life years. A \code{Frame} is sold with a painting and has a material, a colour
 and a size label.
@@ -96,7 +98,7 @@ Five kinds of relationships are used, each with a precise meaning:
 \item \textbf{Aggregation} (hollow diamond): \code{Customer} groups its \code{Address} objects, but an address is
 also used by \code{Shipping}, so it is not deleted with the customer.
 \item \textbf{Association} (plain line): two independent objects that know each other, for example a customer and
-the orders placed by that customer, or an artist and that artist's paintings. In the data model the line receives its name and its
+the orders placed by that customer, or an artist and that artist's paintings, or a category and the products it classifies. In the data model the line receives its name and its
 multiplicities: a customer \emph{places} 0..* orders, an artist \emph{paints} 0..* paintings.
 \item \textbf{Generalization} (hollow triangle): \code{CustomerVIP} and \code{CustomerNew} specialise
 \code{Customer}, \code{PayCash} and \code{PayCredit} specialise \code{Payment}, \code{Painting} and \code{Frame}
@@ -166,7 +168,8 @@ database cannot drift from the model.
 \small Identifier & \small Primary key of type \code{varchar(20)} & \small \code{customer_id}, \code{product_id}, \code{order_id}\\
 \small Value object 1 -- 1 & \small Embedded as columns of the owner, no separate table & \small \code{FullName} $\rightarrow$ \code{customer.first_name}, \code{middle_name}, \code{last_name}\\
 \small Generalization & \small One table per class (class table inheritance): the child table uses the parent key as primary key and foreign key & \small \code{painting.product_id} $\rightarrow$ \code{product}; \code{pay_cash.payment_id} $\rightarrow$ \code{payment}\\
-\small Discriminator & \small The parent table says which child a row belongs to & \small \code{product.product_type} (PAINTING, FRAME), \code{payment.method}\\
+\small Category and detail tables & \small A product row points to its category; the category names the detail table that holds the product's own columns & \small \code{product.category_id} $\rightarrow$ \code{category}; \code{category.detail_kind} (PAINTING $\rightarrow$ \code{painting}, FRAME $\rightarrow$ \code{frame})\\
+\small Discriminator & \small The parent table says which child a row belongs to & \small \code{payment.method} (CASH, CREDIT)\\
 \small Association 1 -- * & \small Foreign key on the ``many'' side & \small \code{painting.artist_id}, \code{orders.customer_id}\\
 \small Association 1 -- 0..1 & \small Foreign key with a \code{UNIQUE} constraint & \small \code{cart.customer_id}, \code{shipping.order_id}\\
 \small Composition with lines & \small Composite primary key; deleting the whole deletes the lines (\code{ON DELETE CASCADE}) & \small \code{cart_item(cart_id, product_id)}, \code{order_item(order_id, product_id)}\\
@@ -190,8 +193,36 @@ Foreign keys and \code{UNIQUE} constraints enforce the \emph{upper} bound of a m
 line'' and ``a customer has at least one address'' are therefore checked by the application:
 \code{CheckoutService.checkout} refuses an empty cart, and \code{Customer.findAddress} refuses an address of another
 customer; \code{CheckoutService.addAddress} refuses an address with an empty part or a part longer than its column
-before \code{CustomerRepository.saveAddress} writes it. In the same way, the discriminator \code{product_type} says which child table must hold the details of a
-product; the repositories read and write the parent row and the child row of a product together.
+before \code{CustomerRepository.saveAddress} writes it. In the same way, a foreign key cannot say that the detail
+row of a product is in the table its category names; Section~\ref{sec:4.2.cat} explains how that rule is kept.
+
+\subsection{Category, Product and the Detail Tables}\label{sec:4.2.cat}
+
+The lecturer's feedback was that one \code{product} table must not hold every detail of every kind of product.
+Họa. sells two kinds of products with different attributes: prints of paintings (artist, style, subject, colour,
+medium, year, size) and frames (material, colour, size label). Three designs were compared:
+\begin{itemize}
+\item \emph{One wide table} with every column of every kind: most columns are empty for every row, and a column
+such as \code{material} would be allowed on a painting. Rejected.
+\item \emph{One table per kind} (\code{painting}, \code{frame}), each with its own price and stock: the common columns
+are repeated, and \code{cart_item} and \code{order_item} could not have one foreign key to ``the product''. Rejected.
+\item \emph{Category, common product, detail tables} (chosen). \code{category} classifies the products and says,
+in \code{detail_kind}, which detail table holds the attributes of its products; \code{product} keeps what every
+product has (name, price, stock, image, description) and the foreign key \code{category_id}; \code{painting} and
+\code{frame} keep the specific attributes, with the product key as primary key and foreign key.
+\end{itemize}
+The design keeps one place for price and stock, so a cart line, an order line and the stock rule work for every
+product. A new product line with the same attributes as an existing kind (for example canvas prints) is one more row
+of \code{category}; a line with new attributes needs one detail table and one value of \code{DetailKind}, and nothing
+else changes.
+
+The rule ``the detail row of a product is in the table its category names'' is kept at three levels.
+The database refuses an unknown category (foreign key) and an unknown kind (\code{CHECK detail_kind IN (...)}).
+In the code, \code{SqliteProductRepository} reads the category with each product and loads the details from the
+table its \code{detailKind} names, and saving a product that its category does not accept
+(\code{Category.accepts(product)}) is refused before anything is written. Finally, \code{tools/gen_sql.py} checks the
+sample data with a query that finds every product whose detail row is not in the table of its category; it finds
+none (\code{build/sql_validation.txt})
 
 \subsection{Generate Data Base}\label{sec:4.2.4}
 
@@ -221,20 +252,44 @@ The schema is checked automatically: \code{tools/check_code_model.py} opens the 
 table and column with \code{model.TABLES}, and compares the SQL strings of the repositories with the same list
 (Section~\ref{sec:4.5.1}).
 
+\paragraph{Generated by Visual Paradigm.} The physical model in Visual Paradigm also generates the database script
+itself. During the build of the project, the plugin sets the project's database configuration to SQLite with the
+driver the demo uses (\code{sqlite-jdbc}), as \emph{Tools $\rightarrow$ DB $\rightarrow$ Database Configuration}
+does, and asks Visual Paradigm's own SQL generator (\code{DatabaseManager.generateCreateSQL}, SQLite dialect) for
+the \code{CREATE TABLE} statements of the \nTables{} tables of the ERD. Visual Paradigm writes them to
+\code{demo/db/vp_generated_ddl.sql}. \code{tools/compare_schema.py} loads that script and the schema of the demo into
+SQLite and compares them table by table (Listing~\ref{lst:schemacompare}). Tables, columns, types, \code{NOT NULL},
+primary keys and \code{UNIQUE} constraints are the same. The only differences are expected: Visual Paradigm's
+SQLite generator writes no \code{FOREIGN KEY} and no \code{CHECK} clause, so the foreign keys (the relationships
+of the ERD) and the checks (the constraints of the physical model) are added by \code{tools/gen_sql.py} from the
+same model.
+
+\IfFileExists{../build/schema_comparison.txt}{%
+\lstinputlisting[caption={Visual Paradigm's generated DDL compared with the schema of the demo (\texttt{build/schema\_comparison.txt})},label={lst:schemacompare}]{../build/schema_comparison.txt}}%
+{\assetbox{Comparison of the generated DDL with the schema}{build/schema_comparison.txt}}
+
 \subsection{Copy Screen of DB}\label{sec:4.2.5}
 
-Figures~\ref{fig:db_tables} and~\ref{fig:db_rows} are screenshots of the generated SQLite database opened in a
-database viewer: the list of tables, and rows of the \code{painting}, \code{artist} and \code{orders} tables.
+Figures~\ref{fig:db_tables}, \ref{fig:db_category} and~\ref{fig:db_rows} are screenshots of the database of the
+demo, \code{demo/data/ecom.db}, opened read-only in the SQLite browser \emph{sqlite-web}: the structure of
+\code{product} with its foreign key to \code{category}, the two categories with the detail kind each one names, and
+rows of \code{product}, every one with its \code{category_id}.
 
 \begin{figure}[htbp]
 \centering
-\begin{minipage}[t]{0.485\linewidth}\centering
-\demofig{db_tables}{0.30\textheight}
-\caption[Tables of the SQLite database]{Tables of the generated SQLite database \texttt{demo/data/ecom.db}. Screenshot \demosrc{db_tables}.}\label{fig:db_tables}\label{fig:dbtables}
+\demofig{db_tables}{0.36\textheight}
+\caption[Structure of the product table]{Structure of the table \texttt{product} in \texttt{demo/data/ecom.db}: the foreign key \texttt{category\_id} references \texttt{category}. Screenshot \demosrc{db_tables}.}\label{fig:db_tables}\label{fig:dbtables}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.40\linewidth}\centering
+\demofig{db_category}{0.26\textheight}
+\caption[Rows of the category table]{The two categories and the detail table each one names. Screenshot \demosrc{db_category}.}\label{fig:db_category}
 \end{minipage}\hfill
-\begin{minipage}[t]{0.485\linewidth}\centering
-\demofig{db_rows}{0.30\textheight}
-\caption[Rows of the SQLite database]{Rows of the demo data in the SQLite database. Screenshot \demosrc{db_rows}.}\label{fig:db_rows}\label{fig:dbrows}
+\begin{minipage}[t]{0.57\linewidth}\centering
+\demofig{db_rows}{0.26\textheight}
+\caption[Rows of the product table]{Rows of \texttt{product}, each with its \texttt{category\_id}. Screenshot \demosrc{db_rows}.}\label{fig:db_rows}\label{fig:dbrows}
 \end{minipage}
 \end{figure}
 
@@ -299,8 +354,8 @@ accepts only \code{PLACED} $\rightarrow$ \code{PROCESSING} $\rightarrow$ \code{S
 \code{Product.keywords()} returns the searchable text, extended by \code{Painting} with style, subject, colour,
 medium and artist.
 \end{itemize}
-Polymorphism replaces conditions on a type field: \code{Product.getCategory()} is abstract and answered by
-\code{Painting} and \code{Frame}; \code{Payment.process()} is abstract and answered differently by \code{PayCash}
+Polymorphism replaces conditions on a type field: \code{Product.getDetailKind()} is abstract and answered by
+\code{Painting} and \code{Frame}, and \code{Category.accepts(product)} compares it with the kind the category names; \code{Payment.process()} is abstract and answered differently by \code{PayCash}
 (cash checked on delivery) and \code{PayCredit} (authorisation code required); \code{Customer.getDiscountRate()}
 returns zero and is overridden by \code{CustomerVIP}.
 
@@ -418,6 +473,33 @@ Lecture~05 stresses that a package is not a layer: a layer is an architectural r
 organise code. Each layer is realised by several Java packages (\code{presentation.view},
 \code{presentation.controller}, \dots), and the shared model by the packages \code{domain.cart}, \code{domain.order},
 \dots; Table~\ref{tab:layers} in Appendix~B lists the packages and their classes.
+
+The lecturer's appendix \emph{From Analysis to Design}~\cite{analysis2design} describes the move from the analysis classes to a layered
+design in four steps, and the design of Họa. follows them:
+\begin{enumerate}
+\item \emph{Add methods to the classes}, both the methods of the class itself and those that work with another
+class: \code{Cart.addItem(product, quantity)}, \code{Order.cancel()}, \code{Category.accepts(product)}
+(Section~\ref{sec:4.3}, Table~\ref{tab:ops43}).
+\item \emph{Replace an association by «use»} where a method of one class only uses another class: controllers
+«use» services and services «use» repositories (Figures~\ref{fig:c44_classes} and~\ref{fig:c44_classes_backend});
+the associations that remain are the ones the domain objects keep as fields.
+\item \emph{Use DAO}: every repository is an interface with a SQLite implementation, \code{CartRepository} and
+\code{SqliteCartRepository} playing the roles of \code{CartDAO} and \code{CartDAOImpl} of the appendix. The name
+\emph{Repository} is the one of the A05 and A06 slides (change CR-03).
+\item \emph{Three layers with packages}: presentation (the view and controller of MVC), application, data, and the
+model as the shared domain package (Figures~\ref{fig:c44_components} and~\ref{fig:c44_packages}).
+\end{enumerate}
+
+Figure~\ref{fig:c44_components} is the component view of the three logical layers. Each layer is a component
+that contains one component per Java package; the domain model is a fourth component that the three layers use;
+the SQLite database file, the Gemma~4 service and the Whisper server are external components. Every dependency is
+labelled with what crosses it: the browser views talk HTTP and JSON to the web server, which dispatches to the
+controllers; the controllers call the shop services and the search and AI services; the services reach the data
+layer only through the repository interfaces, \code{VectorIndex} and the \code{LlmClient} and \code{SpeechClient}
+interfaces; the SQLite repositories implement the repository interfaces and talk SQL over JDBC; the AI clients talk
+HTTPS to Gemma~4 and HTTP with audio to Whisper.
+
+\landscapefig{c44_components}{Three logical components}{The three logical components of Họa. (presentation, application, data), the shared domain model and the external database and AI servers, with what crosses each dependency. Visual Paradigm diagram \vpsrc{c44_components}.}{\label{fig:c44_components}}
 
 Figure~\ref{fig:c44_packages} draws the same structure as a UML package diagram. Each layer is a package that
 contains its Java sub-packages, and the domain model is a fourth package beside them. Every dependency points

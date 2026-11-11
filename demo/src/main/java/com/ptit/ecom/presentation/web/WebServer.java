@@ -11,6 +11,7 @@ import com.google.gson.JsonSerializer;
 import com.ptit.ecom.domain.cart.Cart;
 import com.ptit.ecom.domain.customer.Customer;
 import com.ptit.ecom.domain.product.Artist;
+import com.ptit.ecom.domain.product.Category;
 import com.ptit.ecom.domain.product.Painting;
 import com.ptit.ecom.domain.product.Product;
 import com.ptit.ecom.presentation.controller.AdminController;
@@ -51,7 +52,7 @@ public class WebServer {
     private static final Gson GSON = dateAware(new GsonBuilder()).disableHtmlEscaping()
             .registerTypeHierarchyAdapter(Product.class, (JsonSerializer<Product>) (product, type, context) -> {
                 JsonObject json = PLAIN.toJsonTree(product, product.getClass()).getAsJsonObject();
-                json.addProperty("category", product.getCategory());
+                json.addProperty("kind", product.getDetailKind().name());
                 return json;
             }).create();
     private int port;
@@ -229,7 +230,10 @@ public class WebServer {
         Artist artist = new Artist();
         artist.setArtistId(text(json, "artistId"));
         artist.setName(text(json, "artistName"));
+        Category category = new Category();
+        category.setCategoryId(text(json, "categoryId"));
         Painting painting = new Painting();
+        painting.setCategory(category);
         painting.setName(text(json, "name"));
         painting.setArtist(artist);
         painting.setPrice(money(json, "price"));

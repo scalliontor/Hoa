@@ -13,6 +13,7 @@ import com.ptit.ecom.domain.customer.CustomerNew;
 import com.ptit.ecom.domain.customer.CustomerVIP;
 import com.ptit.ecom.domain.order.Order;
 import com.ptit.ecom.domain.payment.PayCredit;
+import com.ptit.ecom.domain.product.Frame;
 import com.ptit.ecom.domain.product.Painting;
 import com.ptit.ecom.domain.product.Product;
 import com.ptit.ecom.infrastructure.repository.sqlite.Database;
@@ -35,10 +36,33 @@ final class RepositoryTest {
             List<Product> products = new SqliteProductRepository(freshDatabase()).allProducts();
             same(37, products.size(), "products");
             same(32L, products.stream().filter(p -> p instanceof Painting).count(), "paintings");
+            same("P01", products.get(0).getProductId(), "first product");
+            same("F01", products.get(32).getProductId(), "first product after the 32 paintings");
             for (Product product : products) {
                 check(product.getPrice().compareTo(new BigDecimal("25")) >= 0
                         && product.getPrice().compareTo(new BigDecimal("180")) <= 0, "price of " + product.getName());
             }
+        });
+        test("The category picks the detail table: P01 is a Painting with its artist, F01 a Frame", () -> {
+            SqliteProductRepository products = new SqliteProductRepository(freshDatabase());
+            Product p01 = products.findById("P01");
+            same(Painting.class, p01.getClass(), "P01 class");
+            same("Fine-art prints", p01.getCategory().getName(), "P01 category");
+            same("Claude Monet", ((Painting) p01).getArtist().getName(), "P01 artist");
+            Product f01 = products.findById("F01");
+            same(Frame.class, f01.getClass(), "F01 class");
+            same("Frames", f01.getCategory().getName(), "F01 category");
+            same("oak", ((Frame) f01).getMaterial(), "F01 material");
+        });
+        test("save refuses a frame in the prints category and writes nothing", () -> {
+            Database database = freshDatabase();
+            SqliteProductRepository products = new SqliteProductRepository(database);
+            Frame frame = Fixtures.frame("F06", "40");
+            frame.setCategory(products.findById("P01").getCategory());
+            same(37, productRows(database), "product rows before");
+            IllegalArgumentException error = fails(IllegalArgumentException.class, () -> products.save(frame));
+            same("Product F06 is a FRAME and cannot go in category CAT-PRINTS", error.getMessage(), "message");
+            same(37, productRows(database), "product rows after");
         });
         test("A customer is loaded as CustomerVIP or CustomerNew with name and addresses", () -> {
             SqliteCustomerRepository customers = new SqliteCustomerRepository(freshDatabase());
@@ -76,6 +100,7 @@ final class RepositoryTest {
             same("P33", saved.getProductId(), "next id");
             Painting loaded = (Painting) products.findById("P33");
             same("Test Artist", loaded.getArtist().getName(), "artist");
+            same("Fine-art prints", loaded.getCategory().getName(), "category");
             try (Connection connection = database.getConnection(); Statement statement = connection.createStatement();
                  ResultSet row = statement.executeQuery(
                          "SELECT length(feature_vector) FROM product_feature WHERE product_id = 'P33'")) {
@@ -89,5 +114,13 @@ final class RepositoryTest {
             fails(IllegalArgumentException.class, () -> service.updatePriceAndStock("P01", new BigDecimal("10"), -3));
             money("59", service.updatePriceAndStock("P01", new BigDecimal("59"), 3).getPrice(), "new price");
         });
+    }
+
+    private static int productRows(Database database) throws Exception {
+        try (Connection connection = database.getConnection(); Statement statement = connection.createStatement();
+             ResultSet row = statement.executeQuery("SELECT count(*) FROM product")) {
+            row.next();
+            return row.getInt(1);
+        }
     }
 }

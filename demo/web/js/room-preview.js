@@ -97,7 +97,7 @@ export const RoomPreview = {
 
   /** Shows the suggested paintings as a filmstrip, in the curator's order, and hangs the first one. */
   renderSuggestions(results) {
-    let list = (results || []).filter((r) => r.product.category === "PAINTING");
+    let list = (results || []).filter((r) => r.product.kind === "PAINTING");
     if (this.requested && state.byId.has(this.requested)) {
       const found = list.find((r) => r.product.productId === this.requested);
       list = [found || { product: state.byId.get(this.requested), score: 0, reason: "", requested: true },

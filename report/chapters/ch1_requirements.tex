@@ -58,23 +58,28 @@ was kept in another spreadsheet updated by the warehouse.
 
 \subsection{Business objectives}
 
-\begin{longtable}{@{}P{1.3cm}P{6.4cm}P{7.3cm}@{}}
-\caption{Business objectives of Họa.}\label{tab:goals}\\
+\begin{longtable}{@{}P{1.1cm}P{5.6cm}P{6.1cm}P{2.2cm}@{}}
+\caption{Business objectives of Họa. and the problems they answer}\label{tab:goals}\\
 \toprule
-\textbf{ID} & \textbf{Objective} & \textbf{How it is measured (proposed; thresholds set by the owner)}\\
+\textbf{ID} & \textbf{Objective} & \textbf{How it is measured (proposed; thresholds set by the owner)} & \textbf{Problems answered}\\
 \midrule
 \endfirsthead
 \toprule
-\textbf{ID} & \textbf{Objective} & \textbf{How it is measured (proposed; thresholds set by the owner)}\\
+\textbf{ID} & \textbf{Objective} & \textbf{How it is measured (proposed; thresholds set by the owner)} & \textbf{Problems answered}\\
 \midrule
 \endhead
-\small BO1 & \small Customers find a suitable painting faster, even when they do not know its title & \small Time and number of steps from the first query to the painting detail page\\
-\small BO2 & \small More searches lead to a purchase & \small Share of search sessions with an ``add to cart''\\
-\small BO3 & \small Never sell a sold-out print, never charge a wrong price & \small Number of orders cancelled because of stock or price errors\\
-\small BO4 & \small Less staff time spent answering ``where is my order?'' & \small Number of order questions answered by the system itself\\
-\small BO5 & \small Protect customer and payment data & \small No case of a customer seeing another customer's order; no full card number stored\\
+\small BO1 & \small Customers find a suitable painting faster, even when they do not know its title & \small Time and number of steps from the first query to the painting detail page & \small P1\\
+\small BO2 & \small More searches lead to a purchase & \small Share of search sessions with an ``add to cart'' & \small P1\\
+\small BO3 & \small Never sell a sold-out print, never charge a wrong price & \small Number of orders cancelled because of stock or price errors & \small P2, P4\\
+\small BO4 & \small Less staff time spent answering ``where is my order?'' & \small Number of order questions answered by the system itself & \small P3, P4\\
+\small BO5 & \small Protect customer and payment data & \small No case of a customer seeing another customer's order; no full card number stored & \small P5\\
 \bottomrule
 \end{longtable}
+
+The last column links each objective to the problems P1--P5 analysed in Section~\ref{sec:1.6}. Every problem is
+answered by at least one objective. P4 (orders and prices handled by hand) is answered by two: handling prices by
+hand causes wrong prices (BO3), and keeping the order status where only staff can see it causes the order
+questions of BO4.
 
 The objectives are written with a measure but without a target number: the essay has no real sales data to set
 thresholds. What can be measured on the demo -- search accuracy, behaviour when the AI fails, speed of speech
@@ -88,26 +93,35 @@ information to it or receives information from it, or takes decisions about it. 
 stakeholders must not only be listed but \emph{analysed}: what is each one's goal and what information does each
 one need?
 
-\begin{longtable}{@{}P{2.9cm}P{4.6cm}P{5.3cm}P{2.2cm}@{}}
-\caption{Stakeholder catalogue and analysis (goal, information need)}\label{tab:stakeholders}\\
+\begin{longtable}{@{}P{2.7cm}P{1.6cm}P{4.0cm}P{4.6cm}P{2.1cm}@{}}
+\caption{Stakeholder catalogue and analysis (type, goal, information need)}\label{tab:stakeholders}\\
 \toprule
-\textbf{Stakeholder} & \textbf{Goal} & \textbf{Information need} & \textbf{Influence}\\
+\textbf{Stakeholder} & \textbf{Type} & \textbf{Goal} & \textbf{Information need} & \textbf{Influence}\\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Stakeholder} & \textbf{Goal} & \textbf{Information need} & \textbf{Influence}\\
+\textbf{Stakeholder} & \textbf{Type} & \textbf{Goal} & \textbf{Information need} & \textbf{Influence}\\
 \midrule
 \endhead
-\small Customer & \small Find and buy a painting they like; know where the order is & \small Paintings, artists, prices, stock, status of own orders & \small High\\
-\small Shop owner & \small Control the business, increase revenue & \small Sales, orders, stock, best-selling paintings & \small High\\
-\small Shop administrator & \small Keep the catalogue right and process orders on time & \small Paintings, prices, stock, orders waiting to be processed & \small High\\
-\small Warehouse staff & \small Pack and ship the right order & \small Order lines, delivery address, stock level & \small Medium\\
-\small Support staff & \small Answer customers quickly and correctly & \small Order status, cancellation policy & \small Medium\\
-\small Payment service & \small Process transactions safely & \small Amount, transaction id, authorisation code & \small Medium\\
-\small Gemma 4 AI service & \small Serve inference requests within its resources & \small Queries, images to describe, list of tools & \small Medium\\
-\small Developer (the author), lecturer & \small A correct model that follows the lectures; a demo that runs & \small Requirements, diagrams, source code, test results & \small High\\
+\small Customer & \small External & \small Find and buy a painting they like; know where the order is & \small Paintings, artists, prices, stock, status of own orders & \small High\\
+\small Shop owner & \small Internal & \small Control the business, increase revenue & \small Sales, orders, stock, best-selling paintings & \small High\\
+\small Shop administrator & \small Internal & \small Keep the catalogue right and process orders on time & \small Paintings, prices, stock, orders waiting to be processed & \small High\\
+\small Warehouse staff & \small Internal & \small Pack and ship the right order & \small Order lines, delivery address, stock level & \small Medium\\
+\small Support staff & \small Internal & \small Answer customers quickly and correctly & \small Order status, cancellation policy & \small Medium\\
+\small Payment service & \small External & \small Process transactions safely & \small Amount, transaction id, authorisation code & \small Medium\\
+\small Delivery carrier & \small External & \small Collect the parcel and deliver it to the right address & \small The parcel and the delivery address, handed over with the parcel & \small Low\\
+\small Gemma 4 AI service & \small External & \small Serve inference requests within its resources & \small Queries, images to describe, list of tools & \small Medium\\
+\small Developer (the author), lecturer & \small External & \small A correct model that follows the lectures; a demo that runs & \small Requirements, diagrams, source code, test results & \small High\\
 \bottomrule
 \end{longtable}
+
+As Assignment~01 asks, the stakeholders fall into two groups. \emph{Internal} stakeholders belong to the shop: the
+owner, the administrator, the warehouse staff and the support staff. \emph{External} stakeholders are outside the
+organisation: the customer, the payment service, the delivery carrier, the Gemma~4 AI service, and the developer
+and the lecturer of this study project. Being external says nothing about influence (the customer has the
+highest), and it does not make a stakeholder an actor either. The delivery carrier takes part in the business
+process (Figure~\ref{fig:c1_process}) but exchanges no data with the system in this release
+(Section~\ref{sec:1.7}).
 
 The analysis shows two conflicts that have to be solved early. Customers want the AI assistant to ``know
 everything'' about their orders, while the owner must guarantee that nobody can see another person's order.
@@ -118,7 +132,7 @@ never leaves the machine).
 
 Figure~\ref{fig:c1_stakeholders} draws the same analysis as an ArchiMate stakeholder map. Every stakeholder is
 linked to the concerns (drivers) it has, and every concern to the goal of the system that answers it, with the
-requirements in brackets. The privacy concern is shared by the customer, the owner and the payment service: this is
+requirements in brackets. The delivery carrier is left out of the map because no goal of this release concerns it. The privacy concern is shared by the customer, the owner and the payment service: this is
 where the conflicts above meet, and why NFR01, NFR05 and NFR08 are all Must.
 
 \landscapefig{c1_stakeholders}{Stakeholder map of Họa. (ArchiMate)}{Stakeholder map of Họa.: stakeholders, their concerns and the goals of the system that answer them. \trialshot{ArchiMate diagrams}. Diagram \vpsrc{c1_stakeholders}.}{\label{fig:c1_stakeholders}}
@@ -192,31 +206,43 @@ later becomes an alternative flow in the use case specifications of Chapter~\ref
 
 Information is the central resource of an information system. Table~\ref{tab:info} lists the groups of
 information that Họa. must manage, together with the attribute names agreed in the model; the same names are used
-in the class diagrams, the database tables and the source code.
+in the class diagrams, the database tables and the source code. Following Assignment~01, the fourth column says
+whether the system produces, consumes, stores or exchanges each group with an outside party, and the last column
+says why the shop needs it.
 
-\begin{longtable}{@{}P{2.9cm}P{7.6cm}P{4.5cm}@{}}
-\caption{Information catalogue}\label{tab:info}\\
+\begin{longtable}{@{}P{2.3cm}P{4.3cm}P{2.5cm}P{2.9cm}P{3.0cm}@{}}
+\caption{Information catalogue: content, owner, handling and purpose}\label{tab:info}\\
 \toprule
-\textbf{Information} & \textbf{Content (names in the model)} & \textbf{Created by / used by}\\
+\textbf{Information} & \textbf{Content (names in the model)} & \textbf{Created by / used by} & \textbf{Produced, consumed, stored, exchanged} & \textbf{Purpose}\\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Information} & \textbf{Content (names in the model)} & \textbf{Created by / used by}\\
+\textbf{Information} & \textbf{Content (names in the model)} & \textbf{Created by / used by} & \textbf{Produced, consumed, stored, exchanged} & \textbf{Purpose}\\
 \midrule
 \endhead
-\small Customer & \small \code{customerId}, name \code{FullName}, \code{email}, \code{phone}, address \code{Address}, VIP or new customer & \small Customer / shop, warehouse\\
-\small Painting & \small \code{productId}, \code{name}, \code{price}, \code{stockQuantity}, \code{imageUrl}, \code{description}; \code{style}, \code{subject}, \code{dominantColor}, \code{medium}, \code{yearCreated}, \code{widthCm} x \code{heightCm} & \small Administrator / customers, search\\
-\small Artist & \small \code{artistId}, \code{name}, \code{nationality}, \code{lifeYears} & \small Administrator / customers\\
-\small Frame & \small \code{material}, \code{color}, \code{sizeLabel} & \small Administrator / customers\\
-\small Cart & \small \code{cartId}, cart lines with \code{quantity} and \code{cartPrice} & \small Customer / checkout\\
-\small Order & \small \code{orderId}, \code{orderDate}, \code{status}, \code{totalAmount}, order lines with \code{quantity} and \code{unitPrice} & \small System / customer, warehouse, administrator\\
-\small Payment & \small \code{paymentId}, \code{amount}, \code{paymentDate}, \code{status}; for cards only \code{cardLast4} and \code{authorizationCode} & \small Confirmed by the payment service\\
-\small Shipping & \small \code{shippingId}, \code{carrier}, \code{trackingNumber}, \code{shippingFee}, \code{deliveredDate} & \small Warehouse, carrier / customer\\
-\small Search and AI & \small Queries, voice audio (processed on the machine only), transcripts, photos of paintings or rooms (not stored), feature vectors of paintings & \small Customer / search service, Whisper, Gemma\\
+\small Customer & \small \code{customerId}, name \code{FullName}, \code{email}, \code{phone}, address \code{Address}, VIP or new customer & \small Customer / shop, warehouse & \small Stored; consumed at checkout & \small Identify the buyer, deliver to the right address, apply the VIP discount\\
+\small Category & \small \code{categoryId}, \code{name}, \code{description}; whether its products are prints or frames & \small Shop owner / administrator, customers & \small Stored; consumed by the catalogue and the search & \small Keep the two product lines apart and say which details a product has\\
+\small Painting & \small \code{productId}, \code{name}, \code{price}, \code{stockQuantity}, \code{imageUrl}, \code{description}; \code{style}, \code{subject}, \code{dominantColor}, \code{medium}, \code{yearCreated}, \code{widthCm} x \code{heightCm} & \small Administrator / customers, search & \small Stored; consumed by search, cart and checkout & \small Browse and search the catalogue; price and stock at checkout\\
+\small Artist & \small \code{artistId}, \code{name}, \code{nationality}, \code{lifeYears} & \small Administrator / customers & \small Stored; consumed by search and the detail page & \small Show and find paintings by painter\\
+\small Frame & \small \code{material}, \code{color}, \code{sizeLabel} & \small Administrator / customers & \small Stored; consumed by the cart & \small Sell a frame that fits the print\\
+\small Cart & \small \code{cartId}, cart lines with \code{quantity} and \code{cartPrice} & \small Customer / checkout & \small Produced by the customer; stored; consumed at checkout & \small Keep the intended purchase until checkout\\
+\small Order & \small \code{orderId}, \code{orderDate}, \code{status}, \code{totalAmount}, order lines with \code{quantity} and \code{unitPrice} & \small System / customer, warehouse, administrator & \small Produced at checkout; stored; consumed by every order use case & \small Record the sale; show its status to the customer and the administrator\\
+\small Payment & \small \code{paymentId}, \code{amount}, \code{paymentDate}, \code{status}; for cards only \code{cardLast4} and \code{authorizationCode} & \small Confirmed by the payment service & \small Exchanged with the payment service; stored without the card number & \small Know whether an order is paid\\
+\small Shipping & \small \code{shippingId}, \code{carrier}, \code{trackingNumber}, \code{shippingFee}, \code{deliveredDate} & \small System at checkout, administrator / customer, warehouse & \small Produced at checkout; stored; updated with the order status; not exchanged with the carrier & \small Deliver to the chosen address; charge the shipping fee\\
+\small Search and AI & \small Queries, voice audio (processed on the machine only), transcripts, photos of paintings or rooms (not stored), feature vectors of paintings & \small Customer / search service, Whisper, Gemma & \small Consumed; queries and photos exchanged with Gemma~4; only the feature vectors stored & \small Understand the query and rank the paintings\\
+\small Search results and answers & \small Ranked paintings with a score and the reason of each suggestion; answers of the assistant & \small System / customer & \small Produced for each request; not stored & \small Show what fits and why; answer order questions\\
 \bottomrule
 \end{longtable}
 
-Two kinds of information in the last row deserve a remark. Audio and room photos are \emph{transient}: they are
+Read by kind, as Assignment~01 asks, the table gives four short lists. The system \emph{produces} the order with its
+confirmation and status, the shipping record, the search results with their reasons and the answers of the
+assistant. It \emph{consumes} the catalogue (categories, paintings, artists, frames), the customer data and the
+queries of customers. It \emph{stores} the catalogue, customers, carts, orders, payments, shipping records and
+feature vectors; queries, transcripts, audio, photos, results and answers live only for one request. It
+\emph{exchanges} information with two outside parties only: payment requests and authorisation results with the
+payment service, and prompts, photos, filters and descriptions with Gemma~4 (Table~\ref{tab:contextflows}).
+
+Two kinds of information in the row ``Search and AI'' deserve a remark. Audio and room photos are \emph{transient}: they are
 needed for one request and are never written to the database. Feature vectors, in contrast, are
 \emph{derived} data: they are computed from the painting attributes and stored in table \code{product_feature}
 together with the version of the encoding (Chapter~4).
@@ -287,7 +313,14 @@ are four parties: the \textbf{Customer}, the \textbf{Administrator}, the \textbf
 \textbf{Gemma 4 Service}. Gemma is outside because the shop does not control the model and only calls it
 through an API; every decision about price, stock and access rights stays inside Họa. The Whisper speech server,
 on the other hand, runs on the shop's own machine and is therefore \emph{inside} the boundary: a customer's
-voice never leaves the system (NFR08). Figure~\ref{fig:context} is the context diagram of Lecture~01 for Họa.
+voice never leaves the system (NFR08).
+
+The delivery carrier is a stakeholder (Table~\ref{tab:stakeholders}) and a pool of the business process
+(Figure~\ref{fig:c1_process}), but it is not an external entity of the context diagram, because in this release it
+exchanges no data with the system. The warehouse hands it the parcel together with the address. The administrator
+records the hand-over and the delivery by moving the order to SHIPPED and then DELIVERED (FR13), which also updates the
+shipping record. A link to a real carrier is out of scope (Table~\ref{tab:scope}); if it is added later, the
+carrier would become a fifth external entity. Figure~\ref{fig:context} is the context diagram of Lecture~01 for Họa.
 
 \subsection{System Context Diagram}\label{sec:1.7.1}
 
@@ -359,7 +392,7 @@ authorisation code; the checkout specification therefore has the alternative flo
 
 The scope comes with constraints: the application is written in Java, the database is a SQLite file and
 everything runs on one machine (NFR06); painting images come only from public-domain works; Gemma~4 is reached
-through the public IP address of the L40S server. The payment service is simulated but still follows the
+through an OpenAI-compatible API over the Internet (DeepInfra; until 11/11/2026 a self-hosted L40S server). The payment service is simulated but still follows the
 decision not to store full card numbers (NFR05).
 
 %% =========================================================================

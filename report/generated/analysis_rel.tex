@@ -22,6 +22,7 @@
 \small \code{Shipping} -- \code{Address} (ships to) & \small Association & \small 0..* -- 1 & \small Each delivery goes to exactly one address; an address receives many deliveries.\\
 \small \code{Order} -- \code{Payment} (is paid by) & \small Association & \small 1 -- 0..* & \small An order may be unpaid, or have several attempts when one fails.\\
 \small \code{Artist} -- \code{Painting} (paints) & \small Association & \small 1 -- 0..* & \small An artist has many paintings in the gallery; each print belongs to exactly one artist.\\
+\small \code{Category} -- \code{Product} (classifies) & \small Association & \small 1 -- 0..* & \small \\
 \small \code{CustomerVIP}, \code{CustomerNew} $\rightarrow$ \code{Customer} & \small Generalization & \small  & \small Both kinds of customer reuse the attributes of Customer and add their own.\\
 \small \code{PayCash}, \code{PayCredit} $\rightarrow$ \code{Payment} & \small Generalization & \small  & \small Both payment methods share amount, date and status.\\
 \small \code{Painting}, \code{Frame} $\rightarrow$ \code{Product} & \small Generalization & \small  & \small Paintings and frames share id, name, price, stock, image and description.\\

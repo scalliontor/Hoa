@@ -1,27 +1,33 @@
-\begin{longtable}{@{}P{1.2cm}P{6.7cm}P{0.9cm}P{1.3cm}P{2.6cm}P{1.8cm}@{}}
-\caption{Functional requirements (ID / Type / Priority / Source)}\label{tab:fr}\\
+\begin{longtable}{@{}P{1.2cm}P{5.5cm}P{2.4cm}P{1.35cm}P{2.3cm}P{1.75cm}@{}}
+\caption{Functional requirements (ID / Area / Priority / Source)}\label{tab:fr}\\
 \toprule
-\small \textbf{ID} & \small \textbf{Requirement} & \small \textbf{Type} & \small \textbf{Priority} & \small \textbf{Source} & \small \textbf{Use case}\\
+\small \textbf{ID} & \small \textbf{Requirement} & \small \textbf{Area} & \small \textbf{Priority} & \small \textbf{Source} & \small \textbf{Use case}\\
 \midrule
 \endfirsthead
 \toprule
-\small \textbf{ID} & \small \textbf{Requirement} & \small \textbf{Type} & \small \textbf{Priority} & \small \textbf{Source} & \small \textbf{Use case}\\
+\small \textbf{ID} & \small \textbf{Requirement} & \small \textbf{Area} & \small \textbf{Priority} & \small \textbf{Source} & \small \textbf{Use case}\\
 \midrule
 \endhead
 \bottomrule
 \endlastfoot
-\small \textbf{FR01} & \small The system shall allow customers to search paintings by keyword or natural sentence and filter them by style, subject, colour, artist and maximum price. & \small FR & \small Must & \small Customer & \small UC02\\
-\small \textbf{FR02} & \small The system shall accept a spoken search query, transcribe it with the self-hosted Whisper model and let the customer edit the transcript before searching. & \small FR & \small Should & \small Customer & \small UC03\\
-\small \textbf{FR03} & \small The system shall return the paintings most similar to a photo uploaded by the customer, ranked by similarity. & \small FR & \small Should & \small Customer & \small UC04\\
-\small \textbf{FR04} & \small The system shall combine a text query and an image in one search. & \small FR & \small Could & \small Customer & \small UC01\\
-\small \textbf{FR05} & \small The system shall display painting details including artist, year, size, medium, price and current stock. & \small FR & \small Must & \small Customer & \small UC05\\
-\small \textbf{FR06} & \small The system shall allow customers to add paintings to the cart, change quantities and remove cart lines. & \small FR & \small Must & \small Customer & \small UC06\\
-\small \textbf{FR07} & \small The system shall create an order from the cart when the paintings are in stock, freeze the prices, decrease the stock and empty the cart. & \small FR & \small Must & \small Customer, Warehouse & \small UC07\\
-\small \textbf{FR08} & \small The system shall allow customers to view their orders and the current status of each order. & \small FR & \small Must & \small Customer & \small UC08\\
-\small \textbf{FR09} & \small The system shall allow customers to look up an order by id only when the order belongs to their account. & \small FR & \small Must & \small Customer & \small UC09\\
-\small \textbf{FR10} & \small The system shall answer shopping questions with an AI assistant that can call the painting search and order look-up functions. & \small FR & \small Should & \small Customer, Support staff & \small UC10\\
-\small \textbf{FR11} & \small The system shall allow customers to cancel an order before it is shipped. & \small FR & \small Should & \small Customer & \small UC11\\
-\small \textbf{FR12} & \small The system shall allow the administrator to add paintings and to update their price and stock. & \small FR & \small Must & \small Administrator & \small UC12\\
-\small \textbf{FR13} & \small The system shall allow the administrator to update the processing and delivery status of orders. & \small FR & \small Must & \small Administrator, Warehouse & \small UC13\\
-\small \textbf{FR14} & \small The system shall suggest paintings that suit a room from a photo of the room and let the customer preview a painting on the wall. & \small FR & \small Could & \small Customer & \small UC14\\
+\small \textbf{FR01} & \small The system shall allow customers to search paintings by keyword or natural sentence and filter them by style, subject, colour, artist and maximum price. & \small Search & \small Must & \small Customer & \small UC02\\
+\small \textbf{FR02} & \small The system shall accept a spoken search query, transcribe it with the self-hosted Whisper model and let the customer edit the transcript before searching. & \small Search & \small Should & \small Customer & \small UC03\\
+\small \textbf{FR03} & \small The system shall return the paintings most similar to a photo uploaded by the customer, ranked by similarity. & \small Search & \small Should & \small Customer & \small UC04\\
+\small \textbf{FR04} & \small The system shall combine a text query and an image in one search. & \small Search & \small Could & \small Customer & \small UC01\\
+\small \textbf{FR05} & \small The system shall display painting details including artist, year, size, medium, price and current stock. & \small Catalogue & \small Must & \small Customer & \small UC05\\
+\small \textbf{FR06} & \small The system shall allow customers to add paintings to the cart, change quantities and remove cart lines. & \small Cart and checkout & \small Must & \small Customer & \small UC06\\
+\small \textbf{FR07} & \small The system shall create an order from the cart when the paintings are in stock, freeze the prices, decrease the stock and empty the cart. & \small Cart and checkout & \small Must & \small Customer, Warehouse & \small UC07\\
+\small \textbf{FR08} & \small The system shall allow customers to view their orders and the current status of each order. & \small Orders & \small Must & \small Customer & \small UC08\\
+\small \textbf{FR09} & \small The system shall allow customers to look up an order by id only when the order belongs to their account. & \small Orders & \small Must & \small Customer & \small UC09\\
+\small \textbf{FR10} & \small The system shall answer shopping questions with an AI assistant that can call the painting search and order look-up functions. & \small Assistant & \small Should & \small Customer, Support staff & \small UC10\\
+\small \textbf{FR11} & \small The system shall allow customers to cancel an order before it is shipped. & \small Orders & \small Should & \small Customer & \small UC11\\
+\small \textbf{FR12} & \small The system shall allow the administrator to add paintings and to update their price and stock. & \small Administration & \small Must & \small Administrator & \small UC12\\
+\small \textbf{FR13} & \small The system shall allow the administrator to update the processing and delivery status of orders. & \small Administration & \small Must & \small Administrator, Warehouse & \small UC13\\
+\small \textbf{FR14} & \small The system shall suggest paintings that suit a room from a photo of the room and let the customer preview a painting on the wall. & \small Search & \small Could & \small Customer & \small UC14\\
+\small \textbf{FR15} & \small The system shall apply the discount rate of a VIP customer to the order total at checkout. & \small Cart and checkout & \small Must & \small Customer, Shop owner & \small UC07\\
+\small \textbf{FR16} & \small The system shall let the customer choose one of their addresses or add a new address during checkout. & \small Cart and checkout & \small Should & \small Customer & \small UC07\\
+\small \textbf{FR17} & \small The system shall add a flat shipping fee of 8 USD to every order. & \small Cart and checkout & \small Must & \small Shop owner & \small UC07\\
+\small \textbf{FR18} & \small The system shall show, for each suggested painting, the reason why it was suggested. & \small Search & \small Should & \small Customer & \small UC02, UC04, UC14\\
+\small \textbf{FR19} & \small The system shall classify every product in exactly one category and let customers filter the results by category. & \small Catalogue & \small Must & \small Shop owner, Administrator & \small UC01, UC05, UC12\\
+\small \textbf{FR20} & \small The system shall list the orders of all customers to the administrator, newest first, with their status. & \small Administration & \small Must & \small Administrator & \small UC13\\
 \end{longtable}

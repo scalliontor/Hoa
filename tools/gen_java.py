@@ -39,6 +39,8 @@ DOCS = {
     "Customer": "Domain class Customer, owner of the cart and the orders (slide A03).",
     "CustomerVIP": "VIP customer with a discount: polymorphic getDiscountRate (Kiem tra 01).",
     "CustomerNew": "New customer with a welcome voucher (Kiem tra 01).",
+    "DetailKind": "Which specialisation, and so which detail table, holds a product's own attributes.",
+    "Category": "Product category: classifies every product and names its detail kind (domain model 4.1).",
     "Product": "Abstract catalogue product (slide A03: Product).",
     "Artist": "Painter of a painting (painting-shop domain model).",
     "Painting": "Painting sold by the shop, a specialisation of Product (domain model 4.1).",

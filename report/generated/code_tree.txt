@@ -16,7 +16,7 @@ demo/
     domain/customer/                   Address, Customer, CustomerNew, CustomerVIP, FullName
     domain/order/                      Order, OrderItem, OrderStatus, Shipping, ShippingStatus
     domain/payment/                    PayCash, PayCredit, Payment, PaymentStatus
-    domain/product/                    Artist, Frame, Painting, Product
+    domain/product/                    Artist, Category, DetailKind, Frame, Painting, Product
     infrastructure/ai/                 GemmaClient, LlmClient, LlmReply, SpeechClient, ToolCall,
                                        WhisperClient
     infrastructure/repository/         CartRepository, CustomerRepository, OrderRepository,

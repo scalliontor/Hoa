@@ -33,7 +33,49 @@ problem moves through the three levels.
 \small P1 hard to find paintings & \small More customers find a painting and buy it (BO1, BO2) & \small Customers need to search by description, voice or photo, or by a photo of their room & \small FR01, FR02, FR03, FR04, FR14, NFR08\\
 \small P2 sold-out prints sold & \small No order cancelled because of stock (BO3) & \small Customers need to know that a print is in stock before buying & \small FR05, FR07, FR12\\
 \small P3 order status unknown & \small Fewer order questions (BO4) & \small Customers need to see the status of their orders at any time & \small FR08, FR09, FR10, FR13\\
+\small P4 manual work & \small No wrong prices, less staff time (BO3, BO4) & \small The administrator needs to manage paintings and order status in one place & \small FR12, FR13, FR20\\
 \small P5 risk of data leaks & \small Protect customer data (BO5) & \small Customers need to be sure that nobody else can see their orders & \small NFR01, NFR05\\
+\bottomrule
+\end{longtable}
+
+\subsection{Stakeholder needs}\label{sec:needs}
+
+Assignment~02 puts one more step between a problem and a requirement: the \emph{stakeholder need}. A need says
+what a stakeholder must be able to do or to know; it is not yet a solution (``find a painting without knowing its
+title'', not ``use Gemma~4''). Table~\ref{tab:needs} derives the needs from the stakeholder analysis
+(Table~\ref{tab:stakeholders}) and the problem analysis (Table~\ref{tab:pcin}) of Chapter~\ref{ch:req}. The third
+column gives the problem behind each need, or the reason when the need does not come from one of the problems
+P1--P5; the last column names the requirements of Section~\ref{sec:frnfr} that answer it. Each of the \nFR{}
+functional and \nNFR{} non-functional requirements appears at least once, so no requirement exists without a
+stakeholder who needs it.
+
+\begin{longtable}{@{}P{2.5cm}P{4.4cm}P{5.3cm}P{2.8cm}@{}}
+\caption{Stakeholder needs and the requirements that answer them}\label{tab:needs}\\
+\toprule
+\textbf{Stakeholder} & \textbf{Need} & \textbf{Reason or problem} & \textbf{Requirements}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Stakeholder} & \textbf{Need} & \textbf{Reason or problem} & \textbf{Requirements}\\
+\midrule
+\endhead
+\small Customer & \small Find a painting without knowing its title: from a description, by voice or with a photo & \small P1: the catalogue can be searched by title only, while customers describe a colour or a subject, or send a photo & \small FR01--FR04, NFR07\\
+\small Customer & \small Choose a painting that suits their own room & \small P1: customers know the room they decorate better than the painting that would fit it & \small FR14\\
+\small Customer & \small Understand why a painting is suggested & \small P1: without a salesperson to explain it, a suggestion is hard to trust and the consultation gets long & \small FR18\\
+\small Customer & \small Get a useful answer from every action, even when the AI service is slow or down & \small Conflict of Section~\ref{sec:1.3}: search at any time, but the AI services can fail; P3: an unclear answer becomes one more question to staff & \small NFR02, NFR09, NFR12\\
+\small Customer & \small Collect several prints and frames before paying & \small P4: today the order is put together in messages with a member of staff & \small FR06\\
+\small Customer, warehouse staff & \small Buy, and pack, only what is really in stock & \small P2: stock is updated by hand, apart from the orders, so sold-out prints are sold & \small FR05, FR07, NFR11\\
+\small Customer, shop owner & \small One correct total for every order, with the VIP discount and the delivery cost & \small P4: prices and totals are worked out by hand, so wrong prices occur & \small FR15, FR17\\
+\small Customer & \small Give the delivery address while ordering & \small P4: order details, the address included, are copied by hand from messages into a spreadsheet & \small FR16\\
+\small Customer & \small See the status of their orders at any time without asking staff & \small P3: the status exists only in a staff spreadsheet & \small FR08, FR09, FR10\\
+\small Customer & \small Cancel an order that has not left the shop & \small P4: orders, cancellations included, are handled by staff by hand & \small FR11\\
+\small Customer & \small Be sure that nobody else sees their orders, card or voice & \small P5: customers are identified by an order id in a message; card numbers are written down & \small NFR01, NFR05, NFR08\\
+\small Support staff & \small Spend less time answering ``where is my order?'' & \small P3: repeated questions overload the staff & \small FR08, FR10\\
+\small Shop administrator & \small Keep paintings, prices and stock right in one place & \small P2, P4: catalogue and stock are kept in separate spreadsheets updated by hand & \small FR12\\
+\small Shop administrator & \small Accept only customer photos that the system can read safely & \small Photo search (P1) brings files from outside the shop into it; a wrong or very large file must not break the search & \small NFR03\\
+\small Shop administrator, warehouse staff & \small See the orders of all customers and move each one to its next status & \small P3, P4: orders are processed by hand and their status is known only to staff & \small FR13, FR20\\
+\small Shop owner & \small Manage prints and frames as two product lines, each with its own details & \small A print has an artist, a style and a size, a frame a material and a colour; one list would mix them & \small FR19, NFR11\\
+\small Developer, lecturer & \small Models and code that say the same thing, and a demo that runs on one laptop & \small The essay is checked against the lectures; the demo must run with the network needed only for Gemma & \small NFR04, NFR06, NFR10\\
 \bottomrule
 \end{longtable}
 
@@ -43,16 +85,24 @@ problem moves through the three levels.
 A \emph{functional requirement} describes a function or behaviour that the system provides. A
 \emph{non-functional requirement} describes a quality, constraint or condition of the system: performance,
 security, reliability, maintainability. Each requirement follows the pattern of Lecture~02:
-\textbf{``The system shall + action + object + condition''}, with an identifier, a type, a priority and a source
-(the stakeholder who asks for it). The two tables below are generated from the shared specification file of the project,
-so the identifiers are the same as in the diagrams, the tests and the code.
+\textbf{``The system shall + action + object + condition''}, with an identifier, an area, a priority and a source
+(the stakeholder who asks for it). Table~\ref{tab:fr} lists the \nFR{} functional and Table~\ref{tab:nfr} the
+\nNFR{} non-functional requirements. The Area column plays the role of the requirement category of Assignment~02: a
+functional area (search, catalogue, cart and checkout, orders, assistant, administration) for a functional
+requirement and a quality (security, reliability, privacy, performance, usability, maintainability, portability)
+for a non-functional one; it is not the product \code{Category} of FR19. FR15--FR20 and NFR09--NFR10 add no new
+feature but make explicit what the shop already did: the VIP discount, the address chosen at checkout, the shipping
+fee, the reason shown with each suggestion, the product categories and the list of all orders for the
+administrator, and the usability and maintainability rules the code already followed. The two tables are generated
+from the shared specification file of the project, so the identifiers are the same as in the diagrams, the tests
+and the code.
 
 \input{generated/req_fr}
 
 \input{generated/req_nfr}
 
 A common mistake pointed out in Lecture~02 is to write ``the system shall be fast''. How many seconds, under which
-load? NFR07 is therefore written as ``return text search results within 2 seconds on the demo data'', and the
+load? NFR07 therefore gives a limit and a condition (first row of Table~\ref{tab:revised}), and the
 waiting limit of an AI call is set separately, because the response time of an external service is not under the
 control of Họa. NFR08 is both a privacy requirement (audio never leaves the machine) and a measurable time limit,
 so it decides how speech recognition is built in Chapter~3. Table~\ref{tab:nfrcheck} in Appendix~C states how
@@ -81,6 +131,28 @@ verified objectively?} Table~\ref{tab:goodreq} checks the criteria against the r
 \small Traceable & \small Every requirement has a stable id and a list of use cases; the matrix is in Section~\ref{sec:trace}.\\
 \small Prioritised & \small Every requirement is Must, Should or Could (Table~\ref{tab:moscow}).\\
 \small Testable & \small The Given -- When -- Then acceptance criteria of Table~\ref{tab:stories} become the test and demo scenarios of Chapter~\ref{ch:code}.\\
+\bottomrule
+\end{longtable}
+
+Assignment~02 also asks for the opposite check: find requirements that break these criteria and revise them. The
+requirements of Họa. did not start in their present form. Table~\ref{tab:revised} records five weak statements
+met while the project grew, the defect of each, and the requirement as it now stands in the shared specification.
+
+\begin{longtable}{@{}P{3.9cm}P{4.4cm}P{6.7cm}@{}}
+\caption{Requirement validation: weak statements and their revision}\label{tab:revised}\\
+\toprule
+\textbf{Weak statement} & \textbf{Problem} & \textbf{Revised requirement (current model)}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Weak statement} & \textbf{Problem} & \textbf{Revised requirement (current model)}\\
+\midrule
+\endhead
+\small ``The search shall be fast.'' & \small Not measurable: no time limit and no condition, so no test can pass or fail it. & \small NFR07: The system shall return text search results within 2 seconds on the demo data.\\
+\small ``The system shall use Gemma~4 to search paintings.'' & \small A solution, not a requirement: it names a technology instead of what the customer needs, and says nothing when the model fails. & \small FR01: The system shall allow customers to search paintings by keyword or natural sentence and filter them by style, subject, colour, artist and maximum price. FR03: The system shall return the paintings most similar to a photo uploaded by the customer, ranked by similarity. Gemma~4 is a design choice (Chapter~3); its failure is covered by NFR02.\\
+\small ``Find an order by its id'', the starting point taken from \code{find_order(order_id)} of Assignment~06. & \small Incomplete and unsafe: no access condition, so anyone who knows or guesses an id sees another customer's order (P5). & \small FR09: The system shall allow customers to look up an order by id only when the order belongs to their account. NFR01 adds where the identity comes from: the signed-in session, with ownership checked on the server.\\
+\small ``Search by voice'' through a cloud speech service, the first plan (change CR-04). & \small Incomplete: it says nothing about where the audio goes, although a recording of a voice is personal data (Section~\ref{sec:1.3}). & \small FR02 keeps the function; NFR08: The system shall process audio on the local machine with self-hosted Whisper, never send audio outside, and transcribe a 5-second sentence within 3 seconds.\\
+\small FR07 as the only checkout requirement: create the order, freeze prices, decrease stock, empty the cart. & \small Incomplete: the VIP discount, the choice of address and the shipping fee were done by the shop but written in no requirement, so they could not be traced or checked against one. & \small FR15: The system shall apply the discount rate of a VIP customer to the order total at checkout. FR16: The system shall let the customer choose one of their addresses or add a new address during checkout. FR17: The system shall add a flat shipping fee of 8 USD to every order.\\
 \bottomrule
 \end{longtable}
 
@@ -172,6 +244,7 @@ affected by the system without using it, while an actor exchanges information wi
 \small Shop owner & \small Yes & \small No & \small Takes decisions and reads reports through the administrator; no direct use in the demo\\
 \small Warehouse and support staff & \small Yes & \small No & \small Use order information through the administrator role\\
 \small Payment service & \small Yes & \small Payment Service & \small External system that exchanges payment data\\
+\small Delivery carrier & \small Yes & \small No & \small Takes the parcel from the warehouse but exchanges no data with the system in this release (Section~\ref{sec:1.7})\\
 \small Gemma 4 server & \small Yes & \small Gemma 4 Service & \small External system called to understand sentences, describe images and choose tools\\
 \small Whisper speech server & \small No & \small No & \small Part of the system itself (inside the boundary), not an external role\\
 \bottomrule
@@ -284,9 +357,9 @@ least three alternative or exception flows. The business rule ids (BR) are expla
 
 Each specification is followed directly by the diagram that shows its behaviour. An activity diagram shows the flow of work: initial node, activities, decisions, alternative branches, merges,
 interactions with external parties, business rules and final node. Lecture~03 warns not to model every click but
-the activities that mean something to the business. Họa. has five
-activities: multimodal search (ACT-01), search by image (ACT-04), checkout (ACT-07), cancel order (ACT-11) and update
-order status (ACT-13). Voice search is also shown as a sequence diagram, and cancellation depends on the state machine
+the activities that mean something to the business. Họa. has six
+activities: multimodal search (ACT-01), search by image (ACT-04), checkout (ACT-07), cancel order (ACT-11), manage
+products (ACT-12) and update order status (ACT-13): every specified use case has its activity. Voice search is also shown as a sequence diagram, and cancellation depends on the state machine
 of the order.
 
 Three use cases also get an \emph{analysis sequence diagram} in the boundary--control--entity style of Lecture~03:
@@ -588,10 +661,11 @@ check of Table~\ref{tab:consistency} compares with the operations of class \code
 \specrow{Trigger}{The administrator opens the product management page and edits it.}
 \specrow{Preconditions}{Signed in with an administrator session.}
 \specrow{Postconditions}{The catalogue is updated; a new price applies to later orders, old orders keep their frozen prices.}
-\specrow{Main flow}{1. The administrator opens the list of paintings. 2. The system shows the paintings with price and stock. 3. The administrator changes the price or stock of a painting, or enters a new painting (artist, style, subject, colour, size, image). 4. The system validates the data. 5. The system saves the change. 6. The system shows the updated list.}
+\specrow{Main flow}{1. The administrator opens the list of paintings. 2. The system shows the paintings with price and stock. 3. The administrator changes the price or stock of a painting, or enters a new painting with its category (artist, style, subject, colour, size, image). 4. The system validates the data and checks that the category accepts a painting. 5. The system saves the change. 6. The system shows the updated list.}
 \specrow{A1 -- Invalid data}{At step 4 a negative price or stock, or a missing mandatory field: the system refuses and names the wrong field.}
 \specrow{A2 -- No permission}{At step 1 the session is not an administrator session: access is refused.}
 \specrow{A3 -- Print in a cart}{The price changes while the print is in a customer's cart: the cart keeps the price of the moment it was added, and the order will use the new price at checkout (BR04).}
+\specrow{A4 -- Wrong category}{At step 4 the chosen category holds another kind of product (a painting sent to Frames): the system refuses and writes nothing.}
 \specrow{Requirements}{FR12, NFR01}
 \bottomrule
 \end{longtable}
@@ -621,6 +695,19 @@ check of Table~\ref{tab:consistency} compares with the operations of class \code
 \end{longtable}
 
 UC13 moves an order only along the transitions of Figure~\ref{fig:stateorder}.
+
+Figure~\ref{fig:c2_activity_products} shows UC12 (ACT-12). The back office opens only for an administrator session
+(A2). The administrator either changes the price or stock of a product or enters a new painting with its category;
+both meet the same validation, which refuses a negative value or a missing field and names it (A1). A new painting
+must also pass \code{Category.accepts}: a category that holds another kind of product is refused and nothing is
+written (A4). An accepted painting is saved as its product row, its painting row and its feature vector in one
+transaction.
+
+\begin{figure}[H]
+\centering
+\vpfig{c2_activity_products}{0.66\textheight}
+\caption[Activity of manage products (ACT-12)]{Activity of product management (ACT-12) with swimlanes for the administrator, the Họa. system and the database: the session check, the validation, the category check of a new painting and its save in one transaction. Visual Paradigm diagram \vpsrc{c2_activity_products}.}\label{fig:c2_activity_products}
+\end{figure}
 
 Figure~\ref{fig:c2_activity_admin} shows UC13 (ACT-13). The administrator selects an order and chooses its next
 status; the system checks the request against the state machine of Figure~\ref{fig:stateorder}: only the next step of
@@ -737,6 +824,8 @@ Each decision in the activity diagrams of Section~\ref{sec:2.2} comes from one o
 \small Customer's order? & \small BR08: another customer's order is answered as not found & \small ACT-11\\
 \small Cancellation allowed? & \small BR06: only PLACED or PROCESSING & \small ACT-11\\
 \small Valid transition? & \small BR07: only the next status of the state machine & \small ACT-13\\
+\small Valid product data? & \small No negative price or stock, no missing field (UC12 A1) & \small ACT-12\\
+\small Category accepts the painting? & \small The detail kind of the category must be PAINTING (UC12 A4, NFR11) & \small ACT-12\\
 \bottomrule
 \end{longtable}
 
@@ -763,6 +852,7 @@ concepts appear naturally when the scenarios are read again (Table~\ref{tab:beha
 \small The purchase price must be kept & \small \code{OrderItem.unitPrice}\\
 \small A print reproduces a work of one artist & \small \code{Painting}, \code{Artist}\\
 \small The customer buys a frame with the print & \small \code{Frame}\\
+\small The shop sells two lines, prints and frames, and the owner manages each line apart & \small \code{Category}\\
 \small The order is delivered to an address & \small \code{Shipping}, \code{Address}\\
 \small The customer pays cash or by card & \small \code{Payment}, \code{PayCash}, \code{PayCredit}\\
 \small A VIP customer gets a discount & \small \code{CustomerVIP}\\
@@ -873,7 +963,7 @@ and keys, is a design decision and is drawn in Section~\ref{sec:4.2}, where the 
 The conceptual data model (Figure~\ref{fig:c42_conceptual}) is the roughest picture: the \nAnalysisClasses{}
 concepts of the domain model as entities, shown by name only, and the links between them with a name that reads as a
 sentence (a customer \emph{owns} a cart, \emph{places} orders; an order \emph{contains} order items and \emph{is
-paid by} payments). It differs from the domain model of Section~\ref{sec:2.7} in what it leaves out: no
+paid by} payments; a category \emph{classifies} products). It differs from the domain model of Section~\ref{sec:2.7} in what it leaves out: no
 multiplicities, no composition or aggregation, and no «create» dependency of checkout, because that dependency is
 an operation, not something to store. The generalizations stay, because at this level a VIP customer is still
 simply a kind of customer.
@@ -972,7 +1062,7 @@ the main scenario and the activity that show it.
 \small FR07 & \small UC07 Checkout & \small Main flow of Table~\ref{tab:spec07} & \small ACT-07 (Figure~\ref{fig:actcheckout})\\
 \small FR10 & \small UC10 Ask Shopping Assistant & \small Specification of UC10 (Chapter~3) & \small Sequence of Figure~\ref{fig:c3_seq_assistant}\\
 \small FR11 & \small UC11 Cancel Order & \small Main flow of Table~\ref{tab:spec11} & \small ACT-11 (Figure~\ref{fig:c2_activity_cancel}), state machine\\
-\small FR12 & \small UC12 Manage Products & \small Main flow of Table~\ref{tab:spec12} & \small --\\
+\small FR12 & \small UC12 Manage Products & \small Main flow of Table~\ref{tab:spec12} & \small ACT-12 (Figure~\ref{fig:c2_activity_products})\\
 \small FR13 & \small UC13 Update Order Status & \small Main flow of Table~\ref{tab:spec13} & \small ACT-13 (Figure~\ref{fig:c2_activity_admin}), state machine\\
 \small FR14 & \small UC14 Find Painting for My Room & \small Specification of UC14 (Chapter~3) & \small ACT-01 (image branch)\\
 \bottomrule

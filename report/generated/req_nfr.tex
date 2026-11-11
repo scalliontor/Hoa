@@ -1,21 +1,25 @@
-\begin{longtable}{@{}P{1.2cm}P{6.7cm}P{0.9cm}P{1.3cm}P{2.6cm}P{1.8cm}@{}}
-\caption{Non-functional requirements (ID / Type / Priority / Source)}\label{tab:nfr}\\
+\begin{longtable}{@{}P{1.2cm}P{5.5cm}P{2.4cm}P{1.35cm}P{2.3cm}P{1.75cm}@{}}
+\caption{Non-functional requirements (ID / Area / Priority / Source)}\label{tab:nfr}\\
 \toprule
-\small \textbf{ID} & \small \textbf{Requirement} & \small \textbf{Type} & \small \textbf{Priority} & \small \textbf{Source} & \small \textbf{Use case}\\
+\small \textbf{ID} & \small \textbf{Requirement} & \small \textbf{Area} & \small \textbf{Priority} & \small \textbf{Source} & \small \textbf{Use case}\\
 \midrule
 \endfirsthead
 \toprule
-\small \textbf{ID} & \small \textbf{Requirement} & \small \textbf{Type} & \small \textbf{Priority} & \small \textbf{Source} & \small \textbf{Use case}\\
+\small \textbf{ID} & \small \textbf{Requirement} & \small \textbf{Area} & \small \textbf{Priority} & \small \textbf{Source} & \small \textbf{Use case}\\
 \midrule
 \endhead
 \bottomrule
 \endlastfoot
-\small \textbf{NFR01} & \small The system shall take the identity from the signed-in session and check order ownership on the server. & \small NFR & \small Must & \small Customer, Administrator & \small UC08, UC09, UC10\\
-\small \textbf{NFR02} & \small The system shall still find paintings with keyword rules when the Gemma service fails or times out. & \small NFR & \small Must & \small Customer & \small UC02, UC03, UC04, UC10\\
-\small \textbf{NFR03} & \small The system shall reject uploaded images that are not JPEG, PNG or WebP or are larger than 5 MB. & \small NFR & \small Must & \small Administrator & \small UC04\\
-\small \textbf{NFR04} & \small The system shall separate presentation, application, domain and infrastructure; the user interface shall not access the database directly. & \small NFR & \small Must & \small Developer & \small UC01\\
-\small \textbf{NFR05} & \small The system shall not store full card numbers; only the last four digits and the authorisation code are kept. & \small NFR & \small Must & \small Customer & \small UC07\\
-\small \textbf{NFR06} & \small The system shall run on one machine with a SQLite database and need the network only to call Gemma. & \small NFR & \small Should & \small Lecturer, Developer & \small UC01\\
-\small \textbf{NFR07} & \small The system shall return text search results within 2 seconds on the demo data. & \small NFR & \small Should & \small Customer & \small UC02\\
-\small \textbf{NFR08} & \small The system shall process audio on the local machine with self-hosted Whisper, never send audio outside, and transcribe a 5-second sentence within 3 seconds. & \small NFR & \small Must & \small Customer & \small UC03\\
+\small \textbf{NFR01} & \small The system shall take the identity from the signed-in session and check order ownership on the server. & \small Security & \small Must & \small Customer, Administrator & \small UC08, UC09, UC10\\
+\small \textbf{NFR02} & \small The system shall still find paintings with keyword rules when the Gemma service fails or times out. & \small Reliability & \small Must & \small Customer & \small UC02, UC03, UC04, UC10\\
+\small \textbf{NFR03} & \small The system shall reject uploaded images that are not JPEG, PNG or WebP or are larger than 5 MB. & \small Security & \small Must & \small Administrator & \small UC04\\
+\small \textbf{NFR04} & \small The system shall separate presentation, application, domain and infrastructure; the user interface shall not access the database directly. & \small Maintainability & \small Must & \small Developer & \small UC01\\
+\small \textbf{NFR05} & \small The system shall not store full card numbers; only the last four digits and the authorisation code are kept. & \small Privacy & \small Must & \small Customer & \small UC07\\
+\small \textbf{NFR06} & \small The system shall run on one machine with a SQLite database and need the network only to call Gemma. & \small Portability & \small Should & \small Lecturer, Developer & \small UC01\\
+\small \textbf{NFR07} & \small The system shall return text search results within 2 seconds on the demo data. & \small Performance & \small Should & \small Customer & \small UC02\\
+\small \textbf{NFR08} & \small The system shall process audio on the local machine with self-hosted Whisper, never send audio outside, and transcribe a 5-second sentence within 3 seconds. & \small Privacy & \small Must & \small Customer & \small UC03\\
+\small \textbf{NFR09} & \small The system shall end every search, cart and order action in a visible result, an empty state with a hint, or an error message that says what to do. & \small Usability & \small Should & \small Customer & \small UC02, UC06, UC07\\
+\small \textbf{NFR10} & \small The system shall keep the class, method, table and column names of the code identical to the design model and check this automatically before each release. & \small Maintainability & \small Must & \small Developer, Lecturer & \small UC01\\
+\small \textbf{NFR11} & \small The system shall enforce every key and constraint of the physical data model, never let stock become negative, and keep the details of each product in the table its category names. & \small Data integrity & \small Must & \small Shop owner, Administrator & \small UC07, UC12\\
+\small \textbf{NFR12} & \small The system shall keep the catalogue, cart, checkout, orders and administration working when the Gemma or Whisper service is unavailable. & \small Availability & \small Must & \small Customer, Shop owner & \small UC05, UC07, UC08, UC13\\
 \end{longtable}

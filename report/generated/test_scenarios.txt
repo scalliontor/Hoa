@@ -1,4 +1,4 @@
-Họa. demo — test run 2026-11-05 17:25
+Họa. demo — test run 2026-11-11 22:57
 
 == Domain rules (4.1, 4.3)
 PASS  FullName shows last, middle and first name
@@ -10,12 +10,15 @@ PASS  Order.cancel is allowed only before shipment (UC11)
 PASS  Order.advanceTo moves one step: PLACED > PROCESSING > SHIPPED > DELIVERED (UC13)
 PASS  Order.isOwnedBy compares the customer id (NFR01)
 PASS  Product.decreaseStock never goes below zero
+PASS  Category.accepts only products of its detail kind
 PASS  Payment.process is polymorphic: card needs an authorisation, cash needs enough money
 PASS  Customer.findAddress refuses an address of another customer
 PASS  Only a VIP customer has a discount
 
 == Repositories and seed data (4.2)
 PASS  Seed: 32 paintings and 5 frames, prices in US dollars
+PASS  The category picks the detail table: P01 is a Painting with its artist, F01 a Frame
+PASS  save refuses a frame in the prints category and writes nothing
 PASS  A customer is loaded as CustomerVIP or CustomerNew with name and addresses
 PASS  An order is read with its items, shipping and the PayCredit subclass
 PASS  decreaseStock refuses to go below zero in the database
@@ -47,7 +50,8 @@ PASS  RankingService: S = 0.45 Stext + 0.45 Simage + 0.10 Sbusiness, best first,
 PASS  Gemma's JSON becomes a CommonQuery (style, artist, max price)
 PASS  Values outside the catalogue vocabulary are dropped
 PASS  Keyword rules replace Gemma when it is offline (NFR02)
-PASS  Offline search still puts Monet first and respects the price limit
+PASS  Offline search keeps only Monet under $100 (UC02 hard conditions)
+PASS  With Gemma the named artist stays a filter although a style is guessed too
 PASS  Text search with Gemma: blue landscape paintings
 PASS  Image search: Gemma's reading of a photo finds the painting (cosine = 1)
 PASS  Room search (UC14): Gemma picks 3-5 shortlisted paintings, each with one concrete sentence
@@ -75,6 +79,8 @@ PASS  Another customer's order answers 404 with the same message as a missing or
 PASS  A customerId in the request body is ignored: the session decides
 PASS  Uploads: only JPEG, PNG or WebP up to 5 MB, checked on the bytes (NFR03)
 PASS  Administrator routes need the ADMIN session
+PASS  Product JSON has the kind and the whole category
+PASS  A new painting is saved only in a category that holds paintings (UC12)
 PASS  Voice: transcript to correct; nothing heard (200, empty); Whisper down (503)
 
-61 tests passed, 0 failed
+67 tests passed, 0 failed

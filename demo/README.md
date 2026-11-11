@@ -1,8 +1,8 @@
 # Họa. — the demo shop of the essay
 
 Họa. sells museum-quality prints of public-domain paintings and the frames to go with them. The code is the
-design of Chapter 4 made real: the 58 Java classes and 9 browser views of `tools/model.py` with the same names,
-fields and operations, and the 17 tables of section 4.2. It is plain Java 17 with no framework (the JDK
+design of Chapter 4 made real: the 60 Java classes and 9 browser views of `tools/model.py` with the same names,
+fields and operations, and the 18 tables of section 4.2. It is plain Java 17 with no framework (the JDK
 HTTP server, JDBC on SQLite, Gson). Two AI services are used:
 
 * **Gemma 4** on the course server (`171.226.10.121:8000`, OpenAI-compatible API) reads search requests, looks at
@@ -27,7 +27,7 @@ Without it the shop still runs, but every Gemma call fails and the offline fallb
 ```bash
 ./build.sh                    # compile into build/classes (needs a JDK 17+, e.g. brew install openjdk@21)
 ./run.sh                      # start the Whisper server and the shop: http://127.0.0.1:8686
-./test.sh                     # 59 tests and the code-model check -> ../build/test_results.txt
+./test.sh                     # 66 tests and the code-model check -> ../build/test_results.txt
 python3 scripts/evaluate.py   # the A06-style evaluation -> ../build/eval/
 ```
 
@@ -50,7 +50,7 @@ The JSON API is described with real examples in [API.md](API.md).
 | `data/` | `catalog.json` (32 paintings, 5 frames, artists), `ATTRIBUTION.md` (Wikimedia Commons sources), `eval_images/` (photos for the evaluation); `ecom.db` and logs at run time | 3, 5 |
 | `config/` | `app.properties` | 5 |
 | `lib/` | `sqlite-jdbc`, `gson`, `slf4j` — the only libraries | 5 |
-| `tests/java/` | 59 tests without a framework (`TestRunner`), fake Gemma and Whisper clients | 5 |
+| `tests/java/` | 66 tests without a framework (`TestRunner`), fake Gemma and Whisper clients | 5 |
 | `scripts/` | `java_home.sh` (finds the JDK), `evaluate.py` (experimental evaluation) | 3, 5 |
 | `generated/` | the skeleton of section 4.5, generated from the model by `tools/gen_java.py`; the application was started from it | 4.5 |
 | `voice-server/` | the self-hosted Whisper server (own README) | 3, 5 |
@@ -65,7 +65,7 @@ The JSON API is described with real examples in [API.md](API.md).
 | `application.service` | Application | CartService, CheckoutService, OrderService, ProductService, AssistantService, AssistantReply | A05 `CheckoutService.checkout(cartId, …)` | 4.4, 4.5 |
 | `application.search` | Application | SearchService, QueryService, SpeechService, ImageService, RankingService, CommonQuery, SearchResult | A06 search engine: query understanding, S = α·Stext + β·Simage + γ·Sbusiness | 3, 4.4 |
 | `domain.customer` | Domain model (shared) | Customer, CustomerVIP, CustomerNew, FullName, Address | analysis classes of 4.1 | 4.1, 4.3 |
-| `domain.product` | Domain model (shared) | Product, Painting, Frame, Artist | | 4.1, 4.3 |
+| `domain.product` | Domain model (shared) | Category, DetailKind, Product, Painting, Frame, Artist | | 4.1, 4.3 |
 | `domain.cart` | Domain model (shared) | Cart, CartItem | | 4.3 |
 | `domain.order` | Domain model (shared) | Order, OrderItem, OrderStatus, Shipping, ShippingStatus | | 4.3 |
 | `domain.payment` | Domain model (shared) | Payment, PayCash, PayCredit, PaymentStatus | polymorphic `process()` | 4.3 |

@@ -75,25 +75,25 @@ Giữ đúng thứ tự, mỗi bước một câu, chỉ mở showcase (trừ de
 \end{center}
 
 \needspace{20\baselineskip}
-\subsection{Bản 10 phút, theo checklist trên bảng của thầy}\label{sec:ban10}
-Thầy cho mỗi người 10 phút. Nói khoảng \key{6 phút 30}, để \key{3 phút 30} cho thầy hỏi. Thứ tự đi đúng bốn khối thầy viết trên bảng: \key{ANALYSIS $\to$ DATAMODEL $\to$ DESIGN $\to$ CODE}, mỗi khối chỉ vào đúng mục thầy ghi, để thầy tích được ngay. Trước mỗi khối nói tên khối: \say{Phần data model, theo bảng của thầy, có ba ý\ldots}
+\subsection{Bản 10 phút, theo năm điểm đánh giá của thầy}\label{sec:ban10}
+Thầy chấm theo năm điểm: (1) biểu đồ lớp phân tích có kế thừa, (2) data model $\Rightarrow$ DB, (3) class design: lớp phân tích + phương thức, (4) layer $\to$ sinh code, (5) code + demo. Showcase có mục \key{Evaluation 1--5} đi đúng thứ tự này: mở mục đó, cuộn từng bước, mỗi bước bấm vào hình để phóng to. Nói khoảng \key{6 phút 30}, để \key{3 phút 30} cho thầy hỏi. Trước mỗi bước nói số bước: \say{Điểm thứ hai thầy chấm là data model sang cơ sở dữ liệu\ldots}
 \begin{center}\small
-\begin{tabular}{@{}P{1.5cm}P{2.9cm}P{4.3cm}P{7.1cm}@{}}
+\begin{tabular}{@{}P{1.5cm}P{2.8cm}P{4.2cm}P{7.3cm}@{}}
 \toprule
-\textbf{Phút} & \textbf{Mục trên bảng} & \textbf{Mở} & \textbf{Nói và chỉ vào}\\
+\textbf{Phút} & \textbf{Điểm của thầy} & \textbf{Mở} & \textbf{Nói và chỉ vào}\\
 \midrule
-0:00--0:30 & Mở đầu & showcase A & Họa. bán bản in tranh; năm chỗ đau thành \factFR{} yêu cầu chức năng, \factNFR{} yêu cầu chất lượng, \factUC{} use case.\\
-0:30--1:30 & \key{ANALYSIS}: context, activity, class diagram analysis & ảnh \vp{1.7 Context Diagram - DFD Level 0}; VP \vp{2.2 Activity - Checkout}; \vp{2.8 Domain Model - analysis class diagram} & Ranh giới hệ thống và các luồng vào ra; ngã rẽ \code{in stock} / \code{out of stock} của đặt hàng; lớp phân tích chỉ có thông tin và \emph{loại} quan hệ (kế thừa, hợp thành, kết hợp).\\
-1:30--3:00 & \key{DATAMODEL}: class diagram + label + ORM; data model; database & VP \vp{2.9b Logical Data Model (ORM-Persistable)} (hoặc showcase C), \vp{4.2 Physical Data Model - tables, keys and foreign keys}, \vp{4.2 Database - entity relationship diagram}; showcase E (hai ảnh Generate Database) & Mức logic thêm nhãn, bội số, «ORM-Persistable»; mức vật lý thành bảng, khóa chính, khóa ngoại. Theo góp ý của thầy: \code{category} phân loại, \code{product} giữ phần chung, \code{painting}/\code{frame} giữ phần riêng. VP tự sinh cơ sở dữ liệu bằng trình hướng dẫn của nó; so với cơ sở dữ liệu đang chạy: giống \factTables{} bảng, \factCmpFKs{} khóa ngoại, chỉ thiếu CHECK.\\
-3:00--4:30 & \key{DESIGN}: class design (class, method); layer + relationship; database revised & VP \vp{4.3 Class Diagram in Design}, \vp{4.4a Three Layers - classes and their links} & Lớp \code{Order} có kiểu dữ liệu và phương thức \code{cancel()}, \code{advanceTo()}, \code{isOwnedBy()}. Bốn bước của phụ lục thầy: thêm phương thức, liên kết thành «use», DAO = interface + bản SQLite, ba tầng MVC. \emph{Database revised}: bảng bài §4.3.4 (showcase E): tiền thành \code{numeric(12,2)}, trạng thái có CHECK, cột \code{detail_kind} cho danh mục, tên khóa ngoại \code{fk_<table>_<column>} vì VP báo trùng.\\
-4:30--5:30 & \key{CODE}: code $\leftrightarrow$ design; use DB? & showcase D, thẻ ``Cancel Order''; VS Code \file{Order.java} dòng \dongOrderCancel{} & Từ yêu cầu bấm tới đúng dòng code và đúng bài kiểm thử; công cụ so code với thiết kế: \factCheckClasses{} lớp, \factCheckTables{} bảng, \factCheckSql{} câu SQL đều khớp. Có dùng DB: kho trừ bằng một câu UPDATE có điều kiện trên SQLite.\\
-5:30--6:30 & Demo (chương 3, 5) & tab cửa hàng (C001) & Gõ \code{blue landscape paintings} (Gemma 4 hiểu câu), mở một bức: dòng ``Fine-art prints'' là danh mục; tra đơn 20261003 của khách khác: ``không tìm thấy''.\\
-6:30 & Kết & showcase G & \factTests{} bài kiểm thử, chạy thử đầu cuối \factEtoE{}/\factEtoE{} bước đều đạt; ba hạn chế đã ghi. Mời thầy hỏi.\\
+0:00--0:30 & Mở đầu & showcase, mục Evaluation & Họa. bán bản in tranh; năm chỗ đau thành \factFR{} yêu cầu chức năng, \factNFR{} yêu cầu chất lượng, \factUC{} use case. Em trình bày theo đúng năm điểm thầy chấm.\\
+0:30--1:30 & \key{1}. Lớp phân tích có kế thừa & Evaluation bước 1 (bấm hình để phóng to); VP \vp{2.8 Domain Model - analysis class diagram} & \factAnalysis{} lớp, chỉ có thông tin và \emph{loại} quan hệ, chưa có kiểu, chưa có phương thức. Ba cây kế thừa: khách hàng thường, VIP và mới; sản phẩm là tranh hoặc khung; thanh toán tiền mặt hoặc thẻ. Sản phẩm và thanh toán là lớp trừu tượng.\\
+1:30--3:00 & \key{2}. Data model $\Rightarrow$ DB & Evaluation bước 2; VP \vp{2.9b Logical Data Model (ORM-Persistable)}, \vp{4.2 Database - entity relationship diagram} & Khái niệm, rồi logic có tên quan hệ, bội số, «ORM-Persistable», rồi vật lý \factTables{} bảng. Kế thừa thành bảng con dùng chung khóa với bảng cha. Theo góp ý của thầy: \code{category} phân loại, \code{product} giữ phần chung. Visual Paradigm tự sinh cơ sở dữ liệu; so với cơ sở dữ liệu đang chạy: giống \factTables{} bảng và \factCmpFKs{} khóa ngoại.\\
+3:00--4:00 & \key{3}. Class design: lớp + phương thức & Evaluation bước 3; VP \vp{4.3 Class Diagram in Design} & Cùng các lớp phân tích, giờ có kiểu dữ liệu và phương thức; bảng trong bước 3 so số thuộc tính và liệt kê phương thức từng lớp. Kế thừa thành đa hình: VIP tự tính giảm giá, tranh và khung tự cho biết loại chi tiết. Cơ sở dữ liệu được sửa theo thiết kế: bảng \emph{Database (revised)}.\\
+4:00--5:00 & \key{4}. Layer $\to$ sinh code & Evaluation bước 4; VP \vp{4.4a Three Layers - classes and their links} & Bốn bước trong phụ lục của thầy: thêm phương thức, liên kết thành «use», DAO là interface cộng bản SQLite, ba tầng có package. Công cụ sinh một file Java cho mỗi lớp thiết kế, đúng package của tầng; lớp miền sinh ra là chạy được ngay, các lớp khác em viết thêm thân hàm.\\
+5:00--6:30 & \key{5}. Code + demo & Evaluation bước 5, rồi mục D (bảng ``Every design class in the code''), rồi tab cửa hàng (C001) & Mọi lớp thiết kế có trong code, đúng từng trường, từng phương thức, đúng chiều giữa các tầng; code dùng SQLite thật. Demo: gõ \code{blue landscape paintings}, mở một bức (dòng danh mục), tra đơn 20261003 của khách khác: ``không tìm thấy''.\\
+6:30 & Kết & Evaluation bước 5 & \factTests{} bài kiểm thử, chạy thử đầu cuối \factEtoE{}/\factEtoE{} bước đều đạt; ba hạn chế đã ghi. Mời thầy hỏi.\\
 \bottomrule
 \end{tabular}
 \end{center}
 \begin{itemize}
-\item \key{Nếu 10 phút là chỉ để trình bày} (hỏi đáp tính riêng): thêm 1 phút 30 cho chương 3 sau phần demo: tìm bằng ảnh (Flow 2) và trợ lý tra đơn bằng công cụ (Flow 3), rồi nói vì sao AI chỉ gợi ý, không quyết định.
-\item \key{Bị cắt ngang}: trả lời ngắn rồi nhảy thẳng tới khối kế tiếp trong bảng, không quay lại khối đã qua.
-\item \key{Còn 2 phút mà mới tới DESIGN}: bỏ demo, nói CODE trong 30 giây bằng showcase D, giữ phần kết.
+\item \key{Nếu 10 phút là chỉ để trình bày} (hỏi đáp tính riêng): thêm 1 phút 30 cho chương 3 sau phần demo: tìm bằng ảnh và trợ lý tra đơn bằng công cụ, rồi nói vì sao AI chỉ gợi ý, không quyết định.
+\item \key{Bị cắt ngang}: trả lời ngắn rồi nhảy tới bước kế tiếp bằng các nút \emph{1 · \ldots{} 5} ở đầu mục Evaluation.
+\item \key{Còn 2 phút mà mới tới bước 3}: nói bước 3 và 4 mỗi bước một câu, bỏ demo, giữ phần kết.
 \end{itemize}

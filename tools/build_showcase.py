@@ -1470,7 +1470,7 @@ class Page:
                 ("Database (revised)", f'what the design changed in the database: <a href="#e-revised">table in section E</a>, '
                                        f'{self.sec_label("sec:4.3.4", False)}')]),
             ("Code", [
-                ("Code ↔ design", f'<a href="#d">section D</a>: requirement → design → file and line → test; '
+                ("Code ↔ design", f'<a href="#d-classes">every design class in the code</a>, layer by layer, and <a href="#d">section D</a>: requirement → design → file and line → test; '
                                   f'{self.blob("tools/check_code_model.py", "def ", "check_code_model.py")} finds {check.group(1)} classes, '
                                   f'{check.group(2)} tables and {check.group(4)} SQL statements <strong>all matching the design</strong>'),
                 ("Use DB?", f'Yes: the repositories run their {check.group(4)} SQL statements on SQLite (demo/data/ecom.db), created from the '
@@ -1841,6 +1841,58 @@ class Page:
         return dict(product=name, parents=parents, details=details, others=others, kinds=kinds, tables=tables)
 
     # ----------------------------------------------------------------------------------------- D traceability
+    def code_map(self):
+        """Every design class found in the code, layer by layer, as tools/check_code_model.py reported it in the last test run."""
+        report = read("build/test_results.txt")
+        run = re.search(r"test run (\d{4}-\d{2}-\d{2} \d{2}:\d{2})", report)
+        total = re.search(r"Model check: (.*?) -> all match the model", report)
+        need(total, "build/test_results.txt: the model check did not end with 'all match the model' (run demo/test.sh)")
+        classes = {m.group(2): (m.group(1), int(m.group(3)), int(m.group(4)))
+                   for m in re.finditer(r"(?m)^(OK|FAIL)\s+([\w.]+)\s+fields\s+(\d+)\s+operations\s+(\d+)", report)}
+        views = {m.group(2): (m.group(1), m.group(3), int(m.group(4)))
+                 for m in re.finditer(r"(?m)^(OK|FAIL)\s+view (\w+)\s+(\S+)\s+\((\d+) functions\)", report)}
+        deps = re.search(r"(\d+)/(\d+) Java dependencies", report)
+        layers = re.findall(r"(?m)^OK\s+layer ([\w ]+?) -> ([\w ]+?): (\d+) file", report)
+        need(classes and views and deps, "build/test_results.txt: no class-by-class model check")
+        bad = [n for n, v in classes.items() if v[0] != "OK"] + [n for n, v in views.items() if v[0] != "OK"]
+        groups = []
+        for title, root, packages in model.PACKAGE_GROUPS:
+            rows = []
+            for pkg in packages:
+                chips = []
+                if pkg == "presentation.view":
+                    for name, (state, path, n_fun) in views.items():
+                        chips.append(f'<a class="chip code-chip" href="{LINKS.file("demo/" + path)}" title="{E(path)}">'
+                                     f'{"✓" if state == "OK" else "✗"} {E(name)} <small>{n_fun} fn</small></a>')
+                for full, (state, n_f, n_o) in classes.items():
+                    if full.rsplit(".", 1)[0] != pkg:
+                        continue
+                    name = full.rsplit(".", 1)[1]
+                    chips.append(f'<a class="chip code-chip" href="{code_ref(name)["url"]}" title="{E(full)}: {n_f} fields, {n_o} operations">'
+                                 f'{"✓" if state == "OK" else "✗"} {E(name)} <small>{n_f}/{n_o}</small></a>')
+                if chips:
+                    rows.append(f'<li><code>{E(pkg)}</code><span class="chips">{"".join(chips)}</span></li>')
+            groups.append(f'<article class="card"><p class="label">{E(title)}</p><ul class="codemap">{"".join(rows)}</ul></article>')
+        layer_txt = "; ".join(f"{a} → {b}: {n} file{'s' if n != '1' else ''}" for a, b, n in layers)
+        return f'''
+  <h3 class="h3 sub top-gap" id="d-classes">Every design class in the code</h3>
+  <p class="muted">{self.blob("tools/check_code_model.py", "def ", "tools/check_code_model.py")} reads every Java file and browser
+  view and compares it with {self.blob("tools/model.py", "DESIGN = [", "tools/model.py")}: the package, every field (attributes and
+  association roles, with their types) and every operation (parameter names and types, return type); then the database, the SQL of
+  the repositories and the «use» links between the layers. Last run {E(run.group(1) if run else "")}: <strong>{E(total.group(1))} — all match
+  the design</strong>{(' <span class="warn-text">except ' + ", ".join(bad) + '</span>') if bad else ""}. Each chip opens the class in the code;
+  the numbers are fields / operations.</p>
+  <div class="groups codemap-groups">{"".join(groups)}</div>
+  <ul class="list">
+    <li><strong>Relationships:</strong> every association of {self.fig("c43_design", "the design class diagram")} is a field named after its
+    role, and {deps.group(1)}/{deps.group(2)} «use» dependencies of {self.fig("c44_classes", "the layer diagrams")} are found in the code
+    (imports and constructor parameters).</li>
+    <li><strong>Layers:</strong> {E(layer_txt)}; arrows only go down, as in {self.fig("c44_layers", "the three layers")}; the one
+    Presentation → Data file is EcomApplication, which creates the objects.</li>
+    <li><strong>Packages:</strong> the Java packages are the packages of {self.fig("c44_packages", "the package diagram")}
+    (<a href="https://github.com/scalliontor/Hoa/tree/main/demo/src/main/java/com/ptit/ecom">demo/src/main/java/com/ptit/ecom</a>).</li>
+  </ul>'''
+
     def section_d(self):
         cards = []
         for t in TRACE:
@@ -1898,6 +1950,7 @@ class Page:
   following the calls from the controller method through the services and repository interfaces to the SQL of the
   SQLite repositories (a static scan, so it lists every table the path can reach).</p>
   {"".join(cards)}
+  {self.code_map()}
 </section>'''
 
     # ---------------------------------------------------------------------------------------------- E database
@@ -2723,6 +2776,12 @@ pre.code code,pre.cmd code{background:none;padding:0;font-size:inherit}
 /* E */
 .groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
 .board-groups{margin:12px 0 48px}
+.codemap-groups{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:16px 0 20px}
+.codemap{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:12px}
+.codemap li{display:grid;gap:6px}
+.codemap code{font-size:12px;color:var(--muted)}
+.code-chip{text-decoration:none;text-transform:none;letter-spacing:0}
+.code-chip small{color:var(--muted);margin-left:2px}
 .board{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:12px;font-size:14.5px}
 .board li{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:start}
 .board .ok{color:var(--ok,#3fb950);font-weight:600}

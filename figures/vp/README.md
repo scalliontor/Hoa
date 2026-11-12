@@ -24,7 +24,7 @@ Two editions of VP 18.1 are used:
   Community Edition opens `vp/tieuluan_design.vpp` with all 40 diagrams.
 
 Two more trial screenshots are not diagrams but VP's own **Generate Database** wizard on the ERD, made by
-`tools/vp_generate_db.py` (Chapter 4.2.4, showcase section E): `c42_generate_db.png` (the wizard: SQLite, Create
+`tools/vp_generate_db.py` (Chapter 4.2.3, showcase section E): `c42_generate_db.png` (the wizard: SQLite, Create
 Database, Generate DDL, output folder) and `c42_generate_db_done.png` (after OK: "Generate Database - Finish" and the
 ORM messages). The DDL the wizard wrote is `demo/db/vp_wizard_ddl.sql`.
 

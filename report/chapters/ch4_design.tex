@@ -401,7 +401,8 @@ Lecture~05: checkout is an application process, so it belongs to an application 
 
 The design classes change some decisions of the logical data model, so the database is revised with them.
 Table~\ref{tab:dbrev} compares the logical data model of Section~\ref{sec:2.dm.2} with the database that is
-actually generated (Section~\ref{sec:4.2}); each change comes from one of the refinements above. The generated
+actually generated (Section~\ref{sec:4.2}); each change comes from one of the refinements above, or from generating
+the database in Visual Paradigm (Section~\ref{sec:4.2.4}). The generated
 schema already contains all of them, and \code{tools/check_code_model.py} checks after every change that the
 database, the model and the SQL of the repositories still agree.
 
@@ -420,11 +421,13 @@ database, the model and the SQL of the repositories still agree.
 \small States & \small \code{status : String} & \small \code{varchar} with \code{CHECK ... IN} the allowed values & \small Enumerations \code{OrderStatus}, \code{ShippingStatus}, \code{PaymentStatus}\\
 \small Address & \small No identifier & \small \code{address_id} primary key, \code{address.customer_id} and \code{shipping.address_id} foreign keys & \small \code{Address.addressId}: choose the delivery address at checkout\\
 \small Links & \small Named associations with multiplicities & \small A foreign key per association; \code{UNIQUE} where the upper bound is 1 (\code{cart.customer_id}, \code{shipping.order_id}) & \small Navigable references (Section~\ref{sec:4.3.3})\\
-\small Inheritance & \small \emph{is a} links 1 -- 0..1 & \small Child table shares the parent key; discriminators \code{product.product_type}, \code{payment.method} & \small Abstract \code{Product} and \code{Payment}: the repository must know which subclass to build\\
+\small Inheritance & \small \emph{is a} links 1 -- 0..1 & \small Child table shares the parent key (\code{painting}, \code{frame}; \code{pay_cash}, \code{pay_credit}); \code{payment.method} names the payment table & \small Abstract \code{Product} and \code{Payment}: the repository must know which subclass to build\\
+\small Detail table & \small \code{Category} (id, name, description) classifies \code{Product} & \small \code{category.detail_kind} with \code{CHECK ... IN ('PAINTING','FRAME')} names the detail table; \code{product.category_id NOT NULL} & \small Enumeration \code{DetailKind} and \code{Category.accepts}: the repository reads and writes the table the category names (lecturer's feedback)\\
 \small Value object & \small \code{FullName} class & \small Columns \code{first_name}, \code{middle_name}, \code{last_name} of \code{customer} & \small Embedded in \code{Customer}\\
 \small Card data & \small \code{cardLast4} & \small \code{card_last4 char(4)}; no column for the full number & \small NFR05\\
 \small Search & \small -- & \small New technical table \code{product_feature} (\code{feature_vector}, \code{model_version}) & \small \code{VectorIndex} of the image search (Chapter~3)\\
 \small Checks & \small -- & \small \code{CHECK} on quantities ($>0$), prices and stock ($\ge 0$) & \small The database itself refuses impossible values, such as a negative stock\\
+\small Constraint names & \small Verbs on the links (\emph{is a}, \emph{contains}) & \small Every foreign key named \code{fk_<table>_<column>}, unique in the database (\code{fk_product_category}) & \small Visual Paradigm's Generate Database refused six foreign keys named \emph{is a} (Section~\ref{sec:4.2.4})\\
 \bottomrule
 \end{longtable}
 

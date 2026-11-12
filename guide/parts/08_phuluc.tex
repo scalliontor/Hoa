@@ -38,7 +38,7 @@ Sơ đồ hoạt động, tuần tự phân tích & VP 2.2 Activity - Checkout, 
 Mô hình miền, giỏ khác đơn & VP 2.8 Domain Model; bài §2.9; \file{OrderItem.java}:\dongFromCart\\
 Ba mức dữ liệu & SC C chuỗi 2; VP 2.9a Conceptual, 2.9b Logical, 4.2 Physical Data Model; bài §2.10, §4.2.1\\
 Danh mục và bảng chi tiết & SC E; \file{ecom_schema_sqlite.sql}:\dongSqlCategory, \dongSqlProduct, \dongSqlPainting, \dongSqlFrame; \file{Category.java}:\dongAccepts; \file{SqliteProductRepository.java}:\dongToProduct, \dongInsertProduct; bài §4.2.2\\
-VP sinh cơ sở dữ liệu & ảnh \file{figures/vp/c42_generate_db.png}, \file{c42_generate_db_done.png}; \file{demo/db/vp_wizard_ddl.sql}; \file{build/schema_comparison.txt}; showcase E; bài §4.2.4; làm trực tiếp: mục~\ref{sec:vpgen}\\
+VP sinh cơ sở dữ liệu & ảnh \file{figures/vp/c42_generate_db.png}, \file{c42_generate_db_done.png}; \file{demo/db/vp_wizard_ddl.sql}; \file{build/schema_comparison.txt}; showcase E; bài §4.2.3; làm trực tiếp: mục~\ref{sec:vpgen}\\
 Khóa, ràng buộc & \file{ecom_schema_sqlite.sql}:\dongSqlCart{} (UNIQUE), \dongSqlCartItem{} và \dongSqlOrderItem{} (khóa ghép); \file{build/sql_validation.txt} (câu sai bị từ chối); \file{Database.java}:\dongFkPragma{} (bật khóa ngoại)\\
 Lớp thiết kế, phương thức & VP 4.3 Class Diagram in Design; \file{tools/model.py}:\dongModelDesign{} (\code{Order} ở dòng \dongModelOrder); bài §4.3\\
 Ba tầng, package, DAO & VP 4.4a Three Layers, 4.4c Package Diagram, 4.4a Three Logical Components, 4.4b--c Classes per Layer; \file{tools/model.py}:\dongModelLayers; \file{EcomApplication.java}:\dongMain; bài §4.4.1\\

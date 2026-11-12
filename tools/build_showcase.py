@@ -1849,12 +1849,14 @@ class Page:
         need(total, "build/test_results.txt: the model check did not end with 'all match the model' (run demo/test.sh)")
         classes = {m.group(2): (m.group(1), int(m.group(3)), int(m.group(4)))
                    for m in re.finditer(r"(?m)^(OK|FAIL)\s+([\w.]+)\s+fields\s+(\d+)\s+operations\s+(\d+)", report)}
+        enums = {m.group(2): (m.group(1), int(m.group(3)))
+                 for m in re.finditer(r"(?m)^(OK|FAIL)\s+([\w.]+)\s+literals\s+(\d+)", report)}
         views = {m.group(2): (m.group(1), m.group(3), int(m.group(4)))
                  for m in re.finditer(r"(?m)^(OK|FAIL)\s+view (\w+)\s+(\S+)\s+\((\d+) functions\)", report)}
         deps = re.search(r"(\d+)/(\d+) Java dependencies", report)
         layers = re.findall(r"(?m)^OK\s+layer ([\w ]+?) -> ([\w ]+?): (\d+) file", report)
         need(classes and views and deps, "build/test_results.txt: no class-by-class model check")
-        bad = [n for n, v in classes.items() if v[0] != "OK"] + [n for n, v in views.items() if v[0] != "OK"]
+        bad = [n for d in (classes, enums, views) for n, v in d.items() if v[0] != "OK"]
         groups = []
         for title, root, packages in model.PACKAGE_GROUPS:
             rows = []
@@ -1870,6 +1872,11 @@ class Page:
                     name = full.rsplit(".", 1)[1]
                     chips.append(f'<a class="chip code-chip" href="{code_ref(name)["url"]}" title="{E(full)}: {n_f} fields, {n_o} operations">'
                                  f'{"✓" if state == "OK" else "✗"} {E(name)} <small>{n_f}/{n_o}</small></a>')
+                for full, (state, n_lit) in enums.items():
+                    if full.rsplit(".", 1)[0] == pkg:
+                        name = full.rsplit(".", 1)[1]
+                        chips.append(f'<a class="chip code-chip" href="{code_ref(name)["url"]}" title="{E(full)}: enumeration, {n_lit} values">'
+                                     f'{"✓" if state == "OK" else "✗"} {E(name)} <small>enum {n_lit}</small></a>')
                 if chips:
                     rows.append(f'<li><code>{E(pkg)}</code><span class="chips">{"".join(chips)}</span></li>')
             groups.append(f'<article class="card"><p class="label">{E(title)}</p><ul class="codemap">{"".join(rows)}</ul></article>')
@@ -1881,7 +1888,7 @@ class Page:
   association roles, with their types) and every operation (parameter names and types, return type); then the database, the SQL of
   the repositories and the «use» links between the layers. Last run {E(run.group(1) if run else "")}: <strong>{E(total.group(1))} — all match
   the design</strong>{(' <span class="warn-text">except ' + ", ".join(bad) + '</span>') if bad else ""}. Each chip opens the class in the code;
-  the numbers are fields / operations.</p>
+  the numbers are fields / operations (enumerations: their values).</p>
   <div class="groups codemap-groups">{"".join(groups)}</div>
   <ul class="list">
     <li><strong>Relationships:</strong> every association of {self.fig("c43_design", "the design class diagram")} is a field named after its

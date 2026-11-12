@@ -1,6 +1,14 @@
 == Code versus model (tools/check_code_model.py)
 == Java classes of DESIGN (tools/model.py) ==
-OK    ... 56 lines of this section, one per element, all OK
+OK    ... 5 lines of this section, one per element, all OK
+OK    domain.product.DetailKind                               literals  2
+OK    ... 7 lines of this section, one per element, all OK
+OK    domain.order.OrderStatus                                literals  5
+OK    ... 2 lines of this section, one per element, all OK
+OK    domain.order.ShippingStatus                             literals  3
+OK    ... 1 lines of this section, one per element, all OK
+OK    domain.payment.PaymentStatus                            literals  3
+OK    ... 41 lines of this section, one per element, all OK
 == Browser views (web/js) ==
 OK    ... 9 lines of this section, one per element, all OK
 == Database ==

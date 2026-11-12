@@ -1,4 +1,4 @@
-Họa. demo — test run 2026-11-12 00:44
+Họa. demo — test run 2026-11-12 16:15
 
 == Domain rules (4.1, 4.3)
 PASS  FullName shows last, middle and first name
@@ -92,6 +92,7 @@ OK    domain.customer.Address                                 fields  5  operati
 OK    domain.customer.Customer                                fields  6  operations  4
 OK    domain.customer.CustomerVIP                             fields  3  operations  2
 OK    domain.customer.CustomerNew                             fields  2  operations  1
+OK    domain.product.DetailKind                               literals  2
 OK    domain.product.Category                                 fields  4  operations  1
 OK    domain.product.Product                                  fields  7  operations  4
 OK    domain.product.Artist                                   fields  4  operations  1
@@ -99,9 +100,12 @@ OK    domain.product.Painting                                 fields  8  operati
 OK    domain.product.Frame                                    fields  3  operations  2
 OK    domain.cart.Cart                                        fields  5  operations  6
 OK    domain.cart.CartItem                                    fields  3  operations  3
+OK    domain.order.OrderStatus                                literals  5
 OK    domain.order.Order                                      fields  8  operations  6
 OK    domain.order.OrderItem                                  fields  3  operations  2
+OK    domain.order.ShippingStatus                             literals  3
 OK    domain.order.Shipping                                   fields  7  operations  2
+OK    domain.payment.PaymentStatus                            literals  3
 OK    domain.payment.Payment                                  fields  4  operations  3
 OK    domain.payment.PayCash                                  fields  2  operations  1
 OK    domain.payment.PayCredit                                fields  4  operations  2

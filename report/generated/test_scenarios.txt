@@ -1,4 +1,4 @@
-Họa. demo — test run 2026-11-12 00:44
+Họa. demo — test run 2026-11-12 16:15
 
 == Domain rules (4.1, 4.3)
 PASS  FullName shows last, middle and first name

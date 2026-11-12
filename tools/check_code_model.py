@@ -149,6 +149,7 @@ def check_class(c):
     if c["kind"] == "enum":
         if code["literals"] != c["literals"]:
             fail(f"{label}: literals {code['literals']} != {c['literals']}")
+        print(f"{'OK  ' if len(failures) == errors_before else 'FAIL'}  {label:<55} literals {len(c['literals']):>2}")
         return len(c["literals"]), 0, []
     field_list = fields_of(c) if c["kind"] != "interface" else []
     for name, type_, _ in field_list:

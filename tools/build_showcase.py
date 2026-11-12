@@ -1218,7 +1218,7 @@ TRACE = [
          route_label="PUT /api/admin/orders/{orderId}", ui=("admin-view.js", "/api/admin/orders/${orderId}"),
          tests=dict(prefixes=["Order.advanceTo moves one step", "updateStatus moves one step", "Administrator routes need"])),
 ]
-NAV = [("a", "A", "Overview"), ("b", "B", "Process"), ("c", "C", "Evolution"), ("d", "D", "Traceability"),
+NAV = [("eval", "★", "Evaluation 1–5"), ("a", "A", "Overview"), ("b", "B", "Process"), ("c", "C", "Evolution"), ("d", "D", "Traceability"),
        ("e", "E", "Database"), ("f", "F", "Live demo"), ("g", "G", "Verification"), ("diagrams", "+", "All diagrams")]
 
 
@@ -1444,6 +1444,129 @@ class Page:
 </section>'''
 
     # --------------------------------------------------------------------------------------------- A overview
+    def shot_card(self, png, title, size="small"):
+        """A screenshot that is not a VP diagram (VP's own dialogs): opens the full PNG."""
+        w, h = png_size(png)
+        return (f'<a class="thumb {size}" href="{LINKS.file(png)}"><span class="wall"><img src="{LINKS.file(png)}" width="{w}" '
+                f'height="{h}" loading="lazy" decoding="async" alt="{E(title)}"></span><span class="thumb-meta">'
+                f'<span class="badge trial"><i></i>VP trial screenshot</span></span><span class="thumb-title">{E(title)}</span></a>')
+
+    def section_eval(self):
+        """The lecturer's five evaluation points, in his order, each with its figures and evidence."""
+        report = read("build/test_results.txt")
+        check = re.search(r"Model check: (\d+) Java classes, (\d+) fields, (\d+) operations, .*?(\d+) SQL statements -> all match", report)
+        tests = re.search(r"(\d+) tests passed, (\d+) failed", report)
+        e2e = re.search(r"(?m)^(\d+)/(\d+) steps passed", read("build/e2e_results.txt"))
+        compare = read("build/schema_comparison.txt")
+        wiz = re.search(r"UNIQUE and foreign keys: True \((\d+) tables, (\d+) columns, (\d+) foreign keys compared\)", compare)
+        need(check and tests and e2e and wiz, "evaluation: missing test, end-to-end or schema comparison results")
+        n_fk = len(list(model.foreign_keys()))
+        gens = {}
+        for child, parent in model.ANALYSIS_GENERALIZATIONS:
+            gens.setdefault(parent, []).append(child)
+        kinds = {}
+        for a in model.ANALYSIS_ASSOCIATIONS:
+            kinds[a["kind"]] = kinds.get(a["kind"], 0) + 1
+        abstract = model.ANALYSIS_ABSTRACT
+        inherit = "; ".join(f'<code>{E(p)}</code>{" <em>abstract</em>" if p in abstract else ""} ← '
+                            + ", ".join(f"<code>{E(c)}</code>" for c in cs) for p, cs in gens.items())
+        domain = [c for c in model.DESIGN if c["package"].startswith("domain") and c["kind"] != "enum"]
+        n_ops = sum(len(c["ops"]) for c in domain)
+        rows = []
+        for name in ["Customer", "CustomerVIP", "Product", "Painting", "Category", "Cart", "Order", "Payment", "PayCredit"]:
+            c = model.DESIGN_BY_NAME[name]
+            a = model.ANALYSIS.get(name, [])
+            ops = ", ".join(f"<code>{E(o['name'])}()</code>" for o in c["ops"])
+            rows.append(f'<tr><td><a class="ref" href="{code_ref(name)["url"]}">{E(name)}</a></td><td class="num">{len(a)}</td>'
+                        f'<td class="num">{len(c["attrs"])}</td><td>{ops}</td></tr>')
+        gen_files = sorted((ROOT / "demo/generated/src").rglob("*.java"))
+        same = sum(1 for f in gen_files if (ROOT / "demo/src/main/java" / f.relative_to(ROOT / "demo/generated/src")).exists()
+                   and f.read_bytes() == (ROOT / "demo/src/main/java" / f.relative_to(ROOT / "demo/generated/src")).read_bytes())
+
+        def facts(items):
+            return '<ul class="board">' + "".join(f'<li><span class="ok">✓</span><span>{x}</span></li>' for x in items) + "</ul>"
+
+        def where(fid):
+            f = self.figs[fid]
+            return self.sec(f["section"]) if f["section"] else ""
+
+        steps = [
+            ("Analysis class diagram, with inheritance",
+             "Biểu đồ lớp phân tích có kế thừa",
+             self.thumb("c41_analysis") + '<div class="eval-row">' + self.thumb("c2_domain", size="small") + "</div>",
+             facts([f'{len(model.ANALYSIS)} analysis classes with their attributes and the <em>kind</em> of each relationship only: '
+                    f'no types, no methods yet ({where("c41_analysis")})',
+                    f'<strong>Inheritance</strong>: {inherit}',
+                    f'{kinds.get("composition", 0)} compositions, {kinds.get("aggregation", 0)} aggregation, '
+                    f'{kinds.get("association", 0)} associations, and «create» Cart → Order (checkout)',
+                    f'Explained relationship by relationship in {where("c2_domain")} and the table of {self.sec_label("sec:4.1", False)}'])),
+            ("Data model → database",
+             "Datamodel ⇒ DB",
+             '<div class="eval-row">' + self.thumb("c42_conceptual", size="small")
+             + self.thumb("c42_orm", size="small") + self.thumb("c42_tables", size="small") + "</div>" + self.thumb("c42_erd")
+             + '<div class="eval-row">' + self.shot_card("figures/vp/c42_generate_db.png", "Generate Database in Visual Paradigm")
+             + self.shot_card("figures/vp/c42_generate_db_done.png", "Generate Database: Finish")
+             + self.thumb("db_tables", size="small") + "</div>",
+             facts([f'Conceptual ({where("c42_conceptual")}) → logical with relationship names, multiplicities and «ORM-Persistable» '
+                    f'({where("c42_orm")}) → physical: {len(model.TABLES)} tables, keys and {n_fk} foreign keys ({where("c42_tables")})',
+                    'Inheritance in the database: the child table shares the parent key (<code>painting</code>, <code>frame</code> → '
+                    '<code>product</code>); the lecturer\'s feedback: <code>category</code> classifies, <code>product</code> holds the common '
+                    'data, the detail tables the specific data',
+                    f'<strong>Generated by Visual Paradigm</strong> (Tools → DB → Generate Database) from the ERD, and compared with the '
+                    f'database that runs: the same {wiz.group(1)} tables, {wiz.group(2)} columns, keys and {wiz.group(3)} foreign keys '
+                    f'({self.file("build/schema_comparison.txt", "schema_comparison.txt")})',
+                    f'The real SQLite file opened in a browser ({self.fig("db_tables", "screenshot")}); details in <a href="#e">section E</a>'])),
+            ("Class design: the analysis classes with types and methods",
+             "Class – Design: class analysis + method",
+             '<div class="eval-row">' + self.thumb("c41_analysis", size="small") + "</div>" + self.thumb("c43_design"),
+             facts([f'The same domain classes, now with typed attributes and {n_ops} operations, navigable roles and 4 enumerations '
+                    f'({where("c43_design")})',
+                    'Inheritance becomes polymorphism: <code>getDiscountRate()</code> of <code>CustomerVIP</code>, '
+                    '<code>getDetailKind()</code> abstract in <code>Product</code> and given by <code>Painting</code> and <code>Frame</code>, '
+                    '<code>process()</code> abstract in <code>Payment</code>',
+                    '<div class="table-wrap"><table class="plain"><thead><tr><th>Class</th><th class="num">Analysis attributes</th>'
+                    '<th class="num">Design attributes</th><th>Design methods</th></tr></thead><tbody>' + "".join(rows) + "</tbody></table></div>",
+                    f'What the design changed in the database: <a href="#e-revised">Database (revised)</a> ({self.sec_label("sec:4.3.4", False)})'])),
+            ("Layers → generated code",
+             "Layer → sinh code",
+             self.thumb("c44_layers") + '<div class="eval-row">' + self.thumb("c44_packages", size="small")
+             + self.thumb("c44_classes", size="small") + self.thumb("c44_classes_backend", size="small") + "</div>",
+             facts([f'The lecturer\'s four steps from analysis to design ({where("c44_layers")}): methods on the classes; associations become '
+                    '«use»; DAO = repository interface + SQLite implementation (<code>CartRepository</code> / <code>SqliteCartRepository</code>); '
+                    'three layers Presentation / Application / Data with packages, arrows only downwards',
+                    f'<strong>Code generated from the layers</strong>: {self.blob("tools/gen_java.py", "def ", "tools/gen_java.py")} writes one Java '
+                    f'file per design class, {len(gen_files)} files in <a href="{LINKS.directory("demo/generated/src/com/ptit/ecom")}">demo/generated</a>, '
+                    f'in the packages of the layers; {same} come out complete (the domain classes, whose method bodies are part of the design), '
+                    f'the others get method bodies to implement',
+                    f'The code then keeps every generated name: {self.blob("tools/check_code_model.py", "def ", "check_code_model.py")} '
+                    f'compares the running code with the same model ({self.sec_label("sec:4.5", False) if "sec:4.5" in self.essay.labels else "Chapter 4.5"})'])),
+            ("Code and demo",
+             "Code + demo",
+             self.thumb("home") + '<div class="eval-row">' + self.thumb("search_text", size="small")
+             + self.thumb("checkout", size="small") + self.thumb("admin_products", size="small") + "</div>",
+             facts([f'<a href="#d-classes">Every design class in the code</a>: {check.group(1)} classes, {check.group(2)} fields, '
+                    f'{check.group(3)} operations, all as in the design; packages = layers',
+                    f'Uses the database: the repositories run {check.group(4)} SQL statements on SQLite (demo/data/ecom.db); '
+                    f'<a href="#d">section D</a> follows five use cases from requirement to code line and test',
+                    f'<strong>{tests.group(1)} tests pass</strong>, {tests.group(2)} fail; the end-to-end run passes '
+                    f'{e2e.group(1)}/{e2e.group(2)} steps, with and without Gemma ({self.file("build/e2e_results.txt", "e2e_results.txt")})',
+                    'Live demo: <a href="http://127.0.0.1:8686/">the shop on this laptop</a> (search by text, voice and photo, '
+                    'checkout, orders, back office); the scripted flows are in <a href="#f">section F</a>'])),
+        ]
+        body = "".join(f'''
+  <article class="evalstep" id="eval-{i}">
+    <div class="eval-figs">{figs}</div>
+    <div class="eval-text"><p class="label">Step {i} of 5</p><h3 class="h3">{E(title)}</h3>
+      <p class="muted small">Lecturer's point: “{E(vi)}”</p>{fx}</div>
+  </article>''' for i, (title, vi, figs, fx) in enumerate(steps, 1))
+        jump = "".join(f'<a class="chip" href="#eval-{i}">{i} · {E(t)}</a>' for i, (t, _, _, _) in enumerate(steps, 1))
+        return f'''
+<section class="block wrap" id="eval">
+  {self.head("eval", "★", "Evaluation, step by step", "The lecturer's five points, in his order; each step shows its diagrams and the evidence, and links to the details in A–G.")}
+  <nav class="chips eval-jump" aria-label="Evaluation steps">{jump}</nav>
+  {body}
+</section>'''
+
     def board_checklist(self):
         """The lecturer's checklist on the board (Analysis, Data model, Design, Code), item by item, with its evidence."""
         check = re.search(r"Model check: (\d+) Java classes, .*?, (\d+) tables, (\d+) columns, (\d+) SQL statements -> all match",
@@ -1897,7 +2020,7 @@ class Page:
     <li><strong>Layers:</strong> {E(layer_txt)}; arrows only go down, as in {self.fig("c44_layers", "the three layers")}; the one
     Presentation → Data file is EcomApplication, which creates the objects.</li>
     <li><strong>Packages:</strong> the Java packages are the packages of {self.fig("c44_packages", "the package diagram")}
-    (<a href="https://github.com/scalliontor/Hoa/tree/main/demo/src/main/java/com/ptit/ecom">demo/src/main/java/com/ptit/ecom</a>).</li>
+    (<a href="{LINKS.directory("demo/src/main/java/com/ptit/ecom")}">demo/src/main/java/com/ptit/ecom</a>).</li>
   </ul>'''
 
     def section_d(self):
@@ -2498,7 +2621,7 @@ cd Hoa/demo
         return items
 
     def render(self):
-        body = (self.header() + "<main>" + self.hero() + self.section_a() + self.section_b() + self.section_c()
+        body = (self.header() + "<main>" + self.hero() + self.section_eval() + self.section_a() + self.section_b() + self.section_c()
                 + self.section_d() + self.section_e() + self.section_f() + self.section_g() + self.gallery() + "</main>"
                 + self.footer())
         data = json.dumps(self.lightbox_data(), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
@@ -2783,6 +2906,19 @@ pre.code code,pre.cmd code{background:none;padding:0;font-size:inherit}
 /* E */
 .groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
 .board-groups{margin:12px 0 48px}
+.eval-jump{margin:8px 0 8px}
+.evalstep{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:40px;padding:44px 0;border-top:1px solid var(--line);scroll-margin-top:80px}
+.evalstep:first-of-type{border-top:0}
+.eval-figs{display:grid;gap:16px;align-content:start}
+.eval-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.eval-text td:first-child{white-space:nowrap}
+.eval-row .thumb-meta{display:none}
+.eval-row .thumb-title{font-size:13px;margin-top:8px}
+.eval-text th{white-space:nowrap}
+.eval-text .h3{font-size:26px;font-weight:300;letter-spacing:-.02em;margin:4px 0 6px}
+.eval-text .board{margin-top:16px}
+.eval-figs,.eval-text{min-width:0}
+@media (max-width:1060px){.evalstep{grid-template-columns:minmax(0,1fr);gap:24px}}
 .codemap-groups{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:16px 0 20px}
 .codemap{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:12px}
 .codemap li{display:grid;gap:6px}
@@ -2790,7 +2926,9 @@ pre.code code,pre.cmd code{background:none;padding:0;font-size:inherit}
 .code-chip{text-decoration:none;text-transform:none;letter-spacing:0}
 .code-chip small{color:var(--muted);margin-left:2px}
 .board{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:12px;font-size:14.5px}
-.board li{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:start}
+.board li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:8px;align-items:start}
+.board li>span{min-width:0}
+.board code{white-space:normal;overflow-wrap:anywhere}
 .board .ok{color:var(--ok,#3fb950);font-weight:600}
 .group{border-top:1px solid var(--line-strong);padding-top:10px}
 .tlist li{display:flex;flex-wrap:wrap;gap:2px 8px;padding:5px 0;border-bottom:1px dotted var(--line);font-size:13px;align-items:baseline}

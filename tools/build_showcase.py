@@ -3018,10 +3018,36 @@ def verify(page_html):
     return report
 
 
+THUMBS = OUT.parent / "thumbs"
+
+
+def use_thumbnails(html_text):
+    """The page shows light JPEG copies of the figures (at most 1100 px, quality 70); a click still opens the full PNG.
+    The PNGs weigh about 20 MB together, too much for a slow connection to GitHub Pages."""
+    THUMBS.mkdir(exist_ok=True)
+    used = set()
+
+    def thumb(m):
+        rel = m.group(2)
+        source = ROOT / rel
+        target = THUMBS / (rel.replace("/", "_")[:-4] + ".jpg")
+        used.add(target.name)
+        if not target.exists() or target.stat().st_mtime < source.stat().st_mtime:
+            subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "70", "-Z", "1100", str(source),
+                            "--out", str(target)], check=True, capture_output=True)
+        return f'{m.group(1)}thumbs/{target.name}"'
+
+    html_text = re.sub(r'(<img [^>]*?src=")\.\./(figures/[^"]+\.png)"', thumb, html_text)
+    for old in THUMBS.glob("*.jpg"):
+        if old.name not in used:
+            old.unlink()
+    return html_text
+
+
 def main():
     try:
         page = Page()
-        html_text = page.render()
+        html_text = use_thumbnails(page.render())
         report = verify(html_text)
         total = report["anchors"] + report["files"] + report["blobs"] + report["trees"]
         html_text = html_text.replace('<span class="stat-n" id="link-count">—</span>',

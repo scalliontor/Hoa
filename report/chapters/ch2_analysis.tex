@@ -1,160 +1,33 @@
 \chapter{Analysis}\label{ch:analysis}\label{ch:2}
 
 Chapter~\ref{ch:req} described the business and fixed the boundary of the system. This chapter analyses what the
-system must do and how it behaves, following Lectures~02--04~\cite{slidesL02,slidesL03,slidesL04}. It first turns the
+system must do and how it behaves, following Lectures~02--04~\cite{slidesL02,slidesL03,slidesL04}. It turns the
 needs into \nFR{} functional and \nNFR{} non-functional requirements, prioritises them and identifies the actors and
-\nUseCases{} use cases (Lecture~02). It then answers the central question of Lecture~03: \emph{when an actor
-performs a use case, what happens?} -- each main use case is specified and followed directly by the diagram that
-shows its behaviour. Finally, following Lecture~04 (Domain Model and Analysis Class Diagram), it moves from
-behaviour to structure -- which concepts the system must represent, how they are related and which of them must
-be stored (the conceptual and logical data model) -- and checks that
-requirements, use cases, scenarios and models trace to each other. The whole chapter stays at the \emph{analysis}
-level: there are no controllers, services, repositories or tables yet -- they belong to the design in Chapter~4.
-
-%% =========================================================================
-\section{Requirement Levels}\label{sec:1.8}
-
-Lecture~02 starts with the question: what must the new system do? A \emph{requirement} describes a capability,
-condition or constraint that the system must satisfy. Requirements have three levels~\cite{slidesL02,sommerville}: \emph{business
-requirements} say why the organisation needs the system; \emph{user requirements} say what users need to
-achieve; \emph{system requirements} say what the system must provide. Table~\ref{tab:levels} shows how the same
-problem moves through the three levels.
-
-\begin{longtable}{@{}P{2.4cm}P{4.0cm}P{4.2cm}P{4.4cm}@{}}
-\caption{The three requirement levels of Họa.}\label{tab:levels}\\
-\toprule
-\textbf{Problem} & \textbf{Business requirement} & \textbf{User requirement} & \textbf{System requirement}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Problem} & \textbf{Business requirement} & \textbf{User requirement} & \textbf{System requirement}\\
-\midrule
-\endhead
-\small P1 hard to find paintings & \small More customers find a painting and buy it (BO1, BO2) & \small Customers need to search by description, voice or photo, or by a photo of their room & \small FR01, FR02, FR03, FR04, FR14, NFR08\\
-\small P2 sold-out prints sold & \small No order cancelled because of stock (BO3) & \small Customers need to know that a print is in stock before buying & \small FR05, FR07, FR12\\
-\small P3 order status unknown & \small Fewer order questions (BO4) & \small Customers need to see the status of their orders at any time & \small FR08, FR09, FR10, FR13\\
-\small P4 manual work & \small No wrong prices, less staff time (BO3, BO4) & \small The administrator needs to manage paintings and order status in one place & \small FR12, FR13, FR20\\
-\small P5 risk of data leaks & \small Protect customer data (BO5) & \small Customers need to be sure that nobody else can see their orders & \small NFR01, NFR05\\
-\bottomrule
-\end{longtable}
-
-\subsection{Stakeholder needs}\label{sec:needs}
-
-Assignment~02 puts one more step between a problem and a requirement: the \emph{stakeholder need}. A need says
-what a stakeholder must be able to do or to know; it is not yet a solution (``find a painting without knowing its
-title'', not ``use Gemma~4''). Table~\ref{tab:needs} derives the needs from the stakeholder analysis
-(Table~\ref{tab:stakeholders}) and the problem analysis (Table~\ref{tab:pcin}) of Chapter~\ref{ch:req}. The third
-column gives the problem behind each need, or the reason when the need does not come from one of the problems
-P1--P5; the last column names the requirements of Section~\ref{sec:frnfr} that answer it. Each of the \nFR{}
-functional and \nNFR{} non-functional requirements appears at least once, so no requirement exists without a
-stakeholder who needs it.
-
-\begin{longtable}{@{}P{2.5cm}P{4.4cm}P{5.3cm}P{2.8cm}@{}}
-\caption{Stakeholder needs and the requirements that answer them}\label{tab:needs}\\
-\toprule
-\textbf{Stakeholder} & \textbf{Need} & \textbf{Reason or problem} & \textbf{Requirements}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Stakeholder} & \textbf{Need} & \textbf{Reason or problem} & \textbf{Requirements}\\
-\midrule
-\endhead
-\small Customer & \small Find a painting without knowing its title: from a description, by voice or with a photo & \small P1: the catalogue can be searched by title only, while customers describe a colour or a subject, or send a photo & \small FR01--FR04, NFR07\\
-\small Customer & \small Choose a painting that suits their own room & \small P1: customers know the room they decorate better than the painting that would fit it & \small FR14\\
-\small Customer & \small Understand why a painting is suggested & \small P1: without a salesperson to explain it, a suggestion is hard to trust and the consultation gets long & \small FR18\\
-\small Customer & \small Get a useful answer from every action, even when the AI service is slow or down & \small Conflict of Section~\ref{sec:1.3}: search at any time, but the AI services can fail; P3: an unclear answer becomes one more question to staff & \small NFR02, NFR09, NFR12\\
-\small Customer & \small Collect several prints and frames before paying & \small P4: today the order is put together in messages with a member of staff & \small FR06\\
-\small Customer, warehouse staff & \small Buy, and pack, only what is really in stock & \small P2: stock is updated by hand, apart from the orders, so sold-out prints are sold & \small FR05, FR07, NFR11\\
-\small Customer, shop owner & \small One correct total for every order, with the VIP discount and the delivery cost & \small P4: prices and totals are worked out by hand, so wrong prices occur & \small FR15, FR17\\
-\small Customer & \small Give the delivery address while ordering & \small P4: order details, the address included, are copied by hand from messages into a spreadsheet & \small FR16\\
-\small Customer & \small See the status of their orders at any time without asking staff & \small P3: the status exists only in a staff spreadsheet & \small FR08, FR09, FR10\\
-\small Customer & \small Cancel an order that has not left the shop & \small P4: orders, cancellations included, are handled by staff by hand & \small FR11\\
-\small Customer & \small Be sure that nobody else sees their orders, card or voice & \small P5: customers are identified by an order id in a message; card numbers are written down & \small NFR01, NFR05, NFR08\\
-\small Support staff & \small Spend less time answering ``where is my order?'' & \small P3: repeated questions overload the staff & \small FR08, FR10\\
-\small Shop administrator & \small Keep paintings, prices and stock right in one place & \small P2, P4: catalogue and stock are kept in separate spreadsheets updated by hand & \small FR12\\
-\small Shop administrator & \small Accept only customer photos that the system can read safely & \small Photo search (P1) brings files from outside the shop into it; a wrong or very large file must not break the search & \small NFR03\\
-\small Shop administrator, warehouse staff & \small See the orders of all customers and move each one to its next status & \small P3, P4: orders are processed by hand and their status is known only to staff & \small FR13, FR20\\
-\small Shop owner & \small Manage prints and frames as two product lines, each with its own details & \small A print has an artist, a style and a size, a frame a material and a colour; one list would mix them & \small FR19, NFR11\\
-\small Developer, lecturer & \small Models and code that say the same thing, and a demo that runs on one laptop & \small The essay is checked against the lectures; the demo must run with the network needed only for Gemma & \small NFR04, NFR06, NFR10\\
-\bottomrule
-\end{longtable}
+\nUseCases{} use cases (Lecture~02); it specifies the main use cases, each followed directly by the diagram that shows
+its behaviour (Lecture~03); and it moves from behaviour to structure -- the domain model and the conceptual and
+logical data model (Lecture~04). The whole chapter stays at the \emph{analysis} level: there are no controllers,
+services, repositories or tables yet -- they belong to the design in Chapter~4.
 
 %% =========================================================================
 \section{Functional and Non-functional Requirements}\label{sec:frnfr}\label{sec:1.9}
 
-A \emph{functional requirement} describes a function or behaviour that the system provides. A
-\emph{non-functional requirement} describes a quality, constraint or condition of the system: performance,
-security, reliability, maintainability. Each requirement follows the pattern of Lecture~02:
-\textbf{``The system shall + action + object + condition''}, with an identifier, an area, a priority and a source
-(the stakeholder who asks for it). Table~\ref{tab:fr} lists the \nFR{} functional and Table~\ref{tab:nfr} the
-\nNFR{} non-functional requirements. The Area column plays the role of the requirement category of Assignment~02: a
-functional area (search, catalogue, cart and checkout, orders, assistant, administration) for a functional
-requirement and a quality (security, reliability, privacy, performance, usability, maintainability, portability)
-for a non-functional one; it is not the product \code{Category} of FR19. FR15--FR20 and NFR09--NFR10 add no new
-feature but make explicit what the shop already did: the VIP discount, the address chosen at checkout, the shipping
-fee, the reason shown with each suggestion, the product categories and the list of all orders for the
-administrator, and the usability and maintainability rules the code already followed. The two tables are generated
-from the shared specification file of the project, so the identifiers are the same as in the diagrams, the tests
-and the code.
+A requirement describes a capability, condition or constraint that the system must satisfy; the requirements below
+answer the needs of the stakeholders (Table~\ref{tab:stakeholders}) and the problems P1--P5 (Table~\ref{tab:pcin})
+of Chapter~\ref{ch:req}. A \emph{functional requirement} describes a function or behaviour that the system provides;
+a \emph{non-functional requirement} describes a quality, constraint or condition of the system. Each requirement
+follows the pattern of Lecture~02, \textbf{``The system shall + action + object + condition''}, with an identifier,
+an area, a priority and a source (the stakeholder who asks for it). Table~\ref{tab:fr} lists the \nFR{} functional
+and Table~\ref{tab:nfr} the \nNFR{} non-functional requirements; both are generated from the shared specification
+file of the project, so the identifiers are the same as in the diagrams, the tests and the code.
 
 \input{generated/req_fr}
 
 \input{generated/req_nfr}
 
-A common mistake pointed out in Lecture~02 is to write ``the system shall be fast''. How many seconds, under which
-load? NFR07 therefore gives a limit and a condition (first row of Table~\ref{tab:revised}), and the
-waiting limit of an AI call is set separately, because the response time of an external service is not under the
-control of Họa. NFR08 is both a privacy requirement (audio never leaves the machine) and a measurable time limit,
-so it decides how speech recognition is built in Chapter~3. Table~\ref{tab:nfrcheck} in Appendix~C states how
-each non-functional requirement is verified.
-
-\subsection{Criteria of a good requirement}
-
-A good requirement is correct, complete, consistent, unambiguous, feasible, verifiable, traceable, prioritised,
-understandable and testable~\cite{iso29148,slidesL02}. The simplest test is the question of Lecture~02: \emph{can this requirement be
-verified objectively?} Table~\ref{tab:goodreq} checks the criteria against the requirements of Họa.
-
-\begin{longtable}{@{}P{2.6cm}P{12.4cm}@{}}
-\caption{Checking the criteria of a good requirement}\label{tab:goodreq}\\
-\toprule
-\textbf{Criterion} & \textbf{How the requirements of Họa. meet it}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Criterion} & \textbf{How the requirements of Họa. meet it}\\
-\midrule
-\endhead
-\small Unambiguous & \small Each statement has one main action; FR07 lists the four things that must happen at checkout instead of saying ``process the order''.\\
-\small Verifiable & \small NFR07 has a 2-second limit and the condition ``on the demo data''; NFR03 names the formats and the size; NFR08 names the place of processing and a 3-second limit.\\
-\small Consistent & \small FR11 (cancel before shipment) agrees with the order statuses of FR13 and with the state machine of Section~\ref{sec:2.9}.\\
-\small Feasible & \small Image search uses an existing model through an API instead of training one; speech recognition uses an open model that runs on a laptop.\\
-\small Traceable & \small Every requirement has a stable id and a list of use cases; the matrix is in Section~\ref{sec:trace}.\\
-\small Prioritised & \small Every requirement is Must, Should or Could (Table~\ref{tab:moscow}).\\
-\small Testable & \small The Given -- When -- Then acceptance criteria of Table~\ref{tab:stories} become the test and demo scenarios of Chapter~\ref{ch:code}.\\
-\bottomrule
-\end{longtable}
-
-Assignment~02 also asks for the opposite check: find requirements that break these criteria and revise them. The
-requirements of Họa. did not start in their present form. Table~\ref{tab:revised} records five weak statements
-met while the project grew, the defect of each, and the requirement as it now stands in the shared specification.
-
-\begin{longtable}{@{}P{3.9cm}P{4.4cm}P{6.7cm}@{}}
-\caption{Requirement validation: weak statements and their revision}\label{tab:revised}\\
-\toprule
-\textbf{Weak statement} & \textbf{Problem} & \textbf{Revised requirement (current model)}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Weak statement} & \textbf{Problem} & \textbf{Revised requirement (current model)}\\
-\midrule
-\endhead
-\small ``The search shall be fast.'' & \small Not measurable: no time limit and no condition, so no test can pass or fail it. & \small NFR07: The system shall return text search results within 2 seconds on the demo data.\\
-\small ``The system shall use Gemma~4 to search paintings.'' & \small A solution, not a requirement: it names a technology instead of what the customer needs, and says nothing when the model fails. & \small FR01: The system shall allow customers to search paintings by keyword or natural sentence and filter them by style, subject, colour, artist and maximum price. FR03: The system shall return the paintings most similar to a photo uploaded by the customer, ranked by similarity. Gemma~4 is a design choice (Chapter~3); its failure is covered by NFR02.\\
-\small ``Find an order by its id'', the starting point taken from \code{find_order(order_id)} of Assignment~06. & \small Incomplete and unsafe: no access condition, so anyone who knows or guesses an id sees another customer's order (P5). & \small FR09: The system shall allow customers to look up an order by id only when the order belongs to their account. NFR01 adds where the identity comes from: the signed-in session, with ownership checked on the server.\\
-\small ``Search by voice'' through a cloud speech service, the first plan (change CR-04). & \small Incomplete: it says nothing about where the audio goes, although a recording of a voice is personal data (Section~\ref{sec:1.3}). & \small FR02 keeps the function; NFR08: The system shall process audio on the local machine with self-hosted Whisper, never send audio outside, and transcribe a 5-second sentence within 3 seconds.\\
-\small FR07 as the only checkout requirement: create the order, freeze prices, decrease stock, empty the cart. & \small Incomplete: the VIP discount, the choice of address and the shipping fee were done by the shop but written in no requirement, so they could not be traced or checked against one. & \small FR15: The system shall apply the discount rate of a VIP customer to the order total at checkout. FR16: The system shall let the customer choose one of their addresses or add a new address during checkout. FR17: The system shall add a flat shipping fee of 8 USD to every order.\\
-\bottomrule
-\end{longtable}
+Non-functional requirements are written so that they can be verified: NFR07 gives a time limit and a condition
+(2 seconds on the demo data), and NFR08 is both a privacy requirement (audio never leaves the machine) and a time limit, so it decides how
+speech recognition is built in Chapter~3. Table~\ref{tab:nfrcheck} in the appendix states how each non-functional
+requirement is verified.
 
 \subsection{Acceptance criteria}
 
@@ -189,98 +62,26 @@ the shared specification, which are the painting-shop versions of the example qu
 %% =========================================================================
 \section{Prioritization and Change Management}\label{sec:1.11}
 
-Not all requirements are equally important. MoSCoW divides them into Must (essential), Should (important but not
-essential), Could (useful improvement) and Won't (not in this release). Besides business value, I
-considered risk and dependencies: image search is attractive but depends on an external service, so it is
-Should and comes with the fallback requirement NFR02 at level Must. Voice privacy (NFR08) is Must even though
-voice search (FR02) is only Should: if voice search is offered at all, it must be private.
+MoSCoW divides the requirements into Must (essential), Should (important but not essential), Could (useful
+improvement) and Won't (not in this release). Besides business value, I considered risk and dependencies: image
+search depends on an external service, so it is Should and comes with the fallback requirement NFR02 at level Must;
+voice privacy (NFR08) is Must even though voice search (FR02) is only Should, because if voice search is offered at
+all, it must be private.
 
 \input{generated/moscow}
 
-Requirements do not stay fixed once they are written. While preparing the essay I met five real changes,
-recorded as change -- reason -- affected parts (Table~\ref{tab:changes}); each change was followed along the trace
-to use cases, classes, tables, code and tests.
-
-\begin{longtable}{@{}P{1.3cm}P{3.9cm}P{4.4cm}P{5.4cm}@{}}
-\caption{Requirement change log}\label{tab:changes}\\
-\toprule
-\textbf{ID} & \textbf{Change} & \textbf{Reason} & \textbf{Affected parts}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{ID} & \textbf{Change} & \textbf{Reason} & \textbf{Affected parts}\\
-\midrule
-\endhead
-\small CR-01 & \small Product domain changed from books, clothes, shoes and electronics to paintings and frames & \small Search by photo and by feeling is most valuable for paintings & \small Product classes, database tables, sample data, demo queries\\
-\small CR-02 & \small AI shopping assistant with tool calling added (FR10) & \small Gemma 4 supports tool calling; fewer order questions (BO4) & \small UC10, class \code{AssistantService}, ownership tests\\
-\small CR-03 & \small Storage layer renamed from DAO to Repository & \small Match the class names of the A05 slides and the A06 sample code & \small Layered class diagram, source code, Section~4.4 and Chapter~\ref{ch:code}\\
-\small CR-04 & \small Voice search through a self-hosted Whisper server instead of a cloud speech service (FR02, NFR08) & \small Customer voice is personal data; works offline & \small Context view, \code{SpeechService}, \code{WhisperClient}, deployment\\
-\small CR-05 & \small Product, data and essay in English; prices in USD; ``find a painting for my room'' added (FR14, UC14) & \small Match the A06 queries (``under 100 dollars''); a new reason to buy & \small Demo queries, catalogue, Whisper language, use case diagram, \code{RoomPreview}\\
-\bottomrule
-\end{longtable}
+Requirements did not stay fixed: each change met while preparing the essay -- for example the move from general
+products to paintings and frames, or voice search through a self-hosted Whisper server instead of a cloud speech
+service -- was followed along the trace to use cases, classes, tables, code and tests.
 
 %% =========================================================================
 \section{Actors and Use Cases}\label{sec:1.10}
 
-\subsection{Stakeholder is not actor}
-
-An actor is \emph{an external role that interacts directly with the system}; it is not necessarily a specific
-person. Stakeholders and actors are related but not the same: a stakeholder may only be interested in or
-affected by the system without using it, while an actor exchanges information with the system directly
-(Table~\ref{tab:stakeactor}).
-
-\begin{longtable}{@{}P{3.6cm}P{2.4cm}P{2.8cm}P{6.2cm}@{}}
-\caption{Stakeholders and actors of Họa.}\label{tab:stakeactor}\\
-\toprule
-\textbf{Party} & \textbf{Stakeholder} & \textbf{Actor} & \textbf{Explanation}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Party} & \textbf{Stakeholder} & \textbf{Actor} & \textbf{Explanation}\\
-\midrule
-\endhead
-\small Customer & \small Yes & \small Customer & \small Both interested and a direct user\\
-\small Shop administrator & \small Yes & \small Administrator & \small Manages paintings and orders directly\\
-\small Shop owner & \small Yes & \small No & \small Takes decisions and reads reports through the administrator; no direct use in the demo\\
-\small Warehouse and support staff & \small Yes & \small No & \small Use order information through the administrator role\\
-\small Payment service & \small Yes & \small Payment Service & \small External system that exchanges payment data\\
-\small Delivery carrier & \small Yes & \small No & \small Takes the parcel from the warehouse but exchanges no data with the system in this release (Section~\ref{sec:1.7})\\
-\small Gemma 4 server & \small Yes & \small Gemma 4 Service & \small External system called to understand sentences, describe images and choose tools\\
-\small Whisper speech server & \small No & \small No & \small Part of the system itself (inside the boundary), not an external role\\
-\bottomrule
-\end{longtable}
+An actor is \emph{an external role that interacts directly with the system}, not necessarily a specific person; a
+stakeholder who is only affected by the system, such as the shop owner or the delivery carrier, is not an actor.
+Table~\ref{tab:actors} lists the four actors of Họa.
 
 \input{generated/actors}
-
-\subsection{A use case is a goal, not a button}
-
-A use case describes a goal-oriented interaction between an actor and the system~\cite{larman}. The key question is:
-\emph{what goal does the actor want to achieve?} ``Click the search button'' is not a use case; the goal is
-``find a painting''. Table~\ref{tab:notbutton} shows how I grouped user-interface actions into goals.
-
-\begin{longtable}{@{}P{6.6cm}P{8.4cm}@{}}
-\caption{User-interface actions and the use cases they belong to}\label{tab:notbutton}\\
-\toprule
-\textbf{User-interface action (not a use case)} & \textbf{Use case (goal of the actor)}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{User-interface action (not a use case)} & \textbf{Use case (goal of the actor)}\\
-\midrule
-\endhead
-\small Type in the search box and press Enter & \small UC02 Search by Keyword\\
-\small Press the microphone button, speak, correct the transcript & \small UC03 Search by Voice\\
-\small Choose an image file, look at the preview, press search & \small UC04 Search by Image\\
-\small Press ``Add to cart'', change a quantity, remove a line & \small UC06 Manage Cart\\
-\small Choose an address and a payment method, press ``Place order'' & \small UC07 Checkout\\
-\small Type or speak a question in the curator panel & \small UC10 Ask Shopping Assistant\\
-\small Press ``Cancel order'' on the order page & \small UC11 Cancel Order\\
-\small Edit the price and stock cells in the admin table & \small UC12 Manage Products\\
-\small Upload a room photo, pick a painting from the strip, press ``Try it in my room'' on a painting page & \small UC14 Find Painting for My Room\\
-\bottomrule
-\end{longtable}
-
-\subsection{Use case catalogue and use case diagram}
 
 The use case names follow the Visual Paradigm diagram and the wording of Assignment~06 (Search Product, Search by
 Keyword, Search by Voice, Search by Image, Search Order, View Product, View Order), extended with the use cases of
@@ -291,25 +92,16 @@ requirements it realises.
 
 \landscapefig{c1_usecase}{Use case diagram of Họa.}{Use case diagram of Họa.: four actors and the use cases inside the Họa. Gallery boundary. Visual Paradigm diagram \vpsrc{c1_usecase}.}{\label{fig:c1_usecase}\label{fig:usecase}}
 
-Figure~\ref{fig:usecase} uses the three kinds of UML relationship~\cite{uml}; Table~\ref{tab:uclinks} in Appendix~C
-lists every relationship with its meaning.
-\emph{Generalization} says that Search by Keyword, Search by Voice and Search by Image are three concrete ways of
-the general goal Search Product -- exactly the structure of Assignment~06; Find Painting for My Room is a fourth
-way whose input is a photo of a room instead of a photo of a painting. \emph{Include} says that a behaviour is
-always used: Checkout always reads and checks the cart (Manage Cart); the assistant always goes through the
-painting search or the order look-up tool. \emph{Extend} says that a behaviour is optional: from the search
-results the customer may open a painting; while viewing an order that is not shipped, the customer may cancel it.
-Gemma 4 Service and Payment Service are supporting actors and take part only in the use cases that need them.
-
-The overview is detailed in three diagrams, one per area of the shop. Figure~\ref{fig:c2_uc_search} enlarges the
-search part: UC01 Search Product is abstract (in italics) because a customer always searches in one concrete way --
-by keyword, by voice, by image or by a photo of the room -- and these four use cases specialise it; opening a
-painting (UC05) is an optional extension of a result list, and Gemma~4 supports the four concrete searches.
-Figure~\ref{fig:c2_uc_purchase} details the buying part: checkout always works on the cart (include), and
-cancelling is an optional step started from the order page (extend); the payment service authorises card payments.
-Figure~\ref{fig:c2_uc_assistant_admin} covers the assistant, which answers a question by running the painting search
-and the order look-up for the customer, and the administrator, who keeps the catalogue right and moves orders
-through their statuses.
+Figure~\ref{fig:usecase} uses the three kinds of UML relationship~\cite{uml} and is detailed in three diagrams, one
+per area of the shop. In the search part (Figure~\ref{fig:c2_uc_search}) UC01 Search Product is abstract (in
+italics) because a customer always searches in one concrete way -- by keyword, by voice, by image or by a photo of
+the room -- and these four use cases specialise it (\emph{generalization}, the structure of Assignment~06); opening a
+painting (UC05) is an optional \emph{extension} of a result list. In the buying part (Figure~\ref{fig:c2_uc_purchase})
+checkout always works on the cart (\emph{include}), and cancelling is an optional step started from the order page
+(\emph{extend}). Figure~\ref{fig:c2_uc_assistant_admin} covers the assistant, which always goes through the painting
+search or the order look-up, and the administrator, who keeps the catalogue right and moves orders through their
+statuses. Gemma 4 Service and Payment Service are supporting actors and take part only in the use cases that need
+them.
 
 \begin{figure}[H]
 \centering
@@ -329,44 +121,21 @@ through their statuses.
 
 
 %% =========================================================================
-\section{From Requirement to Behavior}\label{sec:2.1}
-
-A requirement says what is needed but not the whole behaviour. FR07 says ``the system shall create an order from
-the cart when the paintings are in stock, freeze the prices, decrease the stock and empty the cart'', but it does
-not say what the customer does first, what the system checks, or what happens when the card is refused.
-Functional analysis turns requirements into behaviour along the chain of Lecture~03:
-\begin{center}
-\emph{Requirement (FR) $\rightarrow$ Use case (UC) $\rightarrow$ Scenario $\rightarrow$ Activity model (ACT).}
-\end{center}
-A good analysis answers four questions: what is the goal of the actor; what is the normal flow; what can go
-wrong; how does the system respond. Lecture~03 also lists the usual mistakes: drawing diagrams before understanding
-the process, modelling every mouse click, ignoring alternative and error flows, creating activities without a
-source requirement, and mixing business analysis with implementation details. This chapter avoids them by writing
-the use case specifications first and drawing the activity and sequence diagrams from the specifications.
-
-%% =========================================================================
 \section{Use Case Specifications and Behavioural Models}\label{sec:2.2}
 
-Following Assignment~03, I specify four customer use cases and two operational use cases in detail. The
-four customer use cases are the two main ways of searching and the purchase flow: UC02 Search by Keyword (with its
-voice variant UC03), UC04 Search by Image, UC07 Checkout and UC11 Cancel Order. The two operational use cases are
-UC12 Manage Products and UC13 Update Order Status of the administrator. The use cases in which the AI advises the
-customer directly (UC10, UC14) are specified in Chapter~3. Every specification uses the template of the
-Lecture~03 slides: primary actor, supporting actor, goal, trigger, preconditions, postconditions, main flow and at
-least three alternative or exception flows. The business rule ids (BR) are explained in Table~\ref{tab:rules}.
+A requirement says what is needed but not the whole behaviour, so Lecture~03 follows the chain \emph{requirement
+$\rightarrow$ use case $\rightarrow$ scenario $\rightarrow$ activity}. Following Assignment~03, I specify three
+customer use cases and one operational use case in detail: UC02 Search by Keyword (with its voice variant UC03),
+UC07 Checkout, UC11 Cancel Order and UC13 Update Order Status of the administrator. Image search (UC04) and the use
+cases in which the AI advises the customer directly (UC10, UC14) are analysed in Chapter~3. Every specification uses
+the template of the Lecture~03 slides -- primary actor, supporting actor, goal, trigger, preconditions,
+postconditions, main flow and at least three alternative or exception flows -- and is followed directly by its
+activity diagram; the business rule ids (BR) are explained in Table~\ref{tab:rules}.
 
-Each specification is followed directly by the diagram that shows its behaviour. An activity diagram shows the flow of work: initial node, activities, decisions, alternative branches, merges,
-interactions with external parties, business rules and final node. Lecture~03 warns not to model every click but
-the activities that mean something to the business. Họa. has six
-activities: multimodal search (ACT-01), search by image (ACT-04), checkout (ACT-07), cancel order (ACT-11), manage
-products (ACT-12) and update order status (ACT-13): every specified use case has its activity. Voice search is also shown as a sequence diagram, and cancellation depends on the state machine
-of the order.
-
-Three use cases also get an \emph{analysis sequence diagram} in the boundary--control--entity style of Lecture~03:
-a \emph{boundary} object is the part of the system the actor talks to (a page), a \emph{control} object carries the
-logic of one use case, and \emph{entity} objects are the analysis classes that hold the data (Section~\ref{sec:2.7}).
-These diagrams say which object is responsible for each step, but nothing yet about classes of the code, method
-signatures, storage or technology; the same scenarios return in Chapter~4 as design sequences with the real classes.
+Checkout also gets an \emph{analysis sequence diagram} in the boundary--control--entity style of Lecture~03: a
+\emph{boundary} object is the page the actor talks to, a \emph{control} object carries the logic of one use case, and
+\emph{entity} objects are the analysis classes that hold the data (Section~\ref{sec:2.7}). It says which object is
+responsible for each step, but nothing yet about classes of the code, storage or technology.
 
 \newcommand{\specrow}[2]{\small\textbf{#1} & \small #2\\}
 
@@ -410,89 +179,10 @@ branch of UC04.
 \end{figure}
 
 Figure~\ref{fig:actsearch} shows the central principle of Assignment~06: \emph{different inputs $\rightarrow$
-common query representation $\rightarrow$ candidate retrieval $\rightarrow$ ranking $\rightarrow$ results}. The
-first decision depends on the kind of input; speech is transcribed into text and then follows the same path as
-typed text, while an image is described as attributes. The decision ``AI answered?'' comes from NFR02: when the
-Gemma service does not answer, the flow does not stop but switches to keyword rules and joins again at candidate
-retrieval.
-
-Figure~\ref{fig:c2_bce_search} is the analysis sequence of UC02. The customer only talks to the search page
-(\emph{boundary}); the search control (\emph{control}) interprets the request, asks the \code{Painting} entities for
-candidates -- each painting knows its \code{Artist} -- and ranks them. The alternative fragment shows the two outcomes
-of the specification: ranked results with their reasons, or an empty state with a hint (A2).
-
-\begin{figure}[H]
-\centering
-\vpfig{c2_bce_search}{0.42\textheight}
-\caption[Analysis sequence of search by keyword (boundary, control, entity)]{Analysis sequence of search by keyword (UC02): search page, search control and the Painting and Artist entities. Visual Paradigm diagram \vpsrc{c2_bce_search}.}\label{fig:c2_bce_search}
-\end{figure}
-
-\needspace{10\baselineskip}
-\subsection{Interaction Model: Search by Voice}\label{sec:2.8}
-
-Assignment~06~\cite{slidesA06} asks for a sequence diagram of the scenario ``the customer searches products by voice'' with exactly
-seven participants: Customer, SearchUI, SpeechService, QueryService, SearchService, ProductRepository and
-RankingService. Figure~\ref{fig:seqvoice} keeps the seven participants and the eight steps of the assignment:
-(1) the customer speaks; (2) SearchUI sends the audio to SpeechService; (3) SpeechService returns the text;
-(4) QueryService builds the common query; (5) SearchService retrieves candidates; (6) ProductRepository accesses the
-painting data; (7) RankingService ranks; (8) SearchUI displays the results.
-
-\begin{figure}[H]
-\centering
-\vpfig{c2_seq_voice}{0.55\textheight}
-\caption[Sequence of search by voice (Assignment 06)]{Sequence of search by voice with exactly the seven participants of Assignment~06. Visual Paradigm diagram \vpsrc{c2_seq_voice}.}\label{fig:c2_seq_voice}\label{fig:seqvoice}
-\end{figure}
-
-Họa. differs from the simulation in the assignment only at steps 2--3: instead of returning a fixed string,
-SpeechService calls a Whisper speech recognition model running on the same machine, so the audio never leaves the
-machine (NFR08). The reasons for this choice and how it is measured are given in Chapter~3. Every step
-after step 3 is unchanged: the transcript takes exactly the path of a typed sentence, as FR02 requires.
-
-\needspace{10\baselineskip}
-\subsection{UC04 Search by Image}\label{sec:2.2.2}
-
-\begin{longtable}{@{}P{3.0cm}P{12.0cm}@{}}
-\caption{Specification of UC04 Search by Image}\label{tab:spec04}\\
-\toprule
-\textbf{Element} & \textbf{Description}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Element} & \textbf{Description}\\
-\midrule
-\endhead
-\specrow{Primary actor}{Customer}
-\specrow{Supporting actor}{Gemma 4 Service (describes the image)}
-\specrow{Goal}{Find the prints whose style, subject and colour are close to a photo the customer has, for example a photo of a painting seen in a caf\'e.}
-\specrow{Trigger}{The customer chooses an image file and starts the search (``show me paintings similar to this image'').}
-\specrow{Preconditions}{The file is JPEG, PNG or WebP and not larger than 5 MB.}
-\specrow{Postconditions}{The customer sees the closest paintings, each with a similarity score and a reason; the query image is not stored.}
-\specrow{Main flow}{1. The customer chooses an image. 2. The page shows a preview and checks the format and size. 3. The system sends the image to Gemma 4 to describe its style, subject and dominant colour. 4. The system turns the description into a feature vector. 5. The system compares the vector of the image with the vector of every painting by cosine similarity. 6. The system ranks and shows the closest paintings. 7. The customer opens a painting.}
-\specrow{A1 -- Wrong format or too large}{At step 2: the system refuses at once, states the allowed formats and size and does not call Gemma (NFR03).}
-\specrow{A2 -- AI unavailable}{At step 3 Gemma 4 fails or does not answer in time: the system describes the photo locally by its dominant colour and continues with that description; the results are weaker, and every other function keeps working (NFR02).}
-\specrow{A3 -- Not a painting}{At step 3 Gemma can describe only part of the image (for example a photo of an object): the system uses the attributes it has, the similarity is lower and the results are labelled as suggestions.}
-\specrow{A4 -- Nothing close}{At step 6 all scores are low: the system shows an empty state instead of a noisy list.}
-\specrow{Rules}{BR10 (image format and size), BR11.}
-\specrow{Requirements}{FR03, NFR02, NFR03}
-\bottomrule
-\end{longtable}
-
-The behaviour of UC04 is the image branch of the activity in Figure~\ref{fig:actsearch}: the photo is checked
-(BR10), described as attributes and then follows the common path of every query. Its sequence with Gemma~4 is
-analysed in Chapter~3 (Figure~\ref{fig:c3_seq_image}).
-
-Figure~\ref{fig:c2_activity_image} draws UC04 on its own (ACT-04). The first decision applies BR10 and NFR03: a file
-that is not JPEG, PNG or WebP, or is larger than 5~MB, is refused at once and Gemma~4 is never called. For a valid
-photo Gemma~4 describes the style, subject and dominant colour with the shop's vocabulary; the second decision
-applies NFR02: on an error or a timeout the system reads the average colour of the photo locally and names the
-closest catalogue colour. Both paths then build the same query vector, retrieve the paintings by cosine similarity and
-rank them; if nothing is close the customer sees an empty state (A4).
-
-\begin{figure}[H]
-\centering
-\vpfig{c2_activity_image}{0.62\textheight}
-\caption[Activity of search by image (ACT-04)]{Activity of search by image (ACT-04) with swimlanes for the customer, the Họa. system and Gemma 4 Service: the file check (BR10) and the local colour fallback (NFR02). Visual Paradigm diagram \vpsrc{c2_activity_image}.}\label{fig:c2_activity_image}
-\end{figure}
+common query representation $\rightarrow$ candidate retrieval $\rightarrow$ ranking $\rightarrow$ results}; speech is
+transcribed into text and follows the path of typed text, while an image is described as attributes. The decision
+``AI answered?'' comes from NFR02: when the Gemma service does not answer, the flow switches to keyword rules and
+joins again at candidate retrieval.
 
 \needspace{10\baselineskip}
 \subsection{UC07 Checkout}\label{sec:2.2.3}
@@ -531,19 +221,16 @@ rank them; if nothing is close the customer sees an empty state (A4).
 \caption[Activity of checkout with swimlanes (ACT-07)]{Activity of checkout with swimlanes (ACT-07): customer, Họa. system and database. Visual Paradigm diagram \vpsrc{c2_activity_checkout}.}\label{fig:c2_activity_checkout}\label{fig:actcheckout}
 \end{figure}
 
-Figure~\ref{fig:actcheckout} divides the work into swimlanes: the customer views the cart and confirms; the system
-checks, freezes prices, computes the total and records the payment; the database saves the order, decreases the
-stock and empties the cart. Each decision on the diagram corresponds to a business rule (Table~\ref{tab:decisions}).
-The order of the steps matters: the stock check and the price freeze come before saving, and the order is saved
-before the stock is decreased and the cart is emptied, so that a state ``stock decreased but no order'' can never
-exist.
+Figure~\ref{fig:actcheckout} divides the work into swimlanes for the customer, the system and the database; each of
+its decisions comes from a business rule of Table~\ref{tab:rules}. The stock check and the price freeze come before
+saving, and the order is saved before the stock is decreased and the cart is emptied, so that a state ``stock
+decreased but no order'' can never exist.
 
-Figure~\ref{fig:c2_bce_checkout} gives the same scenario as an analysis sequence. The checkout page is the boundary
-and the checkout control carries the use case. A loop checks the stock and current price of each cart line in
-\code{Painting}; the alternative then either refuses and names the missing item (BR02) or lets \code{Order} create
-its \code{OrderItem}s at the frozen price and compute its own total, before the payment is recorded, the stock is
-reduced and the cart is emptied. Chapter~4 shows the same flow through \code{CheckoutController},
-\code{CheckoutService} and the repositories (Figure~\ref{fig:c44_checkout_seq}).
+Figure~\ref{fig:c2_bce_checkout} gives the same scenario as an analysis sequence: the checkout control checks the
+stock and current price of each cart line in \code{Painting}, then either refuses and names the missing item (BR02)
+or lets \code{Order} create its \code{OrderItem}s at the frozen price and compute its own total. Chapter~4 shows the
+same flow through \code{CheckoutController}, \code{CheckoutService} and the repositories
+(Figure~\ref{fig:c44_checkout_seq}).
 
 \begin{figure}[H]
 \centering
@@ -580,28 +267,14 @@ reduced and the cart is emptied. Chapter~4 shows the same flow through \code{Che
 \bottomrule
 \end{longtable}
 
-Figure~\ref{fig:c2_activity_cancel} shows the cancellation (ACT-11). The customer's identity comes from the
-signed-in session, never from the request. The first decision applies BR08 and NFR01: an order that does not exist and
-an order of another customer receive the same answer, ``not found in your account'', so nothing leaks. The second
-decision applies BR06: only a PLACED or PROCESSING order can be cancelled; a SHIPPED, DELIVERED or already CANCELLED
-order is refused and nothing changes (A1, A3). Otherwise the order becomes CANCELLED, is saved and the customer sees
-the new status (FR11).
+Figure~\ref{fig:c2_activity_cancel} shows the cancellation (ACT-11). The customer's identity comes from the signed-in
+session; the first decision applies BR08 and NFR01 (an order of another customer gets the same answer as a missing
+one, so nothing leaks), and the second applies BR06 (only a PLACED or PROCESSING order can be cancelled).
 
 \begin{figure}[H]
 \centering
 \vpfig{c2_activity_cancel}{0.45\textheight}
 \caption[Activity of cancel order (ACT-11)]{Activity of order cancellation (ACT-11) with swimlanes for the customer, the Họa. system and the database: the ownership check (BR08) and the status check (BR06). Visual Paradigm diagram \vpsrc{c2_activity_cancel}.}\label{fig:c2_activity_cancel}
-\end{figure}
-
-Figure~\ref{fig:c2_bce_cancel} is the analysis sequence of the same use case: the order page receives the request,
-the cancel control finds the \code{Order} and checks its owner and status, and the alternative fragment covers the
-four outcomes of the specification -- another customer's order (answered as not found, BR08), a shipped order
-(refused, BR06), an order already cancelled (A3) and a PLACED or PROCESSING order, which is told to \code{cancel()}.
-
-\begin{figure}[H]
-\centering
-\vpfig{c2_bce_cancel}{0.42\textheight}
-\caption[Analysis sequence of cancel order (boundary, control, entity)]{Analysis sequence of order cancellation (UC11): order page, cancel control and the Order entity. Visual Paradigm diagram \vpsrc{c2_bce_cancel}.}\label{fig:c2_bce_cancel}
 \end{figure}
 
 Whether an order may still be cancelled depends on its state, which is modelled next.
@@ -639,36 +312,11 @@ shipped does not mean that the money has been collected.
 \bottomrule
 \end{longtable}
 
-DELIVERED and CANCELLED are final states, with no backward transition and no jump; this is what the consistency
-check of Table~\ref{tab:consistency} compares with the operations of class \code{Order}.
+DELIVERED and CANCELLED are final states, with no backward transition and no jump; in the design the operations
+\code{cancel()} and \code{advanceTo(next)} of class \code{Order} enforce these transitions (Section~\ref{sec:4.3}).
 
 \needspace{10\baselineskip}
-\subsection{UC12 Manage Products and UC13 Update Order Status}\label{sec:2.2.5}
-
-\begin{longtable}{@{}P{3.0cm}P{12.0cm}@{}}
-\caption{Specification of UC12 Manage Products (operational)}\label{tab:spec12}\\
-\toprule
-\textbf{Element} & \textbf{Description}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Element} & \textbf{Description}\\
-\midrule
-\endhead
-\specrow{Primary actor}{Administrator}
-\specrow{Supporting actor}{None}
-\specrow{Goal}{Keep the catalogue right: add new paintings, change price and stock.}
-\specrow{Trigger}{The administrator opens the product management page and edits it.}
-\specrow{Preconditions}{Signed in with an administrator session.}
-\specrow{Postconditions}{The catalogue is updated; a new price applies to later orders, old orders keep their frozen prices.}
-\specrow{Main flow}{1. The administrator opens the list of paintings. 2. The system shows the paintings with price and stock. 3. The administrator changes the price or stock of a painting, or enters a new painting with its category (artist, style, subject, colour, size, image). 4. The system validates the data and checks that the category accepts a painting. 5. The system saves the change. 6. The system shows the updated list.}
-\specrow{A1 -- Invalid data}{At step 4 a negative price or stock, or a missing mandatory field: the system refuses and names the wrong field.}
-\specrow{A2 -- No permission}{At step 1 the session is not an administrator session: access is refused.}
-\specrow{A3 -- Print in a cart}{The price changes while the print is in a customer's cart: the cart keeps the price of the moment it was added, and the order will use the new price at checkout (BR04).}
-\specrow{A4 -- Wrong category}{At step 4 the chosen category holds another kind of product (a painting sent to Frames): the system refuses and writes nothing.}
-\specrow{Requirements}{FR12, NFR01}
-\bottomrule
-\end{longtable}
+\subsection{UC13 Update Order Status}\label{sec:2.2.5}
 
 \begin{longtable}{@{}P{3.0cm}P{12.0cm}@{}}
 \caption{Specification of UC13 Update Order Status (operational)}\label{tab:spec13}\\
@@ -694,59 +342,15 @@ check of Table~\ref{tab:consistency} compares with the operations of class \code
 \bottomrule
 \end{longtable}
 
-UC13 moves an order only along the transitions of Figure~\ref{fig:stateorder}.
-
-Figure~\ref{fig:c2_activity_products} shows UC12 (ACT-12). The back office opens only for an administrator session
-(A2). The administrator either changes the price or stock of a product or enters a new painting with its category;
-both meet the same validation, which refuses a negative value or a missing field and names it (A1). A new painting
-must also pass \code{Category.accepts}: a category that holds another kind of product is refused and nothing is
-written (A4). An accepted painting is saved as its product row, its painting row and its feature vector in one
-transaction.
-
-\begin{figure}[H]
-\centering
-\vpfig{c2_activity_products}{0.66\textheight}
-\caption[Activity of manage products (ACT-12)]{Activity of product management (ACT-12) with swimlanes for the administrator, the Họa. system and the database: the session check, the validation, the category check of a new painting and its save in one transaction. Visual Paradigm diagram \vpsrc{c2_activity_products}.}\label{fig:c2_activity_products}
-\end{figure}
-
-Figure~\ref{fig:c2_activity_admin} shows UC13 (ACT-13). The administrator selects an order and chooses its next
-status; the system checks the request against the state machine of Figure~\ref{fig:stateorder}: only the next step of
-PLACED, PROCESSING, SHIPPED, DELIVERED is allowed, and CANCELLED and DELIVERED are final. A skipped step, a step back
-or a move from a final status is refused (BR07); a valid transition is saved and shown, and the customer sees it the
-next time the order is opened.
+Figure~\ref{fig:c2_activity_admin} shows UC13 (ACT-13): the system checks the chosen status against the state
+machine of Figure~\ref{fig:stateorder}; a skipped step, a step back or a move from a final status is refused (BR07),
+and a valid transition is saved and shown.
 
 \begin{figure}[H]
 \centering
 \vpfig{c2_activity_admin}{0.45\textheight}
 \caption[Activity of update order status (ACT-13)]{Activity of order status update (ACT-13) with swimlanes for the administrator, the Họa. system and the database: the transition check of the order state machine (BR07). Visual Paradigm diagram \vpsrc{c2_activity_admin}.}\label{fig:c2_activity_admin}
 \end{figure}
-
-\subsection{Summary of alternative flows}
-
-Lecture~03 insists that the normal flow is not enough. Table~\ref{tab:altsummary} collects the most important
-alternative situations of the specifications above as \emph{situation $\rightarrow$ system behaviour}, like the
-Place Order table of the Lecture~03 slides.
-
-\begin{longtable}{@{}P{4.6cm}P{7.8cm}P{2.6cm}@{}}
-\caption{Alternative situations and system behaviour}\label{tab:altsummary}\\
-\toprule
-\textbf{Situation} & \textbf{System behaviour} & \textbf{Use case}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Situation} & \textbf{System behaviour} & \textbf{Use case}\\
-\midrule
-\endhead
-\small A print is out of stock & \small Name the print, ask to change the cart, create no order & \small UC07\\
-\small The card is refused & \small Record a failed payment; the order is not paid & \small UC07\\
-\small Cancelling a shipped order & \small Refuse and explain the cancellation rule & \small UC11\\
-\small Asking for another customer's order & \small Answer ``not found'', reveal nothing & \small UC09, UC11\\
-\small AI fails during text search & \small Use keyword rules and say so & \small UC02, UC03\\
-\small Whisper server is down & \small Invite the customer to type instead & \small UC03\\
-\small Image of wrong format or too large & \small Refuse before calling the AI & \small UC04, UC14\\
-\small Status moved in the wrong order & \small Refuse and keep the old status & \small UC13\\
-\bottomrule
-\end{longtable}
 
 %% =========================================================================
 \section{Data Flow Diagram (Level 1)}\label{sec:dfd1}
@@ -763,8 +367,8 @@ asks the payment service for an authorisation and writes the new order with its 
 \item \textbf{4 Administer catalogue and orders} (UC12, UC13) writes painting changes (D1) and new order statuses (D3).
 \end{itemize}
 The diagram is \emph{balanced} with level~0: every flow of the context diagram appears again between the same
-external entity and one of the processes, and no new external entity appears. Every data store has a flow in and a
-flow out. To keep the lines from crossing, the customer and D1 are drawn twice, as DFDs allow.
+external entity and one of the processes, and every data store has a flow in and a flow out. To keep the lines from
+crossing, the customer and D1 are drawn twice, as DFDs allow.
 
 \landscapefig{c2_dfd1}{Data flow diagram, level 1}{Data flow diagram of Họa., level 1: four processes, three data stores and the external entities of the context diagram. \trialshot{data flow diagrams}. Diagram \vpsrc{c2_dfd1}.}{\label{fig:c2_dfd1}}
 
@@ -800,64 +404,13 @@ diagrams and the state machine.
 \bottomrule
 \end{longtable}
 
-Each decision in the activity diagrams of Section~\ref{sec:2.2} comes from one of these rules
-(Table~\ref{tab:decisions}).
-
-\begin{longtable}{@{}P{4.2cm}P{8.3cm}P{2.5cm}@{}}
-\caption{Decision points of the activities and their business rules}\label{tab:decisions}\\
-\toprule
-\textbf{Decision} & \textbf{Business rule} & \textbf{Activity}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Decision} & \textbf{Business rule} & \textbf{Activity}\\
-\midrule
-\endhead
-\small Kind of input? & \small Text, voice and image all become one common query (Assignment~06) & \small ACT-01\\
-\small AI answered? & \small NFR02: if not, use keyword rules & \small ACT-01\\
-\small Valid image? & \small BR10 & \small ACT-01\\
-\small Cart has items? & \small BR03 & \small ACT-07\\
-\small In stock? & \small BR02 & \small ACT-07\\
-\small Payment succeeded? & \small BR09 & \small ACT-07\\
-\small Image accepted? & \small BR10, NFR03: JPEG, PNG or WebP, at most 5~MB & \small ACT-04\\
-\small Description received? & \small NFR02: if not, describe the photo locally by its colour & \small ACT-04\\
-\small Customer's order? & \small BR08: another customer's order is answered as not found & \small ACT-11\\
-\small Cancellation allowed? & \small BR06: only PLACED or PROCESSING & \small ACT-11\\
-\small Valid transition? & \small BR07: only the next status of the state machine & \small ACT-13\\
-\small Valid product data? & \small No negative price or stock, no missing field (UC12 A1) & \small ACT-12\\
-\small Category accepts the painting? & \small The detail kind of the category must be PAINTING (UC12 A4, NFR11) & \small ACT-12\\
-\bottomrule
-\end{longtable}
-
 %% =========================================================================
 \section{Domain Model}\label{sec:2.7}
 
-Lecture~04 moves from behaviour to structure~\cite{slidesL04,larman,evans}: \emph{requirements + behaviour $\Rightarrow$ domain concepts}. The
-concepts appear naturally when the scenarios are read again (Table~\ref{tab:behavior2concept}).
-
-\begin{longtable}{@{}P{6.4cm}P{8.6cm}@{}}
-\caption{From business behaviour to domain concepts}\label{tab:behavior2concept}\\
-\toprule
-\textbf{Business behaviour} & \textbf{Domain concepts}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Business behaviour} & \textbf{Domain concepts}\\
-\midrule
-\endhead
-\small A customer adds a print to the cart & \small \code{Customer}, \code{Cart}, \code{CartItem}, \code{Product}\\
-\small The customer changes a quantity & \small \code{CartItem.quantity}\\
-\small The customer places an order & \small \code{Cart}, \code{Order}\\
-\small An order contains the purchased prints & \small \code{Order}, \code{OrderItem}, \code{Product}\\
-\small The purchase price must be kept & \small \code{OrderItem.unitPrice}\\
-\small A print reproduces a work of one artist & \small \code{Painting}, \code{Artist}\\
-\small The customer buys a frame with the print & \small \code{Frame}\\
-\small The shop sells two lines, prints and frames, and the owner manages each line apart & \small \code{Category}\\
-\small The order is delivered to an address & \small \code{Shipping}, \code{Address}\\
-\small The customer pays cash or by card & \small \code{Payment}, \code{PayCash}, \code{PayCredit}\\
-\small A VIP customer gets a discount & \small \code{CustomerVIP}\\
-\bottomrule
-\end{longtable}
+Lecture~04 moves from behaviour to structure~\cite{slidesL04,larman,evans}: \emph{requirements + behaviour
+$\Rightarrow$ domain concepts}. The concepts appear when the scenarios above are read again: a customer adds a print
+to the cart and places an order; the order contains the purchased prints at their purchase price, is delivered to an
+address and is paid cash or by card.
 
 \begin{figure}[H]
 \centering
@@ -867,33 +420,10 @@ concepts appear naturally when the scenarios are read again (Table~\ref{tab:beha
 
 Figure~\ref{fig:domain} is the analysis class diagram: each class shows its attributes, and each line shows only the
 kind of relationship -- association, composition (filled diamond), aggregation (hollow diamond), generalization
-(hollow triangle) and the «create» dependency of checkout. The relationships get their names and multiplicities one
-step later, in the logical data model (Section~\ref{sec:2.dm.2}), and their direction and methods in the design
-(Chapter~4). The diagram contains business concepts only. Following the Lecture~04 slides, the analysis model does
-\emph{not} contain CheckoutController, CheckoutService, CartRepository, OrderRepository, REST APIs, database tables
-or layers; they answer the question ``how'' and belong to Chapter~4. The conceptual responsibilities
-of the main classes are listed in Table~\ref{tab:responsibility}.
-
-\begin{longtable}{@{}P{2.8cm}P{12.2cm}@{}}
-\caption{Conceptual responsibilities in the analysis model}\label{tab:responsibility}\\
-\toprule
-\textbf{Concept} & \textbf{Responsibility}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Concept} & \textbf{Responsibility}\\
-\midrule
-\endhead
-\small \code{Customer} & \small Owns a cart, places orders, has one name and at least one address.\\
-\small \code{Product} & \small Something the gallery sells: a print (\code{Painting}) or a frame (\code{Frame}); has a price and a stock.\\
-\small \code{Painting} & \small A print of one painting by one artist; carries the attributes used for search: style, subject, colour, medium, year, size.\\
-\small \code{Cart} & \small Holds the current shopping state.\\
-\small \code{CartItem} & \small Records one product and the intended quantity in the cart, with the price when added.\\
-\small \code{Order} & \small Represents a confirmed transaction with a status and a total.\\
-\small \code{OrderItem} & \small Records the product, the purchased quantity and the transaction price.\\
-\small \code{Shipping}, \code{Payment} & \small Deliver one order to one address; record the payment attempts of an order.\\
-\bottomrule
-\end{longtable}
+(hollow triangle: \code{Painting} and \code{Frame} are kinds of \code{Product}, \code{PayCash} and \code{PayCredit}
+kinds of \code{Payment}, \code{CustomerVIP} and \code{CustomerNew} kinds of \code{Customer}) and the «create»
+dependency of checkout. Following the Lecture~04 slides, it contains business concepts only: controllers, services,
+repositories, REST APIs and database tables answer the question ``how'' and belong to Chapter~4.
 
 \subsection{CartItem is not OrderItem}
 
@@ -937,25 +467,9 @@ is drawn as a «create» dependency, not as an association.
 \section{Data Model}\label{sec:2.dm}
 
 The domain model says which concepts the shop works with; the data model says which of them must be kept and how.
-Following Test~01, it is drawn at three levels, each adding detail to the one before (Table~\ref{tab:levels42}). The
-conceptual and logical levels belong to the analysis and are drawn here; the physical level, with tables, data types
-and keys, is a design decision and is drawn in Section~\ref{sec:4.2}, where the database is generated from it.
-
-\begin{longtable}{@{}P{2.3cm}P{8.6cm}P{4.1cm}@{}}
-\caption{The three levels of the data model}\label{tab:levels42}\\
-\toprule
-\textbf{Level} & \textbf{What it shows} & \textbf{Figure}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Level} & \textbf{What it shows} & \textbf{Figure}\\
-\midrule
-\endhead
-\small Conceptual & \small The entities by name and the named links between them; no attributes, no multiplicities & \small Figure~\ref{fig:c42_conceptual}\\
-\small Logical & \small + attributes; every class «ORM-Persistable»; every link named, with multiplicities at both ends (1, 0..1, 0..*, 1..*); generalizations turned into \emph{is a} links & \small Figure~\ref{fig:c42_orm}\\
-\small Physical & \small + tables and columns with SQL data types; primary, foreign and unique keys; each link becomes a foreign key with its name and multiplicities & \small Figure~\ref{fig:c42_tables} (Section~\ref{sec:4.2})\\
-\bottomrule
-\end{longtable}
+Following Test~01, it is drawn at three levels, each adding detail to the one before: the conceptual and logical
+levels belong to the analysis and are drawn here; the physical level, with tables, data types and keys, is a design
+decision and is drawn in Section~\ref{sec:4.2} (Figure~\ref{fig:c42_tables}), where the database is generated from it.
 
 \needspace{10\baselineskip}
 \subsection{Conceptual Data Model}\label{sec:2.dm.1}
@@ -984,9 +498,8 @@ CustomerVIP} says that a customer has at most one VIP record and every VIP recor
 
 \landscapefig{c42_orm}{Logical data model of Họa.}{Logical data model: attributes, classes marked «ORM-Persistable», named associations with multiplicities, generalizations turned into \emph{is a} associations 1 -- 0..1. Visual Paradigm diagram \vpsrc{c42_orm}.}{\label{fig:c42_orm}\label{fig:orm}}
 
-\paragraph{Multiplicity.} Multiplicity must be modelled explicitly (Lecture~04 slides); in this essay it is written
-at the logical level of the data model, together with the names of the relationships. Table~\ref{tab:mult} gives the
-multiplicity of the main relationships and the business assumption behind each value.
+\paragraph{Multiplicity.} Multiplicity must be modelled explicitly (Lecture~04 slides); Table~\ref{tab:mult} gives
+the multiplicity of the main relationships and the business assumption behind each value.
 
 \begin{longtable}{@{}P{3.7cm}P{2.4cm}P{8.9cm}@{}}
 \caption{Multiplicities and business assumptions}\label{tab:mult}\\
@@ -1035,80 +548,16 @@ functions.
 \bottomrule
 \end{longtable}
 
-Table~\ref{tab:traceuc} in Appendix~C is the two-way traceability matrix between requirements and use cases: every
+Table~\ref{tab:traceuc} in the appendix is the two-way traceability matrix between requirements and use cases: every
 requirement is realised by at least one use case and every use case has at least one source requirement. The trace
-continues to scenarios and activities (Section~\ref{sec:2.5}), and to classes, tables and code in Section~4.6 and
-Appendix~B.
-
-%% =========================================================================
-\section{Traceability: Requirement -- Use Case -- Scenario -- Activity}\label{sec:2.5}
-
-Every important functional model must be traceable (Lecture~03): from a requirement one must find the use case,
-the main scenario and the activity that show it.
-
-\begin{longtable}{@{}P{1.5cm}P{3.6cm}P{5.6cm}P{4.3cm}@{}}
-\caption{Trace FR $\rightarrow$ UC $\rightarrow$ scenario $\rightarrow$ activity}\label{tab:tracefr}\\
-\toprule
-\textbf{Req.} & \textbf{Use case} & \textbf{Main scenario} & \textbf{Behaviour model}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Req.} & \textbf{Use case} & \textbf{Main scenario} & \textbf{Behaviour model}\\
-\midrule
-\endhead
-\small FR01 & \small UC02 Search by Keyword & \small Main flow of Table~\ref{tab:spec02} & \small ACT-01 (Figure~\ref{fig:actsearch})\\
-\small FR02 & \small UC03 Search by Voice & \small Voice variant of Table~\ref{tab:spec02} & \small ACT-01, sequence of Figure~\ref{fig:seqvoice}\\
-\small FR03 & \small UC04 Search by Image & \small Main flow of Table~\ref{tab:spec04} & \small ACT-04 (Figure~\ref{fig:c2_activity_image}), sequence of Figure~\ref{fig:c3_seq_image}\\
-\small FR07 & \small UC07 Checkout & \small Main flow of Table~\ref{tab:spec07} & \small ACT-07 (Figure~\ref{fig:actcheckout})\\
-\small FR10 & \small UC10 Ask Shopping Assistant & \small Specification of UC10 (Chapter~3) & \small Sequence of Figure~\ref{fig:c3_seq_assistant}\\
-\small FR11 & \small UC11 Cancel Order & \small Main flow of Table~\ref{tab:spec11} & \small ACT-11 (Figure~\ref{fig:c2_activity_cancel}), state machine\\
-\small FR12 & \small UC12 Manage Products & \small Main flow of Table~\ref{tab:spec12} & \small ACT-12 (Figure~\ref{fig:c2_activity_products})\\
-\small FR13 & \small UC13 Update Order Status & \small Main flow of Table~\ref{tab:spec13} & \small ACT-13 (Figure~\ref{fig:c2_activity_admin}), state machine\\
-\small FR14 & \small UC14 Find Painting for My Room & \small Specification of UC14 (Chapter~3) & \small ACT-01 (image branch)\\
-\bottomrule
-\end{longtable}
-
-%% =========================================================================
-\section{Consistency Check}\label{sec:2.6}
-
-The models must say the same thing. Lecture~03 takes the requirement ``the customer can cancel an order before
-shipment'' and checks whether every analysis artefact shows it correctly. I apply the same check to Họa.
-(Table~\ref{tab:consistency}); the last column says where the rule is realised in the later chapters.
-
-\begin{longtable}{@{}P{3.1cm}P{8.0cm}P{3.9cm}@{}}
-\caption{Consistency check of the requirement ``cancel before shipment''}\label{tab:consistency}\\
-\toprule
-\textbf{Artefact} & \textbf{Expected information} & \textbf{Result}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Artefact} & \textbf{Expected information} & \textbf{Result}\\
-\midrule
-\endhead
-\small Requirement & \small FR11: customers cancel their own order while it is not shipped (PLACED or PROCESSING). & \small Present\\
-\small Use case & \small UC11 Cancel Order, extending UC08 View Order. & \small Present (Figure~\ref{fig:usecase})\\
-\small Scenario & \small The customer asks to cancel; the system checks ownership, checks the status, sets CANCELLED. & \small Table~\ref{tab:spec11}\\
-\small Exception flow & \small An order already shipped is refused. & \small A1 of UC11\\
-\small Business rule & \small BR06: cancel only when PLACED or PROCESSING. & \small Table~\ref{tab:rules}\\
-\small State machine & \small Transitions PLACED $\rightarrow$ CANCELLED and PROCESSING $\rightarrow$ CANCELLED exist; none from SHIPPED or DELIVERED to CANCELLED. & \small Figure~\ref{fig:stateorder}\\
-\small Class model & \small Operation \code{cancel()} of \code{Order} refuses every status except PLACED and PROCESSING; \code{advanceTo(next)} never goes back. & \small Section~4.3\\
-\small Test & \small Cancelling a PLACED order succeeds; cancelling the SHIPPED order 20261001 is refused (US08). & \small Chapter~\ref{ch:code}\\
-\bottomrule
-\end{longtable}
-
-The check found one point that needed a decision: the original requirement said nothing about stock when an order
-is cancelled. Instead of leaving the programmer to guess, the point was written down as an open question in the
-specification of UC11.
+continues to classes, tables and code in Chapter~\ref{ch:design}.
 
 %% =========================================================================
 \section{Conclusion}\label{sec:2.10}
 
-Chapter~2 turned the needs of Chapter~\ref{ch:req} into \nFR{} functional and \nNFR{} non-functional requirements
-written as ``The system shall\dots'', each with a priority and a source, and into four actors and \nUseCases{} use
-cases. It then answered ``when an actor performs a use case, what happens'' for six use cases, each with a main
-flow, at least three alternative flows and the diagram that shows its behaviour. Every decision in the activities
-comes from a business rule, the trace requirement -- use case -- scenario -- activity is kept for every main
-requirement, and the consistency check of ``cancel before shipment'' shows that requirement, use case, scenario,
-rule and state machine say the same thing. The domain model, the conceptual and logical data model, the distinction between
-\code{CartItem} and \code{OrderItem} and the checkout transformation are the foundation of the design in Chapter~4; the use cases that
-involve AI are analysed in Chapter~3.
+Chapter~2 turned the needs of Chapter~\ref{ch:req} into \nFR{} functional and \nNFR{} non-functional requirements,
+each with a priority and a source, and into four actors and \nUseCases{} use cases. It specified the main use cases
+with their alternative flows and the activity diagrams that show their behaviour, took every decision from a
+business rule and fixed the life cycle of the order in a state machine. The domain model and the conceptual and
+logical data model are the foundation of the design in Chapter~4; the use cases that involve AI are analysed in
+Chapter~3.

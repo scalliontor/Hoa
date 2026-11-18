@@ -8,20 +8,11 @@
 
 Chapter~\ref{ch:req} found the two problems that the AI features of Họa. answer: customers
 cannot find a painting when they do not know its title (P1 in Table~\ref{tab:pcin}), and they keep asking where
-their order is (P3). The needs behind them are to find paintings from a description, a voice, a photo or a photo of
-the room, and to get an answer about one's own order at any time. This chapter first asks which of these needs are
-best served by AI and which by ordinary rules, and only then which models do the work and how they are placed
-inside an ordinary information system without taking over its business rules. It follows the chain of the
-complementary material \emph{Integrating AI into E-Commerce Systems -- Analysis Phase}~\cite{aianalysis}:
-\begin{center}
-\emph{Business problem $\rightarrow$ Requirement $\rightarrow$ AI requirement $\rightarrow$ Data requirement
-$\rightarrow$ AI component.}
-\end{center}
-Sections~\ref{sec:3.1} and~\ref{sec:3.2} treat the problem and the choice of AI, Section~\ref{sec:aireq} the AI and
-data requirements, Sections~\ref{sec:3.3} and~\ref{sec:aispec} the architecture and the specification of the AI
-components, Sections~\ref{sec:3.4}--\ref{sec:3.10} the models and the features, Sections~\ref{sec:3.11} and~\ref{sec:hitl}
-failures, human control and risks, and Section~\ref{sec:3.12} the evaluation, which ends with the trace from
-business objective to metric. Inside the components every input follows the principle of Assignment~06:
+their order is (P3). Following the chain \emph{business problem $\rightarrow$ requirement $\rightarrow$ AI
+requirement $\rightarrow$ data requirement $\rightarrow$ AI component} of the complementary
+material~\cite{aianalysis}, this chapter first asks which needs are best served by AI and which by ordinary rules,
+and only then which models do the work and how they sit inside an ordinary information system without taking over
+its business rules. Inside the components every input follows the principle of Assignment~06:
 \begin{equation}
 \text{Different inputs} \;\to\; \text{Common query} \;\to\; \text{Retrieval} \;\to\; \text{Ranking}
 \;\to\; \text{Results.}
@@ -35,48 +26,20 @@ orders, ownership) stays in deterministic code and in the SQLite database.
 %% -------------------------------------------------------------------------
 \section{The Role of AI in the Shopping Journey}\label{sec:3.1}
 
-A customer of a painting shop rarely knows the exact title of the picture she or he wants. The request is usually
-a feeling (``something blue and calm''), a name half remembered (``that Monet with the water''), a photo taken in
-a museum, or a room that needs a picture. Keyword search over titles answers none of these well. AI is useful
-exactly where the input is ambiguous or perceptual, and it should stay a \emph{decision support}: the customer
-still sees the real price, stock and description from the catalogue before buying, and the system never lets a
-model change an order, a price or a stock level (business rule BR11 of Chapter~\ref{ch:analysis}).
-Table~\ref{tab:journey} places the AI features of Họa. on the shopping journey.
-
-\begin{longtable}{@{}P{2.5cm}P{4.4cm}P{4.1cm}P{4.0cm}@{}}
-\caption{AI along the shopping journey of Họa.}\label{tab:journey}\\
-\toprule
-\textbf{Stage} & \textbf{Difficulty of the customer} & \textbf{AI feature} & \textbf{Where in the design}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Stage} & \textbf{Difficulty of the customer} & \textbf{AI feature} & \textbf{Where in the design}\\
-\midrule
-\endhead
-\small Discover & \small Knows the mood, colour or subject, not the title & \small Natural-language query understanding (Gemma~4) & \small \code{QueryService.textQuery}\\
-\small Discover & \small Hands busy or prefers to speak & \small Voice search (self-hosted Whisper) & \small \code{SpeechService.transcribe}, \code{QueryService.voiceQuery}\\
-\small Discover & \small Has a photo of a painting seen elsewhere & \small Image search (Gemma~4 vision) & \small \code{ImageService.embed}, \code{SearchService.searchImage}\\
-\small Decide & \small Does not know what suits the room & \small Find a painting for my room (Gemma~4 vision) & \small \code{SearchService.describeRoom}, \code{SearchService.searchRoom}\\
-\small Decide & \small Compares several candidates & \small Ranking with an explanation of each result & \small \code{RankingService.rank}, \code{SearchResult.reason}\\
-\small After purchase & \small Wants to know where the order is & \small Curator assistant with tool calling (Gemma~4) & \small \code{AssistantService.ask}\\
-\bottomrule
-\end{longtable}
-
-The measures of value follow the journey: the time needed to reach a suitable painting, the share of searches
-with no result, how often the customer has to rephrase, and whether the assistant answers order questions without
-a human. A higher turnover alone would not prove that AI caused it; such a claim would need a controlled online
-experiment, which is outside the scope of this essay.
+A customer of a painting shop rarely knows the exact title of the picture she or he wants: the request is a feeling
+(``something blue and calm''), a name half remembered, a photo taken in a museum, or a room that needs a picture, and
+keyword search over titles answers none of these well. AI is useful exactly where the input is ambiguous or
+perceptual, and it stays a \emph{decision support}: the customer still sees the real price, stock and description
+from the catalogue before buying, and the system never lets a model change an order, a price or a stock level
+(business rule BR11 of Chapter~\ref{ch:analysis}).
 
 %% -------------------------------------------------------------------------
 \section{AI Problems in E-commerce}\label{sec:3.2}
 
-AI in e-commerce is not one technique but a family of problems (Table~\ref{tab:aiproblems}). Recommendation can
-use \emph{collaborative filtering}, which learns from what other customers bought or viewed (the item-to-item
-method of Amazon \cite{linden2003}); \emph{content-based} filtering, which compares item attributes; or a
-\emph{hybrid} such as Wide \& Deep, which memorises observed interactions and generalises to new feature
-combinations \cite{cheng2016}. Search ranking orders the products that match a query; computer vision reads
-images; natural-language processing extracts intent and attributes from sentences; conversational assistants
-combine language understanding with access to business functions.
+AI in e-commerce is not one technique but a family of problems (Table~\ref{tab:aiproblems}). Họa. uses four of
+them and rejects recommendation by collaborative filtering, such as the item-to-item method of Amazon
+\cite{linden2003} or hybrids such as Wide \& Deep \cite{cheng2016}, because it learns from purchase history that a
+new shop does not have.
 
 \begin{longtable}{@{}P{3.0cm}P{4.3cm}P{2.0cm}P{5.7cm}@{}}
 \caption{AI problems in e-commerce and the choice of Họa.}\label{tab:aiproblems}\\
@@ -106,15 +69,10 @@ and to compare pictures.
 \section{AI Requirements and Data Requirements}\label{sec:aireq}
 
 The functional requirements (FR01--FR04, FR10, FR14, FR18) say \emph{what} the shop must do, not how well an AI
-component must do it or which data it needs. The complementary material adds these two kinds of requirement.
-
-\subsection{AI Requirements}\label{sec:aireq.ai}
-
-An AI requirement states the behaviour expected from an AI component without naming a model. Table~\ref{tab:aireq}
-covers the qualities the material lists. A target comes from an existing requirement (NFR02, NFR07, NFR08) or is
-marked as a \emph{design target} that I set for the demo; the last column gives the value measured in
-Section~\ref{sec:3.12} or says that the item was not measured. The test sets are small, so ``met'' means ``no
-failure on this set'', not a proven rate.
+component must do it. An AI requirement states that behaviour without naming a model (Table~\ref{tab:aireq}). A
+target comes from an existing requirement or is a \emph{design target} that I set for the demo; the last column gives
+the value measured in Section~\ref{sec:3.12}. The test sets are small, so ``met'' means ``no failure on this set'',
+not a proven rate.
 
 \begin{longtable}{@{}P{1.15cm}P{5.3cm}P{3.45cm}P{5.1cm}@{}}
 \caption{AI requirements of Họa. with their targets and measured values}\label{tab:aireq}\\
@@ -140,43 +98,10 @@ failure on this set'', not a proven rate.
 \bottomrule
 \end{longtable}
 
-As the material asks, these requirements are kept apart from the \emph{model} requirements, which may change without
-touching an AIR (NFR04). In Họa. the model side is Gemma~4 with a JSON-only prompt at temperature 0.2
-(Section~\ref{sec:3.4}), faster-whisper \code{small} in int8 on the laptop CPU, the one-hot vector with
-Equation~\ref{eq:ranking}, and an index rebuilt in memory at every retrieval. Another model behind \code{LlmClient}
-would change this sentence, not the table.
-
-\subsection{Data Requirements}\label{sec:aireq.data}
-
-An AI requirement implies a data requirement. Table~\ref{tab:datareq} answers the eight questions of the material
-for the four sources the AI features read, with the real table and file names of the demo.
-
-\begin{longtable}{@{}P{2.1cm}P{3.55cm}P{2.95cm}P{3.4cm}P{3.0cm}@{}}
-\caption{Data requirements of the AI features: the eight questions of the material}\label{tab:datareq}\\
-\toprule
-\textbf{Question} & \textbf{Catalogue and vocabulary} & \textbf{Feature vectors} & \textbf{Photos and audio} & \textbf{Orders}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Question} & \textbf{Catalogue and vocabulary} & \textbf{Feature vectors} & \textbf{Photos and audio} & \textbf{Orders}\\
-\midrule
-\endhead
-\small 1. What data? & \small \code{product}, \code{painting}, \code{artist}: style, subject, colour, price, stock; 28 vocabulary values & \small \code{product_feature}: one 28-dimension vector per painting & \small A photo of a painting or a room; a short recording & \small \code{orders}, \code{order_item}, \code{shipping}, \code{address}\\
-\small 2. Where from? & \small \code{catalog.json} via \code{db/seed.sql}; the administrator (UC12) & \small \code{VectorIndex.toVector}, when a painting is added & \small The customer's camera, files or microphone & \small Checkout, status changes, cancellation\\
-\small 3. Available? & \small Yes: 32 paintings, 5 frames & \small Yes: 32 rows & \small Only during the request & \small Yes: three demo orders\\
-\small 4. Reliable? & \small Human labels; the seed is checked by \code{VocabularyTest}, the admin form is not & \small Deterministic; checked by \code{VocabularyTest} & \small Varies with light, noise and accent & \small Authoritative: the rows of the order pages\\
-\small 5. How often updated? & \small At every change by the administrator; read at every search & \small Once per painting; index rebuilt at every search & \small Every request & \small Every status change; read at every question\\
-\small 6. How much history? & \small None needed: no clicks or ratings are used & \small One row per painting & \small None kept; 8 test photos, 20 test utterances & \small All orders of the customer\\
-\small 7. Privacy constraints? & \small None: public-domain works & \small None & \small Audio stays on the laptop (NFR08); photos go to the Gemma server, not stored & \small Only the session's orders (NFR01), sent to the Gemma server with the address\\
-\small 8. What if missing? & \small A value outside the vocabulary leaves its part of the vector at zero & \small The stored row is not read today; the index uses the attributes & \small Bad file rejected (NFR03); Gemma down: local colour; Whisper down: type instead & \small ``No orders yet''; Gemma down: rules\\
-\bottomrule
-\end{longtable}
-
-Two points follow. No AI feature learns from customer behaviour, so Họa. needs no interaction history; this is why
-collaborative filtering was rejected (Table~\ref{tab:aiproblems}) and why a new painting has no cold start
-(Table~\ref{tab:airisk}). And the search rests on attributes typed by people: the administrator's form has free-text
-fields for style, subject and colour, so a misspelt style silently weakens the vector of a new painting. A drop-down
-list fed by the vocabulary would close this gap; it is not implemented.
+On the data side, no AI feature learns from customer behaviour: the features read only the catalogue attributes,
+the photo or recording of the current request and the signed-in customer's orders, so Họa. needs no interaction
+history and a new painting has no cold start. The weak point is that the attributes are typed by the administrator in
+free-text fields, so a misspelt style silently weakens the vector of a new painting.
 
 %% -------------------------------------------------------------------------
 \section{AI Architecture of Họa.}\label{sec:3.3}
@@ -212,25 +137,17 @@ through the interfaces \texttt{LlmClient} and \texttt{SpeechClient}, implemented
 \label{fig:c3_ai_architecture}\label{fig:aiarch}
 \end{figure}
 
-The dependency direction in Figure~\ref{fig:c3_ai_architecture} is deliberate. \code{QueryService},
-\code{ImageService} and \code{AssistantService} depend on the interface \code{LlmClient}, not on
-\code{GemmaClient}; \code{SpeechService} depends on \code{SpeechClient}, not on \code{WhisperClient}. This gives
-three properties that the requirements ask for. First, the model can be replaced (another Gemma size, another
-provider) by writing one class of the data layer, without touching the services (NFR04). Second, the
-services can be tested with a fake client that answers instantly or always fails. Third, every call to a model can
-fail without breaking the shop: the services catch the error and switch to a rule-based path (NFR02,
-Section~\ref{sec:3.11}). The composition root \code{EcomApplication.main} creates one \code{GemmaClient} and one
-\code{WhisperClient} from \code{config/app.properties} and passes them to the services, which is the Java
-counterpart of \code{main.py} in the A06 slide.
+The services depend on the interfaces, never on \code{GemmaClient} or \code{WhisperClient}. So the model can be
+replaced by writing one class of the data layer (NFR04), the services can be tested with a fake client, and every
+model call can fail without breaking the shop, because the services catch the error and switch to a rule-based path
+(NFR02, Section~\ref{sec:3.11}).
 
 %% -------------------------------------------------------------------------
 \section{AI Component Specification}\label{sec:aispec}
 
-The material asks for one specification per AI component, with a fixed list of items. Họa. has two such components:
-\emph{AI Search} for text, voice and image (with Gemma~4 as the ranker it also serves the room suggestions of
-Section~\ref{sec:3.8}) and the \emph{curator assistant}. Table~\ref{tab:aispec} keeps the items in the order of the
-material; for the assistant, the rows AI function, Data source, Interaction and Human role also answer the material's
-four questions for a chatbot.
+The material asks for one specification per AI component, with a fixed list of items. Họa. has two components,
+\emph{AI Search} for text, voice and image (which also serves the room suggestions) and the \emph{curator
+assistant}; Table~\ref{tab:aispec} keeps the items in the order of the material.
 
 \begin{longtable}{@{}P{2.4cm}P{6.3cm}P{6.3cm}@{}}
 \caption{AI Component Specification of AI Search and of the curator assistant}\label{tab:aispec}\\
@@ -245,190 +162,54 @@ four questions for a chatbot.
 \small\textbf{Business problem} & \small P1: customers cannot find a painting without its title (Table~\ref{tab:pcin}). & \small P3: customers keep asking staff where their order is.\\
 \small\textbf{Business objective} & \small BO1, find faster; BO2, more searches end in a purchase. & \small BO4, less staff time on order questions; BO5, protect data.\\
 \small\textbf{AI function} & \small Extract filters from a sentence (Gemma~4); speech-to-text (Whisper); classify a photo into the vocabulary (Gemma~4 vision). The ranking is deterministic. & \small Choose among four read-only tools and answer from their results (Gemma~4 tool calling, at most three rounds). No tool covers returns, refunds or payments.\\
-\small\textbf{Input} & \small A sentence, a recording or a photo (Table~\ref{tab:io}). & \small A typed or transcribed question; the session's customer id.\\
+\small\textbf{Input} & \small A sentence, a recording or a photo (JPEG, PNG or WebP, at most 5~MB). & \small A typed or transcribed question; the session's customer id.\\
 \small\textbf{Output} & \small Up to twelve \code{SearchResult} objects with scores and \code{reason}. & \small \code{AssistantReply}: answer, tools used, \code{aiUsed}.\\
-\small\textbf{Data source} & \small Catalogue and vocabulary (Table~\ref{tab:datareq}). & \small Orders through \code{OrderService}; paintings through the search.\\
+\small\textbf{Data source} & \small Catalogue attributes and the vocabulary of 28 values. & \small Orders through \code{OrderService}; paintings through the search.\\
 \small\textbf{System component} & \small \code{application.search} services with \code{VectorIndex}, \code{LlmClient} and \code{SpeechClient} (Figure~\ref{fig:c3_ai_architecture}). & \small \code{AssistantService} with \code{LlmClient} (Figure~\ref{fig:c3_seq_assistant}).\\
 \small\textbf{Interaction} & \small Customers through \code{SearchUI}; reads \code{ProductRepository}; serves the tool \code{search_paintings}; never touches cart or orders. & \small Signed-in customers only; read methods of \code{OrderService}; identity from \code{SessionManager}; no tool writes.\\
 \small\textbf{Performance} & \small AIR01--AIR04, AIR07--AIR11; fallbacks of Table~\ref{tab:fallback}. & \small AIR05--AIR08.\\
 \small\textbf{Update} & \small Catalogue read at every search; prompts, vocabulary, weights change with a release. Owner: the developer; attributes: the administrator. & \small Orders read at every question; nothing is trained. Owner: the developer; statuses: the administrator.\\
-\small\textbf{Human role} & \small The customer corrects the transcript and chooses; the AI changes no price or stock (BR11). & \small Read-only; no hand-over to support staff yet (Section~\ref{sec:hitl.human}).\\
+\small\textbf{Human role} & \small The customer corrects the transcript and chooses; the AI changes no price or stock (BR11). & \small Read-only; no hand-over to support staff yet (Section~\ref{sec:hitl}).\\
 \small\textbf{Risk} & \small Wrong filters, misheard names, uneven exposure, photos sent to the server (Table~\ref{tab:airisk}). & \small Prompt injection, an invented status, order data sent to the server.\\
 \small\textbf{Evaluation} & \small Hit@1, P@5, MRR, Hit@3, WER, seconds (Section~\ref{sec:3.12}); BO1 and BO2 measures not measured. & \small Correct answers, right tool, leaked words; the BO4 measure not measured.\\
-\bottomrule
-\end{longtable}
-
-\subsection{Input/Output Specification}\label{sec:aispec.io}
-
-Table~\ref{tab:io} states, for every mode, what enters the AI, how the server checks it, what comes out and what
-happens when the model does not answer.
-
-\begin{longtable}{@{}P{1.75cm}P{2.75cm}P{4.1cm}P{3.3cm}P{3.1cm}@{}}
-\caption{Input/output specification of the AI modes}\label{tab:io}\\
-\toprule
-\textbf{Mode} & \textbf{Input} & \textbf{Validation} & \textbf{Output} & \textbf{Fallback}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Mode} & \textbf{Input} & \textbf{Validation} & \textbf{Output} & \textbf{Fallback}\\
-\midrule
-\endhead
-\small Text & \small Sentence (\code{GET /api/search}) & \small A style, subject or colour from Gemma is kept only if it is in the vocabulary & \small Up to 12 ranked results with reasons & \small \code{parseRules}: price pattern, synonyms\\
-\small Voice & \small Recording (\code{POST /api/voice/transcribe}) & \small Not empty, English, at most 10~MB, decodable & \small Editable transcript, then the text path & \small Whisper down: HTTP 503, type instead\\
-\small Image & \small Photo of a painting & \small JPEG, PNG or WebP, at most 5~MB, checked on the bytes (NFR03) & \small Vector; up to 12 results with a visual-match share & \small Average colour read on the laptop\\
-\small Room photo & \small Photo of a room & \small As for images; ids outside the shortlist dropped; a reason kept only if it has 10--40 words naming room and painting & \small Reading of the room; 3--5 picks with reasons & \small Local colour; vector ranking, reasons from the attributes\\
-\small Assistant question & \small Typed or transcribed question & \small Customer session required (else HTTP 403); ownership of every order checked by \code{OrderService} & \small \code{AssistantReply} & \small Rules on an order number and on ``latest'', ``recent'', ``order''\\
 \bottomrule
 \end{longtable}
 
 %% -------------------------------------------------------------------------
 \section{Gemma 4 Integration}\label{sec:3.4}
 
-Gemma~4 is reached through the OpenAI-compatible chat API \cite{gemma}. During the evaluation of
-Section~\ref{sec:3.12} it ran on a self-hosted NVIDIA L40S server behind vLLM~\cite{vllm}; when that server stopped
-answering on 11/11/2026, the demo moved to Gemma~4 31B at DeepInfra by changing only the configuration below
-(Section~\ref{sec:5.2}). Because the API is standard, \code{GemmaClient} needs only the Java standard HTTP client and a
-JSON library. Table~\ref{tab:gemmaconfig} lists how the call is configured; the values are read from
-\code{demo/config/app.properties} and the API key is never written in the source code.
-
-\begin{longtable}{@{}P{3.6cm}P{5.4cm}P{6.0cm}@{}}
-\caption{Configuration of the Gemma 4 calls}\label{tab:gemmaconfig}\\
-\toprule
-\textbf{Item} & \textbf{Value} & \textbf{Where it is used}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Item} & \textbf{Value} & \textbf{Where it is used}\\
-\midrule
-\endhead
-\small Base URL & \small \codex{\cfgGemmaBaseUrl} (ends with ``/'') & \small \code{gemma.baseUrl}, constructor of \code{GemmaClient}\\
-\small Model name & \small \codex{\cfgGemmaModel} (\code{gemma-4} on the self-hosted server) & \small \code{gemma.model}\\
-\small Authentication & \small Bearer token & \small \code{gemma.apiKey} in \code{config/app.local.properties}, which is not in git\\
-\small Chat endpoint & \small \code{POST chat/completions} & \small \code{GemmaClient.chat}\\
-\small Availability check & \small \code{GET models}, 5-second timeout & \small \code{GemmaClient.isAvailable}, printed at start-up\\
-\small Sampling & \small temperature 0.2, at most 700 output tokens & \small Every request of \code{GemmaClient.chat}\\
-\small Timeout & \small \code{gemma.timeoutSeconds} & \small Request timeout of \code{GemmaClient.chat}; bounded by NFR07\\
-\bottomrule
-\end{longtable}
-
-Three integration patterns are used, all through the same method
-\code{chat(messages: List<Map<String, Object>>, tools: List<Map<String, Object>>): LlmReply}.
-
-\textbf{Structured extraction.} \code{QueryService} and \code{ImageService} send a system prompt that asks for
-\emph{one JSON object only} with fixed keys (\code{style}, \code{subject}, \code{color}, \code{artist},
-\code{max_price} for a sentence). The prompt gives the closed vocabulary of the shop: ten styles (Impressionism,
-Post-Impressionism, Ukiyo-e, Art Nouveau, Baroque, Romanticism, Expressionism, Abstract, Realism, Naive art), eight
-subjects and ten colours. The reply is parsed from the first ``\{'' to the last ``\}'', and every value is
-checked against the vocabulary of \code{VectorIndex} before it is used, so an invented value can never reach the
-search. The low temperature makes the extraction stable.
-
-\textbf{Vision.} A photo is sent as an \code{image_url} content part holding a data URI
-(\code{data:image/jpeg;base64,...}); the MIME type is detected from the first bytes of the file. The photo is
-kept in memory only, and the answer is remembered by \code{ImageService} so that the same photo is never sent
-twice.
-
-\textbf{Tool calling.} \code{AssistantService} passes a list of tools in the OpenAI \code{tools} format with
-\code{tool_choice} set to \code{auto}; \code{GemmaClient} turns the \code{tool_calls} of the reply into
-\code{ToolCall} objects inside an \code{LlmReply}. Section~\ref{sec:3.9} describes the loop.
-
-Every HTTP error, a status other than 200, or a timeout becomes an exception in \code{GemmaClient}. The services
-catch it and use their fallback, which is how the shop keeps working when the AI server is down (NFR02).
+Gemma~4 is reached through the OpenAI-compatible chat API \cite{gemma}: on a self-hosted NVIDIA L40S server behind
+vLLM~\cite{vllm} during the evaluation, and at DeepInfra since 11/11/2026, a move that changed only the configuration
+(Section~\ref{sec:5.2}). Every call goes through \code{GemmaClient.chat} at temperature 0.2, in three patterns:
+\emph{structured extraction} into one JSON object whose values must belong to the closed vocabulary of the shop (ten
+styles, eight subjects, ten colours); \emph{vision}, with the photo sent in memory as a data URI; and \emph{tool
+calling} for the assistant. Every HTTP error, status other than 200 or timeout becomes an exception, which the
+services catch to use their fallback (NFR02).
 
 %% -------------------------------------------------------------------------
 \section{Feature 1: Natural-language Query Understanding}\label{sec:3.5}
 
-Feature~1 turns a free sentence into the common query representation of A06, the class \code{CommonQuery}. Its
-fields are \code{type}, \code{query}, \code{embedding}, \code{style}, \code{subject}, \code{color},
-\code{artist}, \code{maxPrice} and \code{aiUsed}. \code{QueryService.textQuery} normalises the sentence (lower
-case, single spaces), creates the \code{CommonQuery} with type ``text'' and calls \code{understand}, which asks
-Gemma~4 for the filters. If the call fails, \code{parseRules} fills the same fields with rules: a regular expression
-recognises ``under'', ``below'', ``less than'', ``up to'' or ``at most'' followed by a number as the maximum price,
-and a synonym list maps words such as ``sea'', ``ocean'' or ``wave'' to the subject \emph{seascape} and
-``japanese'' to the style \emph{Ukiyo-e}. The field \code{aiUsed} records which path produced the query, so the
-interface can tell the customer that the shop is working in fallback mode.
-
-Table~\ref{tab:nlu} shows the \emph{specified} result for two demo queries of \code{model.DEMO_QUERIES}. It is the
-contract of the feature, not a measurement; the measured success rate is reported in Section~\ref{sec:3.12}.
-
-\begin{longtable}{@{}P{4.2cm}P{6.3cm}P{4.5cm}@{}}
-\caption{Expected common query for two demo sentences}\label{tab:nlu}\\
-\toprule
-\textbf{Sentence} & \textbf{Fields of \texttt{CommonQuery}} & \textbf{Effect on the search}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Sentence} & \textbf{Fields of \texttt{CommonQuery}} & \textbf{Effect on the search}\\
-\midrule
-\endhead
-\small ``blue landscape paintings'' & \small \code{type}=text, \code{subject}=landscape, \code{color}=blue & \small Paintings whose subject and dominant colour match score highest\\
-\small ``Monet paintings under 100 dollars'' & \small \code{type}=text, \code{artist}=Monet, \code{maxPrice}=100 & \small Hard filters: price at most 100 and artist Claude Monet\\
-\bottomrule
-\end{longtable}
-
-The same \code{CommonQuery} is used by the voice path (\code{QueryService.voiceQuery}, which only changes the type
-to ``voice'') and by the image path (\code{QueryService.imageQuery}, which stores the image vector in
-\code{embedding}). This is exactly Principle~2 of the A06 brief: different inputs, one representation
+Feature~1 turns a free sentence into the common query of A06, the class \code{CommonQuery} (style, subject,
+colour, artist, maximum price, image \code{embedding} and \code{aiUsed}). \code{QueryService.textQuery} asks Gemma~4
+for the filters; ``Monet paintings under 100 dollars'', for example, should give the artist Monet and the maximum
+price 100 as hard filters. If the call fails, \code{parseRules} fills the same fields with a price pattern
+(``under'', ``below'' followed by a number) and a synonym list (``sea'', ``wave'' $\rightarrow$ \emph{seascape}).
+The voice and image paths fill the same \code{CommonQuery}: different inputs, one representation
 (Equation~\ref{eq:a06pipeline}).
 
 %% -------------------------------------------------------------------------
 \section{Feature 2: Voice Search with Self-hosted Whisper}\label{sec:3.6}
 
-\subsection{Path of the Audio}
+In the A06 prototype, \code{SpeechService.transcribe(audio_input)} only returned the text it was given. In Họa. the
+browser view \code{VoiceInput} records the customer, and \code{SpeechService.transcribe} passes the recording through
+\code{WhisperClient} to a local voice server (\code{127.0.0.1:9000}) running faster-whisper
+\cite{whisper,fasterwhisper}. The transcript appears in the search box, where the customer can correct it -- speech
+recognition makes mistakes on names such as ``Hokusai'' -- before it follows the same path as typed text
+(Figure~\ref{fig:demo_search_voice}). If the voice server is down, the customer is invited to type instead.
 
-In the A06 prototype, \code{SpeechService.transcribe(audio_input)} only returned the text it was given, because
-speech recognition was simulated. Họa. replaces the simulation with a real speech-to-text model that the shop
-hosts itself:
-\begin{enumerate}
-\item The browser view \code{VoiceInput} records the customer with the MediaRecorder API (\code{start},
-\code{stop}) and sends the recording with \code{upload(audio: Blob)}.
-\item The controller method \code{SearchController.transcribe} passes the bytes of the recording to
-\code{SpeechService.transcribe(audioInput: byte[])}.
-\item \code{SpeechService} calls \code{SpeechClient.transcribe(audio, "en")}; the implementation
-\code{WhisperClient} posts the raw bytes to the local voice server (\code{POST /transcribe?language=en} on
-\code{127.0.0.1:9000}).
-\item The voice server, a small Python program in \code{demo/voice-server}, decodes the audio and runs
-faster-whisper, an efficient re-implementation of Whisper \cite{whisper,fasterwhisper}. The model size is chosen by
-measurement and configured by \code{whisper.model}.
-\item The transcript goes back to the browser and is shown in the search box. The customer can correct it, then
-\code{SearchUI.submitVoice} calls \code{SearchController.searchVoice(transcript)}, which follows
-\code{SearchService.searchVoice} and \code{QueryService.voiceQuery}: the same path as typed text.
-\end{enumerate}
-Showing the transcript before searching is a usability decision: speech recognition makes mistakes on names such as
-``Hokusai'', and an editable transcript lets the customer fix them instead of receiving wrong results. The A06
-sequence diagram of Chapter~\ref{ch:analysis} (Figure~\ref{fig:seqvoice}) keeps the seven participants of the
-brief; the self-hosted model sits behind \code{SpeechService}.
-
-\subsection{Why the Voice Model Is Self-hosted}
-
-Three architectures were compared (Table~\ref{tab:sttcompare}). I chose self-hosting because of NFR08: audio
-is personal data, and a voice recorded in a living room can contain other people and private conversations.
-
-\begin{longtable}{@{}P{3.1cm}P{3.9cm}P{3.9cm}P{4.1cm}@{}}
-\caption{Three ways to recognise speech}\label{tab:sttcompare}\\
-\toprule
-\textbf{Criterion} & \textbf{Browser speech API} & \textbf{Cloud speech API} & \textbf{Self-hosted Whisper}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Criterion} & \textbf{Browser speech API} & \textbf{Cloud speech API} & \textbf{Self-hosted Whisper}\\
-\midrule
-\endhead
-\small Where the audio goes & \small Usually to the browser vendor's servers & \small To the provider & \small Stays on the laptop (NFR08)\\
-\small Works offline & \small No & \small No & \small Yes, after the model is downloaded once (NFR06)\\
-\small Browser support & \small Depends on the browser & \small Any & \small Any browser that can record audio\\
-\small Cost & \small Free & \small Per minute of audio & \small Free; uses the CPU of the laptop\\
-\small Control & \small None & \small Limited & \small Model size, language and decoding chosen by the developer\\
-\small Latency & \small Low & \small Network dependent & \small Measured (Section~\ref{sec:3.12}); target 3~s for 5~s of speech\\
-\bottomrule
-\end{longtable}
-
-When the voice server is not running, \code{WhisperClient} raises an error, \code{SpeechService.transcribe}
-returns \code{null}, and the interface invites the customer to type the query instead (alternative flow A4 of
-UC03 in Chapter~\ref{ch:analysis}).
-
-%% -------------------------------------------------------------------------
-Figure~\ref{fig:demo_search_voice} shows the voice search in the demo, next to the image search of the next
-section.
+\textbf{Why the voice model is self-hosted.} A browser or cloud speech API sends the audio to the browser vendor or
+the provider, while self-hosted Whisper keeps it on the laptop. I chose self-hosting because of NFR08: audio is
+personal data, and a voice recorded in a living room can contain other people and private conversations.
 
 \begin{figure}[htbp]
 \centering
@@ -444,8 +225,6 @@ section.
 
 \section{Feature 3: Image Search with Gemma 4 Vision}\label{sec:3.7}
 
-\subsection{From an Image to a Vector}
-
 The A06 brief describes image search with an encoder $f_\theta$ that turns an image $I$ into a feature vector and a
 similarity measure between vectors:
 \begin{equation}
@@ -454,153 +233,73 @@ s(I_q, I_p) = \frac{z_q^{\top} z_p}{\lVert z_q\rVert\,\lVert z_p\rVert}.
 \label{eq:cosine}
 \end{equation}
 In Họa. the encoder has two steps. Gemma~4 vision reads the photo and returns its style, subject and dominant
-colour, restricted to the vocabulary of the shop (\code{ImageService.describe} with the purpose ``artwork'').
-Then \code{VectorIndex.toVector(style, subject, color)} builds a one-hot vector of $10+8+10 = 28$ dimensions: one
-block for the ten styles, one for the eight subjects and one for the ten colours. The catalogue paintings are
-encoded with the same method from their stored attributes (\code{VectorIndex.build} and
-\code{VectorIndex.embedProduct}); frames have no picture and are not indexed. \code{ImageService.embed} returns the
-query vector and \code{QueryService.imageQuery} stores it in \code{CommonQuery.embedding}.
+colour from the vocabulary of the shop (\code{ImageService.describe}); then \code{VectorIndex.toVector} builds a
+one-hot vector of $10+8+10 = 28$ dimensions. The catalogue paintings are encoded in the same way from their stored
+attributes, so the cosine is simply the share of matching attributes (1.00, 0.67 or 0.33 when all three are known),
+and \code{VectorIndex.nearest} keeps the paintings with a similarity above zero: the retrieval
+$R(q) = \operatorname{TopK}_{x\in X} s(q, x)$ of the brief. The request goes from \code{ImageUpload} through
+\code{SearchController}, \code{SearchService}, \code{ImageService} and \code{GemmaClient} to \code{VectorIndex} and
+\code{RankingService} (Figure~\ref{fig:demo_search_image} shows the page); the file is checked in the browser and
+again on the server (NFR03).
 
-With one-hot blocks, the cosine of Equation~\ref{eq:cosine} has a simple meaning. If the photo and the painting
-share $m$ of their known attributes, and $n_q$, $n_p$ attributes are known for each, then
-\begin{equation}
-s = \frac{m}{\sqrt{n_q}\,\sqrt{n_p}},
-\end{equation}
-so a painting that matches style, subject and colour scores 1.00, two attributes score 0.67 and one attribute
-scores 0.33 when all three are known. \code{VectorIndex.nearest(queryEmbedding, k)} keeps only the products with a
-similarity above zero, sorted from the most similar. This is the retrieval
-$R(q) = \operatorname{TopK}_{x\in X} s(q, x)$ of the A06 brief.
-
-\subsection{Interaction and Design Choices}
-
-Figure~\ref{fig:c3_seq_image} shows the interaction. The browser view \code{ImageUpload} checks the type and size of
-the file before sending it (\code{validate}); the server checks again, because a check in the browser can be
-bypassed (NFR03: JPEG, PNG or WebP, at most 5~MB).
-
-\begin{figure}[htbp]
-\centering
-\vpfig{c3_seq_image}{0.47\textheight}
-\caption[Sequence of the image search]{Sequence of the image search, from \texttt{ImageUpload} through
-\texttt{SearchController}, \texttt{SearchService}, \texttt{ImageService} and \texttt{GemmaClient} to
-\texttt{VectorIndex} and \texttt{RankingService}. Visual Paradigm diagram \vpsrc{c3_seq_image}.}
-\label{fig:c3_seq_image}\label{fig:seqimage}
-\end{figure}
-
-An attribute vector was preferred to a learned image embedding for three reasons. It is \emph{explainable}: every
-match can be told to the customer as ``same style, same colour''. It uses the \emph{same vocabulary} as the text
-filters, so text and image scores can be combined in one ranking. And it needs \emph{no extra model} on the laptop:
-the heavy work is done by Gemma~4 on the server. The cost is precision: two blue impressionist landscapes get the
-same vector, so ties are broken by the text and business scores of the ranking (Section~\ref{sec:3.10}). The table
-\code{product_feature} (columns \code{model_version}, \code{feature_vector}) is reserved for a learned embedding in
-a later version, with the model version stored next to each vector.
-
-If Gemma~4 is not reachable, \code{ImageService} reads the average colour of the photo on the laptop and names it
-with the closest of the ten catalogue colours. The search then works on colour only and the result reason says
-``Local colour reading'' instead of ``Gemma 4 vision''.
+An attribute vector was preferred to a learned image embedding because it is \emph{explainable} (``same style, same
+colour''), shares the vocabulary of the text filters and needs no extra model on the laptop. The cost is precision:
+two blue impressionist landscapes get the same vector, so ties are broken by the ranking (Section~\ref{sec:3.10}).
+Without Gemma~4, \code{ImageService} reads the average colour of the photo locally.
 
 %% -------------------------------------------------------------------------
 \section{Feature 4: Find a Painting for My Room}\label{sec:3.8}
 
-The fourth feature answers a question every buyer of a painting asks: \emph{will it suit my room?} A room photo uploaded anywhere in the
-shop opens the page ``Find for my room''; ``find similar paintings'' (UC04, \code{SearchService.searchImage})
-remains a second option for photos of paintings. The suggestion is built in three
-steps, which apply the A06 principle that \emph{retrieval and ranking are different} with a language model as the
-ranker.
-
-\textbf{1. Reading the room.} \code{ImageService.describe(image, "room")} sends the photo to Gemma~4 with a curator
-prompt that asks for the kind of room, a palette of four hex colours, one to three colour names, the tone (warm,
-cool or neutral), the interior style, the mood, the light, the one painting style, subject and colour that fit best,
-a one-sentence reading of the room and, if visible, the box of the largest empty wall area in relative coordinates.
-\code{SearchService.describeRoom} returns this reading to the interface. Because \code{ImageService} remembers each
-answer, the reading is computed only once per photo.
-
-\textbf{2. Retrieval.} \code{SearchService.searchRoom} turns the suggested style, subject and colour into a vector
-with \code{VectorIndex.toVector} and retrieves about twelve candidate paintings by cosine similarity
-(Equation~\ref{eq:cosine}). Retrieval is cheap, deterministic and limited to the catalogue: whatever happens next,
-only these candidates can be suggested.
-
-\textbf{3. Re-ranking by Gemma~4.} \code{SearchService.searchRoom} sends the room photo again to Gemma~4 through
-\code{ImageService.describe}, this time with the purpose ``pick'' followed by one line per shortlisted painting (id,
-title, artist, style, subject, dominant colour, size). Gemma~4 chooses the three to five paintings that suit the room
-best and writes for each one ``why it fits'' sentence of 15 to 25 words that names something seen in the photo and
-the painting's own colours, subject or style. The sentence is stored in \code{SearchResult.reason}. The model can
-only \emph{choose}: an id outside the shortlist is ignored, a sentence that is too short or generic is replaced by
-one built from the attributes, and price, stock and image always come from the database (BR11).
-In terms
-of the A06 formulas,
+The fourth feature answers a question every buyer of a painting asks: \emph{will it suit my room?} It applies the
+A06 principle that \emph{retrieval and ranking are different}, with a language model as the ranker, in three steps.
+\textbf{(1) Reading the room:} \code{SearchService.describeRoom} asks Gemma~4 for the palette, tone, interior style,
+mood and light of the room photo, the painting style, subject and colour that fit best, and the largest empty wall
+area. \textbf{(2) Retrieval:} \code{SearchService.searchRoom} turns that style, subject and colour into a vector and
+retrieves about twelve candidates by cosine similarity (Equation~\ref{eq:cosine}). \textbf{(3) Re-ranking:} the photo
+is sent again with one line per candidate; Gemma~4 chooses three to five paintings and writes for each a ``why it
+fits'' sentence of 15 to 25 words, stored in \code{SearchResult.reason}. The model can only \emph{choose}: an id
+outside the shortlist is ignored, a generic sentence is replaced by one built from the attributes, and price, stock
+and image always come from the database (BR11). In terms of the A06 formulas,
 \begin{align}
 C(q) &= \operatorname{TopK}_{x}\; s(z_q, z_x), && |C(q)| \approx 12,\\
 R(q) &= \operatorname{Gemma}\bigl(\text{photo}, C(q)\bigr) \subseteq C(q), && 3 \le |R(q)| \le 5,
 \end{align}
-where $C(q)$ is the retrieved candidate set and $R(q)$ the ranked suggestion. The vector decides what is
-\emph{possible}; the model, which sees the room and the paintings together, decides what is \emph{best} and says
-why.
-
-\textbf{Fallback and explainability.} If the re-ranking call fails, times out or returns no valid id, the vector
-ranking of \code{RankingService} is kept and the reasons are built from the matching attributes (for example
-``Impressionism / landscape / blue''); if even the reading of the room fails, only the main colour of the photo is
-read locally (NFR02). Each reason returned by the server names the path that produced it; the shop page turns it
-into plain words for the customer, and the developer view (\code{?debug=1}) shows the path itself.
-
-\textbf{The page.} The browser view \code{RoomPreview} receives the photo (\code{chooseRoom}), shows the reading
-of the room (``What we see'': palette, tags and one sentence) from \code{SearchController.describeRoom}, then the
-picks from \code{SearchController.searchRoom} (\code{renderSuggestions}): the best pick is hung on the customer's
-own wall with its ``Why it fits'' sentence, and the other picks wait in a strip below. Choosing a pick from the strip,
-or pressing ``Try it in my room'' on a painting page, hangs that painting on the same wall (\code{placePainting}),
-from where it can be added to the cart. The photo is kept only in the browser tab (\code{sessionStorage}); it is
-never stored on the server (Figure~\ref{fig:demo_room_preview}). Table~\ref{tab:spec14} specifies the use
-case in the format of Lecture~03.
-
-\begin{figure}[htbp]
-\centering
-\demofig{room_preview}{0.30\textheight}
-\caption[Find a painting for my room]{Find a painting for my room: the reading of the room (palette, style, mood), the suggestions chosen by Gemma~4 with their reasons, and a painting placed on the wall (UC14). Screenshot \demosrc{room_preview}.}\label{fig:demo_room_preview}
-\end{figure}
-
-\begin{longtable}{@{}P{3.0cm}P{12.0cm}@{}}
-\caption{Specification of UC14 Find Painting for My Room}\label{tab:spec14}\\
-\toprule
-\textbf{Element} & \textbf{Description}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Element} & \textbf{Description}\\
-\midrule
-\endhead
-\specrow{Primary actor}{Customer}
-\specrow{Supporting actor}{Gemma 4 Service (reads the room, re-ranks the candidates)}
-\specrow{Goal}{Choose a painting that suits a real room and see how it would look on the wall.}
-\specrow{Trigger}{The customer uploads a photo of the room anywhere in the shop (the page ``Find for my room'' opens), or presses ``Try it in my room'' on a painting page.}
-\specrow{Preconditions}{The photo is JPEG, PNG or WebP and not larger than 5~MB (NFR03).}
-\specrow{Postconditions}{The customer has seen the reading of the room and three to five suggested paintings, each with a reason; the photo is not stored; the cart changes only if the customer adds a painting.}
-\specrow{Main flow}{1. The customer uploads a photo of the room; the page ``Find for my room'' opens and keeps the photo in the browser tab only. 2. The system checks the file. 3. The system asks the Gemma 4 Service to read the room (palette, tone, interior style, mood, light, best painting style, subject and colour, empty wall area). 4. The system shows what it sees: palette, tags and one sentence. 5. The system shortlists about twelve paintings by cosine similarity with the suggested style, subject and colour. 6. The system sends the room photo and the shortlist to the Gemma 4 Service, which picks three to five paintings with a ``why it fits'' sentence each. 7. The system hangs the best pick on the customer's wall with its sentence and shows the other picks in a strip. 8. The customer chooses another pick, which replaces the first on the wall. 9. The customer adds the painting (and a frame) to the cart (UC06).}
-\specrow{A1 -- Room not read}{At step 3 Gemma fails or times out: the system reads the main colour of the photo locally, says that only the colour was read, and ranks the paintings by colour (NFR02).}
-\specrow{A2 -- Re-ranking fails}{At step 6 Gemma fails, times out or names no painting of the candidate list: the system keeps the vector ranking, builds each reason from the matching attributes and says that the suggestions come from similarity only (NFR02).}
-\specrow{A3 -- Invalid file}{At step 2 the file has another type or is too large: the system rejects it with a clear message and does not call Gemma (NFR03).}
-\specrow{A4 -- No empty wall found}{At step 7 Gemma gave no wall area: the system places the painting in the upper middle of the photo and the customer moves it.}
-\specrow{A5 -- No suitable painting}{At step 5 no painting has a similarity above zero: the system shows an empty state and suggests browsing the collection.}
-\specrow{A6 -- From a painting page}{The customer presses ``Try it in my room'' on a painting page: if a room photo is kept in the tab, that painting is hung on it directly (steps 7--9); otherwise the customer is asked for a photo first.}
-\specrow{Rules}{The AI suggests, it never changes price or stock (BR11); the room photo is processed in memory only.}
-\specrow{Requirements}{FR14, FR05, FR06, NFR02, NFR03}
-\bottomrule
-\end{longtable}
+so the vector decides what is \emph{possible} and the model, which sees the room and the paintings together,
+decides what is \emph{best} and says why; if it fails, the vector ranking is kept (NFR02). The page
+\code{RoomPreview} hangs the best pick on the customer's own wall with its sentence
+(Figure~\ref{fig:demo_room_preview}); the photo stays in the browser tab and is never stored on the server.
 
 %% -------------------------------------------------------------------------
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.485\linewidth}\centering
+\demofig{room_preview}{0.21\textheight}
+\caption[Find a painting for my room]{Find a painting for my room: the reading of the room (palette, style, mood), the suggestions chosen by Gemma~4 with their reasons, and a painting placed on the wall (UC14). Screenshot \demosrc{room_preview}.}\label{fig:demo_room_preview}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}\centering
+\demofig{assistant}{0.21\textheight}
+\caption[The curator assistant]{The curator assistant answers ``where is my latest order?'' with the order of the signed-in customer (UC10). Screenshot \demosrc{assistant}.}\label{fig:demo_assistant}
+\end{minipage}
+\end{figure}
+
 \section{Feature 5: Curator Assistant with Tool Calling}\label{sec:3.9}
 
 The A06 brief lists order questions such as ``find my order 20261001'' and ``where is my latest order?''. Họa.
-answers them, and painting questions, with a curator assistant. The assistant is not a chatbot that knows the
-shop; it is a language model that \emph{chooses a function} of the shop and lets the shop run it.
-\code{AssistantService.ask(customerId, message)} works in rounds (at most three):
-\begin{enumerate}
-\item It sends the system prompt, the message and the tool list (\code{AssistantService.tools}) to Gemma~4.
-\item If Gemma answers with text, the text is the reply. If it asks for tools, \code{runTool} executes each tool
-for the customer of the session and appends the result, as JSON, to the conversation.
-\item Gemma reads the results and writes the final answer in at most three short sentences.
-\end{enumerate}
-The system prompt says that the shop sells prints of public-domain paintings and frames, that prices are in US
-dollars, that the customer is already signed in, and that the assistant must always use the tools and never invent
-order numbers, prices or states. Table~\ref{tab:tools} lists the four tools.
+answers them, and painting questions, with a curator assistant that is not a chatbot that knows the shop but a
+language model that \emph{chooses a function} of the shop and lets the shop run it. \code{AssistantService.ask}
+sends the message and the tool list (Table~\ref{tab:tools}) to Gemma~4; when Gemma asks for tools, \code{runTool}
+executes them for the customer of the session and returns the results, and Gemma writes a short answer, in at most
+three rounds (Figure~\ref{fig:demo_assistant}). The prompt tells it to always use the tools and never invent order
+numbers, prices or states (Figure~\ref{fig:c3_seq_assistant}).
+
+\begin{figure}[htbp]
+\centering
+\vpfig{c3_seq_assistant}{0.47\textheight}
+\caption[Sequence of the curator assistant]{Sequence of the curator assistant: Gemma~4 chooses a tool,
+\texttt{AssistantService} runs it for the customer of the session through \texttt{OrderService} and
+\texttt{OrderRepository}. Visual Paradigm diagram \vpsrc{c3_seq_assistant}.}
+\label{fig:c3_seq_assistant}\label{fig:seqassistant}
+\end{figure}
 
 \begin{longtable}{@{}P{3.0cm}P{2.6cm}P{5.0cm}P{4.4cm}@{}}
 \caption{Tools of the curator assistant}\label{tab:tools}\\
@@ -619,82 +318,20 @@ order numbers, prices or states. Table~\ref{tab:tools} lists the four tools.
 \bottomrule
 \end{longtable}
 
-\textbf{Security.} No tool takes a customer id as a parameter. \code{AssistantController.ask} receives the customer
-id from the session (\code{SessionManager.customerOf}), and \code{runTool} always passes that id to
-\code{OrderService}. Even if a message tries to make the model ask for another customer's order, the order service
-checks \code{Order.isOwnedBy} and refuses (NFR01). The tools only \emph{read} data, so a manipulated prompt cannot
-cancel, pay for or change an order.
-
-\textbf{Fallback.} When Gemma cannot be reached, \code{AssistantService} answers without AI: an eight- to
-fourteen-digit number in the message is treated as an order number, the words ``latest'' or ``recent'' call the
-latest-order tool, the word ``order'' lists the orders, and anything else is searched as a painting request. The
-reply then starts with ``(Gemma 4 is offline)'' and \code{AssistantReply.aiUsed} is false; the shop page removes
-the prefix for the customer and shows the mode only in the developer view.
-
-\begin{figure}[htbp]
-\centering
-\vpfig{c3_seq_assistant}{0.47\textheight}
-\caption[Sequence of the curator assistant]{Sequence of the curator assistant: Gemma~4 chooses a tool,
-\texttt{AssistantService} runs it for the customer of the session through \texttt{OrderService} and
-\texttt{OrderRepository}. Visual Paradigm diagram \vpsrc{c3_seq_assistant}.}
-\label{fig:c3_seq_assistant}\label{fig:seqassistant}
-\end{figure}
-
-\begin{longtable}{@{}P{3.0cm}P{12.0cm}@{}}
-\caption{Specification of UC10 Ask Shopping Assistant}\label{tab:spec10}\\
-\toprule
-\textbf{Element} & \textbf{Description}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Element} & \textbf{Description}\\
-\midrule
-\endhead
-\specrow{Primary actor}{Customer (signed in for order questions)}
-\specrow{Supporting actor}{Gemma 4 Service (understands the question, chooses tools)}
-\specrow{Goal}{Get an answer about paintings or about one's own orders in a single sentence, without navigating the shop.}
-\specrow{Trigger}{The customer types or speaks a question in the assistant panel.}
-\specrow{Preconditions}{For order questions the customer is signed in; the session holds the customer id.}
-\specrow{Postconditions}{The customer receives an answer built from real data of the shop; no data is changed.}
-\specrow{Main flow}{1. The customer sends a question, for example ``where is my latest order?''. 2. The system sends the question and the tool list to the Gemma 4 Service. 3. Gemma chooses a tool, for example \texttt{latest\_order}. 4. The system runs the tool for the customer of the session and returns the result to Gemma. 5. Gemma writes a short answer from the result. 6. The system shows the answer and which tools were used.}
-\specrow{A1 -- Order of another customer}{At step 4 the order exists but belongs to another account: the tool returns an error, and the answer says that the order was not found in the customer's account (NFR01).}
-\specrow{A2 -- AI does not answer}{At step 2 Gemma fails or times out: the system answers with the rule-based fallback and marks the reply as offline (NFR02).}
-\specrow{A3 -- No order yet}{At step 4 the customer has no order: the tool says so and Gemma answers accordingly.}
-\specrow{A4 -- Too many rounds}{After three tool rounds Gemma has not answered: the system apologises and asks the customer to rephrase.}
-\specrow{Rules}{The customer id comes only from the session; the tools only read data (BR11).}
-\specrow{Requirements}{FR10, FR09, FR08, NFR01, NFR02}
-\bottomrule
-\end{longtable}
-
-%% -------------------------------------------------------------------------
-Figure~\ref{fig:demo_assistant} shows an answer of the assistant in the demo; Figure~\ref{fig:demo_ai_fallback}
-shows the same search page when Gemma~4 cannot be reached.
-
-\begin{figure}[htbp]
-\centering
-\begin{minipage}[t]{0.485\linewidth}\centering
-\demofig{assistant}{0.21\textheight}
-\caption[The curator assistant]{The curator assistant answers ``where is my latest order?'' with the order of the signed-in customer (UC10). Screenshot \demosrc{assistant}.}\label{fig:demo_assistant}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.485\linewidth}\centering
-\demofig{ai_fallback}{0.21\textheight}
-\caption[Search and assistant with Gemma 4 switched off]{The same page with Gemma~4 switched off: the search results come from the keyword rules and the assistant answers from its rule-based tools, so the page looks normal to the customer (NFR02). Screenshot \demosrc{ai_fallback}.}\label{fig:demo_ai_fallback}
-\end{minipage}
-\end{figure}
+\textbf{Security.} No tool takes a customer id as a parameter: \code{runTool} always passes the id of the session
+to \code{OrderService}, which checks \code{Order.isOwnedBy} and refuses another customer's order (NFR01). The tools
+only \emph{read} data, so a manipulated prompt cannot cancel, pay for or change an order. \textbf{Fallback.} Without
+Gemma, an order number, the words ``latest'' or ``order'' call the matching tool and anything else is searched as a
+painting request.
 
 \section{Retrieval, Ranking and Multimodal Fusion}\label{sec:3.10}
 
-The A06 brief insists that retrieval and ranking are different operations (Principle~3). In Họa. they are two
-methods of two classes.
-
-\textbf{Retrieval} (\code{SearchService.retrieve}) reads the catalogue through \code{ProductRepository.allProducts},
-applies the hard condition first (a product above \code{CommonQuery.maxPrice} is never a candidate, whatever its
-score), and gives each remaining product two scores. The text score $S_{\text{text}}$ is the average of the share
-of query keywords found in \code{Product.keywords()} and the share of requested attributes (style, subject, colour,
-artist) that the painting has; an artist matches by part of the name, so ``Monet'' matches ``Claude Monet''. The
-image score $S_{\text{image}}$ is the cosine similarity of Equation~\ref{eq:cosine} when the query has a vector, and
-zero otherwise. A text query keeps the products with $S_{\text{text}}>0$, an image or room query keeps those with
-$S_{\text{image}}>0$, and a multimodal query keeps either.
+The A06 brief insists that retrieval and ranking are different operations (Principle~3); in Họa. they are two
+methods of two classes. \textbf{Retrieval} (\code{SearchService.retrieve}) applies the hard condition first (a
+product above \code{CommonQuery.maxPrice} is never a candidate) and gives each remaining product two scores: the text
+score $S_{\text{text}}$, the average of the share of query keywords found and the share of requested attributes
+(style, subject, colour, artist) that the painting has, and the image score $S_{\text{image}}$, the cosine of
+Equation~\ref{eq:cosine} when the query has a vector.
 
 \textbf{Ranking} (\code{RankingService.rank}) orders the candidates with the weighted sum of the A06 brief:
 \begin{equation}
@@ -702,43 +339,14 @@ S(x \mid q) = \alpha\, S_{\text{text}} + \beta\, S_{\text{image}} + \gamma\, S_{
 \qquad \alpha = \cfgRankingAlpha,\ \beta = \cfgRankingBeta,\ \gamma = \cfgRankingGamma.
 \label{eq:ranking}
 \end{equation}
-The weights are parameters of the constructor \code{RankingService(alpha, beta, gamma)} and are read from
-\code{ranking.alpha}, \code{ranking.beta} and \code{ranking.gamma} in the configuration file.
-\code{RankingService.businessScore} gives zero to a sold-out product, so it sinks to the end, and
-$\min(1, \text{stock}/5)$ otherwise, a small preference for prints that can be delivered at once. The business part
-has a deliberately small weight: the customer's request must decide the order, the shop's interest only breaks
-ties.
-
-\textbf{A language model as the ranker.} For the room (Section~\ref{sec:3.8}) the same separation is kept but the
-ranker changes: retrieval still returns the vector candidates, and Gemma~4 orders a short list of them by looking at
-the room and the paintings together. Equation~\ref{eq:ranking} remains the fallback ranker, so the result is never
-worse than the similarity ranking when the model is unavailable.
-
-\textbf{Multimodal fusion.} For a query with both text and image the brief combines the representations and the
-scores:
-\begin{equation}
-z = \lambda_t z_t + \lambda_i z_i + \lambda_v z_v, \quad \lambda_t+\lambda_i+\lambda_v = 1, \qquad
-S(p \mid q) = \lambda_t S_t(p \mid q_t) + \lambda_i S_i(p \mid q_i).
-\end{equation}
-\code{SearchService.searchMultimodal} implements the score form: the text sentence fills the filters of the
-\code{CommonQuery}, the image fills its \code{embedding}, and Equation~\ref{eq:ranking} adds the two scores. Because
-$\alpha = \beta$, the text and the image have the same weight, which is the $\lambda_t = \lambda_i = 0.5$ example of
-the brief after normalisation; voice needs no separate $\lambda_v$ because a transcript is text.
-
-\begin{figure}[htbp]
-\centering
-\demofig{search_debug}{0.26\textheight}
-\caption[Score breakdown in the developer view]{Developer view of the search ``blue landscape paintings'': each card
-shows $S_{\text{text}}$, $S_{\text{image}}$, $S_{\text{business}}$ and the final score $S$ of
-Equation~\ref{eq:ranking}, under the reason given to the customer. Screenshot \demosrc{search_debug}.}\label{fig:demo_search_debug}
-\end{figure}
-
-Figure~\ref{fig:demo_search_debug} shows these three scores in the demo's developer view, which is switched on only
-for this screenshot. \textbf{Explanation.} Every \code{SearchResult} carries a \code{reason} built from the parts that really matched,
-for example ``Gemma 4 / landscape / blue / under \$100'' or ``Gemma 4 vision / Impressionism / 67\% visual match''
-(the interface separates the parts with small squares). The first part says which path produced the query (Gemma~4,
-Gemma~4 vision, keyword rules or local colour reading). Showing why a painting is suggested makes the AI
-inspectable and helps the customer correct the request.
+\code{RankingService.businessScore} gives zero to a sold-out product and $\min(1, \text{stock}/5)$ otherwise; its
+weight is deliberately small, so the customer's request decides the order and the shop's interest only breaks ties.
+\textbf{Multimodal fusion} (\code{SearchService.searchMultimodal}) is the score form of the brief,
+$S(p \mid q) = \lambda_t S_t + \lambda_i S_i$: the sentence fills the filters, the image fills the \code{embedding},
+and because $\alpha = \beta$ both have the same weight; voice needs no weight of its own because a transcript is
+text. \textbf{Explanation:} every \code{SearchResult} carries a \code{reason} built from the parts that really
+matched, for example ``Gemma 4 / landscape / blue / under \$100'', which makes the AI inspectable and helps the
+customer correct the request.
 
 %% -------------------------------------------------------------------------
 \section{Fallback, Safety and Privacy}\label{sec:3.11}
@@ -766,74 +374,23 @@ does in each case; the behaviour is part of the design, not an error message add
 \bottomrule
 \end{longtable}
 
-\textbf{Privacy.} Audio never leaves the laptop (NFR08). Photos are sent to the Gemma server for the
-time of one request and are not stored by Họa.; only an in-memory cache of the answer is kept, limited to fifty
-entries. The assistant sends Gemma only the question and the results of the tools for the signed-in customer (order
-number, status, total, lines, carrier, tracking number and delivery address), never card data: the database itself keeps only the last four digits and the authorisation
-code (NFR05). The API key is in the configuration file, not in the source code.
-
-\textbf{Risk management.} The NIST AI Risk Management Framework organises the work in four functions
-\cite{nistairmf}. Table~\ref{tab:rmf} applies them to Họa.
-
-\begin{longtable}{@{}P{2.4cm}P{12.6cm}@{}}
-\caption{NIST AI RMF applied to Họa.}\label{tab:rmf}\\
-\toprule
-\textbf{Function} & \textbf{Application in Họa.}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Function} & \textbf{Application in Họa.}\\
-\midrule
-\endhead
-\small GOVERN & \small The shop decides that AI only suggests and explains; prices, stock, ownership and order states are rules (BR11). Prompts, vocabulary and weights are versioned with the code.\\
-\small MAP & \small The customer is the person affected; the possible harms are wrong suggestions, exposure of another customer's order and leaks of audio or photos. Each is mapped to a requirement (FR01, NFR01, NFR08).\\
-\small MEASURE & \small Labelled queries for each mode, success rate and latency (Section~\ref{sec:3.12}); every result shows its reason and whether AI was used.\\
-\small MANAGE & \small Fallback paths (Table~\ref{tab:fallback}), editable transcripts, read-only tools, timeouts and input validation of uploads.\\
-\bottomrule
-\end{longtable}
+\textbf{Privacy.} Audio never leaves the laptop (NFR08). Photos are sent to the Gemma server for one request and
+are not stored by Họa. The assistant sends Gemma only the question and the tool results for the signed-in customer
+(delivery address included), never card data, of which the database keeps only the last four digits (NFR05).
 
 %% -------------------------------------------------------------------------
 \section{Human-in-the-Loop and AI Risk Analysis}\label{sec:hitl}
 
-\subsection{Human-in-the-Loop}\label{sec:hitl.human}
+The material sums up AI design as \emph{prediction + fallback + human control}. Besides the fallback, a person
+stays in control at four points: the customer corrects the Whisper transcript before the search runs (FR02) and
+decides to buy after checking price and stock, since no AI path calls the cart (UC06); the administrator enters the
+attributes, price and stock of the catalogue (UC12) and moves the status of an order, which the customer may cancel
+before shipment (UC11, UC13). A chatbot therefore never changes an order by itself. A hand-over to the support staff
+for questions no tool covers (a return, a refund) is proposed but not implemented.
 
-The material sums up AI design as \emph{prediction + fallback + human control}. Section~\ref{sec:3.11} gave the
-fallback; Table~\ref{tab:hitl} gives the human control. In Họa. the AI proposes a transcript, a ranking or an answer,
-and every business action -- adding to the cart, placing or cancelling an order, changing a price, the stock or a
-status -- is a use case without AI, started by a customer or the administrator. So the material's question whether a
-chatbot may change an order by itself is answered with no.
-
-\begin{longtable}{@{}P{2.5cm}P{2.9cm}P{6.1cm}P{3.5cm}@{}}
-\caption{Points where a person stays in control of the AI}\label{tab:hitl}\\
-\toprule
-\textbf{Point} & \textbf{The AI proposes} & \textbf{The person decides} & \textbf{Where}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Point} & \textbf{The AI proposes} & \textbf{The person decides} & \textbf{Where}\\
-\midrule
-\endhead
-\small Voice transcript & \small Whisper's text & \small The customer corrects it before the search runs; in the assistant it is sent only on ``Send''. & \small \code{SearchUI.submitVoice}; FR02\\
-\small Results, room picks & \small A ranking and a reason & \small The customer checks price and stock on the painting page and decides to buy; no AI path calls the cart. & \small UC05, UC06; FR18\\
-\small Catalogue & \small Nothing: it only reads & \small The administrator enters attributes, price and stock. & \small UC12; FR12, BR11\\
-\small Orders & \small The assistant reports the status & \small The administrator moves the status; the customer cancels before shipment. & \small UC11, UC13; BR06, BR07\\
-\bottomrule
-\end{longtable}
-
-\textbf{When a person must take over.} Four situations need one: a question no tool covers (a return, a damaged
-print, a refund, a new address), a request to change an order, an answer the customer believes is wrong, and a
-conversation that reaches the limit of three tool rounds. The code does not hand these over yet: the system prompt
-does not mention the support staff, there is no hand-over tool, and at the limit the assistant only asks the customer
-to ask again. I propose, but have not implemented, one rule for the prompt, the rule-based fallback and the round
-limit: when no tool fits, say that the support staff will help and how to reach them. Because the tools only read
-(BR11), a wrong status comes from the administrator's data and a wrong wording from the model; the customer can check
-both, since order numbers in an answer link to the order page (\code{AssistantView}).
-
-\subsection{AI Risk Analysis}\label{sec:airisk}
-
-Table~\ref{tab:airisk} goes one level below the NIST functions of Table~\ref{tab:rmf} and lists, as the material
-does, the risks that AI adds to Họa. Service failure is covered by Table~\ref{tab:fallback} and lack of explanation
-by AIR04.
+Following the NIST AI Risk Management Framework \cite{nistairmf}, the governing decision is that AI only suggests
+while prices, stock, ownership and order states are rules (BR11). Table~\ref{tab:airisk} lists the risks that AI adds
+to Họa.; service failure is covered by Table~\ref{tab:fallback}.
 
 \begin{longtable}{@{}P{1.95cm}P{4.35cm}P{5.45cm}P{3.25cm}@{}}
 \caption{AI risks of Họa.: example, response and where it is handled}\label{tab:airisk}\\
@@ -863,33 +420,17 @@ number of queries, the success rate and examples of incorrect results.
 \text{Success rate} = \frac{\text{Number of successful queries}}{\text{Total number of queries}}.
 \label{eq:successrate}
 \end{equation}
-The script \code{demo/scripts/evaluate.py} starts two copies of the shop on fresh databases, one with Gemma~4 and one
-with Gemma~4 unreachable, and sends every request through the HTTP API, so each AI method is measured together with
-its fallback. Its pass criteria are the following.
-\begin{itemize}
-\item \textbf{Text and voice search.} Each request has a set of relevant paintings defined from the catalogue
-      attributes (for ``Monet paintings under 100 dollars'': artist Monet, price at most 100~USD) or one named painting.
-      Hit@1, the success rate of Equation~(\ref{eq:successrate}), is the share of requests whose first result is
-      relevant; P@5 the share of relevant results among the first five; MRR the mean reciprocal rank of the first
-      relevant result. There are 14 direct requests (12 also recorded and transcribed by Whisper) and 6 paraphrases
-      that avoid every style, subject and colour word known to the keyword rules.
-\item \textbf{Image search.} Eight photos of catalogue paintings that differ from the shop images; a query succeeds
-      when the photographed painting is ranked first (Hit@1) or among the first three (Hit@3).
-\item \textbf{Assistant.} Seven questions about orders and paintings. An answer is correct when it contains every
-      expected element -- for ``find my order 20261001'' the order number and the word ``ship'', for another
-      customer's order a refusal such as ``not found''; the tool is right when the expected tool was called; leaked
-      words counts words of another customer's order that appear in the answer.
-\item \textbf{Room suggestions.} The three sample rooms of the demo. Each suggestion must carry a reason of 15 to 25
-      words that is \emph{concrete}: it names something of the painting (colour, subject, style or artist) and
-      something of the room (a word such as sofa, wall or floor, or a colour, tone, light or mood of the reading).
-\end{itemize}
-Tables~\ref{tab:evalsearch}--\ref{tab:evalroom} give the results of the last run, with $n$ the number of queries.
-They are filled from \code{build/eval/eval_tables.tex}, written by the script, so no number is retyped.
+The script \code{demo/scripts/evaluate.py} runs every request through the HTTP API of two copies of the shop, one
+with Gemma~4 and one with Gemma~4 unreachable, so each AI method is measured together with its fallback. Each text
+or voice request has a set of relevant paintings (for ``Monet paintings under 100 dollars'': artist Monet, price at
+most 100~USD); Hit@1, the success rate of Equation~(\ref{eq:successrate}), is the share of requests whose first result
+is relevant, P@5 the share of relevant results among the first five, MRR the mean reciprocal rank. The paraphrases
+avoid every word known to the keyword rules; an image query succeeds when the photographed painting is first (Hit@1)
+or among the first three (Hit@3). Table~\ref{tab:evalsearch} is filled from \code{build/eval/eval_tables.tex},
+written by the script, so no number is retyped.
 
 \IfFileExists{../build/eval/eval_tables.tex}{\input{../build/eval/eval_tables.tex}}{}
 \providecommand{\evalSearchRows}{\multicolumn{6}{l}{\small (run demo/scripts/evaluate.py)}\\}
-\providecommand{\evalAssistantRows}{\multicolumn{6}{l}{\small (run demo/scripts/evaluate.py)}\\}
-\providecommand{\evalRoomRows}{\multicolumn{6}{l}{\small (run demo/scripts/evaluate.py)}\\}
 
 \begin{table}[htbp]
 \centering\small
@@ -903,102 +444,41 @@ They are filled from \code{build/eval/eval_tables.tex}, written by the script, s
 \end{tabular}
 \end{table}
 
-\begin{table}[htbp]
-\centering\small
-\caption{Assistant evaluation: correct answers, right tool, words of another customer's order}\label{tab:evalassistant}
-\begin{tabular}{@{}lrrrrr@{}}
-\toprule
-\textbf{Mode} & $\boldsymbol{n}$ & \textbf{Correct} & \textbf{Right tool} & \textbf{Leaked words} & \textbf{s}\\
-\midrule
-\evalAssistantRows
-\bottomrule
-\end{tabular}
-\end{table}
+The assistant answered \evAsstGemmaCorrect{} of \evAsstGemmaN{} labelled questions about orders and paintings
+correctly, chose the right tool in \evAsstGemmaTool{} of \evAsstGemmaN{}, leaked \evAsstGemmaLeaks{} words of another
+customer's order and took \evAsstGemmaSec~s per question; its rule-based fallback answered \evAsstRulesCorrect{} of
+\evAsstRulesN{} correctly. In the \evRoomGemmaRooms{} sample rooms Gemma~4 made \evRoomGemmaPicks{} picks, of which
+\evRoomGemmaLength{} had a reason of 15--25 words and \evRoomGemmaConcrete{} a concrete reason naming both the
+painting and the room, at \evRoomGemmaSec~s per room.
 
-\begin{table}[htbp]
-\centering\small
-\caption{Room suggestions: picks, reasons of 15--25 words, concrete reasons}\label{tab:evalroom}
-\begin{tabular}{@{}lrrrrr@{}}
-\toprule
-\textbf{Mode} & \textbf{Rooms} & \textbf{Picks} & \textbf{15--25 words} & \textbf{Concrete} & \textbf{s/room}\\
-\midrule
-\evalRoomRows
-\bottomrule
-\end{tabular}
-\end{table}
-
-\textbf{Reading the results.} The figures come from one run on small sets ($n$ is given in every row), and the
-results with Gemma~4 vary from run to run: over the runs made for this essay, image Hit@1 with Gemma~4 lay between
-0.62 and 0.75 and paraphrase Hit@1 between 0.50 and 0.67. On direct text requests Gemma~4 and the keyword rules
-reach the same Hit@1 (\evTextGemmaHitOne{} and \evTextRulesHitOne{}), so the essay does not claim that the model
-beats the rules there. The clear gain is image search: Hit@1 / Hit@3 of \evImageGemmaHitOne{} / \evImageGemmaSecond{}
-with Gemma~4 vision against \evImageLocalHitOne{} / \evImageLocalSecond{} with the offline colour reader ($n =
-\evImageGemmaN$). Voice search reached Hit@1 \evVoiceHitOne{} on \evVoiceN{} recordings; over all
-\evWhisperRecordings{} recordings Whisper's mean WER was \evWhisperWer{} at about \evWhisperSec~s per recording, and
-\evOrderKept{} of \evOrderTotal{} spoken order numbers were transcribed intact. The assistant was correct
-in \evAsstGemmaCorrect{}/\evAsstGemmaN{} questions with Gemma~4 and \evAsstRulesCorrect{}/\evAsstRulesN{} with the
-rules, with \evAsstGemmaLeaks{} leaked words; \evRoomGemmaLength{} of \evRoomGemmaPicks{} room reasons had 15--25 words.
+\textbf{Reading the results.} The figures come from one run on small sets, and the results with Gemma~4 vary from
+run to run (image Hit@1 between 0.62 and 0.75, paraphrase Hit@1 between 0.50 and 0.67 over the runs made for this
+essay). On direct text requests Gemma~4 and the keyword rules reach the same Hit@1 (\evTextGemmaHitOne{} and \evTextRulesHitOne{}), so the
+essay does not claim that the model beats the rules there. The clear gain is image search: Hit@1 / Hit@3 of
+\evImageGemmaHitOne{} / \evImageGemmaSecond{} with Gemma~4 vision against \evImageLocalHitOne{} /
+\evImageLocalSecond{} with the offline colour reader. Whisper's mean WER was \evWhisperWer{} over
+\evWhisperRecordings{} recordings, with \evOrderKept{} of \evOrderTotal{} spoken order numbers intact, and
+\voiceWER\,\% on a separate set of \voiceUtterances{} synthetic utterances at \voiceMeanSeconds~s on average, within
+the 3~seconds of NFR08. The business metrics were not measured; they need real traffic and an A/B test.
 
 \textbf{Incorrect results.} As the brief asks, the failures of the same run are listed below as the script wrote
 them; ``Klimt'' heard as ``Climbed'' is the only voice miss caused by speech recognition.
 
 \txtfileor{generated/eval_errors.txt}{../build/eval/eval_summary.txt}
 
-\textbf{Speech recognition.} On a separate set of \voiceUtterances{} synthetic English utterances, the model
-\texttt{\voiceModel} on the laptop CPU reached a WER of \voiceWER\,\%, a CER of \voiceCER\,\%, \voiceExact{} of
-\voiceExactOf{} sentences exact and a mean time of \voiceMeanSeconds~s (maximum \voiceMaxSeconds~s), well within the
-3~seconds of NFR08; only the English part of \code{build/eval/voice_eval.txt} is reproduced.
-
-\txtfileor{generated/voice_eval_en.txt}{../build/eval/voice_eval.txt}
-
-\subsection{AI Requirements Traceability}\label{sec:aitrace}
-
-The material asks that every AI component be traceable to a business objective, and warns that model accuracy is not
-business success. Table~\ref{tab:aitrace} closes the chain: objective (Table~\ref{tab:goals}) $\rightarrow$
-requirement $\rightarrow$ AI feature $\rightarrow$ technical metric measured above $\rightarrow$ business metric. The
-business metrics were not measured in this study (Section~\ref{sec:3.1}).
-
-\begin{longtable}{@{}P{1.2cm}P{1.75cm}P{2.6cm}P{5.25cm}P{4.2cm}@{}}
-\caption{AI traceability: business objective, requirement, AI feature, technical and business metric}\label{tab:aitrace}\\
-\toprule
-\textbf{BO} & \textbf{Require\-ment} & \textbf{AI feature} & \textbf{Technical metric (measured)} & \textbf{Business metric (not measured)}\\
-\midrule
-\endfirsthead
-\toprule
-\textbf{BO} & \textbf{Require\-ment} & \textbf{AI feature} & \textbf{Technical metric (measured)} & \textbf{Business metric (not measured)}\\
-\midrule
-\endhead
-\small BO1 & \small FR01 & \small Query under\-standing & \small Hit@1 \evTextGemmaHitOne{} ($n=\evTextGemmaN$), paraphrased \evParaGemmaHitOne{} ($n=\evParaGemmaN$) & \small Time from the first query to the painting page\\
-\small BO1 & \small FR02, NFR08 & \small Voice search & \small Hit@1 \evVoiceHitOne{} ($n=\evVoiceN$); WER \voiceWER\,\%; \voiceMeanSeconds~s per transcription & \small Voice searches that reach a painting page\\
-\small BO1, BO2 & \small FR03 & \small Image search & \small Hit@1 / Hit@3 \evImageGemmaHitOne{} / \evImageGemmaSecond{} ($n=\evImageGemmaN$) & \small Photo searches followed by ``add to cart''\\
-\small BO1 & \small FR04 & \small Multimodal search & \small Not measured: no labelled text-and-photo requests & \small As for text and image\\
-\small BO2 & \small FR14, FR18 & \small Room picks and their reasons & \small \evRoomGemmaPicks{} picks in \evRoomGemmaRooms{} rooms, \evRoomGemmaLength{} reasons of 15--25 words, \evRoomGemmaConcrete{} concrete & \small Room visits with ``add to cart''; with and without reasons (A/B test)\\
-\small BO4 & \small FR10 & \small Curator assistant & \small \evAsstGemmaCorrect/\evAsstGemmaN{} correct, \evAsstGemmaTool/\evAsstGemmaN{} right tool, \evAsstGemmaSec~s & \small Order questions answered without staff\\
-\small BO5 & \small NFR01 & \small Assistant tools & \small \evAsstGemmaLeaks{} leaked words ($n=\evAsstGemmaN$) & \small Customers who saw another's order\\
-\small BO1, BO4 & \small NFR02 & \small Fallbacks & \small Offline: text Hit@1 \evTextRulesHitOne{}, image \evImageLocalHitOne{}, assistant \evAsstRulesCorrect/\evAsstRulesN{} & \small Sessions ending in an error while the model is down\\
-\bottomrule
-\end{longtable}
-
-The evidence is strongest for image search, where Gemma~4 vision clearly beats its fallback, and for the assistant.
-For text, Gemma~4 did not beat the keyword rules on this set, so its value for BO1 is still open. Reaching the
-business column needs real traffic: a log of searches, page views and ``add to cart'' actions, and an A/B test that
-switches one AI feature off for part of the customers.
-
 %% -------------------------------------------------------------------------
 \section{When to Use AI and When Not}\label{sec:3.13}
 
 AI is the right tool when rules cannot cover the variety of the input, the data gives a usable signal, errors can
 be measured and the user can correct the result: reading a free sentence, a voice or a photo meets all four. Stock,
-price limits, ownership and order status meet none; they are exact rules in the domain classes
-(\code{Product.isAvailable}, \code{Order.isOwnedBy}, \code{Order.advanceTo}) and in SQL constraints, and the keyword
-fallback of every AI feature is the baseline the AI must beat.
+price limits, ownership and order status meet none; they stay exact rules in the domain classes and in SQL
+constraints, and the keyword fallback of every AI feature is the baseline the AI must beat.
 
 %% -------------------------------------------------------------------------
 \section{Chapter Conclusion}\label{sec:3.14}
 
 Họa. uses AI where the customer's input is ambiguous -- sentences, voices, photos of paintings and rooms, questions
 -- and every feature follows the A06 pipeline of Equation~\ref{eq:a06pipeline}, separates retrieval from ranking,
-explains its results and falls back to rules. Each feature is traced from a business objective through its AI and
-data requirements to a measured metric (Tables~\ref{tab:aireq} and~\ref{tab:aitrace}); people keep every business
-action, although a hand-over from the assistant to the support staff is still missing.
-Chapter~\ref{ch:design} places these classes in the layered design.
+explains its results and falls back to rules. Each AI requirement has a target and a measured value
+(Table~\ref{tab:aireq}); people keep every business action, although a hand-over from the assistant to the support
+staff is still missing. Chapter~\ref{ch:design} places these classes in the layered design.

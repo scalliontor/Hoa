@@ -312,6 +312,83 @@ rows of \code{product}, every one with its \code{category_id}.
 \end{minipage}
 \end{figure}
 
+\subsection{Why Each Column Is Stored}\label{sec:4.2.why}
+
+Every column answers a requirement, a business rule or a method of the design; Table~\ref{tab:whystored} gives
+the reason for the columns whose purpose is not obvious from their name (identifiers, names and foreign keys are
+explained in Table~\ref{tab:fks}).
+
+\begin{longtable}{@{}P{5.0cm}P{6.6cm}P{3.6cm}@{}}
+\caption{Why the less obvious columns are stored}\label{tab:whystored}\\
+\toprule
+\textbf{Column} & \textbf{Why it is stored} & \textbf{Requirement, rule, method}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Column} & \textbf{Why it is stored} & \textbf{Requirement, rule, method}\\
+\midrule
+\endhead
+\small \code{customer_vip.vip_level}, \code{discount_rate}, \code{reward_points} & \small The tier and its discount rate, applied at checkout; the points balance of the tier (the demo does not award points yet) & \small FR15, BR05; \code{CustomerVIP.getDiscountRate}, \code{addPoints}\\
+\small \code{customer_new.registered_date}, \code{welcome_voucher} & \small The registration date and the welcome voucher of a new customer (stored; the demo does not redeem vouchers yet) & \small \code{CustomerNew.hasWelcomeVoucher}\\
+\small \code{address} (own table) & \small A customer has several delivery addresses and chooses one at checkout; the shipment refers to it & \small FR16; \code{Customer.findAddress}\\
+\small \code{category.detail_kind} & \small Names the detail table of the products of the category & \small FR19, lecturer's feedback; \code{Category.accepts}\\
+\small \code{product.stock_quantity} & \small A print cannot be sold beyond its stock & \small BR02, FR07; \code{Product.decreaseStock}\\
+\small \code{painting.style}, \code{subject}, \code{dominant_color} & \small The attributes that search filters on and that the reasons of a suggestion name & \small FR01, FR03, FR18\\
+\small \code{painting.width_cm}, \code{height_cm} & \small The print is hung on the customer's wall at its real size & \small FR14; \code{Painting.sizeLabel}\\
+\small \code{product_feature.feature_vector}, \code{model_version}, \code{updated_at} & \small The vector of each painting for image search, with the model that made it and when, so vectors of an older model can be found & \small FR03, FR04; \code{VectorIndex}\\
+\small \code{cart_item.cart_price} & \small The price shown when the print was put in the cart & \small \code{CartItem.CartItem}\\
+\small \code{order_item.unit_price} & \small The price at checkout, kept when the catalogue price changes & \small BR04, FR07; \code{OrderItem.fromCartItem}\\
+\small \code{orders.status} & \small The state of the order, which decides what may happen next & \small BR06, BR07; \code{Order.cancel}, \code{advanceTo}\\
+\small \code{orders.total_amount} & \small The amount the customer agreed to pay: subtotal, VIP discount and shipping fee & \small FR15, FR17; \code{Order.calculateTotal}\\
+\small \code{shipping.shipping_fee}, \code{carrier}, \code{tracking_number}, \code{delivered_date} & \small The fee charged at the time, and how the customer follows the parcel & \small FR17, FR08; \code{Shipping.markDelivered}\\
+\small \code{payment.method}, \code{status}, \code{amount} & \small One row per payment attempt; a failed card payment can be followed by another & \small \code{Payment.process}, \code{markSucceeded}, \code{markFailed}\\
+\small \code{pay_credit.card_last4}, \code{authorization_code} & \small Enough to show the card and prove the payment, never the full number & \small NFR05; \code{PayCredit.maskedCard}, \code{process}\\
+\small \code{pay_cash.cash_received}, \code{change_amount} & \small The cash handed to the courier and the change & \small \code{PayCash.process}\\
+\bottomrule
+\end{longtable}
+
+\subsection{Data Not Stored}\label{sec:4.2.notstored}
+
+Some data exists only while a request is being answered, on purpose:
+\begin{itemize}[leftmargin=1.5em]
+\item \textbf{The full card number and the security code} are never written; only the last four digits, the holder,
+the bank and the authorisation code are kept (NFR05).
+\item \textbf{Voice recordings} are sent to the self-hosted Whisper server on the same machine, transcribed in memory
+and dropped; only the transcript reaches the search, and it is not saved either (NFR08).
+\item \textbf{Uploaded photos} (search by image, a photo of the room) are checked (NFR03), read into a description
+and a vector, and dropped.
+\item \textbf{Search sentences, query vectors, scores and result lists} live in \code{CommonQuery} and
+\code{SearchResult} objects for one request.
+\item \textbf{Conversations with the curator assistant} are a list of messages inside one call of
+\code{AssistantService.ask}; nothing is saved.
+\item \textbf{Values that can be computed} are not stored: the cart total (\code{Cart.calculateTotal}), whether a
+print is available (\code{Product.isAvailable}) and the discount amount, which only enters the stored
+\code{orders.total_amount}.
+\end{itemize}
+
+\subsection{Normalization}\label{sec:4.2.norm}
+
+The tables come from the classes of the design, and they were then checked against the normal forms:
+\begin{itemize}[leftmargin=1.5em]
+\item \textbf{First normal form.} Every column holds one value: the name of a customer is split into
+\code{first_name}, \code{middle_name} and \code{last_name}, an address into house number, street, district and
+city, and a painting's size into width and height. The one exception is \code{product_feature.feature_vector},
+which the search index reads and writes as a whole and never queries by its parts.
+\item \textbf{Second normal form.} Only \code{cart_item} and \code{order_item} have a composite key, and their
+other columns (quantity, price) describe the line, that is the pair of cart or order and product, not the
+product alone; the product's own data stays in \code{product}.
+\item \textbf{Third normal form and BCNF.} No column depends on another non-key column: the artist of a painting,
+the category of a product and the address of a shipment are foreign keys to their own tables instead of copied
+names. The other determinants are candidate keys declared \code{UNIQUE}: \code{customer.email},
+\code{category.name}, \code{cart.customer_id} and \code{shipping.order_id}.
+\item \textbf{Inheritance} uses one table per subclass sharing the parent's key (\code{painting} and \code{frame} for
+\code{product}; \code{customer_vip}, \code{customer_new}; \code{pay_cash}, \code{pay_credit}), so no row carries
+the empty columns of another kind.
+\item \textbf{Deliberate copies.} \code{order_item.unit_price}, \code{orders.total_amount} and
+\code{cart_item.cart_price} repeat a price that can also be found elsewhere, but they record a different fact: the
+price at a moment. Without them a later change of the catalogue price would rewrite past orders (BR04).
+\end{itemize}
+
 %% =========================================================================
 \section{Class Diagram in Design}\label{sec:4.3}
 

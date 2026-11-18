@@ -36,3 +36,6 @@ PT&TKHTTT-*.zip
 tieuluan_v4_*.pdf
 assigment_03_*.pdf
 build/vp_wizard/
+# Local copies of the VP project (the build writes vp/tieuluan_design.vpp)
+vp/tieuluan_design *.vpp
+vp/tieuluan_design_*.vpp

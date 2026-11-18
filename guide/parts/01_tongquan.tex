@@ -2,19 +2,19 @@
 {\color{accent}\fontsize{28}{32}\selectfont\bfseries Họa.}\\[2pt]
 {\LARGE\bfseries Hướng dẫn bảo vệ tiểu luận}\\[2pt]
 {\normalsize Phân tích và thiết kế một cửa hàng tranh có AI: từ yêu cầu đến code chạy được}\\[4pt]
-{\small Môn Phân tích và thiết kế hệ thống thông tin · Lớp 04 · Vũ Hùng Anh (B23DCDT022) · 18:00 thứ Năm 12/11/2026}
+{\small Môn Phân tích và thiết kế hệ thống thông tin · Lớp 04 · Vũ Hùng Anh (B23DCDT022) · Đánh giá cuối kỳ thứ Năm 19/11/2026}
 \end{center}
 
 \section{Tổng quan ngắn}\label{sec:tongquan}
-\textbf{Trình bày gì.} Một mình em kể lại một sản phẩm, cửa hàng tranh Họa., đi qua đủ năm bước của môn: yêu cầu, phân tích, thiết kế, code, kiểm chứng. \key{Không dùng slide.} Công cụ chính là trang \key{Technical Defense Showcase}; khi thầy muốn xem tận nơi thì mở thẳng hiện vật thật bên dưới. Lời nói bằng tiếng Việt, mọi hiện vật bằng tiếng Anh.
+\textbf{Trình bày gì.} Một mình em kể lại một sản phẩm, cửa hàng tranh Họa., đi qua đủ năm bước của môn: yêu cầu, phân tích, thiết kế, code, kiểm chứng. \key{Không dùng slide.} Sơ đồ mở thẳng trong \key{Visual Paradigm}; trang \key{showcase} chứng minh code và demo khớp thiết kế. Lời nói bằng tiếng Việt, mọi hiện vật bằng tiếng Anh.
 
 \begin{center}\small
 \begin{tabular}{@{}P{3.1cm}P{6.6cm}P{6.6cm}@{}}
 \toprule
 \textbf{Hiện vật} & \textbf{Mở ở đâu} & \textbf{Dùng để}\\
 \midrule
-Showcase (mục A--G) & \file{showcase/index.html}, qua \code{http://localhost:8000/showcase/} & đường đi chính của bài nói; mỗi mục có liên kết tới hiện vật gốc\\
-Project Visual Paradigm & \file{vp/tieuluan_design.vpp} (\factDiagrams{} sơ đồ) & cho thầy thấy sơ đồ là bản gốc, mở và sửa được\\
+Showcase (5 phần) & \file{showcase/index.html}, qua \code{http://localhost:8000/showcase/} & chứng minh code và demo khớp thiết kế: 1 thiết kế $\leftrightarrow$ code, 2 use case $\to$ code $\to$ kiểm thử, 3 demo $\leftrightarrow$ code, 4 cơ sở dữ liệu, 5 kiểm thử\\
+Project Visual Paradigm & \file{vp/tieuluan_design.vpp} (\factDiagrams{} sơ đồ), mở bằng bản Community & cho thầy thấy sơ đồ là bản gốc, mở và sửa được\\
 IDE (VS Code) & \file{tools/model.py} và vài file Java (mục~\ref{sec:cuaso}) & chỉ đúng dòng code của một phương thức trong thiết kế\\
 Cơ sở dữ liệu & \file{demo/data/ecom.db} (sqlite-web hoặc \code{sqlite3}) & bảng \code{category}, \code{product} và khóa ngoại thật\\
 Cửa hàng chạy thật & \code{http://127.0.0.1:8686} (bản tắt AI: cổng 8687) & demo trực tiếp (mục~\ref{sec:demo})\\
@@ -26,23 +26,23 @@ Bài tiểu luận & \file{build/report/tieuluan_V3_04_10_VUHUNGANH_022.pdf} & t
 \textbf{Ba điều thầy nên nhớ sau buổi bảo vệ.}
 \begin{enumerate}[leftmargin=1.5em]
 \item \key{Một đường liền từ vấn đề đến code.} Mỗi yêu cầu có use case, mỗi use case có sơ đồ, mỗi sơ đồ thành lớp và bảng, mỗi lớp và bảng có dòng code và bài kiểm thử. Mọi tên gọi chỉ viết một lần trong một bản đặc tả, và một công cụ tự so code với bản đặc tả: \factCheckOps{} phương thức, \factCheckColumns{} cột đều khớp; \factTests{} bài kiểm thử và \factEtoE{} bước chạy thử đầu cuối đều đạt.
-\item \key{Cơ sở dữ liệu làm theo góp ý của thầy và được sinh ra từ mô hình.} Danh mục, một bảng sản phẩm chung, và bảng chi tiết cho từng loại. Visual Paradigm sinh câu lệnh tạo bảng; em so với cơ sở dữ liệu đang chạy: giống hệt, chỉ thiếu khóa ngoại và ràng buộc kiểm tra mà bộ sinh của VP cho SQLite không viết, và em bổ sung chúng từ cùng mô hình.
+\item \key{Cơ sở dữ liệu làm theo góp ý của thầy và được sinh ra từ mô hình.} Danh mục, một bảng sản phẩm chung, và bảng chi tiết cho từng loại. Visual Paradigm sinh câu lệnh tạo bảng; em so với cơ sở dữ liệu đang chạy: giống hệt về bảng, cột, khóa chính và khóa ngoại, chỉ thiếu các ràng buộc kiểm tra giá trị mà sơ đồ không chứa, và em bổ sung chúng từ cùng mô hình.
 \item \key{AI giúp khách nhưng không nắm quyền; tắt AI cửa hàng vẫn bán.} Giá, số hàng, quyền xem đơn do luật của cửa hàng quyết. Em nói thật kết quả: Gemma hơn rõ khi tìm bằng ảnh (\evImageGemma{} so với \evImageLocal{}), nhưng tìm bằng chữ thì ngang luật đơn giản (\evTextDirectGemma{} cả hai).
 \end{enumerate}
 
-\textbf{Thời gian.} Hỏi thầy thời lượng ngay khi lên. Bảy bước của mục~\ref{sec:kichban}, hai phương án:
+\textbf{Thời gian.} Hỏi thầy thời lượng ngay khi lên. Thầy cho 10 phút và chấm theo năm điểm: dùng bản 10 phút (mục~\ref{sec:ban10}). Còn lại: bảy bước của mục~\ref{sec:kichban}, hai phương án:
 \begin{center}\small
 \begin{tabular}{@{}P{0.5cm}P{4.6cm}P{6.1cm}P{1.9cm}P{1.9cm}@{}}
 \toprule
 & \textbf{Bước} & \textbf{Mở chính} & \textbf{6--7 phút} & \textbf{3--4 phút}\\
 \midrule
-1 & Vấn đề và yêu cầu & showcase A & 45 giây & 20 giây\\
-2 & Các sơ đồ chính & showcase B, VP: use case, activity & 1 phút & 40 giây\\
-3 & Từ phân tích sang thiết kế & showcase C, VP: lớp, ba tầng & 45 giây & (gộp vào 2)\\
-4 & Cơ sở dữ liệu & showcase E, VP: ERD, bảng \code{category} & 50 giây & 30 giây\\
-5 & Từ đặc tả đến code & showcase D, IDE & 45 giây & 20 giây\\
+1 & Vấn đề và yêu cầu & bài §1.5.2 (Bảng 1.6) & 45 giây & 20 giây\\
+2 & Các sơ đồ chính & showcase 2 (thẻ UC07), VP: use case, activity & 1 phút & 40 giây\\
+3 & Từ phân tích sang thiết kế & VP: lớp phân tích, lớp thiết kế, ba tầng & 45 giây & (gộp vào 2)\\
+4 & Cơ sở dữ liệu & showcase 4, VP: ERD, bảng \code{category} & 50 giây & 30 giây\\
+5 & Từ đặc tả đến code & showcase 2 (thẻ UC11), IDE & 45 giây & 20 giây\\
 6 & Demo trực tiếp & cửa hàng & 1 phút 45 & 1 phút\\
-7 & Kiểm thử và kết luận & showcase G & 30 giây & 20 giây\\
+7 & Kiểm thử và kết luận & showcase 5 & 30 giây & 20 giây\\
 \midrule
 & \textbf{Tổng} & & \textbf{≈ 6 phút 20} & \textbf{≈ 3 phút 10}\\
 \bottomrule

@@ -36,43 +36,42 @@ VP & Visual Paradigm, the modelling tool used for every diagram\\
 \addcontentsline{toc}{chapter}{Introduction}
 \markboth{Introduction}{}
 
-\textbf{Context.} Buying a painting online is not like buying an item with a clear product code. People
-remember how a painting feels rather than what it is called: ``a blue landscape'', ``Monet, but under
-100 dollars'', or just a photo of a print they saw in a caf\'e. A shop that only offers a search box over
-titles loses these customers. On the other hand, adding artificial intelligence without careful analysis
-can make the system recommend sold-out prints, show one customer another customer's order, or stop working
-whenever the AI service is slow.
+\textbf{Context.} People remember how a painting feels, not its title: ``a blue landscape'', ``Monet, but under 100
+dollars'', or a photo of a print seen in a caf\'e. A title-only search loses these customers. Yet AI added without
+careful analysis can recommend sold-out prints, show one customer another customer's order, or stop whenever the AI
+service is slow.
 
-\textbf{Topic.} This essay analyses, designs and builds \textbf{Họa.}, an online gallery that sells
-fine-art prints of public-domain paintings together with frames. Customers can find paintings with keywords
-or a natural sentence, by speaking, with a photo, or with a photo of their own room; they can ask an AI
-curator, add prints to the cart, place an order and follow it until delivery. The AI part uses the
-\textbf{Gemma 4} model reached through an OpenAI-compatible interface (a self-hosted vLLM server during the
-evaluation, DeepInfra for the demo), and
-a \textbf{self-hosted Whisper} model that turns speech into text on the laptop itself. Everything else
-(web pages, Java application, SQLite database) runs on one machine, so the demo works without any cloud
-service. All prices are in US dollars.
+\textbf{Topic.} This essay analyses, designs and builds \textbf{Họa.}, an online gallery of fine-art prints of
+public-domain paintings, sold with frames. Customers search by keywords, a sentence, voice, a photo or a photo of
+their room. They can ask an AI curator, order prints and follow the order until delivery. The AI is
+\textbf{Gemma 4}, reached through an OpenAI-compatible interface (Chapter~3), and a \textbf{self-hosted Whisper}
+model that turns speech into text on the laptop. Everything else (web pages, Java application, SQLite database)
+runs on one machine. If Gemma cannot be reached, search falls back to keyword rules and the shop keeps working.
+Prices are in USD.
 
-\textbf{Objectives.} The essay follows the five chapters set by the lecturer, and each chapter produces a
-concrete artefact of Họa.: Chapter~1 (Requirement Determination) investigates the business of the gallery,
-its problems and their root causes, and fixes the system boundary in a context diagram; Chapter~2 (Analysis)
-states \nFR{} functional and \nNFR{} non-functional requirements and \nUseCases{} use cases, specifies the main
-use cases, each followed by its activity, sequence or state diagram, and builds the domain model and the
-conceptual and logical data model; Chapter~3 (AI in E-commerce) explains the five AI features, how each can fail and how
-they are measured; Chapter~4 (Design) follows the lecturer's outline 4.1--4.6 from the analysis class diagram to the
-generated code; Chapter~5 (Code) presents the source code, the user interface, the tests and how to run the demo.
+\textbf{Organisation.} The essay follows the five chapters set by the lecturer. Each produces an artefact of Họa.:
+\begin{enumerate}
+\item \textbf{Requirement Determination}: the business, its problems and root causes, the context diagram.
+\item \textbf{Analysis}: \nFR{} functional and \nNFR{} non-functional requirements, \nUseCases{} use cases with
+      activity, sequence or state diagrams, the domain and data models.
+\item \textbf{AI in E-commerce}: five AI features, how each can fail and how they are measured.
+\item \textbf{Design}: the outline 4.1--4.6, from the analysis class diagram to the generated code.
+\item \textbf{Code}: source code, user interface, tests and how to run the demo.
+\end{enumerate}
 
-\textbf{Method and consistency.} All diagrams are drawn in one editable Visual Paradigm project~\cite{visualparadigm}. The names of
-requirements, use cases, classes, methods and tables are declared once in the specification file
-\code{tools/model.py}; from this file I generate the VP diagrams, the SQL schema, the Java skeleton
-and the tables of this essay, and a checker compares the real code and database with it. Class and method
-names follow the code in the course slides: Assignment~03 (\code{Cart}, \code{CartItem}, \code{Order},
-\code{OrderItem} and the checkout transformation), Assignment~05 (Controller -- Service -- Domain --
-Repository and \code{CheckoutService.checkout}) and Assignment~06 (\code{SearchUI}, \code{QueryService},
-\code{SpeechService}, \code{SearchService}, \code{RankingService}, \code{ProductRepository},
-\code{OrderRepository}, \code{VectorIndex}). The appendix holds the report of that checker and the
-requirement -- use case matrix; every file named in the essay is in the public repository of the project.
+\textbf{Method.} All diagrams are in one editable Visual Paradigm project~\cite{visualparadigm}. Every name is
+declared once, in \code{tools/model.py}. From it I generate the VP diagrams, SQL schema, Java skeleton and essay
+tables; a checker compares the real code and database with it. Class names follow the course slides:
+{\raggedright
+\begin{itemize}
+\item Assignment~03: \code{Cart}, \code{CartItem}, \code{Order}, \code{OrderItem}, the checkout transformation;
+\item Assignment~05: Controller -- Service -- Domain -- Repository, \code{CheckoutService.checkout};
+\item Assignment~06: \code{SearchUI}, \code{QueryService}, \code{SpeechService}, \code{SearchService},
+      \code{RankingService}, \code{ProductRepository}, \code{OrderRepository}, \code{VectorIndex}.
+\end{itemize}
+\par}
+The appendix holds the checker's report and the requirement -- use case matrix. Every file named here is in the
+project's public repository.
 
-\textbf{Scope.} Họa. is a study project. Payment and delivery are simulated; painting images come from
-Wikimedia Commons~\cite{wikimedia} and only public-domain works are used; evaluation figures describe my own data
-and test queries, not the performance of a real shop.
+\textbf{Scope.} Họa. is a study project. Payment and delivery are simulated. Images are public-domain works from
+Wikimedia Commons~\cite{wikimedia}. Evaluation figures describe my own data and test queries, not a real shop.

@@ -8,7 +8,7 @@ Mọi lệnh chạy từ \key{thư mục dự án} \file{~/PTIT/infor_sys/tieulu
 \item \key{Whisper và micro:} lần đầu \code{./run.sh} tải mô hình (cần Internet một lần). Mở Chrome ở \code{http://127.0.0.1:8686}, bấm micro, chọn \emph{Allow}, nói thử ``blue landscape paintings''. Chỉ nói \key{tiếng Anh}.
 \item \key{Ảnh demo} chép ra Desktop: \file{demo/data/eval_images/Q02.jpg} (The Great Wave) và \file{demo/web/img/rooms/room1.jpg}.
 \item \key{sqlite-web} (trình xem cơ sở dữ liệu đã dùng để chụp ảnh trong bài) \key{hiện chưa cài trên máy}. Cài vào một môi trường riêng: \code{python3 -m venv ~/sqlite-web && ~/sqlite-web/bin/pip install sqlite-web} (cần Internet). Không cài được thì dùng \code{sqlite3} có sẵn (mục~\ref{sec:cuaso}).
-\item \key{Tập kịch bản 7 bước ba lần} có bấm giờ, rồi tập demo (mục~\ref{sec:demo}), rồi \key{đặt lại dữ liệu mẫu} (mục~\ref{sec:reset}).
+\item \key{Tập bản 10 phút (mục~\ref{sec:ban10}) và kịch bản 7 bước}, mỗi bản hai lần, có bấm giờ; rồi tập demo (mục~\ref{sec:demo}), rồi \key{đặt lại dữ liệu mẫu} (mục~\ref{sec:reset}).
 \item \key{Dự phòng:} ảnh chụp màn hình \file{figures/demo/*.png}; showcase cũng có trên GitHub Pages (\code{https://scalliontor.github.io/Hoa/showcase/}, cần Internet, có thể cũ hơn bản trên máy).
 \item \key{Máy:} sạc đầy, mang sạc và cáp máy chiếu, bật Không làm phiền, chạy \code{caffeinate -d} để máy không ngủ.
 \end{checklist}
@@ -19,7 +19,7 @@ Mọi lệnh chạy từ \key{thư mục dự án} \file{~/PTIT/infor_sys/tieulu
 \item \key{Terminal 2, bản tắt Gemma:} \code{cd demo && ./run.sh config/app.offline.properties}. Chạy ở cổng 8687, cơ sở dữ liệu riêng, địa chỉ Gemma cố ý trỏ vào chỗ không có gì.
 \item \key{Terminal 3, showcase:} ở thư mục dự án chạy \code{python3 -m http.server 8000 --bind 127.0.0.1}.
 \item \key{Chrome, ba tab, phóng to 110--125\%:} (1) showcase \code{http://localhost:8000/showcase/}; (2) cửa hàng \code{http://127.0.0.1:8686}, đăng nhập C001; (3) bản tắt Gemma \code{http://127.0.0.1:8687/?debug=1}.
-\item \key{Visual Paradigm:} mở \file{vp/tieuluan_design.vpp} bằng \key{Visual Paradigm CE} và mở sẵn các sơ đồ dưới đây thành tab (tìm theo tên trong Diagram Navigator; tên bắt đầu bằng số mục của bài). Khi đóng VP, chọn \emph{Don't Save}.
+\item \key{Visual Paradigm:} mở \file{vp/tieuluan_design.vpp} bằng \key{Visual Paradigm CE} và mở sẵn các sơ đồ dưới đây thành tab (tìm theo tên trong Diagram Navigator; số ở đầu tên là số mục của bản bài \key{cũ}, không phải số mục hiện nay). Khi đóng VP, chọn \emph{Don't Save}.
 \begin{center}\small
 \begin{tabular}{@{}P{8.6cm}P{7.2cm}@{}}
 \toprule
@@ -27,18 +27,19 @@ Mọi lệnh chạy từ \key{thư mục dự án} \file{~/PTIT/infor_sys/tieulu
 \midrule
 \vp{1.2 Use Case Diagram - Hoa Gallery} & bước 2\\
 \vp{2.2 Activity - Checkout} & bước 2\\
-\vp{2.8 Domain Model - analysis class diagram} & bước 3\\
-\vp{4.3 Class Diagram in Design} & bước 3; QĐ2, QĐ4\\
-\vp{4.4a Three Layers - classes and their links} & bước 3; QĐ3\\
-\vp{4.2 Database - entity relationship diagram} & bước 4; câu hỏi về khóa\\
-\vp{4.2 Physical Data Model - tables, keys and foreign keys} & câu hỏi về mức vật lý\\
+\vp{2.8 Domain Model - analysis class diagram} & bước 3; điểm 1 (bản 10 phút)\\
+\vp{2.9b Logical Data Model (ORM-Persistable)} & điểm 2\\
+\vp{4.2 Physical Data Model - tables, keys and foreign keys} & điểm 2; câu hỏi về mức vật lý\\
+\vp{4.2 Database - entity relationship diagram} & bước 4; điểm 2; câu hỏi về khóa\\
+\vp{4.3 Class Diagram in Design} & bước 3; điểm 3; QĐ2, QĐ4\\
+\vp{4.4a Three Layers - classes and their links} & bước 3; điểm 4; QĐ3\\
 \vp{2.6b Analysis Sequence - Checkout (UC07)} và \vp{4.4d Checkout across the layers (design sequence)} & câu hỏi phân tích khác thiết kế\\
 \vp{2.4 State Machine - Order} & QĐ4\\
 \vp{4.4a Three Logical Components}, \vp{4.4c Package Diagram - Design Packages} & câu hỏi kiến trúc\\
 \bottomrule
 \end{tabular}
 \end{center}
-Bản Community mở được \key{mọi sơ đồ UML và ERD}. Năm sơ đồ BPMN, ArchiMate và DFD (\vp{1.3 Stakeholder Map (ArchiMate)}, \vp{1.4 Business Process - Order to Delivery (BPMN)}, \vp{1.6 Problem Tree (ArchiMate)}, \vp{1.7 Context Diagram - DFD Level 0}, \vp{2.9c Data Flow Diagram - Level 1}) là ảnh chụp bản dùng thử. Bản dùng thử \key{không mở lại được} file \file{vp/tieuluan_design.vpp} (báo ``Evaluation on this project has been expired''), nên đừng mở project bằng nó. Khi thầy hỏi đến năm sơ đồ này, mở ảnh chụp trong bài hoặc trong showcase (mục cuối ``All diagrams'').
+Bản Community mở được \key{mọi sơ đồ UML và ERD}. Năm sơ đồ BPMN, ArchiMate và DFD (\vp{1.3 Stakeholder Map (ArchiMate)}, \vp{1.4 Business Process - Order to Delivery (BPMN)}, \vp{1.6 Problem Tree (ArchiMate)}, \vp{1.7 Context Diagram - DFD Level 0}, \vp{2.9c Data Flow Diagram - Level 1}) là ảnh chụp bản dùng thử. Bản dùng thử \key{không mở lại được} file \file{vp/tieuluan_design.vpp} (báo ``Evaluation on this project has been expired''), nên đừng mở project bằng nó. Khi thầy hỏi đến năm sơ đồ này, mở ảnh chụp trong bài: Hình 1.1--1.4 (Chương 1) và Hình 2.11 (DFD mức 1, §2.5).
 \item \key{VS Code}: \code{open -a "Visual Studio Code" .} ở thư mục dự án. Mở sẵn các tab sau (Cmd+P gõ tên file, Ctrl+G gõ số dòng):
 \begin{center}\small
 \begin{tabular}{@{}P{5.6cm}P{10.2cm}@{}}
@@ -92,7 +93,7 @@ và bật lại; cơ sở dữ liệu được tạo lại từ \file{demo/db/ec
 
 \subsection{Năm phút trước}
 \begin{checklist}
-\item Ba tab Chrome mở, showcase ở đầu mục A; cửa hàng ở trang chủ với C001; Shift+D đã tắt.
+\item Ba tab Chrome mở, showcase ở đầu trang; cửa hàng ở trang chủ với C001; Shift+D đã tắt.
 \item VP mở sẵn các tab sơ đồ; VS Code mở sẵn các file; cửa sổ cơ sở dữ liệu ở bảng \code{category}.
 \item Đã quyết: có Gemma hay trình bày dự phòng (mục~\ref{sec:gemma}). Ảnh demo trên Desktop; micro đã cho phép.
 \item Đóng Zalo, Messenger, email; đóng file \file{app.local.properties} (có key). Điện thoại im lặng; nước uống.

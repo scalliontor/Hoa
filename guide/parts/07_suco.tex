@@ -1,5 +1,5 @@
 \section{Sự cố và cách xử lý}\label{sec:suco}
-Nguyên tắc: \key{bình tĩnh và nói thật}, vừa sửa vừa nói cho thầy biết mình đang làm gì. Quá 30 giây thì bỏ qua và mở ảnh chụp: showcase có ảnh của mọi sơ đồ (mục cuối ``All diagrams'') và mọi màn hình demo (mục F); ảnh gốc ở \file{figures/vp/} và \file{figures/demo/}. Nhiều sự cố của AI lại là dịp chứng minh đường lui (NFR02).
+Nguyên tắc: \key{bình tĩnh và nói thật}, vừa sửa vừa nói cho thầy biết mình đang làm gì. Quá 30 giây thì bỏ qua và mở ảnh chụp: sơ đồ trong bài (PDF), ảnh demo ở showcase phần 3; ảnh gốc ở \file{figures/vp/} và \file{figures/demo/}. Nhiều sự cố của AI lại là dịp chứng minh đường lui (NFR02).
 
 \begin{longtable}{@{}P{3.6cm}P{3.6cm}P{8.6cm}@{}}
 \toprule
@@ -26,9 +26,9 @@ Tải ảnh không được & Không phải JPEG, PNG, WebP, hoặc quá 5 MB & 
 \addlinespace
 Hết hàng, giỏ lạ, ``latest order'' là đơn cũ & Dữ liệu còn từ lần tập & Đặt lại dữ liệu mẫu (mục~\ref{sec:reset}).\\
 \addlinespace
-VP Community báo sơ đồ \emph{not supported} & Đó là một trong năm sơ đồ BPMN, ArchiMate, DFD & Bình thường. Mở ảnh chụp trong bài hay showcase (câu trả lời ở mục~\ref{sec:qtrial}); bản dùng thử không mở lại được project.\\
+VP Community báo sơ đồ \emph{not supported} & Đó là một trong năm sơ đồ BPMN, ArchiMate, DFD & Bình thường. Mở ảnh chụp trong bài, Hình 1.1--1.4 và 2.11 (câu trả lời ở mục~\ref{sec:qtrial}); bản dùng thử không mở lại được project.\\
 \addlinespace
-VP Community không mở được project & Bản quyền, hoặc project đang bị một tiến trình dựng sơ đồ giữ (\file{vp/.vp.lock}) & Đóng mọi cửa sổ VP, xóa \file{vp/.vp.lock} nếu không còn tiến trình nào chạy, mở lại bằng bản Community. Không chạy \file{tools/build_vp.py} trong buổi bảo vệ. Nếu vẫn không được: dùng ảnh trong showcase.\\
+VP Community không mở được project & Bản quyền, hoặc project đang bị một tiến trình dựng sơ đồ giữ (\file{vp/.vp.lock}) & Đóng mọi cửa sổ VP, xóa \file{vp/.vp.lock} nếu không còn tiến trình nào chạy, mở lại bằng bản Community. Không chạy \file{tools/build_vp.py} trong buổi bảo vệ. Nếu vẫn không được: dùng hình trong bài và showcase phần 1, 4.\\
 \addlinespace
 VP hỏi có lưu không & Đã lỡ kéo một hình & Chọn \emph{Don't Save}: file project phải giữ nguyên như lúc nộp.\\
 \addlinespace
@@ -38,7 +38,7 @@ VP hỏi có lưu không & Đã lỡ kéo một hình & Chọn \emph{Don't Save}
 \addlinespace
 Chữ trên máy chiếu nhỏ & Độ phân giải & Phóng to Chrome (Cmd và dấu +) lên 125\%; VS Code: Cmd và dấu +; VP: thanh zoom ở góc dưới.\\
 \addlinespace
-Mọi thứ hỏng & Máy hoặc mạng & Chỉ cần trình duyệt: showcase (bản trên máy hoặc GitHub Pages) có đủ sơ đồ và ảnh demo. Kể lại năm flow bằng ảnh ở mục F, và nói thẳng rằng demo trực tiếp không chạy được.\\
+Mọi thứ hỏng & Máy hoặc mạng & Chỉ cần trình duyệt: showcase (bản trên máy hoặc GitHub Pages, có liên kết tới bài PDF) có sơ đồ thiết kế, cơ sở dữ liệu và ảnh demo. Kể lại demo bằng ảnh ở phần 3, và nói thẳng rằng demo trực tiếp không chạy được.\\
 \bottomrule
 \end{longtable}
 
@@ -46,7 +46,7 @@ Mọi thứ hỏng & Máy hoặc mạng & Chỉ cần trình duyệt: showcase (
 \begin{itemize}
 \item Không nói Gemma \emph{hơn} luật từ khóa khi tìm bằng chữ: số đo cho thấy ngang. Chỉ nói Gemma hơn rõ ở ảnh.
 \item Không nói số đo ở Chương 3 là đo trên DeepInfra: chúng đo ngày 30/10 trên máy chủ của lớp.
-\item Không nói VP sinh ra \emph{toàn bộ} cơ sở dữ liệu: bản của VP thiếu khóa ngoại và CHECK, em bổ sung từ cùng mô hình.
+\item Không nói VP sinh ra \emph{toàn bộ} cơ sở dữ liệu: bản của VP thiếu các ràng buộc CHECK, em bổ sung từ cùng mô hình.
 \item Không nói mọi yêu cầu đều có kiểm thử tự động; không nói vector ảnh là embedding học được; không nói thanh toán là thật; không nói đặt hàng nằm trong một giao dịch.
 \item Không mở \file{demo/config/app.local.properties} khi đang chiếu (có key); không đọc key hay địa chỉ máy chủ lên.
 \end{itemize}

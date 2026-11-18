@@ -21,7 +21,7 @@ Cấu hình & cửa hàng cổng 8686 (bản tắt Gemma 8687), Whisper \code{12
 \end{center}
 
 \subsection{Hỏi gì thì mở gì}\label{sec:filemap}
-Số sau dấu hai chấm là số dòng (lấy tự động lúc dựng tài liệu). File Java nằm trong \file{demo/src/main/java/com/ptit/ecom/}, file kiểm thử trong \file{demo/tests/java/com/ptit/ecom/test/}. ``Bài §'' là mục trong tiểu luận; ``VP'' là tên sơ đồ trong project; ``SC'' là mục của showcase.
+Số sau dấu hai chấm là số dòng (lấy tự động lúc dựng tài liệu). File Java nằm trong \file{demo/src/main/java/com/ptit/ecom/}, file kiểm thử trong \file{demo/tests/java/com/ptit/ecom/test/}. ``Bài §'' là mục trong tiểu luận; ``VP'' là tên sơ đồ trong project (số đầu tên là số mục cũ); ``SC~$n$'' là phần $n$ của showcase.
 \begin{center}\small\renewcommand{\arraystretch}{1.12}
 \begin{longtable}{@{}P{4.1cm}P{11.8cm}@{}}
 \toprule
@@ -30,31 +30,31 @@ Số sau dấu hai chấm là số dòng (lấy tự động lúc dựng tài li
 \toprule
 \textbf{Thầy hỏi về} & \textbf{Mở}\\
 \midrule\endhead
-Vấn đề, mục tiêu, người dùng & SC A; bài §1.2, §1.3, §1.6; VP 1.3 Stakeholder Map, 1.6 Problem Tree (bản dùng thử)\\
-Yêu cầu, MoSCoW, use case & SC A; \file{tools/model.py}:\dongModelReq{} (\code{REQUIREMENTS}, rồi \code{USE_CASES}); VP 1.2 Use Case Diagram, 2.4a--c; bài §2.2, §2.3, §2.4\\
-Ranh giới, luồng thông tin & VP 1.1 Context View; 1.7 Context Diagram - DFD Level 0 và 2.9c DFD Level 1 (bản dùng thử); bài §1.7, §2.7\\
-Đặc tả use case, luồng thay thế, luật & SC D (liên kết tới nguồn LaTeX); bài §2.6 (UC07 ở §2.6.4, UC11 ở §2.6.5), luật BR01--BR11 ở §2.8\\
-Sơ đồ hoạt động, tuần tự phân tích & VP 2.2 Activity - Checkout, 2.3 Activity - Multimodal Search, 2.6a--c Analysis Sequence\\
-Mô hình miền, giỏ khác đơn & VP 2.8 Domain Model; bài §2.9; \file{OrderItem.java}:\dongFromCart\\
-Ba mức dữ liệu & SC C chuỗi 2; VP 2.9a Conceptual, 2.9b Logical, 4.2 Physical Data Model; bài §2.10, §4.2.1\\
-Danh mục và bảng chi tiết & SC E; \file{ecom_schema_sqlite.sql}:\dongSqlCategory, \dongSqlProduct, \dongSqlPainting, \dongSqlFrame; \file{Category.java}:\dongAccepts; \file{SqliteProductRepository.java}:\dongToProduct, \dongInsertProduct; bài §4.2.2\\
-VP sinh cơ sở dữ liệu & ảnh \file{figures/vp/c42_generate_db.png}, \file{c42_generate_db_done.png}; \file{demo/db/vp_wizard_ddl.sql}; \file{build/schema_comparison.txt}; showcase E; bài §4.2.3; làm trực tiếp: mục~\ref{sec:vpgen}\\
+Vấn đề, mục tiêu, người dùng & bài §1.1, §1.2, §1.5 (Bảng 1.6 và cây vấn đề ở §1.5.2); VP 1.3 Stakeholder Map, 1.6 Problem Tree (bản dùng thử)\\
+Yêu cầu, MoSCoW, use case & \file{tools/model.py}:\dongModelReq{} (\code{REQUIREMENTS}, rồi \code{USE_CASES}); VP 1.2 Use Case Diagram, 2.4a--c; bài §2.1 (tiêu chí chấp nhận §2.1.1), §2.2, §2.3\\
+Ranh giới, luồng thông tin & VP 1.1 Context View; 1.7 Context Diagram - DFD Level 0 và 2.9c DFD Level 1 (bản dùng thử); bài §1.6 (sơ đồ ngữ cảnh §1.6.1, luồng vào ra §1.6.2), §2.5\\
+Đặc tả use case, luồng thay thế, luật & SC 2 (mỗi thẻ có liên kết tới nguồn LaTeX); bài §2.4 (UC02/UC03 §2.4.1, UC07 §2.4.2, UC11 §2.4.3, UC13 §2.4.5), luật BR01--BR11 ở §2.6; tìm bằng ảnh (UC04) ở §3.9\\
+Sơ đồ hoạt động, tuần tự phân tích & VP 2.2 Activity - Checkout, 2.3 Activity - Multimodal Search, 2.6b Analysis Sequence - Checkout (2.6a, 2.6c chỉ có trong VP); bài §2.4\\
+Mô hình miền, giỏ khác đơn & VP 2.8 Domain Model; bài §2.7 (giỏ khác đơn: §2.7.1); \file{OrderItem.java}:\dongFromCart\\
+Ba mức dữ liệu & SC 4 (``From the data models to the database''); VP 2.9a Conceptual, 2.9b Logical, 4.2 Physical Data Model; bài §2.8.1, §2.8.2, §4.2.1\\
+Danh mục và bảng chi tiết & SC 4; SC 3 flow 3; \file{ecom_schema_sqlite.sql}:\dongSqlCategory, \dongSqlProduct, \dongSqlPainting, \dongSqlFrame; \file{Category.java}:\dongAccepts; \file{SqliteProductRepository.java}:\dongToProduct, \dongInsertProduct; bài §4.2.2\\
+VP sinh cơ sở dữ liệu & ảnh \file{figures/vp/c42_generate_db.png}, \file{c42_generate_db_done.png}; \file{demo/db/vp_wizard_ddl.sql}; \file{build/schema_comparison.txt}; SC 4; bài §4.2.3 (Hình 4.4); làm trực tiếp: mục~\ref{sec:vpgen}\\
 Khóa, ràng buộc & \file{ecom_schema_sqlite.sql}:\dongSqlCart{} (UNIQUE), \dongSqlCartItem{} và \dongSqlOrderItem{} (khóa ghép); \file{build/sql_validation.txt} (câu sai bị từ chối); \file{Database.java}:\dongFkPragma{} (bật khóa ngoại)\\
-Lớp thiết kế, phương thức & VP 4.3 Class Diagram in Design; \file{tools/model.py}:\dongModelDesign{} (\code{Order} ở dòng \dongModelOrder); bài §4.3\\
-Ba tầng, package, DAO & VP 4.4a Three Layers, 4.4c Package Diagram, 4.4a Three Logical Components, 4.4b--c Classes per Layer; \file{tools/model.py}:\dongModelLayers; \file{EcomApplication.java}:\dongMain; bài §4.4.1\\
-Đặt hàng & SC B, SC D ``Checkout''; VP 4.4d Checkout across the layers; \file{CheckoutService.java}:\dongCheckout, \dongCurrentProduct\\
-Hủy đơn, trạng thái đơn & SC D ``Cancel Order'', ``Update Order Status''; VP 2.4 State Machine - Order; \file{Order.java}:\dongOrderCancel, \dongOrderAdvance; \file{OrderService.java}:\dongCancelOrder, \dongUpdateStatus; \file{DomainTest.java}:\dongTestCancel, \dongTestAdvance\\
-Quyền xem đơn (NFR01) & \file{OrderService.java}:\dongGetOrder; \file{Order.java}:\dongOrderOwned; \file{WebServer.java}:\dongSessionCustomer{} (mã khách từ phiên), \dongNotFound{} (404); \file{OrderServiceTest.java}:\dongTestNotFound\\
+Lớp thiết kế, phương thức & VP 4.3 Class Diagram in Design; \file{tools/model.py}:\dongModelDesign{} (\code{Order} ở dòng \dongModelOrder); SC 1; bài §4.3\\
+Ba tầng, package, DAO & VP 4.4a Three Layers, 4.4c Package Diagram, 4.4a Three Logical Components, 4.4b--c Classes per Layer; \file{tools/model.py}:\dongModelLayers; \file{EcomApplication.java}:\dongMain; SC 1; bài §4.4.1\\
+Đặt hàng & SC 2 thẻ UC07; SC 3 flow 4; VP 4.4d Checkout across the layers; \file{CheckoutService.java}:\dongCheckout, \dongCurrentProduct\\
+Hủy đơn, trạng thái đơn & SC 2 thẻ UC11, UC13; bài §2.4.3--§2.4.5; VP 2.4 State Machine - Order; \file{Order.java}:\dongOrderCancel, \dongOrderAdvance; \file{OrderService.java}:\dongCancelOrder, \dongUpdateStatus; \file{DomainTest.java}:\dongTestCancel, \dongTestAdvance\\
+Quyền xem đơn (NFR01) & SC 3 flow 5; \file{OrderService.java}:\dongGetOrder; \file{Order.java}:\dongOrderOwned; \file{WebServer.java}:\dongSessionCustomer{} (mã khách từ phiên), \dongNotFound{} (404); \file{OrderServiceTest.java}:\dongTestNotFound\\
 Trừ kho & \file{SqliteProductRepository.java}:\dongDecreaseStock; \file{ecom_schema_sqlite.sql}:\dongSqlStockCheck; \file{RepositoryTest.java}:\dongTestStock\\
-AI và đường lui & SC G ``AI: five features''; VP 3.1 AI Components; \file{LlmClient.java}:\dongLlmChat; \file{QueryService.java}:\dongUnderstand, \dongParseRules; \file{ImageService.java}:\dongDescribe, \dongLocalColor; \file{AssistantService.java}:\dongAsk, \dongRunTool, \dongNoAi; bài §3.13\\
+AI và đường lui & SC 3 flow 1, 2, 5, 6; VP 3.1 AI Components; \file{LlmClient.java}:\dongLlmChat; \file{QueryService.java}:\dongUnderstand, \dongParseRules; \file{ImageService.java}:\dongDescribe, \dongLocalColor; \file{AssistantService.java}:\dongAsk, \dongRunTool, \dongNoAi; bài §3.13\\
 Giọng nói & \file{demo/voice-server/server.py}; \file{WhisperClient.java}:\dongWhisper; \file{SpeechService.java}:\dongSpeech; bài §3.8\\
 Đánh giá AI & \file{build/eval/eval_summary.txt}, \file{build/eval/voice_eval.txt}; bài §3.15\\
-Code khớp mô hình & \file{tools/check_code_model.py} (\code{check_database}:\dongCheckDb, \code{check_dependencies}:\dongCheckDeps); dòng cuối \file{build/test_results.txt}; bài §4.5.1\\
+Code khớp mô hình & \file{tools/check_code_model.py} (\code{check_database}:\dongCheckDb, \code{check_dependencies}:\dongCheckDeps); dòng cuối \file{build/test_results.txt}; SC 1; bài §4.5.1, phụ lục A.1\\
 Sinh sơ đồ, bảng, code & \file{tools/build_vp.py}; \file{tools/gen_sql.py} (\code{create_table}:\dongGenCreate, \code{validate}:\dongGenValidate); \file{tools/gen_java.py} $\to$ \file{demo/generated/}\\
-Kiểm thử, chạy thử & \file{build/test_results.txt}; \file{build/e2e_results.txt}; \file{tools/e2e_check.py}; bài §5.10\\
+Kiểm thử, chạy thử & SC 5; \file{build/test_results.txt}; \file{build/e2e_results.txt}; \file{tools/e2e_check.py}; bài §5.10; cách kiểm chứng từng yêu cầu chất lượng: phụ lục A.2\\
 Triển khai, cấu hình & VP 5.1 Deployment; \file{demo/config/app.properties} (không mở \file{app.local.properties}); bài §5.2, §5.11\\
-Ảnh bản dùng thử & \file{figures/vp/README.md}; chú thích các hình 1.3, 1.4, 1.6, 1.7 và DFD mức 1 trong bài\\
-Hạn chế & SC G ``Limitations''; bài §5.12\\
+Ảnh bản dùng thử & \file{figures/vp/README.md}; chú thích Hình 1.1--1.4 và 2.11 trong bài\\
+Hạn chế & bài §5.12\\
 Các đường API & \file{demo/API.md}\\
 \bottomrule
 \end{longtable}

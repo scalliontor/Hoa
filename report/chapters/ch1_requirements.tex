@@ -1,68 +1,67 @@
 \chapter{Requirement Determination}\label{ch:req}\label{ch:1}
 
-This chapter follows the first lecture of the course~\cite{slidesL01}: \emph{business investigation}. It describes
-what the painting shop Họa. does, who is involved, which processes run, which information must be managed and
-which problems occur; it traces each problem to its root cause and the need behind it; and it ends by fixing the
-boundary of the proposed system in a context diagram. The thread of the chapter is the first half of the chain
-stressed in the lectures:
+This chapter follows Lecture~01 of the course~\cite{slidesL01}: \emph{business investigation}. It describes the
+shop Họa., its people, processes, information and problems. It traces each problem to a root cause and a need, then
+fixes the system boundary in a context diagram. This is the first half of the chain stressed in the lectures:
 \begin{center}
 \emph{Business problem $\rightarrow$ Root cause $\rightarrow$ Stakeholder need $\rightarrow$ System boundary.}
 \end{center}
-The needs found here become the requirements, actors and use cases at the start of Chapter~\ref{ch:analysis}.
+Chapter~\ref{ch:analysis} turns the needs into requirements, actors and use cases.
 
 %% =========================================================================
 \section{Organization and Business Objectives}\label{sec:1.2}
 
 \subsection{The organisation}
 
-Họa. is a small online gallery. Its main products are \emph{fine-art prints} (on canvas or fine-art paper) of
-famous paintings that are now in the public domain, by painters such as Claude Monet, Vincent van Gogh or
-Katsushika Hokusai; its secondary products are \emph{frames} sold with the prints. Each print belongs to one
-artist and has the attributes that buyers use to choose: style (Impressionism, Post-Impressionism,
-Ukiyo-e\dots), subject (landscape, flowers, sea, portrait\dots), dominant colour, original medium, year and size.
-The target customers are young city dwellers decorating a flat, an office or a coffee shop. All prices are in US
-dollars.
+Họa. is a small online gallery. It sells:
+\begin{itemize}
+\item \textbf{fine-art prints} (main product) of famous public-domain paintings, on canvas or fine-art paper, by
+      painters such as Claude Monet, Vincent van Gogh or Katsushika Hokusai;
+\item \textbf{frames} (secondary product), sold with the prints.
+\end{itemize}
+Each print belongs to one artist. Buyers choose by style (Impressionism, Post-Impressionism, Ukiyo-e\dots), subject
+(landscape, flowers, sea, portrait\dots), dominant colour, original medium, year and size. Customers are young city
+dwellers decorating a flat, an office or a coffee shop. All prices are in US dollars.
 
-Before the system existed, the shop sold mainly through social-media messages. A customer sent a description or a
-photo, a member of staff searched an image folder, quoted a price and wrote the order into a spreadsheet; the stock
-was kept in another spreadsheet updated by the warehouse.
+Before the system, the shop sold mainly through social-media messages:
+\begin{enumerate}
+\item A customer sent a description or a photo.
+\item Staff searched an image folder, quoted a price and wrote the order into a spreadsheet.
+\item The warehouse updated the stock in another spreadsheet.
+\end{enumerate}
 
 \subsection{Business objectives}
+
+Table~\ref{tab:goals} sets five objectives with proposed measures; the owner sets the thresholds. The last column
+links each objective to the problems of Section~\ref{sec:1.6}.
 
 \begin{longtable}{@{}P{1.1cm}P{5.6cm}P{6.1cm}P{2.2cm}@{}}
 \caption{Business objectives of Họa. and the problems they answer}\label{tab:goals}\\
 \toprule
-\textbf{ID} & \textbf{Objective} & \textbf{How it is measured (proposed; thresholds set by the owner)} & \textbf{Problems answered}\\
+\textbf{ID} & \textbf{Objective} & \textbf{Measure (proposed)} & \textbf{Problems answered}\\
 \midrule
 \endfirsthead
 \toprule
-\textbf{ID} & \textbf{Objective} & \textbf{How it is measured (proposed; thresholds set by the owner)} & \textbf{Problems answered}\\
+\textbf{ID} & \textbf{Objective} & \textbf{Measure (proposed)} & \textbf{Problems answered}\\
 \midrule
 \endhead
-\small BO1 & \small Customers find a suitable painting faster, even when they do not know its title & \small Time and number of steps from the first query to the painting detail page & \small P1\\
+\small BO1 & \small Customers find a suitable painting faster, even without its title & \small Time and steps from the first query to the painting detail page & \small P1\\
 \small BO2 & \small More searches lead to a purchase & \small Share of search sessions with an ``add to cart'' & \small P1\\
-\small BO3 & \small Never sell a sold-out print, never charge a wrong price & \small Number of orders cancelled because of stock or price errors & \small P2, P4\\
-\small BO4 & \small Less staff time spent answering ``where is my order?'' & \small Number of order questions answered by the system itself & \small P3, P4\\
-\small BO5 & \small Protect customer and payment data & \small No case of a customer seeing another customer's order; no full card number stored & \small P5\\
+\small BO3 & \small Never sell a sold-out print, never charge a wrong price & \small Orders cancelled because of stock or price errors & \small P2, P4\\
+\small BO4 & \small Less staff time on ``where is my order?'' & \small Order questions answered by the system itself & \small P3, P4\\
+\small BO5 & \small Protect customer and payment data & \small No customer sees another customer's order; no full card number stored & \small P5\\
 \bottomrule
 \end{longtable}
 
-The last column links each objective to the problems P1--P5 analysed in Section~\ref{sec:1.6}. Every problem is
-answered by at least one objective. P4 (orders and prices handled by hand) is answered by two: handling prices by
-hand causes wrong prices (BO3), and keeping the order status where only staff can see it causes the order
-questions of BO4.
-
-The objectives are written with a measure but without a target number: the essay has no real sales data to set
-thresholds. What can be measured on the demo -- search accuracy, behaviour when the AI fails, speed of speech
-recognition -- is reported in Chapter~3 and Chapter~\ref{ch:code}.
+P4 has two objectives: manual prices cause wrong prices (BO3), and a staff-only status causes order questions
+(BO4). There are no target numbers, as there is no real sales data. Chapters~3 and~\ref{ch:code} report what the
+demo can measure: search accuracy, behaviour when the AI fails and speed of speech recognition.
 
 %% =========================================================================
 \section{Stakeholders}\label{sec:1.3}
 
-A stakeholder is a person, group or organisation that is affected by the system, is interested in it, provides
-information to it or receives information from it, or takes decisions about it. Lecture~01 insists that
-stakeholders must not only be listed but \emph{analysed}: what is each one's goal and what information does each
-one need?
+Lecture~01 asks the analyst to analyse stakeholders, not only list them. Table~\ref{tab:stakeholders} gives each one's type
+(internal or external, as Assignment~01 asks), goal, information need and influence.
 
 \begin{longtable}{@{}P{2.7cm}P{1.6cm}P{4.0cm}P{4.6cm}P{2.1cm}@{}}
 \caption{Stakeholder catalogue and analysis (type, goal, information need)}\label{tab:stakeholders}\\
@@ -76,44 +75,41 @@ one need?
 \endhead
 \small Customer & \small External & \small Find and buy a painting they like; know where the order is & \small Paintings, artists, prices, stock, status of own orders & \small High\\
 \small Shop owner & \small Internal & \small Control the business, increase revenue & \small Sales, orders, stock, best-selling paintings & \small High\\
-\small Shop administrator & \small Internal & \small Keep the catalogue right and process orders on time & \small Paintings, prices, stock, orders waiting to be processed & \small High\\
+\small Shop administrator & \small Internal & \small Keep the catalogue right, process orders on time & \small Paintings, prices, stock, orders waiting to be processed & \small High\\
 \small Warehouse staff & \small Internal & \small Pack and ship the right order & \small Order lines, delivery address, stock level & \small Medium\\
 \small Support staff & \small Internal & \small Answer customers quickly and correctly & \small Order status, cancellation policy & \small Medium\\
 \small Payment service & \small External & \small Process transactions safely & \small Amount, transaction id, authorisation code & \small Medium\\
-\small Delivery carrier & \small External & \small Collect the parcel and deliver it to the right address & \small The parcel and the delivery address, handed over with the parcel & \small Low\\
+\small Delivery carrier & \small External & \small Collect the parcel, deliver it to the right address & \small Parcel and delivery address, handed over together & \small Low\\
 \small Gemma 4 AI service & \small External & \small Serve inference requests within its resources & \small Queries, images to describe, list of tools & \small Medium\\
 \small Developer (the author), lecturer & \small External & \small A correct model that follows the lectures; a demo that runs & \small Requirements, diagrams, source code, test results & \small High\\
 \bottomrule
 \end{longtable}
 
-As Assignment~01 asks, the stakeholders fall into two groups. \emph{Internal} stakeholders belong to the shop: the
-owner, the administrator, the warehouse staff and the support staff. \emph{External} stakeholders are outside the
-organisation: the customer, the payment service, the delivery carrier, the Gemma~4 AI service, and the developer
-and the lecturer of this study project. Being external says nothing about influence (the customer has the
-highest), and it does not make a stakeholder an actor either. The delivery carrier takes part in the business
-process (Figure~\ref{fig:c1_process}) but exchanges no data with the system in this release
+Being external says nothing about influence (the customer has the highest) or about being an actor
 (Section~\ref{sec:1.7}).
 
-The analysis shows two conflicts that have to be solved early. Customers want the AI assistant to ``know
-everything'' about their orders, while the owner must guarantee that nobody can see another person's order.
-Customers want to search with photos and voice at any time, while the AI services can be slow or down. The two
-conflicts become requirements NFR01 and NFR02 in Section~\ref{sec:frnfr}. A third, quieter conflict concerns
-voice: speaking is convenient, but a recording of a customer's voice is personal data. It becomes NFR08 (audio
-never leaves the machine).
+Three conflicts must be solved early, each by a requirement (Section~\ref{sec:frnfr}):
+\begin{enumerate}
+\item Customers want the assistant to ``know everything'' about their orders. The owner must guarantee that nobody
+      sees another person's order (NFR01).
+\item Customers want photo and voice search at any time. The AI services can be slow or down (NFR02).
+\item Speaking is convenient, but a voice recording is personal data. Audio never leaves the machine (NFR08).
+\end{enumerate}
 
-Figure~\ref{fig:c1_stakeholders} draws the same analysis as an ArchiMate stakeholder map. Every stakeholder is
-linked to the concerns (drivers) it has, and every concern to the goal of the system that answers it, with the
-requirements in brackets. The delivery carrier is left out of the map because no goal of this release concerns it. The privacy concern is shared by the customer, the owner and the payment service: this is
-where the conflicts above meet, and why NFR01, NFR05 and NFR08 are all Must.
+Figure~\ref{fig:c1_stakeholders} draws this as an ArchiMate stakeholder map: stakeholder $\rightarrow$ concern
+(driver) $\rightarrow$ system goal, with requirements in brackets. Notice:
+\begin{itemize}
+\item The delivery carrier is missing: no goal of this release concerns it.
+\item The customer, the owner and the payment service share the privacy concern, where the conflicts meet. So
+      NFR01, NFR05 and NFR08 are all Must.
+\end{itemize}
 
 \landscapefig{c1_stakeholders}{Stakeholder map of Họa. (ArchiMate)}{Stakeholder map of Họa.: stakeholders, their concerns and the goals of the system that answer them. \trialshot{ArchiMate diagrams}. Diagram \vpsrc{c1_stakeholders}.}{\label{fig:c1_stakeholders}}
 
 %% =========================================================================
 \section{Business Processes}\label{sec:1.4}
 
-A business process is a structured sequence of activities that produces a business result.
-Table~\ref{tab:processes} is the process catalogue of Họa., written as purpose -- input -- main activities --
-output.
+Table~\ref{tab:processes} is the process catalogue: the input, main activities and output of each process.
 
 \begin{longtable}{@{}P{2.9cm}P{3.0cm}P{5.5cm}P{3.6cm}@{}}
 \caption{Business process catalogue}\label{tab:processes}\\
@@ -126,31 +122,31 @@ output.
 \midrule
 \endhead
 \small Catalogue management & \small Painting images, artist data, purchase price & \small Add a print, record its attributes, set price and stock & \small Catalogue of paintings for sale\\
-\small Finding and recommending & \small A description, a spoken query, a photo of a painting or of a room & \small Understand the need, filter, match, rank, present & \small Ranked list of suitable paintings\\
+\small Finding and recommending & \small Description, spoken query, photo of a painting or a room & \small Understand the need, filter, match, rank, present & \small Ranked list of suitable paintings\\
 \small Order processing & \small Cart, address, payment method & \small Check cart and stock, freeze prices, create the order, decrease stock & \small Order in status PLACED\\
-\small Payment & \small Order, amount & \small Collect cash on delivery or obtain a card authorisation code & \small Payment succeeded or failed\\
+\small Payment & \small Order, amount & \small Collect cash on delivery or get a card authorisation code & \small Payment succeeded or failed\\
 \small Stock management & \small Orders, goods received & \small Decrease stock on order, increase on receipt, reconcile & \small Current stock\\
 \small Delivery & \small Packed order, address & \small Move the order through its statuses, hand over to the carrier, confirm delivery & \small Order DELIVERED\\
-\small After-sales support & \small Customer question, order id & \small Look up status, cancel an order that is not shipped & \small Answer, order CANCELLED\\
+\small After-sales support & \small Customer question, order id & \small Look up status, cancel an order not yet shipped & \small Answer, order CANCELLED\\
 \bottomrule
 \end{longtable}
 
-Figure~\ref{fig:c1_process} draws the central process, from the order to the delivery, in BPMN. The customer
-and the gallery are pools; inside the gallery the administrator and the warehouse staff are lanes; the payment
-service and the delivery carrier are black-box pools that only exchange messages with the gallery. A message start
-event receives the order; an exclusive gateway separates card payment from cash on delivery; the order then moves
-through the statuses PLACED, PROCESSING, SHIPPED and DELIVERED, which Chapter~\ref{ch:analysis} models as the state
-machine of \code{Order} (Figure~\ref{fig:c2_state_order}).
+Figure~\ref{fig:c1_process} draws the central process, order to delivery, in BPMN. Notice:
+\begin{itemize}
+\item The payment service and the carrier are black-box pools that only exchange messages with the gallery.
+\item An exclusive gateway separates card payment from cash on delivery.
+\item The order moves through PLACED, PROCESSING, SHIPPED and DELIVERED: the state machine of \code{Order} in
+      Chapter~\ref{ch:analysis} (Figure~\ref{fig:c2_state_order}).
+\end{itemize}
 
 \landscapefig{c1_process}{Business process from order to delivery (BPMN)}{Business process of Họa. from order to delivery: pools, lanes, the payment gateway and the message flows with the payment service and the carrier. \trialshot{BPMN diagrams}. Diagram \vpsrc{c1_process}.}{\label{fig:c1_process}}
 
 \subsection{Order processing and its exceptions}
 
-The most important process is order processing. In its simplest form it is: \emph{choose a painting
-$\rightarrow$ cart $\rightarrow$ place the order $\rightarrow$ payment $\rightarrow$ order confirmation
-$\rightarrow$ processing $\rightarrow$ shipping $\rightarrow$ delivered}. But, as Lecture~01 warns, the analyst
-must keep asking ``what happens if\dots''. Table~\ref{tab:exceptions} records the exceptions found; each one
-later becomes an alternative flow in the use case specifications of Chapter~\ref{ch:analysis}.
+Order processing is the key process. Its simplest form is: \emph{choose a painting $\rightarrow$ cart
+$\rightarrow$ place the order $\rightarrow$ payment $\rightarrow$ order confirmation $\rightarrow$ processing
+$\rightarrow$ shipping $\rightarrow$ delivered}. Lecture~01 tells the analyst to keep asking ``what happens if\dots''.
+Table~\ref{tab:exceptions} lists the answers; each becomes an alternative flow in Chapter~\ref{ch:analysis}.
 
 \begin{longtable}{@{}P{4.4cm}P{6.4cm}P{4.2cm}@{}}
 \caption{Exceptions of the order processing process}\label{tab:exceptions}\\
@@ -162,12 +158,12 @@ later becomes an alternative flow in the use case specifications of Chapter~\ref
 \textbf{Situation} & \textbf{Expected handling} & \textbf{Recorded as}\\
 \midrule
 \endhead
-\small A print is sold out at checkout & \small Say which print is short, ask the customer to change the cart, create no order & \small FR07, alternative flow of UC07\\
-\small The price changed after the print was added to the cart & \small The order uses the current catalogue price at checkout time & \small FR07, frozen-price rule\\
+\small A print is sold out at checkout & \small Name the missing print, ask to change the cart, create no order & \small FR07, alternative flow of UC07\\
+\small The price changed after the print was added to the cart & \small The order uses the catalogue price at checkout time & \small FR07, frozen-price rule\\
 \small The cart is empty & \small Checkout is refused & \small FR07\\
-\small The address does not belong to the customer & \small Refuse and ask for one of the customer's own addresses & \small UC07\\
-\small The card payment is refused & \small Record a failed payment; the order is not considered paid & \small UC07, NFR05\\
-\small The customer wants to cancel & \small Allowed only while the order is PLACED or PROCESSING; refused once shipped & \small FR11, UC11\\
+\small The address is not the customer's & \small Refuse; ask for one of the customer's own addresses & \small UC07\\
+\small The card payment is refused & \small Record a failed payment; the order does not count as paid & \small UC07, NFR05\\
+\small The customer wants to cancel & \small Only while PLACED or PROCESSING; refused once shipped & \small FR11, UC11\\
 \small Someone asks about another customer's order & \small Reveal nothing; answer as if the order did not exist & \small FR09, NFR01\\
 \bottomrule
 \end{longtable}
@@ -175,11 +171,8 @@ later becomes an alternative flow in the use case specifications of Chapter~\ref
 %% =========================================================================
 \section{Information Catalogue}\label{sec:1.5}
 
-Information is the central resource of an information system. Table~\ref{tab:info} lists the groups of
-information that Họa. must manage, together with the attribute names agreed in the model; the same names are used
-in the class diagrams, the database tables and the source code. Following Assignment~01, the fourth column says
-whether the system produces, consumes, stores or exchanges each group with an outside party, and the last column
-says why the shop needs it.
+Table~\ref{tab:info} lists the information Họa. must manage. The content uses the model's names, shared by the
+class diagrams, the database and the code. As Assignment~01 asks, it also gives handling and purpose.
 
 \begin{longtable}{@{}P{2.3cm}P{4.3cm}P{2.5cm}P{2.9cm}P{3.0cm}@{}}
 \caption{Information catalogue: content, owner, handling and purpose}\label{tab:info}\\
@@ -192,59 +185,53 @@ says why the shop needs it.
 \midrule
 \endhead
 \small Customer & \small \code{customerId}, name \code{FullName}, \code{email}, \code{phone}, address \code{Address}, VIP or new customer & \small Customer / shop, warehouse & \small Stored; consumed at checkout & \small Identify the buyer, deliver to the right address, apply the VIP discount\\
-\small Category & \small \code{categoryId}, \code{name}, \code{description}; whether its products are prints or frames & \small Shop owner / administrator, customers & \small Stored; consumed by the catalogue and the search & \small Keep the two product lines apart and say which details a product has\\
+\small Category & \small \code{categoryId}, \code{name}, \code{description}; whether its products are prints or frames & \small Shop owner / administrator, customers & \small Stored; consumed by catalogue and search & \small Keep the two product lines apart; say which details a product has\\
 \small Painting & \small \code{productId}, \code{name}, \code{price}, \code{stockQuantity}, \code{imageUrl}, \code{description}; \code{style}, \code{subject}, \code{dominantColor}, \code{medium}, \code{yearCreated}, \code{widthCm} x \code{heightCm} & \small Administrator / customers, search & \small Stored; consumed by search, cart and checkout & \small Browse and search the catalogue; price and stock at checkout\\
-\small Artist & \small \code{artistId}, \code{name}, \code{nationality}, \code{lifeYears} & \small Administrator / customers & \small Stored; consumed by search and the detail page & \small Show and find paintings by painter\\
+\small Artist & \small \code{artistId}, \code{name}, \code{nationality}, \code{lifeYears} & \small Administrator / customers & \small Stored; consumed by search and detail page & \small Show and find paintings by painter\\
 \small Frame & \small \code{material}, \code{color}, \code{sizeLabel} & \small Administrator / customers & \small Stored; consumed by the cart & \small Sell a frame that fits the print\\
 \small Cart & \small \code{cartId}, cart lines with \code{quantity} and \code{cartPrice} & \small Customer / checkout & \small Produced by the customer; stored; consumed at checkout & \small Keep the intended purchase until checkout\\
-\small Order & \small \code{orderId}, \code{orderDate}, \code{status}, \code{totalAmount}, order lines with \code{quantity} and \code{unitPrice} & \small System / customer, warehouse, administrator & \small Produced at checkout; stored; consumed by every order use case & \small Record the sale; show its status to the customer and the administrator\\
+\small Order & \small \code{orderId}, \code{orderDate}, \code{status}, \code{totalAmount}, order lines with \code{quantity} and \code{unitPrice} & \small System / customer, warehouse, administrator & \small Produced at checkout; stored; consumed by every order use case & \small Record the sale; show its status to customer and administrator\\
 \small Payment & \small \code{paymentId}, \code{amount}, \code{paymentDate}, \code{status}; for cards only \code{cardLast4} and \code{authorizationCode} & \small Confirmed by the payment service & \small Exchanged with the payment service; stored without the card number & \small Know whether an order is paid\\
 \small Shipping & \small \code{shippingId}, \code{carrier}, \code{trackingNumber}, \code{shippingFee}, \code{deliveredDate} & \small System at checkout, administrator / customer, warehouse & \small Produced at checkout; stored; updated with the order status; not exchanged with the carrier & \small Deliver to the chosen address; charge the shipping fee\\
-\small Search and AI & \small Queries, voice audio (processed on the machine only), transcripts, photos of paintings or rooms (not stored), feature vectors of paintings & \small Customer / search service, Whisper, Gemma & \small Consumed; queries and photos exchanged with Gemma~4; only the feature vectors stored & \small Understand the query and rank the paintings\\
+\small Search and AI & \small Queries, voice audio (processed on the machine only), transcripts, photos of paintings or rooms (not stored), feature vectors of paintings & \small Customer / search service, Whisper, Gemma & \small Consumed; queries and photos exchanged with Gemma~4; only feature vectors stored & \small Understand the query and rank the paintings\\
 \small Search results and answers & \small Ranked paintings with a score and the reason of each suggestion; answers of the assistant & \small System / customer & \small Produced for each request; not stored & \small Show what fits and why; answer order questions\\
 \bottomrule
 \end{longtable}
 
-Read by kind, as Assignment~01 asks, the table gives four short lists. The system \emph{produces} the order with its
-confirmation and status, the shipping record, the search results with their reasons and the answers of the
-assistant. It \emph{consumes} the catalogue (categories, paintings, artists, frames), the customer data and the
-queries of customers. It \emph{stores} the catalogue, customers, carts, orders, payments, shipping records and
-feature vectors; queries, transcripts, audio, photos, results and answers live only for one request. It
-\emph{exchanges} information with two outside parties only: payment requests and authorisation results with the
-payment service, and prompts, photos, filters and descriptions with Gemma~4 (Table~\ref{tab:contextflows}).
-
-Two kinds of information in the row ``Search and AI'' deserve a remark. Audio and room photos are \emph{transient}: they are
-needed for one request and are never written to the database. Feature vectors, in contrast, are
-\emph{derived} data: they are computed from the painting attributes and stored in table \code{product_feature}
-together with the version of the encoding (Chapter~4).
+Read by kind:
+\begin{itemize}
+\item \textbf{Produced:} orders (with confirmation and status), shipping records, search results with reasons,
+      assistant answers.
+\item \textbf{Consumed:} the catalogue (categories, paintings, artists, frames), customer data, queries.
+\item \textbf{Stored:} catalogue, customers, carts, orders, payments, shipping records, feature vectors. Queries,
+      transcripts, audio, photos, results and answers last one request only.
+\item \textbf{Exchanged:} only with the payment service and Gemma~4 (Table~\ref{tab:contextflows}).
+\end{itemize}
+Audio and room photos are \emph{transient}: never written to the database. Feature vectors are \emph{derived} from
+the painting attributes and stored in table \code{product_feature} with the encoding version (Chapter~4).
 
 %% =========================================================================
 \section{Business Problems and Root Causes}\label{sec:1.6}
 
-The analyst must point out problems, not only describe activities. From observing the message-based sales process
-I recorded five problems: (P1) customers cannot find a suitable painting when they do not know its title;
-(P2) sold-out prints are sometimes sold; (P3) customers do not know where their order is and ask again and
-again; (P4) staff process orders and update the catalogue by hand; (P5) order and payment details can leak when
-customers are identified through messages.
+From the message-based sales process I recorded five problems, P1--P5 (Table~\ref{tab:pcin}). First I ask
+``why'' about P1.
 
 \subsection{Asking ``why'' down to the root cause}
 
-For problem P1, asking ``why'' repeatedly gives:
+P1: customers cannot find a suitable painting when they do not know its title.
 \begin{enumerate}
-\item \emph{Why can customers not find paintings?} Because the catalogue can only be searched by title.
-\item \emph{Why is searching by title not enough?} Because customers describe what they feel: a colour, a subject,
-      ``something like this one''.
-\item \emph{Why can the catalogue not be searched by colour or subject?} Because the painting data has no
-      structured attributes such as style, subject or dominant colour.
-\item \emph{Why are these attributes missing?} Because the knowledge about the paintings is in the heads of the
-      sales staff, not in the system.
-\item \emph{Why can the photos and voice messages sent by customers not be used?} Because there is no way to turn
-      a photo or a recording into information that can be matched.
+\item \emph{Why?} The catalogue can only be searched by title.
+\item \emph{Why is that not enough?} Customers describe a feeling: a colour, a subject, ``something like this
+      one''.
+\item \emph{Why no search by colour or subject?} The painting data has no structured attributes such as style,
+      subject or dominant colour.
+\item \emph{Why are these attributes missing?} The knowledge is in the heads of the sales staff, not in the system.
+\item \emph{Why are customers' photos and voice messages useless?} Nothing turns them into information that can
+      be matched.
 \end{enumerate}
-The root cause is therefore not ``a missing search box'' but \emph{missing structured data about paintings and no
-way to understand queries given as natural sentences, speech or images}. This is why the AI features
-(Chapter~3) come together with a structured painting model in the data design
-(Chapter~4).
+The root cause is not ``a missing search box''. It is \emph{missing structured painting data and no way to
+understand queries given as sentences, speech or images}. So the AI features (Chapter~3) come with a structured
+painting model (Chapter~4).
 
 \subsection{Problem -- cause -- impact -- need}
 
@@ -259,53 +246,57 @@ way to understand queries given as natural sentences, speech or images}. This is
 \midrule
 \endhead
 \small P1 & \small Customers cannot find a suitable painting & \small Search by title only; no descriptive attributes; photos and speech cannot be used & \small Lost customers, long consultations & \small Find paintings by description, voice, photo, or a photo of the room\\
-\small P2 & \small Sold-out prints are sold & \small Stock updated by hand, separate from orders & \small Cancelled or late orders, lost trust & \small Accurate stock at checkout time\\
+\small P2 & \small Sold-out prints are sometimes sold & \small Stock updated by hand, separate from orders & \small Cancelled or late orders, lost trust & \small Accurate stock at checkout time\\
 \small P3 & \small Customers do not know where their order is & \small Order status only in a staff spreadsheet & \small Repeated questions, overloaded staff & \small See and look up order status at any time\\
 \small P4 & \small Orders and prices handled by hand & \small No administration tool & \small Wrong prices, slow delivery & \small Tools to manage paintings and order status\\
-\small P5 & \small Risk of leaking data & \small Customers identified by an order id in a message; card numbers written down & \small Legal risk, loss of trust & \small Ownership checks, no stored card numbers, voice kept local\\
+\small P5 & \small Order and payment data can leak & \small Customers identified by an order id in a message; card numbers written down & \small Legal risk, loss of trust & \small Ownership checks, no stored card numbers, voice kept local\\
 \bottomrule
 \end{longtable}
 
 %% =========================================================================
-Figure~\ref{fig:c1_problems} arranges Table~\ref{tab:pcin} as a problem tree: each root cause at the bottom
-influences a problem, and each problem an impact on the business at the top. The requirements of
-Chapter~\ref{ch:analysis} attack the causes, not the symptoms: structured painting data and multimodal search for P1,
-stock decreased in the same step as the order for P2, self-service order tracking for P3, a back office for P4 and
-ownership checks for P5.
+Figure~\ref{fig:c1_problems} draws the table as a problem tree: root causes (bottom) influence problems, which
+influence business impacts (top). The requirements of Chapter~\ref{ch:analysis} attack the causes, not the symptoms:
+\begin{itemize}
+\item P1: structured painting data and multimodal search;
+\item P2: stock decreased in the same step as the order;
+\item P3: self-service order tracking;
+\item P4: a back office;
+\item P5: ownership checks.
+\end{itemize}
 
 \landscapefig{c1_problems}{Problem tree of Họa. (ArchiMate)}{Problem tree of Họa.: root causes, the five problems P1--P5 and their impacts. \trialshot{ArchiMate diagrams}. Diagram \vpsrc{c1_problems}.}{\label{fig:c1_problems}}
 
 %% =========================================================================
 \section{System Scope, Boundary and Context Diagram}\label{sec:1.7}
 
-Before designing, the analyst must decide what is inside the system and what is outside. Inside the boundary of
-\emph{Họa. Gallery} are the painting catalogue, customers, carts, orders, stock and the search services. Outside
-are four parties: the \textbf{Customer}, the \textbf{Administrator}, the \textbf{Payment Service} and the
-\textbf{Gemma 4 Service}. Gemma is outside because the shop does not control the model and only calls it
-through an API; every decision about price, stock and access rights stays inside Họa. The Whisper speech server,
-on the other hand, runs on the shop's own machine and is therefore \emph{inside} the boundary: a customer's
-voice never leaves the system (NFR08).
+Before designing, I fix what is inside the system and what is outside:
+\begin{itemize}
+\item \textbf{Inside} \emph{Họa. Gallery}: catalogue, customers, carts, orders, stock, search services, and the
+      Whisper speech server on the shop's own machine. So a customer's voice never leaves the system (NFR08).
+\item \textbf{Outside}: the \textbf{Customer}, the \textbf{Administrator}, the \textbf{Payment Service} and the
+      \textbf{Gemma 4 Service}. The shop does not control Gemma and only calls it through an API. Decisions on price,
+      stock and access rights stay inside.
+\end{itemize}
 
-The delivery carrier is a stakeholder (Table~\ref{tab:stakeholders}) and a pool of the business process
-(Figure~\ref{fig:c1_process}), but it is not an external entity of the context diagram, because in this release it
-exchanges no data with the system. The warehouse hands it the parcel together with the address. The administrator
-records the hand-over and the delivery by moving the order to SHIPPED and then DELIVERED (FR13), which also updates the
-shipping record. A link to a real carrier is out of scope (Table~\ref{tab:scope}); if it is added later, the
-carrier would become a fifth external entity. Figure~\ref{fig:context} is the context diagram of Lecture~01 for Họa.
+The delivery carrier is a stakeholder and a BPMN pool (Figure~\ref{fig:c1_process}), but not an external entity: in
+this release it exchanges no data with the system. The warehouse hands it the parcel and the address. The
+administrator records hand-over and delivery by moving the order to SHIPPED, then DELIVERED (FR13), which also
+updates the shipping record. A real carrier link is out of scope (Table~\ref{tab:scope}); it would be a fifth
+external entity.
 
 \subsection{System Context Diagram}\label{sec:1.7.1}
 
-The context diagram is the level~0 data flow diagram (DFD): the whole system is the single process~0, the four
-external entities are drawn around it, and each arrow is a flow of information labelled with what it carries. Level~1
-(Section~\ref{sec:dfd1}) opens process~0 and must show the same flows again.
+Figure~\ref{fig:context} is the context diagram of Lecture~01, i.e.\ the level~0 data flow diagram (DFD). The system
+is the single process~0 among the four external entities; each arrow says what it carries. Level~1
+(Section~\ref{sec:dfd1}) opens process~0 and must show the same flows.
 
 \landscapefig{c1_dfd0}{Context diagram of Họa. (DFD level 0)}{Context diagram of Họa. (DFD level 0): the system as process 0, the four external entities and the flows of information in each direction. \trialshot{data flow diagrams}. Diagram \vpsrc{c1_dfd0}.}{\label{fig:c1_dfd0}\label{fig:context}}
 
 \subsection{External Information Inflows and Outflows}\label{sec:1.7.2}
 
-Every flow is read twice: what enters the system must be received by a use case and kept in, or answered
-from, a concept of the domain model; what leaves the system must be produced by a use case.
-Table~\ref{tab:contextflows} does this for the eight flows.
+Each flow is read twice. An inflow must be received by a use case and kept in, or answered from, a domain concept.
+An outflow must be produced by a use case. Table~\ref{tab:contextflows} checks the eight flows. Notice that Gemma's
+flows carry no concept: the shop keeps nothing Gemma returns.
 
 \begin{longtable}{@{}P{2.3cm}P{3.6cm}P{3.6cm}P{2.0cm}P{3.5cm}@{}}
 \caption{Flows of the context diagram, the use cases that handle them and the concepts they carry}\label{tab:contextflows}\\
@@ -324,23 +315,19 @@ Table~\ref{tab:contextflows} does this for the eight flows.
 \bottomrule
 \end{longtable}
 
-Three consequences come straight from the boundary:
+So every flow has a use case (Section~\ref{sec:1.10}), and what the shop keeps from it is a domain concept. Two
+more consequences follow from the boundary:
 \begin{itemize}
-\item \textbf{Every flow has a use case.} The flows of the customer and the administrator become the use cases of
-Section~\ref{sec:1.10}, and the things they carry (paintings, cart, orders, payments) become the concepts of the
-domain model in Section~\ref{sec:2.7}. The flows of Gemma carry no concept: what Gemma returns is not data that
-the shop keeps.
 \item \textbf{Gemma is outside, so its answers are checked inside.} Gemma only helps to understand a query or a
-photo. Prices, stock and the right to see an order are decided by the rules of Họa. (Section~\ref{sec:2.3}), and
-when Gemma does not answer the search goes on with keyword rules (NFR02): this is the fallback branch of the search
-activity (Figure~\ref{fig:c2_activity_search}). The Whisper speech server runs on the shop's own machine, so it is
-inside the boundary and the customer's voice never leaves the system (NFR08).
-\item \textbf{The payment service is outside, so it can say no.} A payment request may come back without an
-authorisation code; the checkout specification therefore has the alternative flow ``card refused''
-(Table~\ref{tab:spec07}), and the concept \code{Payment} keeps a status.
+      photo. The shop's rules decide prices, stock and who may see an order (Section~\ref{sec:2.3}). If Gemma does
+      not answer, search falls back to keyword rules (NFR02, Figure~\ref{fig:c2_activity_search}).
+\item \textbf{The payment service is outside, so it can say no.} A request may return no authorisation code. Hence
+      the alternative flow ``card refused'' (Table~\ref{tab:spec07}) and the status of \code{Payment}.
 \end{itemize}
 
 \subsection{Scope of the Demo Release}\label{sec:1.7.3}
+
+Table~\ref{tab:scope} splits what the demo release does from what is recorded for later.
 
 \begin{longtable}{@{}P{7.4cm}P{7.6cm}@{}}
 \caption{In and out of the scope of the demo release}\label{tab:scope}\\
@@ -361,17 +348,20 @@ authorisation code; the checkout specification therefore has the alternative flo
 \bottomrule
 \end{longtable}
 
-The scope comes with constraints: the application is written in Java, the database is a SQLite file and
-everything runs on one machine (NFR06); painting images come only from public-domain works; Gemma~4 is reached
-through an OpenAI-compatible API over the Internet (DeepInfra; until 11/11/2026 a self-hosted L40S server). The payment service is simulated but still follows the
-decision not to store full card numbers (NFR05).
+Constraints of this scope:
+\begin{itemize}
+\item a Java application, a SQLite database file, everything on one machine (NFR06);
+\item painting images only from public-domain works;
+\item Gemma~4 through an OpenAI-compatible API over the Internet (DeepInfra; until 11/11/2026 a self-hosted L40S
+      server);
+\item a simulated payment service that still stores no full card number (NFR05).
+\end{itemize}
 
 %% =========================================================================
 \section{Conclusion}\label{sec:1.13}
 
-Chapter~1 has gone through the first step of the course. Business investigation showed that Họa. is an information
-system of people, processes, data and technology, and traced five problems to missing structured painting data,
-missing up-to-date tools and missing access checks. The context diagram fixed the boundary of the system: four
-external entities and eight flows of information, with the Whisper speech server inside and Gemma~4 and the
-payment service outside. Chapter~\ref{ch:analysis} turns the needs into requirements, actors and use cases, and
-answers the next question: \emph{when an actor performs a use case, what happens?}
+Business investigation showed Họa. as an information system of people, processes, data and technology. Its five
+problems trace back to missing structured painting data, up-to-date tools and access checks. The context diagram
+fixed the boundary: four external entities and eight flows. Whisper is inside; Gemma~4 and the payment service are
+outside. Chapter~\ref{ch:analysis} turns the needs into requirements, actors and use cases. It asks: \emph{when an
+actor performs a use case, what happens?}

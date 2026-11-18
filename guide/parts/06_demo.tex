@@ -1,5 +1,5 @@
 \section{Demo trực tiếp}\label{sec:demo}
-Kể demo như \key{câu chuyện của một vị khách}: chị ghé Họa., tìm tranh bằng lời và bằng giọng nói, đưa ảnh một bức tranh rồi ảnh phòng khách, đặt mua; người quản lý chuyển đơn đi; chị hỏi trợ lý và tò mò thử xem đơn của người khác; cuối cùng ta rút phích AI. Năm flow, cùng thứ tự với mục F của showcase, tổng khoảng \key{6 phút}. Trong kịch bản 7 bước (bước 6) chỉ dùng một phần Flow 1, 3 và 4; các flow còn lại dùng khi thầy muốn xem thêm. Mọi câu tìm đều bằng \key{tiếng Anh}.
+Kể demo như \key{câu chuyện của một vị khách}: chị ghé Họa., tìm tranh bằng lời và bằng giọng nói, đưa ảnh một bức tranh rồi ảnh phòng khách, đặt mua; người quản lý chuyển đơn đi; chị hỏi trợ lý và tò mò thử xem đơn của người khác; cuối cùng ta rút phích AI. Năm flow, tổng khoảng \key{6 phút}, theo thứ tự sáu flow ở showcase phần 3 (Flow 3 ở đây gộp flow 3 và 4 của showcase); ở đó mỗi màn hình đặt cạnh code của nó, có số dòng. Trong kịch bản 7 bước (bước 6) chỉ dùng một phần Flow 1, 3 và 4; các flow còn lại dùng khi thầy muốn xem thêm. Mọi câu tìm đều bằng \key{tiếng Anh}.
 
 \begin{note}[warn]{Ba điều cần biết trước khi demo}
 \begin{itemize}
@@ -68,16 +68,16 @@ Nói câu mở ở mục~\ref{sec:gemma} trước khi bắt đầu demo, rồi �
 \textbf{Flow} & \textbf{Chuyện gì xảy ra} & \textbf{Làm và nói gì}\\
 \midrule
 1 · chữ, giọng & Vẫn chạy: luật từ khóa hiểu câu; Whisper vẫn chạy trên laptop & Bật Shift+D, chỉ nhãn ``KEYWORD FALLBACK'': ``đây là đường lui em thiết kế sẵn''. Câu Monet vẫn ra đúng ba bức Monet dưới 100 USD.\\
-2 · ảnh, phòng & Ảnh chỉ còn đọc màu, kết quả kém; phòng xếp theo màu, lý do dựng từ thông tin của tranh & Làm nhanh một lần để thấy kết quả kém, rồi mở showcase F (``Show a photo, then hang it on your wall'') hoặc \file{figures/demo/search_image.png}, \file{room_preview.png}: ảnh chụp khi có Gemma.\\
+2 · ảnh, phòng & Ảnh chỉ còn đọc màu, kết quả kém; phòng xếp theo màu, lý do dựng từ thông tin của tranh & Làm nhanh một lần để thấy kết quả kém, rồi mở showcase phần 3, flow 2 (``Show a photo, then hang it on your wall'') hoặc \file{figures/demo/search_image.png}, \file{room_preview.png}: ảnh chụp khi có Gemma.\\
 3 · mua, giao & Không ảnh hưởng (NFR12) & Làm đầy đủ: đây là phần chứng minh cửa hàng vẫn bán được.\\
 4 · trợ lý & Trợ lý trả lời bằng luật (chế độ nhà phát triển ghi ``Fallback ▪ no AI''); quyền xem đơn y nguyên & Hỏi \code{find my order 20261001} hoặc \code{where is my latest order?}, vì luật chỉ nhận mã đơn và vài từ khóa; phần tra đơn của người khác vẫn làm như cũ.\\
 \bottomrule
 \end{tabular}
 \end{center}
-Nếu được hỏi ``vậy số đo có Gemma ở đâu?'': mục G của showcase và bài §3.15 (đo ngày 30/10).
+Nếu được hỏi ``vậy số đo có Gemma ở đâu?'': bài §3.15 (đo ngày 30/10) và \file{build/eval/eval_summary.txt}.
 
 \subsection{Nếu thầy muốn xem VP sinh cơ sở dữ liệu ngay tại chỗ}\label{sec:vpgen}
-Bài đã có hai ảnh chụp trình hướng dẫn \emph{Generate Database} của chính VP (bài §4.2.3, showcase mục E). Muốn chạy lại trước mặt thầy, chỉ cần một lệnh (khoảng 2 phút):
+Bài đã có hai ảnh chụp trình hướng dẫn \emph{Generate Database} của chính VP (bài §4.2.3, Hình 4.4; showcase phần 4). Muốn chạy lại trước mặt thầy, chỉ cần một lệnh (khoảng 2 phút):
 \begin{enumerate}[leftmargin=1.5em]
 \item Đóng mọi cửa sổ Visual Paradigm.
 \item Ở thư mục dự án chạy \code{python3 tools/vp_generate_db.py}. Cửa sổ VP (bản dùng thử) tự mở, tự dựng sơ đồ quan hệ thực thể, rồi tự bấm \emph{Tools $\to$ DB $\to$ Generate Database}, chọn SQLite, \emph{Generate DDL} và OK. Trong lúc nó chạy, đừng bấm chuột vào cửa sổ VP.
@@ -88,4 +88,4 @@ Bài đã có hai ảnh chụp trình hướng dẫn \emph{Generate Database} c�
 \lab{Nói}
 Em để Visual Paradigm tự sinh cơ sở dữ liệu từ chính sơ đồ quan hệ thực thể, bằng đúng trình hướng dẫn của nó. File nó viết ra giống cơ sở dữ liệu cửa hàng đang chạy ở mọi bảng, cột, khóa chính và khóa ngoại; chỉ thiếu các ràng buộc kiểm tra giá trị, vì sơ đồ không chứa chúng, nên công cụ của em thêm vào từ cùng mô hình. Lần đầu chạy, VP còn bắt được một lỗi của em: sáu khóa ngoại cùng tên ``is a''. Em đặt lại tên theo quy ước khóa ngoại bảng cột.
 \lab{Nếu lỗi}
-Lệnh báo lỗi hoặc VP không mở: mở hai ảnh trong showcase mục E và file \file{build/schema_comparison.txt} của lần chạy trước. Có dòng \code{DIFFERENCE}: đọc to dòng đó và giải thích.
+Lệnh báo lỗi hoặc VP không mở: mở hai ảnh trong showcase phần 4 và file \file{build/schema_comparison.txt} của lần chạy trước. Có dòng \code{DIFFERENCE}: đọc to dòng đó và giải thích.

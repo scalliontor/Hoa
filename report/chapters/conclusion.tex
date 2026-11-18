@@ -2,36 +2,34 @@
 \addcontentsline{toc}{chapter}{Conclusion}
 \markboth{Conclusion}{}
 
-\textbf{What I built.} This essay followed one product, the online gallery Họa., through the five steps of
-the course. Chapter~1 investigated the business, traced five concrete problems to their root causes and fixed the
-boundary of the system in a context diagram. Chapter~2 turned the needs into \nFR{} functional and \nNFR{}
-non-functional requirements, four actors and \nUseCases{} use cases, each requirement written as ``The system
-shall\dots'' with a priority and a source, specified the main use cases with their alternative flows, derived every decision of the activity diagrams from a business rule, checked that the rule ``cancel before
-shipment'' reads the same in every model, and built the domain model -- in which a cart line and an order line
-are different things and checkout is a transformation -- and the conceptual and logical data model. Chapter~3 placed five AI features -- understanding sentences,
-self-hosted speech recognition, image search, suggestions for a customer's room and a curator assistant with tool
-calling -- inside that model, each with a fallback and a measurement. Chapter~4 followed the lecturer's outline
-4.1--4.6 from the analysis class diagram to the database, the design classes, the three layers and the generated
-code. Chapter~5 showed the running system and followed every business rule to the line of code that enforces it.
+\textbf{What I built.} This essay followed one product, the online gallery Họa., through the five steps of the
+course:
+\begin{itemize}
+\item Chapter~1 traced five business problems to their root causes and fixed the system boundary.
+\item Chapter~2 turned the needs into \nFR{} functional and \nNFR{} non-functional requirements, four actors and
+      \nUseCases{} use cases, then built the domain and data models. Every activity-diagram decision comes from a
+      business rule, and ``cancel before shipment'' reads the same in every model.
+\item Chapter~3 placed five AI features inside that model, each with a fallback and a measurement.
+\item Chapter~4 followed the lecturer's outline 4.1--4.6, from the analysis class diagram to the generated code.
+\item Chapter~5 showed the running system and traced every business rule to the code that enforces it.
+\end{itemize}
 
-\textbf{What made it consistent.} The decision that paid off most was to declare every name once. Requirements,
-use cases, classes, methods, tables and columns live in \code{tools/model.py}; the Visual Paradigm diagrams, the SQL
-schema, the Java skeleton and the tables of this essay are generated from it, and a checker compares the finished
-code and database with it. When the product changed during the work -- paintings instead of general goods, a voice
-server on the laptop instead of a cloud service, English and US dollars everywhere, a new use case for the
-customer's room -- each change was made once and appeared everywhere, and the traceability tables were regenerated
-rather than edited by hand.
+\textbf{What made it consistent.} The decision that paid off most was to declare every name once, in
+\code{tools/model.py}. Diagrams, SQL schema, Java skeleton and essay tables are generated from it; a checker
+compares the code with it. So each product change was made once and appeared everywhere: paintings instead of
+general goods, a voice server on the laptop instead of a cloud service, English and US dollars, a room use case.
 
-\textbf{What I learned about AI in an information system.} The AI features were useful only because the
-analysis came first. Gemma~4 understands ``Monet paintings under 100 dollars'' far better than keyword rules, but the
-price limit is still applied by \code{SearchService}, the order is still checked by \code{OrderService}, and the
-assistant still receives the customer id from the session, not from the model. Every AI call can fail, so every AI
-feature has a path without AI, and the essay reports measured behaviour instead of promises. Self-hosting the speech
-model showed that a non-functional requirement -- the customer's voice must not leave the machine -- can decide an
-architecture as strongly as any functional one.
+\textbf{What I learned about AI.} The AI features were useful only because the analysis came first. Gemma~4
+understands ``Monet paintings under 100 dollars'' far better than keyword rules. Still, \code{SearchService} applies
+the price limit, \code{OrderService} checks the order, and the customer id comes from the session, not the model.
+Every AI call can fail, so every AI feature has a path without AI. Keeping the voice on the machine showed that a
+non-functional requirement can shape the architecture as strongly as a functional one.
 
-\textbf{Limits and next steps.} The demo is a study project: payment and delivery are simulated, the image vectors
-encode attributes rather than appearance, and the evaluation uses my own data. The next steps follow
-directly from the models: learned image embeddings behind the same \code{VectorIndex} interface, one transaction
-around the whole checkout, a decision of the owner on stock and refunds when an order is cancelled, and an
-evaluation with real customers and real rooms.
+\textbf{Limits and next steps.} Payment and delivery are simulated, image vectors encode attributes rather than
+appearance, and the evaluation uses my own data. Next steps:
+\begin{itemize}
+\item learned image embeddings behind the same \code{VectorIndex} interface;
+\item one transaction around the whole checkout;
+\item an owner's decision on stock and refunds after a cancellation;
+\item an evaluation with real customers and real rooms.
+\end{itemize}

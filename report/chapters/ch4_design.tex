@@ -8,90 +8,70 @@
 %% 4.5 Generate code from 4.4 (present code + structure of packages and classes)
 %% 4.6 Conclusion
 %% Tables in report/generated are produced from tools/model.py by report/gen_tables.py.
+%% Style: each section is a short lead-in (what the figure or table shows, what to notice), then the figure or
+%% table, sometimes a few numbered points. Short sentences; facts shown in a figure or table are not repeated.
 %% =========================================================================
 \chapter{Design}\label{ch:design}
 \providecommand{\schemaPath}{demo/db/ecom\_schema\_sqlite.sql}
 
-Analysis answered \emph{what} the system means; design answers \emph{how} the software realises it (Lecture~05).
-This chapter follows the six points of the lecturer's outline: it updates the analysis class diagram of
-Chapter~\ref{ch:analysis} (4.1), takes the logical data model to a physical data model and a database (4.2), refines
-the classes into a design class diagram with types and methods (4.3), places every class in a layer (4.4) and
-generates the code skeleton from the layered model (4.5). Every artefact is derived from the same specification file
-\code{tools/model.py}.
+Analysis said \emph{what} the system means; design says \emph{how} the software does it (Lecture~05). The sections
+follow the lecturer's outline. Every artefact comes from one specification file, \code{tools/model.py}.
 
 %% =========================================================================
 \section{Class Diagram in Analysis}\label{sec:4.1}
 
-The analysis class diagram answers which concepts the system must represent (Lecture~04). Following the lecturer's
-rule, it contains no controller, service or repository: every class is a business concept with its attributes, and
-every relationship shows only its kind. Names and multiplicities are added in the logical data model
-(Section~\ref{sec:2.dm.2}); directions, role names and methods in the design class diagram (Section~\ref{sec:4.3}).
+The analysis class diagram shows only business concepts (Lecture~04). By the lecturer's rule, it has no controller,
+service or repository, and relationships show only their kind. The logical data model adds names and multiplicities
+(Section~\ref{sec:2.dm.2}); the design adds directions, role names and methods (Section~\ref{sec:4.3}).
 
 \subsection{Update}\label{sec:4.1.1}
 
-The starting point is the class model of Test~01, which used nineteen classes for a general shop (books, clothes,
-shoes and electronics). Họa. sells paintings, so the customer, cart, order, shipping and payment classes are kept and
-the product side is replaced: an abstract \code{Product} with the subclasses \code{Painting} and \code{Frame}, a new
-class \code{Artist}, and a new class \code{Category} that classifies the products (lecturer's feedback). Cart and
-order lines now refer to one \code{Product} instead of four product classes, and \code{PayCredit} keeps only
-\code{cardLast4} and \code{authorizationCode} (NFR05). The result has \nAnalysisClasses{} classes.
+The starting point is Test~01: nineteen classes for a general shop (books, clothes, shoes, electronics). The
+customer, cart, order, shipping and payment classes stay. Họa. sells paintings, so four things change:
+\begin{enumerate}
+\item an abstract \code{Product}, with \code{Painting} and \code{Frame}, replaces the four product classes; cart and
+order lines refer to it;
+\item a new class \code{Artist};
+\item a new class \code{Category} classifies the products (lecturer's feedback);
+\item \code{PayCredit} keeps only \code{cardLast4} and \code{authorizationCode} (NFR05).
+\end{enumerate}
+Figure~\ref{fig:c41_analysis} shows the result: \nAnalysisClasses{} classes.
 
 \landscapefig{c41_analysis}{Analysis class diagram of Họa.}{Updated analysis class diagram of Họa. (\nAnalysisClasses{} classes with their attributes, abstract classes in italics; relationships by kind only, without names or multiplicities). Visual Paradigm diagram \vpsrc{c41_analysis}.}{\label{fig:c41_analysis}\label{fig:analysis41}}
 
 \subsection{Describe in Words}\label{sec:4.1.2}
 
-Figure~\ref{fig:c41_analysis} has four groups of classes.
-
-\textbf{Customers.} A \code{Customer} has an identifier, e-mail, phone and date of birth. The name is a value object
-\code{FullName} (first, middle and last name), and the customer keeps one or more \code{Address} objects for
-delivery. Two kinds of customers specialise \code{Customer}: \code{CustomerVIP} with a VIP level, a discount rate
-and reward points, and \code{CustomerNew} with a registration date and an optional welcome voucher.
-
-\textbf{Products.} Every product belongs to one \code{Category}, the line of the shop it is sold under: fine-art
-prints or frames. \code{Product} is abstract: it holds what every item of the shop has (identifier, name, price,
-stock quantity, image and description). A \code{Painting} is a print of a painting, described by its style, subject,
-dominant colour, medium, year of creation and size in centimetres; each painting is by one \code{Artist}. A
-\code{Frame} is sold with a painting and has a material, a colour and a size label.
-
-\textbf{Cart and order.} A \code{Cart} is the temporary shopping state of one customer and contains
-\code{CartItem} lines (quantity and the price shown when the item was added). An \code{Order} is a confirmed
-transaction with a date, a status and a total; it contains \code{OrderItem} lines whose \code{unitPrice} is the
-price frozen at checkout.
-
-\textbf{Delivery and payment.} \code{Shipping} records the carrier, tracking number, fee, status and delivery date
-of an order and points to the delivery \code{Address}. \code{Payment} is abstract (identifier, amount, date,
-status) with two forms: \code{PayCash}, paid on delivery, and \code{PayCredit}, authorised by the payment service.
+In words, the four groups of Figure~\ref{fig:c41_analysis} mean:
+\begin{itemize}
+\item \textbf{Customers.} A customer has a \code{FullName} (a value object) and one or more delivery addresses. A
+VIP customer has a discount rate; a new customer may have a welcome voucher.
+\item \textbf{Products.} A \code{Category} is a line of the shop: fine-art prints or frames. A \code{Painting} is a
+print by one \code{Artist}. A \code{Frame} is sold with a painting.
+\item \textbf{Cart and order.} A \code{Cart} is one customer's temporary shopping state; its lines keep the price
+shown when added. An \code{Order} is a confirmed transaction; its lines keep the price frozen at checkout.
+\item \textbf{Delivery and payment.} \code{Shipping} delivers an order to an address. \code{PayCash} is paid on
+delivery; \code{PayCredit} is authorised by the payment service.
+\end{itemize}
 
 \subsection{Explain Relationships}\label{sec:4.1.3}
 
-Five kinds of relationships are used, each with a precise meaning:
-\begin{itemize}
-\item \textbf{Composition} (filled diamond): the part cannot exist without the whole and is deleted with it --
-\code{Customer} and its \code{FullName}, \code{Cart} and its \code{CartItem} lines, \code{Order} and its
-\code{OrderItem} lines.
-\item \textbf{Aggregation} (hollow diamond): \code{Customer} groups its \code{Address} objects, but an address is
-also used by \code{Shipping}, so it is not deleted with the customer.
-\item \textbf{Association} (plain line): two independent objects that know each other, such as a customer and its
-orders, an artist and its paintings, a category and its products. The data model names the line and adds its
-multiplicities: a customer \emph{places} 0..* orders.
-\item \textbf{Generalization} (hollow triangle): \code{CustomerVIP} and \code{CustomerNew} specialise
-\code{Customer}, \code{PayCash} and \code{PayCredit} specialise \code{Payment}, \code{Painting} and \code{Frame}
-specialise \code{Product}.
-\item \textbf{Dependency «create»} (dashed arrow): \code{Cart} creates an \code{Order} at checkout.
-\end{itemize}
-Table~\ref{tab:rel41} explains every relationship with its name, multiplicities and business meaning.
+Table~\ref{tab:rel41} gives each relationship's name, kind, multiplicities and business meaning. Five kinds appear:
+composition, aggregation, association, generalization and one «create» dependency.
 
 \input{generated/analysis_rel}
 
-Two points of Lecture~04 matter here. \code{CartItem} is not \code{OrderItem}: the cart line is temporary and its
-price may change, while the order line is history and its \code{unitPrice} never changes after checkout. And checkout
-is a transformation that turns the cart lines into order lines with the same products and quantities and empties the
-cart, which is why \code{Cart} and \code{Order} are linked by a «create» dependency, not by a permanent association.
+Two points of Lecture~04 matter here:
+\begin{enumerate}
+\item \code{CartItem} is not \code{OrderItem}. A cart line is temporary; its price may change. An order line is
+history; its \code{unitPrice} never changes after checkout.
+\item Checkout turns cart lines into order lines (same products, same quantities) and empties the cart. It is a
+transformation, so \code{Cart} and \code{Order} are linked by «create», not by a permanent association.
+\end{enumerate}
 
 \subsection{From Analysis Classes to Design Classes}\label{sec:4.1.4}
 
-Lecture~05 (slide~22) gives the transformation from the analysis model to the design model; Table~\ref{tab:a2d}
-applies it to Họa., and Sections~\ref{sec:4.2} to~\ref{sec:4.4} carry it out.
+Lecture~05 (slide~22) gives the steps from the analysis model to the design model. Table~\ref{tab:a2d} applies them
+to Họa.; Sections~\ref{sec:4.2} to~\ref{sec:4.4} carry them out.
 
 \begin{longtable}{@{}P{3.6cm}P{4.4cm}P{7.0cm}@{}}
 \caption{From analysis classes to design classes (Lecture~05)}\label{tab:a2d}\\
@@ -109,21 +89,20 @@ applies it to Họa., and Sections~\ref{sec:4.2} to~\ref{sec:4.4} carry it out.
 \small Business interaction & \small Controller + service & \small \code{CheckoutController} $\rightarrow$ \code{CheckoutService}\\
 \small Persistence need & \small Repository & \small \code{CartRepository}, \code{OrderRepository}, \code{ProductRepository}, \code{CustomerRepository}\\
 \small Analysis model & \small Design class model & \small \nAnalysisClasses{} analysis classes $\rightarrow$ \nJavaTypes{} Java types and \nViews{} browser views\\
-\small Domain structure & \small Layered architecture & \small Three layers, the shared domain model and their packages\\
+\small Domain structure & \small Layered architecture & \small Three layers, the shared domain model, their packages\\
 \bottomrule
 \end{longtable}
 
 %% =========================================================================
 \section{Data Model -- Database}\label{sec:4.2}
 
-The conceptual and logical data models were built in the analysis (Section~\ref{sec:2.dm}, Figures~\ref{fig:c42_conceptual}
-and~\ref{fig:c42_orm}). Design takes the logical model to the third level, the physical data model, and generates
-the database from it.
+The conceptual and logical data models are in Section~\ref{sec:2.dm} (Figures~\ref{fig:c42_conceptual}
+and~\ref{fig:c42_orm}). Design adds the third level, the physical data model, and generates the database from it.
 
 \subsection{Physical Data Model}\label{sec:4.2.1}\label{sec:4.2.2}\label{sec:4.2.3}
 
-The physical data model fixes how the logical model is stored. Table~\ref{tab:mapping42} lists the mapping rules. They are applied mechanically by \code{tools/gen_sql.py}, so the
-database cannot drift from the model.
+Table~\ref{tab:mapping42} lists the rules that turn the logical model into tables. \code{tools/gen_sql.py} applies
+them, so the database cannot drift from the model.
 
 \begin{longtable}{@{}P{3.4cm}P{6.6cm}P{5.0cm}@{}}
 \caption{Rules that turn the logical data model into tables}\label{tab:mapping42}\\
@@ -135,90 +114,78 @@ database cannot drift from the model.
 \textbf{Case} & \textbf{Rule} & \textbf{Example}\\
 \midrule
 \endhead
-\small Persistent class & \small One table, name in lower case with underscores; \code{Order} becomes \code{orders} because \code{ORDER} is an SQL keyword & \small \code{CartItem} $\rightarrow$ \code{cart_item}\\
-\small Identifier & \small Primary key of type \code{varchar(20)} & \small \code{customer_id}, \code{product_id}, \code{order_id}\\
-\small Value object 1 -- 1 & \small Embedded as columns of the owner, no separate table & \small \code{FullName} $\rightarrow$ \code{customer.first_name}, \code{middle_name}, \code{last_name}\\
-\small Generalization & \small One table per class (class table inheritance): the child table uses the parent key as primary key and foreign key & \small \code{painting.product_id} $\rightarrow$ \code{product}; \code{pay_cash.payment_id} $\rightarrow$ \code{payment}\\
-\small Category and detail tables & \small A product row points to its category; the category names the detail table that holds the product's own columns & \small \code{product.category_id} $\rightarrow$ \code{category}; \code{category.detail_kind} (PAINTING $\rightarrow$ \code{painting}, FRAME $\rightarrow$ \code{frame})\\
-\small Discriminator & \small The parent table says which child a row belongs to & \small \code{payment.method} (CASH, CREDIT)\\
+\small Persistent class & \small One table, lower case with underscores; \code{Order} becomes \code{orders} (\code{ORDER} is an SQL keyword) & \small \code{CartItem} $\rightarrow$ \code{cart_item}\\
+\small Identifier & \small Primary key, \code{varchar(20)} & \small \code{customer_id}, \code{product_id}, \code{order_id}\\
+\small Value object 1 -- 1 & \small Columns of the owner, no own table & \small \code{FullName} $\rightarrow$ \code{customer.first_name}, \code{middle_name}, \code{last_name}\\
+\small Generalization & \small One table per class (class table inheritance): the child's primary key is also a foreign key to the parent & \small \code{painting.product_id} $\rightarrow$ \code{product}; \code{pay_cash.payment_id} $\rightarrow$ \code{payment}\\
+\small Category and detail tables & \small A product points to its category; the category names the detail table with the product's own columns & \small \code{product.category_id} $\rightarrow$ \code{category}; \code{category.detail_kind} (PAINTING $\rightarrow$ \code{painting}, FRAME $\rightarrow$ \code{frame})\\
+\small Discriminator & \small The parent table names the child of each row & \small \code{payment.method} (CASH, CREDIT)\\
 \small Association 1 -- * & \small Foreign key on the ``many'' side & \small \code{painting.artist_id}, \code{orders.customer_id}\\
-\small Association 1 -- 0..1 & \small Foreign key with a \code{UNIQUE} constraint & \small \code{cart.customer_id}, \code{shipping.order_id}\\
-\small Composition with lines & \small Composite primary key; deleting the whole deletes the lines (\code{ON DELETE CASCADE}) & \small \code{cart_item(cart_id, product_id)}, \code{order_item(order_id, product_id)}\\
-\small Money, quantities, states & \small Money \code{numeric(12,2)} in US dollars; quantities \code{integer} with \code{CHECK}; states as text with \code{CHECK ... IN (...)} & \small \code{order_item.unit_price}, \code{cart_item.quantity > 0}\\
-\small Technical table & \small \code{product_feature} stores the feature vector of each painting for the search & \small \code{product_feature(product_id, model_version, feature_vector, updated_at)}\\
+\small Association 1 -- 0..1 & \small Foreign key with \code{UNIQUE} & \small \code{cart.customer_id}, \code{shipping.order_id}\\
+\small Composition with lines & \small Composite primary key; lines deleted with the whole (\code{ON DELETE CASCADE}) & \small \code{cart_item(cart_id, product_id)}, \code{order_item(order_id, product_id)}\\
+\small Money, quantities, states & \small Money \code{numeric(12,2)} in US dollars; quantities \code{integer} with \code{CHECK}; states text with \code{CHECK ... IN (...)} & \small \code{order_item.unit_price}, \code{cart_item.quantity > 0}\\
+\small Technical table & \small \code{product_feature} holds each painting's feature vector for search & \small \code{product_feature(product_id, model_version, feature_vector, updated_at)}\\
 \bottomrule
 \end{longtable}
 
-\paragraph{Explain relations of tables.} Figure~\ref{fig:c42_tables} shows the physical data model: each table
-is drawn as a class with the stereotype «table»,
-each column with its SQL type and the markers \{PK\}, \{FK\}, \{U\} (unique) and \{NULL\} (nullable), and each line
-is one foreign key from the parent table to the child table, labelled with the relationship name and the
-foreign-key column. Table~\ref{tab:fks} explains the \nFks{} foreign keys with their names and multiplicities.
+\paragraph{Explain relations of tables.} Figure~\ref{fig:c42_tables} draws each table as a class «table», with SQL
+types and the markers \{PK\}, \{FK\}, \{U\} (unique) and \{NULL\}. Each line is one foreign key, labelled with its
+name and column. Table~\ref{tab:fks} explains all \nFks{}.
 
 \input{generated/fks}
 
 \landscapefig{c42_tables}{Physical data model of Họa.}{Physical data model: \nTables{} tables «table» with columns, SQL data types, keys and the \nFks{} foreign keys. Visual Paradigm diagram \vpsrc{c42_tables}.}{\label{fig:c42_tables}\label{fig:tables42}}
 
-Foreign keys and \code{UNIQUE} constraints enforce the upper bound of a multiplicity but not a lower bound of 1, so
-the rules ``an order has at least one line'' and ``a customer has at least one address'' are checked by the
-application: \code{CheckoutService.checkout} refuses an empty cart, and \code{Customer.findAddress} refuses an address
-of another customer. Nor can a foreign key say that the detail row of a product is in the table its category names;
-Section~\ref{sec:4.2.cat} explains how that rule is kept.
+Foreign keys and \code{UNIQUE} enforce only the upper bound of a multiplicity, not a lower bound of 1. So the
+application checks ``an order has at least one line'' and ``a customer has at least one address'':
+\code{CheckoutService.checkout} refuses an empty cart, and \code{Customer.findAddress} refuses another customer's
+address. A foreign key also cannot say which detail table holds a product's row (Section~\ref{sec:4.2.cat}).
 
 \subsection{Category, Product and the Detail Tables}\label{sec:4.2.cat}
 
-The lecturer's feedback was that one \code{product} table must not hold every detail of every kind of product.
-Họa. sells two kinds of products with different attributes: prints of paintings (artist, style, subject, colour,
-medium, year, size) and frames (material, colour, size label). Three designs were compared:
-\begin{itemize}
-\item \emph{One wide table} with every column of every kind: most columns are empty for every row, and a column
-such as \code{material} would be allowed on a painting. Rejected.
-\item \emph{One table per kind} (\code{painting}, \code{frame}), each with its own price and stock: the common columns
-are repeated, and \code{cart_item} and \code{order_item} could not have one foreign key to ``the product''. Rejected.
-\item \emph{Category, common product, detail tables} (chosen). \code{category} classifies the products and says,
-in \code{detail_kind}, which detail table holds the attributes of its products; \code{product} keeps what every
-product has (name, price, stock, image, description) and the foreign key \code{category_id}; \code{painting} and
-\code{frame} keep the specific attributes, with the product key as primary key and foreign key.
-\end{itemize}
-One place for price and stock lets a cart line, an order line and the stock rule work for every product, and a new
-product line with new attributes needs only one detail table and one value of \code{DetailKind}. The rule ``the
-detail row of a product is in the table its category names'' is kept at three levels: the database refuses an
-unknown category (foreign key) and an unknown kind (\code{CHECK detail_kind IN (...)}); \code{SqliteProductRepository}
-loads the details from the table the category names and refuses to save a product its category does not accept
-(\code{Category.accepts(product)}); and \code{tools/gen_sql.py} checks the sample data and finds no product whose
-detail row is elsewhere (\code{build/sql_validation.txt}).
+The lecturer's feedback: one \code{product} table must not hold every detail of every kind of product. Three designs
+were compared:
+\begin{enumerate}
+\item \emph{One wide table}: most columns stay empty, and a painting could get a \code{material}. Rejected.
+\item \emph{One table per kind}, each with price and stock: common columns repeat, and cart and order lines lose
+their one foreign key to ``the product''. Rejected.
+\item \emph{Category, common product, detail tables}: chosen (Table~\ref{tab:mapping42}). Price and stock stay in
+one place, so cart lines, order lines and the stock rule work for every product. A new product line needs only one
+detail table and one \code{DetailKind} value.
+\end{enumerate}
+
+Three levels keep each detail row in the table its category names:
+\begin{enumerate}
+\item the database refuses an unknown category (foreign key) or kind (\code{CHECK detail_kind IN (...)});
+\item \code{SqliteProductRepository} reads that table and refuses a product its category does not accept
+(\code{Category.accepts});
+\item \code{tools/gen_sql.py} finds no misplaced detail row in the sample data (\code{build/sql_validation.txt}).
+\end{enumerate}
 
 \subsection{Generate Data Base}\label{sec:4.2.4}
 
-From the physical data model the database is drawn as an entity relationship diagram in Visual Paradigm
-(Figure~\ref{fig:c42_erd}), table by table on the same grid. A solid line is an identifying relationship (the child
-table's key contains the parent's key, as in \code{order_item} and \code{painting}); a dashed line is a plain foreign
-key. Each foreign key is named after its constraint, \code{fk_<table>_<column>}: the verbs of the logical model are
-for the reader, and Visual Paradigm's Generate Database stopped the first attempt with ``The name of foreign key
-\emph{is a} is duplicated'', since six relationships carried that verb.
+Figure~\ref{fig:c42_erd} is the database as a Visual Paradigm entity relationship diagram. A solid line is an
+identifying relationship: the child's key contains the parent's, as in \code{order_item} and \code{painting}. A
+dashed line is a plain foreign key. Notice the names \code{fk_<table>_<column>}: they replace the verbs of the
+logical model. The reason: the first run of Generate Database stopped with ``The name of foreign key \emph{is a}
+is duplicated''. Six relationships carried that verb.
 
 \landscapefig{c42_erd}{Database of Họa. (entity relationship diagram)}{Database of Họa.: entity relationship diagram of the \nTables{} tables with their columns, keys and the \nFks{} foreign keys, drawn on the grid of the physical data model. Visual Paradigm diagram \vpsrc{c42_erd}.}{\label{fig:c42_erd}}
 
-The database is generated, not written by hand. \code{tools/gen_sql.py} reads \code{model.TABLES} and writes
-\texttt{\schemaPath}, with the \code{CREATE TABLE} statements in foreign-key order, and \code{demo/db/seed.sql}, with
-the demo data; at start-up \code{Database.initialize(schemaSql, seedSql)} creates the SQLite file
-\code{demo/data/ecom.db}. Listing~\ref{lst:schema} shows three generated tables: the parent table \code{product}, the
-child table \code{painting} (class table inheritance and the foreign key to \code{artist}) and the composition table
-\code{order_item}.
+The demo's database is generated, not written by hand. \code{tools/gen_sql.py} reads \code{model.TABLES} and writes
+\texttt{\schemaPath} (in foreign-key order) and \code{demo/db/seed.sql} (demo data). At start-up,
+\code{Database.initialize} creates the SQLite file \code{demo/data/ecom.db}. Listing~\ref{lst:schema} shows three
+tables: the parent \code{product}, the child \code{painting} and the composition \code{order_item}.
 
 \IfFileExists{generated/schema_excerpt.sql}{%
 \lstinputlisting[language=SQL,caption={Excerpt of the generated schema (\texttt{\schemaPath})},label={lst:schema}]{generated/schema_excerpt.sql}}%
 {\assetbox{Excerpt of the generated schema}{report/generated/schema_excerpt.sql}}
 
-\paragraph{Generated by Visual Paradigm.} The ERD also generates the database script with the tool's own wizard
-(Figure~\ref{fig:c42_generate_db}): \emph{Tools $\rightarrow$ DB $\rightarrow$ Generate Database}, SQLite with the
-driver the demo uses (\code{sqlite-jdbc}), \emph{Generate DDL}. The Community Edition has no database generation, so
-the wizard runs in the Enterprise edition's 30-day trial, operated by \code{tools/vp_generate_db.py}, which copies the
-DDL to \code{demo/db/vp_wizard_ddl.sql}; every build also asks Visual Paradigm's SQL generator for the same statements
-(\code{demo/db/vp_generated_ddl.sql}). \code{tools/compare_schema.py} loads both scripts and the schema of the demo
-into SQLite and compares them (Listing~\ref{lst:schemacompare}): the wizard's script has the same tables, columns,
-types, keys, \code{UNIQUE} constraints and all \nFks{} foreign keys; only the \code{CHECK} constraints, which the ERD
-does not hold, are added by \code{tools/gen_sql.py}.
+\paragraph{Generated by Visual Paradigm.} Visual Paradigm's own wizard also writes the DDL from the ERD
+(Figure~\ref{fig:c42_generate_db}): \emph{Tools $\rightarrow$ DB $\rightarrow$ Generate Database}, SQLite with
+\code{sqlite-jdbc}, \emph{Generate DDL}. The Community Edition has no database generation, so the wizard runs in the
+Enterprise 30-day trial. \code{tools/vp_generate_db.py} drives it and saves \code{demo/db/vp_wizard_ddl.sql}. Every
+build also saves the same statements from Visual Paradigm's SQL generator (\code{demo/db/vp_generated_ddl.sql}).
 
 \begin{figure}[p]
 \centering
@@ -232,14 +199,19 @@ Họa. Screenshots of the Visual Paradigm 18.1 window in the Enterprise edition'
 \vpsrc{c42_generate_db_done}, made by \code{tools/vp_generate_db.py}.}\label{fig:c42_generate_db}
 \end{figure}
 
+\code{tools/compare_schema.py} loads both scripts and the demo's schema into SQLite and compares them
+(Listing~\ref{lst:schemacompare}). The wizard's script has the same tables, columns, types, keys, \code{UNIQUE}
+constraints and all \nFks{} foreign keys. Only the \code{CHECK} constraints differ: the ERD has none, so
+\code{tools/gen_sql.py} adds them.
+
 \IfFileExists{../build/schema_comparison.txt}{%
 \lstinputlisting[caption={The DDL written by Visual Paradigm compared with the schema of the demo (\texttt{build/schema\_comparison.txt})},label={lst:schemacompare}]{../build/schema_comparison.txt}}%
 {\assetbox{Comparison of the generated DDL with the schema}{build/schema_comparison.txt}}
 
 \subsection{Copy Screen of DB}\label{sec:4.2.5}
 
-Figure~\ref{fig:db_tables} is a screenshot of the database of the demo, \code{demo/data/ecom.db}, opened read-only in
-the SQLite browser \emph{sqlite-web}: the structure of \code{product} with its foreign key to \code{category}.
+Figure~\ref{fig:db_tables} shows the demo's database, \code{demo/data/ecom.db}, in the SQLite browser
+\emph{sqlite-web}, opened read-only. Notice the table \code{product} and its foreign key to \code{category}.
 
 \begin{figure}[htbp]
 \centering
@@ -249,8 +221,8 @@ the SQLite browser \emph{sqlite-web}: the structure of \code{product} with its f
 
 \subsection{Why Each Column Is Stored}\label{sec:4.2.why}
 
-Every column answers a requirement, a business rule or a method of the design. Table~\ref{tab:whystored} gives the
-reason for the least obvious ones; the foreign keys are explained in Table~\ref{tab:fks}.
+Table~\ref{tab:whystored} gives the requirement, rule or method behind the less obvious columns.
+Table~\ref{tab:fks} covers the foreign keys.
 
 \begin{longtable}{@{}P{5.0cm}P{6.6cm}P{3.6cm}@{}}
 \caption{Why the less obvious columns are stored}\label{tab:whystored}\\
@@ -262,60 +234,61 @@ reason for the least obvious ones; the foreign keys are explained in Table~\ref{
 \textbf{Column} & \textbf{Why it is stored} & \textbf{Requirement, rule, method}\\
 \midrule
 \endhead
-\small \code{category.detail_kind} & \small Names the detail table of the products of the category & \small FR19, lecturer's feedback; \code{Category.accepts}\\
-\small \code{product.stock_quantity} & \small A print cannot be sold beyond its stock & \small BR02, FR07; \code{Product.decreaseStock}\\
-\small \code{painting.style}, \code{subject}, \code{dominant_color} & \small The attributes that search filters on and that the reasons of a suggestion name & \small FR01, FR03, FR18\\
-\small \code{product_feature.feature_vector}, \code{model_version}, \code{updated_at} & \small The vector of each painting for image search, with the model that made it and when, so vectors of an older model can be found & \small FR03, FR04; \code{VectorIndex}\\
-\small \code{order_item.unit_price} & \small The price at checkout, kept when the catalogue price changes & \small BR04, FR07; \code{OrderItem.fromCartItem}\\
-\small \code{orders.status} & \small The state of the order, which decides what may happen next & \small BR06, BR07; \code{Order.cancel}, \code{advanceTo}\\
-\small \code{orders.total_amount} & \small The amount the customer agreed to pay: subtotal, VIP discount and shipping fee & \small FR15, FR17; \code{Order.calculateTotal}\\
-\small \code{pay_credit.card_last4}, \code{authorization_code} & \small Enough to show the card and prove the payment, never the full number & \small NFR05; \code{PayCredit.maskedCard}, \code{process}\\
+\small \code{category.detail_kind} & \small Names the detail table of the category's products & \small FR19, lecturer's feedback; \code{Category.accepts}\\
+\small \code{product.stock_quantity} & \small No print is sold beyond its stock & \small BR02, FR07; \code{Product.decreaseStock}\\
+\small \code{painting.style}, \code{subject}, \code{dominant_color} & \small Search filters on them; the reasons of a suggestion name them & \small FR01, FR03, FR18\\
+\small \code{product_feature.feature_vector}, \code{model_version}, \code{updated_at} & \small Each painting's vector for image search, with its model and date, so vectors of an older model can be found & \small FR03, FR04; \code{VectorIndex}\\
+\small \code{order_item.unit_price} & \small Price at checkout, kept when the catalogue price changes & \small BR04, FR07; \code{OrderItem.fromCartItem}\\
+\small \code{orders.status} & \small Order state; decides what may happen next & \small BR06, BR07; \code{Order.cancel}, \code{advanceTo}\\
+\small \code{orders.total_amount} & \small Agreed amount: subtotal, VIP discount, shipping fee & \small FR15, FR17; \code{Order.calculateTotal}\\
+\small \code{pay_credit.card_last4}, \code{authorization_code} & \small Shows the card and proves the payment; never the full number & \small NFR05; \code{PayCredit.maskedCard}, \code{process}\\
 \bottomrule
 \end{longtable}
 
 \subsection{Data Not Stored}\label{sec:4.2.notstored}
 
-Some data exists only while a request is answered, on purpose: the full card number and the security code (only the
-last four digits, the holder, the bank and the authorisation code are kept, NFR05); voice recordings, transcribed in
-memory by the self-hosted Whisper server and dropped (NFR08); uploaded photos, read into a description and a vector
-and dropped; search sentences, query vectors and result lists (\code{CommonQuery}, \code{SearchResult}); the
-conversations with the curator assistant; and values that can be computed, such as the cart total
-(\code{Cart.calculateTotal}) and whether a print is available (\code{Product.isAvailable}).
+Some data lives only during a request, on purpose:
+\begin{itemize}
+\item the full card number and the security code (NFR05);
+\item voice recordings, transcribed in memory by the self-hosted Whisper server (NFR08), and uploaded photos, once
+turned into a description and a vector;
+\item search sentences, query vectors, result lists and chats with the curator assistant;
+\item values that can be computed, such as the cart total and whether a print is available.
+\end{itemize}
 
 \subsection{Normalization}\label{sec:4.2.norm}
 
 The tables were checked against the normal forms:
 \begin{itemize}[leftmargin=1.5em]
-\item \textbf{First normal form.} Every column holds one value: names, addresses and a painting's size are split into
-columns. The one exception, \code{product_feature.feature_vector}, is read and written as a whole and never queried by
-its parts.
-\item \textbf{Second normal form.} Only \code{cart_item} and \code{order_item} have a composite key, and their
-quantity and price describe the line, not the product alone.
-\item \textbf{Third normal form and BCNF.} No column depends on another non-key column: the artist, the category and
-the delivery address are foreign keys, not copied names; the other determinants are declared \code{UNIQUE}
-(\code{customer.email}, \code{category.name}, \code{cart.customer_id}, \code{shipping.order_id}).
+\item \textbf{First normal form.} One value per column. The one exception, \code{product_feature.feature_vector}, is
+read and written whole, never queried by its parts.
+\item \textbf{Second normal form.} Only \code{cart_item} and \code{order_item} have composite keys. Their quantity
+and price describe the line, not the product alone.
+\item \textbf{Third normal form and BCNF.} The artist, category and delivery address are foreign keys, not copied
+names. Other determinants are \code{UNIQUE} (\code{customer.email}, \code{category.name}, \code{cart.customer_id},
+\code{shipping.order_id}).
 \item \textbf{Deliberate copies.} \code{order_item.unit_price}, \code{orders.total_amount} and
-\code{cart_item.cart_price} record the price at a moment; without them a change of the catalogue price would rewrite
-past orders (BR04).
+\code{cart_item.cart_price} freeze a price, so a new catalogue price cannot rewrite past orders (BR04).
 \end{itemize}
 
 %% =========================================================================
 \section{Class Diagram in Design}\label{sec:4.3}
 
-The design class diagram (Figure~\ref{fig:c43_design}) keeps the \nAnalysisClasses{} domain classes of
-Figure~\ref{fig:c41_analysis} and answers a new question: \emph{what does each class hold, with which type, and
-which behaviour is it responsible for?} Three enumerations are added for the states (\code{OrderStatus},
-\code{ShippingStatus}, \code{PaymentStatus}). Controllers, services and repositories are added in
+The design class diagram (Figure~\ref{fig:c43_design}) keeps the \nAnalysisClasses{} domain classes and adds
+types, methods and directions. Notice the three new enumerations for the states: \code{OrderStatus},
+\code{ShippingStatus} and \code{PaymentStatus}. Controllers, services and repositories come in
 Section~\ref{sec:4.4}.
 
 \landscapefig{c43_design}{Design class diagram of the domain}{Design class diagram of the domain: typed private attributes, public methods, directed associations with role names. Visual Paradigm diagram \vpsrc{c43_design}.}{\label{fig:c43_design}\label{fig:design43}}
 
 \subsection{Update Attributes}\label{sec:4.3.1}
 
-Every attribute becomes private and receives a Java type (Table~\ref{tab:types43}): money becomes \code{BigDecimal},
-because binary floating point cannot represent cents exactly; a date becomes \code{LocalDate} (a day) or
-\code{LocalDateTime} (an instant); a free-text \code{status} becomes an enumeration, so an impossible state cannot be
-written; and \code{Address} receives the identifier \code{addressId}, needed to choose a delivery address at checkout.
+Every attribute becomes private and gets a Java type (Table~\ref{tab:types43}). Three choices matter:
+\begin{itemize}
+\item money is \code{BigDecimal}, because binary floating point cannot hold cents exactly;
+\item a status is an enumeration, so an impossible state cannot be written;
+\item \code{Address} gets the identifier \code{addressId}, to choose the delivery address at checkout.
+\end{itemize}
 
 \begin{longtable}{@{}P{2.7cm}P{3.4cm}P{8.9cm}@{}}
 \caption{Refinement of attribute types from analysis to design}\label{tab:types43}\\
@@ -338,38 +311,38 @@ written; and \code{Address} receives the identifier \code{addressId}, needed to 
 
 \subsection{Update Methods}\label{sec:4.3.2}
 
-Lecture~05 warns against two opposite mistakes: putting all logic in a controller or in one ``god'' service, and
-leaving the domain classes as bare data. Họa. keeps the business rules in the domain classes and lets the services
-only coordinate. The key methods are \code{Cart.addItem(product, quantity)} and \code{Cart.calculateTotal()};
-\code{OrderItem.fromCartItem(item, current)}, which creates an order line at the \emph{current} catalogue price (the
-checkout transformation at the level of one line); \code{Order.calculateTotal(discountRate)}, \code{Order.cancel()}
-(only from \code{PLACED} or \code{PROCESSING}, FR11), \code{Order.advanceTo(next)} (FR13) and
-\code{Order.isOwnedBy(customerId)} (NFR01); and \code{Product.isAvailable} and \code{Product.decreaseStock}, which
-protect the stock. Polymorphism replaces conditions on a type field: \code{Product.getDetailKind()} is answered by
-\code{Painting} and \code{Frame} and checked by \code{Category.accepts(product)}; the abstract
-\code{Payment.process()} is answered differently by \code{PayCash} (cash checked on delivery) and \code{PayCredit}
-(authorisation code required); and \code{Customer.getDiscountRate()} returns zero and is overridden by
-\code{CustomerVIP}.
+Lecture~05 warns against two mistakes: all logic in a controller or ``god'' service, and domain classes that are
+bare data. Họa. keeps the business rules in the domain classes; services only coordinate. For example,
+\code{OrderItem.fromCartItem} uses the \emph{current} catalogue price, and \code{Order.cancel} works only from
+\code{PLACED} or \code{PROCESSING} (FR11). \code{Product.isAvailable} and \code{decreaseStock} protect the stock.
+
+Polymorphism replaces checks on a type field:
+\begin{enumerate}
+\item \code{getDetailKind()} is answered by \code{Painting} and \code{Frame}, and checked by \code{Category.accepts};
+\item the abstract \code{Payment.process()}: \code{PayCash} checks the cash on delivery; \code{PayCredit} requires an
+authorisation code;
+\item \code{Customer.getDiscountRate()} returns zero; \code{CustomerVIP} overrides it.
+\end{enumerate}
 
 \subsection{Update Relationships -- Explain}\label{sec:4.3.3}
 
-In design an association becomes a reference held by one class, so it receives a direction and a role name, which is
-the name of the field. The direction follows the questions the code must answer:
-a cart knows its \code{owner}, to check that the customer of the session may check it out; an order knows its
-\code{customer}, \code{shipping} and \code{payments}; a painting knows its \code{artist}; and the whole of a
-composition knows its parts (\code{Cart.items}, \code{Order.items}). Generalizations become Java inheritance, with
-\code{Product} and \code{Payment} abstract. The «create» dependency between \code{Cart} and \code{Order} is refined
-twice: \code{OrderItem} uses \code{CartItem} through \code{fromCartItem}, and the application service
-\code{CheckoutService} creates the order (Section~\ref{sec:4.4}), since checkout is an application process
-(Lecture~05).
+An association becomes a field of one class, with a direction and a role name (the field name). The direction
+follows what the code must ask:
+\begin{itemize}
+\item a cart knows its \code{owner}, to check who may check it out;
+\item an order knows its \code{customer}, \code{shipping} and \code{payments}; a painting knows its \code{artist};
+\item a composition knows its parts (\code{Cart.items}, \code{Order.items}).
+\end{itemize}
+Generalizations become Java inheritance. The «create» dependency is refined twice: \code{OrderItem} uses
+\code{CartItem} through \code{fromCartItem}, and \code{CheckoutService} creates the order (Section~\ref{sec:4.4}),
+because checkout is an application process (Lecture~05).
 
 \subsection{Database (Revised)}\label{sec:4.3.4}
 
-The design classes change some decisions of the logical data model, so the database is revised with them.
-Table~\ref{tab:dbrev} compares the logical data model of Section~\ref{sec:2.dm.2} with the database that is
-actually generated (Section~\ref{sec:4.2}); the generated schema contains every revision, and
-\code{tools/check_code_model.py} checks after every change that the database, the model and the SQL of the
-repositories still agree.
+The design changes some decisions of the logical data model, so the database changes too. Table~\ref{tab:dbrev}
+compares the logical model (Section~\ref{sec:2.dm.2}) with the generated database (Section~\ref{sec:4.2}), which
+has every revision. After every change, \code{tools/check_code_model.py} checks that the database, the model and
+the repositories' SQL still agree.
 
 \begin{longtable}{@{}P{2.6cm}P{3.6cm}P{4.6cm}P{4.2cm}@{}}
 \caption{Revisions of the database after the design}\label{tab:dbrev}\\
@@ -384,15 +357,15 @@ repositories still agree.
 \small Money & \small \code{float} & \small \code{numeric(12,2)} (\code{price}, \code{unit_price}, \code{total_amount}, \dots); \code{discount_rate numeric(4,3)} & \small \code{BigDecimal}: exact cents\\
 \small Dates & \small \code{Date} & \small \code{date} for a day, \code{timestamp} for an instant & \small \code{LocalDate}, \code{LocalDateTime}\\
 \small States & \small \code{status : String} & \small \code{varchar} with \code{CHECK ... IN} the allowed values & \small Enumerations \code{OrderStatus}, \code{ShippingStatus}, \code{PaymentStatus}\\
-\small Address & \small No identifier & \small \code{address_id} primary key, \code{address.customer_id} and \code{shipping.address_id} foreign keys & \small \code{Address.addressId}: choose the delivery address at checkout\\
-\small Links & \small Named associations with multiplicities & \small A foreign key per association; \code{UNIQUE} where the upper bound is 1 (\code{cart.customer_id}, \code{shipping.order_id}) & \small Navigable references (Section~\ref{sec:4.3.3})\\
-\small Inheritance & \small \emph{is a} links 1 -- 0..1 & \small Child table shares the parent key (\code{painting}, \code{frame}; \code{pay_cash}, \code{pay_credit}); \code{payment.method} names the payment table & \small Abstract \code{Product} and \code{Payment}: the repository must know which subclass to build\\
-\small Detail table & \small \code{Category} (id, name, description) classifies \code{Product} & \small \code{category.detail_kind} with \code{CHECK ... IN ('PAINTING','FRAME')} names the detail table; \code{product.category_id NOT NULL} & \small Enumeration \code{DetailKind} and \code{Category.accepts}: the repository reads and writes the table the category names (lecturer's feedback)\\
+\small Address & \small No identifier & \small \code{address_id} primary key; foreign keys \code{address.customer_id}, \code{shipping.address_id} & \small \code{Address.addressId}: choose the delivery address at checkout\\
+\small Links & \small Named associations with multiplicities & \small One foreign key per association; \code{UNIQUE} where the upper bound is 1 (\code{cart.customer_id}, \code{shipping.order_id}) & \small Navigable references (Section~\ref{sec:4.3.3})\\
+\small Inheritance & \small \emph{is a} links 1 -- 0..1 & \small Child table shares the parent key (\code{painting}, \code{frame}; \code{pay_cash}, \code{pay_credit}); \code{payment.method} names the payment table & \small Abstract \code{Product}, \code{Payment}: the repository must know which subclass to build\\
+\small Detail table & \small \code{Category} (id, name, description) classifies \code{Product} & \small \code{category.detail_kind} (\code{CHECK ... IN ('PAINTING','FRAME')}) names the detail table; \code{product.category_id NOT NULL} & \small \code{DetailKind}, \code{Category.accepts}: the repository uses the table the category names (lecturer's feedback)\\
 \small Value object & \small \code{FullName} class & \small Columns \code{first_name}, \code{middle_name}, \code{last_name} of \code{customer} & \small Embedded in \code{Customer}\\
 \small Card data & \small \code{cardLast4} & \small \code{card_last4 char(4)}; no column for the full number & \small NFR05\\
 \small Search & \small -- & \small New technical table \code{product_feature} (\code{feature_vector}, \code{model_version}) & \small \code{VectorIndex} of the image search (Chapter~3)\\
-\small Checks & \small -- & \small \code{CHECK} on quantities ($>0$), prices and stock ($\ge 0$) & \small The database itself refuses impossible values, such as a negative stock\\
-\small Constraint names & \small Verbs on the links (\emph{is a}, \emph{contains}) & \small Every foreign key named \code{fk_<table>_<column>}, unique in the database (\code{fk_product_category}) & \small Visual Paradigm's Generate Database refused six foreign keys named \emph{is a} (Section~\ref{sec:4.2.4})\\
+\small Checks & \small -- & \small \code{CHECK} on quantities ($>0$), prices and stock ($\ge 0$) & \small The database refuses impossible values, such as a negative stock\\
+\small Constraint names & \small Verbs on the links (\emph{is a}, \emph{contains}) & \small Each foreign key named \code{fk_<table>_<column>}, unique in the database (\code{fk_product_category}) & \small Generate Database refused six foreign keys named \emph{is a} (Section~\ref{sec:4.2.4})\\
 \bottomrule
 \end{longtable}
 
@@ -401,29 +374,27 @@ repositories still agree.
 
 \subsection{Three Layers and their Relationships}\label{sec:4.4.1}
 
-Họa. uses the three-layer architecture of Assignment~06 (Figure~\ref{fig:c44_layers}). The \textbf{Presentation
-layer} receives requests and shows results (the browser views, the controllers, the web server and the session); the
-\textbf{Application layer} coordinates the use cases (the services of the shop and the search and AI services of
-Assignment~06); the \textbf{Data layer} stores and fetches data and reaches the external services (the repository
-interfaces and their SQLite implementations, \code{Database}, the \code{VectorIndex}, and the Gemma~4 and Whisper
-clients behind \code{LlmClient} and \code{SpeechClient}). The domain classes are not a layer of their own: they are
-the model shared by the three layers, as in the reference design.
+Họa. uses the three layers of Assignment~06 (Figure~\ref{fig:c44_layers}):
+\begin{enumerate}
+\item \textbf{Presentation} receives requests and shows results;
+\item \textbf{Application} coordinates the use cases: the shop services, and the search and AI services of
+Assignment~06;
+\item \textbf{Data} stores and fetches data and reaches the external services, through the repositories,
+\code{VectorIndex} and the Gemma~4 and Whisper clients.
+\end{enumerate}
+The domain classes are not a layer. As in the reference design, all three layers share them.
 
 \landscapefig{c44_layers}{The three layers of Họa.}{The three layers of Họa. with their classes and the links between them; the domain classes are the model shared by all layers. Visual Paradigm diagram \vpsrc{c44_layers}.}{\label{fig:c44_layers}\label{fig:layers44}}
 
-\paragraph{Explain relationships.} In Figure~\ref{fig:c44_layers} a dashed arrow is a «use» dependency (the class at
-the tail calls the class at the head) and a dashed arrow with a hollow triangle is a realization (the class at the
-tail implements the interface at the head). Every arrow goes down: presentation uses application, application uses
-data, and nothing in the data layer uses the layers above it; each layer may use the shared domain model.
-\code{tools/check_code_model.py} checks this rule on the imports of every Java file; its one reported exception is
-\code{EcomApplication}, the composition root, which creates the data-layer objects at start-up and hands them to the
-services. No view or controller calls a repository, so the user interface never touches the database (NFR04).
+\paragraph{Explain relationships.} In Figure~\ref{fig:c44_layers} a dashed arrow is a «use» dependency; with a
+hollow triangle it is a realization. Notice that every arrow goes down: presentation uses application, and
+application uses data. Any layer may use the domain model. \code{tools/check_code_model.py} checks this rule on
+every Java import. Its one exception is the composition root, \code{EcomApplication}, which creates the data-layer
+objects at start-up and hands them to the services. No view or controller calls a repository, so the user interface
+never touches the database (NFR04).
 
-A package is not a layer (Lecture~05): each layer is realised by several Java packages, and the shared model by the
-packages \code{domain.cart}, \code{domain.order}, \dots{}.
-Figure~\ref{fig:c44_packages} draws them as a UML package diagram: every dependency points downwards or towards the
-domain, which depends on no layer, and the SQLite package realises the repository interfaces, so the application
-layer never depends on SQLite directly.
+A package is not a layer (Lecture~05). Figure~\ref{fig:c44_packages} shows the Java packages of each layer and of
+the shared model. Dependencies point down or to the domain, which depends on no layer.
 
 \begin{figure}[H]
 \centering
@@ -431,46 +402,42 @@ layer never depends on SQLite directly.
 \caption[Design packages and their dependencies]{Design packages of Họa.: the Presentation, Application and Data layers with their Java sub-packages, and the domain model shared by all three. Visual Paradigm diagram \vpsrc{c44_packages}.}\label{fig:c44_packages}
 \end{figure}
 
-The lecturer's appendix \emph{From Analysis to Design}~\cite{analysis2design} describes the move from the analysis
-classes to a layered design in four steps, and the design of Họa. follows them:
+The lecturer's appendix \emph{From Analysis to Design}~\cite{analysis2design} gives four steps from analysis classes
+to a layered design. Họa. follows them:
 \begin{enumerate}
-\item \emph{Add methods to the classes}, both the methods of the class itself and those that work with another
-class: \code{Cart.addItem(product, quantity)}, \code{Order.cancel()}, \code{Category.accepts(product)}
-(Section~\ref{sec:4.3}).
-\item \emph{Replace an association by «use»} where a method of one class only uses another class: controllers
-«use» services and services «use» repositories (Figures~\ref{fig:c44_layers} and~\ref{fig:c44_classes_backend});
-the associations that remain are the ones the domain objects keep as fields.
-\item \emph{Use DAO}: every repository is an interface with a SQLite implementation, \code{CartRepository} and
-\code{SqliteCartRepository} playing the roles of \code{CartDAO} and \code{CartDAOImpl} of the appendix. The name
-\emph{Repository} is the one of the A05 and A06 slides (change CR-03).
-\item \emph{Three layers with packages}: presentation (the view and controller of MVC), application, data, and the
-model as the shared domain package (Figures~\ref{fig:c44_layers} and~\ref{fig:c44_packages}).
+\item \emph{Add methods to the classes}, own and cross-class, such as \code{Cart.addItem} and
+\code{Category.accepts} (Section~\ref{sec:4.3}).
+\item \emph{Replace an association by «use»} where a method only uses another class: controllers use services,
+services use repositories. The remaining associations are domain fields.
+\item \emph{Use DAO}: \code{CartRepository} and \code{SqliteCartRepository} play \code{CartDAO} and
+\code{CartDAOImpl}. The name \emph{Repository} comes from the A05 and A06 slides (change CR-03).
+\item \emph{Three layers with packages}: presentation (MVC's view and controller), application and data, plus the
+model as a shared domain package (Figure~\ref{fig:c44_packages}).
 \end{enumerate}
 
 \subsection{Classes and Relationships per Layer}\label{sec:4.4.2}
 
-Figure~\ref{fig:c44_classes_backend} expands the application and data classes with the methods of the four services
-and the four repository interfaces: the design class model that Lecture~05 asks students to expand from
-\code{CheckoutController}, \code{CheckoutService}, \code{Cart}, \code{Order}, \code{CartRepository} and
-\code{OrderRepository}. The SQLite classes implement the same methods as their interfaces and are drawn by name only;
-the domain classes are in Figure~\ref{fig:c43_design}.
+Figure~\ref{fig:c44_classes_backend} shows the methods of the four services and the four repository interfaces.
+Lecture~05 asks to expand them from six classes: \code{CheckoutController}, \code{CheckoutService}, \code{Cart},
+\code{Order}, \code{CartRepository} and \code{OrderRepository}. The SQLite classes share their interfaces'
+methods, so only their names are drawn.
 
 \landscapefig{c44_classes_backend}{Application and data classes}{Application and data classes: the four services and the four repository interfaces with their methods, the SQLite implementations (realization) and \code{Database}. Visual Paradigm diagram \vpsrc{c44_classes_backend}.}{\label{fig:c44_classes_backend}}
 
-Three kinds of relationships connect the classes of the layers. \textbf{«use»}: each controller uses one or two services, and
-each service uses repository interfaces, the search classes or the AI interfaces (\code{CheckoutService} uses
-\code{CartRepository}, \code{OrderRepository}, \code{ProductRepository} and \code{CustomerRepository}); every
-dependency is a field set by the constructor. \textbf{«create»}: \code{CheckoutService} creates the \code{Order}, the
-design form of the checkout transformation. \textbf{Realization}: each repository interface has one SQLite
-implementation (\code{SqliteOrderRepository} implements \code{OrderRepository}), and \code{GemmaClient} and
-\code{WhisperClient} implement \code{LlmClient} and \code{SpeechClient}. The services depend on the interfaces, never
-on the SQLite or HTTP classes (dependency inversion), so the database or the AI provider can be replaced, or replaced
-by a fake in the tests, without changing the application layer.
+Three kinds of relationships connect the layers:
+\begin{enumerate}
+\item \textbf{«use»}: a controller uses one or two services; a service uses repositories, search classes or AI
+interfaces. Each is a field set by the constructor.
+\item \textbf{«create»}: \code{CheckoutService} creates the \code{Order}.
+\item \textbf{Realization}: one SQLite class per repository interface; \code{GemmaClient} and \code{WhisperClient}
+implement \code{LlmClient} and \code{SpeechClient}.
+\end{enumerate}
+Services depend only on interfaces, never on the SQLite or HTTP classes (dependency inversion). So the database or
+the AI provider can be replaced, or faked in tests, without changing the application layer.
 
 \subsection{Explain}\label{sec:4.4.3}
 
-Lecture~05 assigns four responsibilities to four kinds of classes. Table~\ref{tab:resp44} shows how Họa. applies
-them to checkout.
+Table~\ref{tab:resp44} shows the four responsibilities of Lecture~05 in the checkout of Họa.
 
 \begin{longtable}{@{}P{2.2cm}P{3.6cm}P{3.9cm}P{5.3cm}@{}}
 \caption{The four design responsibilities in Họa.}\label{tab:resp44}\\
@@ -482,21 +449,21 @@ them to checkout.
 \textbf{Component} & \textbf{Question (Lecture 05)} & \textbf{Class in Họa.} & \textbf{Responsibility in checkout}\\
 \midrule
 \endhead
-\small Controller & \small How does a request enter? & \small \code{CheckoutController} & \small Takes the customer id from the session, builds a \code{PayCash} or \code{PayCredit} from the payment method, calls the service\\
-\small Service & \small How is a process coordinated? & \small \code{CheckoutService} & \small Runs the steps of the checkout in order; the natural place of a database transaction\\
+\small Controller & \small How does a request enter? & \small \code{CheckoutController} & \small Takes the customer id from the session, builds \code{PayCash} or \code{PayCredit}, calls the service\\
+\small Service & \small How is a process coordinated? & \small \code{CheckoutService} & \small Runs the checkout steps in order; the natural place for a database transaction\\
 \small Domain & \small What does the business represent? & \small \code{Cart}, \code{Order}, \code{OrderItem}, \code{Payment} & \small Rules: non-empty cart, frozen price, total with discount, payment processing\\
-\small Repository & \small How is data persisted? & \small \code{CartRepository}, \code{OrderRepository}, \code{ProductRepository} & \small Read the cart and the catalogue, save the order, decrease stock, clear the cart\\
+\small Repository & \small How is data persisted? & \small \code{CartRepository}, \code{OrderRepository}, \code{ProductRepository} & \small Read cart and catalogue, save the order, decrease stock, clear the cart\\
 \bottomrule
 \end{longtable}
 
-\textbf{Checkout across the layers.} Figure~\ref{fig:c44_checkout_seq} shows the design sequence, which follows the
-body of \code{CheckoutService.checkout} in \code{demo/src}. The controller takes the customer id from the session,
-builds the payment object and calls the service. The service reads the cart and refuses it if it is empty or belongs
-to another customer, reads the customer and creates an \code{Order} with status \code{PLACED}; for each cart line it
-reads the product again, checks \code{isAvailable} and adds \code{OrderItem.fromCartItem(item, current)}, so the price
-is frozen from the catalogue, not trusted from the cart. It then creates the \code{Shipping}, computes the total with
-the customer's discount, lets the polymorphic \code{process()} authorise a card payment (cash stays \code{PENDING}
-until delivery), saves the order, decreases the stock and empties the cart.
+\textbf{Checkout across the layers.} Figure~\ref{fig:c44_checkout_seq} shows the design sequence, taken from
+\code{CheckoutService.checkout} in \code{demo/src}. Beside the arrows, notice four steps in the code:
+\begin{enumerate}
+\item the service refuses an empty cart, or another customer's cart;
+\item it reads each product again and checks \code{isAvailable}; the price comes from the catalogue, not the cart;
+\item it creates the \code{Shipping} before computing the total;
+\item the polymorphic \code{process()} authorises a card payment; cash stays \code{PENDING} until delivery.
+\end{enumerate}
 
 \begin{figure}[htbp]
 \centering
@@ -507,69 +474,70 @@ repositories. Visual Paradigm diagram \vpsrc{c44_checkout_seq}.}
 \end{figure}
 
 \textbf{Why \texttt{checkout(cartId, customerId, addressId, payment)}.} Lecture~05 proposes
-\code{CheckoutService.checkout(cartID) : Order}, so that the service reads the current cart, checks its state and
-controls the transaction. Họa. keeps \code{cartId} first and adds what a real checkout needs: \code{customerId}, taken
-from the session and never from the request body, so the service can check that the cart belongs to the customer
-(NFR01); \code{addressId}, one of the customer's addresses; and the \code{payment} chosen by the customer.
+\code{checkout(cartID) : Order}, so the service reads the current cart, checks it and controls the transaction.
+Họa. keeps \code{cartId} and adds \code{customerId}, from the session and never the request body, to check the
+cart's owner (NFR01). It also adds the customer's \code{addressId} and the chosen \code{payment}.
 
 %% =========================================================================
 \section{Generate Code from 4.4}\label{sec:4.5}
 
 \subsection{How the Code Is Generated}\label{sec:4.5.1}
 
-The code is generated from the model of Section~\ref{sec:4.4}, not written from memory. The script
-\code{tools/gen_java.py} reads \code{tools/model.py}, the same specification from which the Visual Paradigm
-diagrams of this chapter are built, and writes one Java file per class into \code{demo/generated/src}. Each layer
-package becomes a Java package \code{com.ptit.ecom.<layer>.<area>}; each class, interface and enumeration a Java type;
-each private attribute and each association end with a role a field; generalization becomes \code{extends},
-realization \code{implements}, a «use» dependency a field set by the constructor, and each operation a method with
-the same name, parameters and return type. The browser views are not generated, because they are JavaScript modules.
+The code is generated from the model of Section~\ref{sec:4.4}, not written from memory. \code{tools/gen_java.py}
+reads \code{tools/model.py}, the file behind this chapter's diagrams, and writes one Java file per class into
+\code{demo/generated/src}:
+\begin{itemize}
+\item layer package $\rightarrow$ Java package \code{com.ptit.ecom.<layer>.<area>}; class, interface or enumeration
+$\rightarrow$ Java type;
+\item private attribute or association role $\rightarrow$ field; «use» dependency $\rightarrow$ field set by the
+constructor;
+\item generalization $\rightarrow$ \code{extends}; realization $\rightarrow$ \code{implements};
+\item operation $\rightarrow$ method with the same name, parameters and return type.
+\end{itemize}
+The browser views are JavaScript modules and are not generated.
 
-Listing~\ref{lst:gencheckout} shows a generated file,
-\code{demo/generated/src/com/ptit/ecom/application/service/CheckoutService.java}: package, imports, fields and
-signatures are complete, and every body that the model does not specify throws an ``unsupported'' exception until
-it is implemented.
+Listing~\ref{lst:gencheckout} shows one generated file. Package, imports, fields and signatures are complete; each
+body the model does not specify throws an ``unsupported'' exception.
 
 \IfFileExists{../demo/generated/src/com/ptit/ecom/application/service/CheckoutService.java}{%
 \lstinputlisting[language=Java,caption={Generated skeleton of \texttt{CheckoutService}},label={lst:gencheckout}]{../demo/generated/src/com/ptit/ecom/application/service/CheckoutService.java}}%
 {\assetbox{Generated skeleton}{demo/generated/src/com/ptit/ecom/application/service/CheckoutService.java}}
 
-The implementation in \code{demo/src/main/java} starts from these files and keeps every name: class, method,
-parameter and field names, and the table and column names used in SQL, must be exactly those of the model.
-\code{tools/check_code_model.py} enforces this rule by comparing the source code, the JavaScript views and the real
-database with \code{model.py}; its report, the second part of \code{build/test_results.txt}, finds no difference.
+The implementation in \code{demo/src/main/java} starts from these files and keeps every model name, down to SQL
+tables and columns. \code{tools/check_code_model.py} compares the code, the JavaScript views and the real database
+with \code{model.py}. Its report (second part of \code{build/test_results.txt}) finds no difference.
 
 \subsection{Present Structure of Packages and Classes}\label{sec:4.5.2}
 
-The implemented project contains \javaFileCount{} Java files (\javaLineCount{} lines) and \jsFileCount{} JavaScript
-view modules. Its package tree mirrors the layers of Figure~\ref{fig:c44_layers}: one folder per layer, one
-sub-folder per package, one file per class.
+The project has \javaFileCount{} Java files (\javaLineCount{} lines) and \jsFileCount{} JavaScript view modules. Its
+package tree mirrors the layers of Figure~\ref{fig:c44_layers}: one folder per layer, one sub-folder per package,
+one file per class.
 
 \txtfileor{generated/code_tree.txt}{../build/code_tree5.txt}
 
 \subsection{Present Code}\label{sec:4.5.3}
 
-\code{CheckoutService} is the class whose generated skeleton is shown in Listing~\ref{lst:gencheckout}; the listing
-below is the same class after implementation. It is the application service of Lecture~05: its steps are those of
-Section~\ref{sec:4.4.3}, every field and signature is unchanged from the skeleton, and the domain methods it calls
-(\code{Cart.isEmpty}, \code{OrderItem.fromCartItem}, \code{Order.calculateTotal}) carry the business rules.
+Below is \code{CheckoutService} after implementation (skeleton in Listing~\ref{lst:gencheckout}). It is the
+application service of Lecture~05, with the steps of Section~\ref{sec:4.4.3} and every field and signature
+unchanged. The business rules stay in the domain methods it calls: \code{Cart.isEmpty},
+\code{OrderItem.fromCartItem}, \code{Order.calculateTotal}.
 
 \excerpt{Java}{CheckoutService.java}
 
-The other classes follow the same pattern: \code{OrderService} reads an order through
-\code{OrderRepository.findOrder} and applies \code{Order.isOwnedBy}, so an order of another customer is reported as
-not found (NFR01), and \code{SqliteOrderRepository} uses only the tables and columns of the model, with parameterised
-statements, so a value typed by a user can never change a query. Chapter~\ref{ch:code} presents the code of the
-search, AI and web classes.
+The other classes follow the same pattern. \code{OrderService} reads an order through
+\code{OrderRepository.findOrder} and applies \code{Order.isOwnedBy}. So another customer's order is ``not found''
+(NFR01). \code{SqliteOrderRepository} uses only model tables and columns, with parameterised statements, so user
+input cannot change a query. Chapter~\ref{ch:code} shows the search, AI and web classes.
 
 %% =========================================================================
 \section{Conclusion}\label{sec:4.6}
 
-The design turns the meaning of Chapter~\ref{ch:analysis} into a structure that can be programmed: the analysis
-diagram was updated for the painting shop, the \nTables{} tables were derived and generated from it, the design
-classes received types, methods and directions, every class was placed in one of three layers or in the shared domain
-model, and the Java skeleton was generated from that model. Two limits remain: the checkout steps run as separate
-repository calls on one SQLite file, where a production system would use one database transaction and handle
-concurrent buyers of the same print; and the vector of the image search is deliberately simple
-(Chapter~\ref{ch:ai}), with the table \code{product_feature} ready for a learned embedding. Chapter~\ref{ch:code}
-presents the complete code, the user interface and the tests.
+The design turned the analysis of Chapter~\ref{ch:analysis} into a structure that can be programmed:
+\nTables{} generated tables, typed classes in three layers, and a generated Java skeleton. Two limits remain:
+\begin{enumerate}
+\item checkout runs as separate repository calls on one SQLite file; production needs one transaction and must
+handle concurrent buyers of the same print;
+\item the image-search vector is deliberately simple (Chapter~\ref{ch:ai}); \code{product_feature} is ready for a
+learned embedding.
+\end{enumerate}
+Chapter~\ref{ch:code} presents the complete code, the user interface and the tests.

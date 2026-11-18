@@ -8,7 +8,7 @@ Mỗi câu có hai tầng: \key{Nói ngắn} là câu trả lời bằng lời t
 
 \qa{Vì sao sơ đồ lớp phân tích không có phương thức, cũng không có bội số?}
 {Theo quy tắc của thầy, mỗi sơ đồ thêm đúng một loại thông tin. Lớp phân tích chỉ có thuộc tính và loại quan hệ. Mô hình dữ liệu thêm tên quan hệ và số lượng ở hai đầu. Thiết kế mới thêm kiểu, phương thức và chiều quan hệ.}
-{Showcase C, chuỗi 1, trình bày đúng ba bước này cho lớp \code{Order}, kèm ``thay đổi gì, vì sao, được gì'' ở mỗi bước.}
+{Ba bước trong VP: \vp{2.8 Domain Model - analysis class diagram} $\to$ \vp{2.9b Logical Data Model (ORM-Persistable)} $\to$ \vp{4.3 Class Diagram in Design}. Trong bài: §4.1 (Hình 4.1), §2.8.2 (Hình 2.14), §4.3 (Hình 4.6); Bảng 4.2 ở §4.1.4 ghi từng lớp đổi gì.}
 
 \qa{Từ \factAnalysis{} lớp phân tích sao thành \factJavaClasses{} lớp Java?}
 {Các lớp miền giữ nguyên tên. Thiết kế thêm những lớp ``làm việc'': nhận yêu cầu web, điều phối từng việc, cất và lấy dữ liệu, gọi AI, cùng vài kiểu liệt kê như trạng thái đơn, trạng thái giao hàng.}
@@ -30,17 +30,17 @@ BPMN & Quy trình nghiệp vụ từ đặt hàng đến giao: ai làm gì, ở 
 Bản đồ bên liên quan & Ai quan tâm điều gì, mục tiêu nào của hệ thống trả lời họ & 1.3 Stakeholder Map (ArchiMate)\\
 Cây vấn đề & Nguyên nhân gốc $\to$ vấn đề $\to$ tác động; từ đó ra nhu cầu & 1.6 Problem Tree (ArchiMate)\\
 Use case & Ai dùng hệ thống để đạt mục tiêu gì; include, extend, tổng quát hóa & 1.2 Use Case Diagram; 2.4a--c theo nhóm\\
-Hoạt động & Các bước của một việc và mọi ngã rẽ theo luật & 2.2 Activity - Checkout (và 4 sơ đồ khác)\\
-Tuần tự phân tích (BCE) & Đối tượng nào chịu trách nhiệm từng bước: trang, bộ điều khiển, thực thể & 2.6a--c Analysis Sequence\\
+Hoạt động & Các bước của một việc và mọi ngã rẽ theo luật & 2.2 Activity - Checkout (và 5 sơ đồ khác)\\
+Tuần tự phân tích (BCE) & Đối tượng nào chịu trách nhiệm từng bước: trang, bộ điều khiển, thực thể & 2.6b Analysis Sequence - Checkout (2.6a, 2.6c chỉ có trong VP)\\
 Máy trạng thái & Vòng đời của đơn và bước chuyển hợp lệ & 2.4 State Machine - Order\\
 Lớp phân tích & Khái niệm miền, thuộc tính, loại quan hệ & 2.8 Domain Model; 4.1 Class Diagram in Analysis\\
 Dữ liệu mức khái niệm & Cần cất những thực thể nào, nối với nhau ra sao & 2.9a Conceptual Data Model\\
 Dữ liệu mức logic & Thuộc tính lưu trữ, tên quan hệ, bội số hai đầu & 2.9b Logical Data Model\\
 Dữ liệu mức vật lý & Bảng, cột, kiểu SQL, khóa chính, khóa ngoại, UNIQUE & 4.2 Physical Data Model\\
 ERD & Chính cơ sở dữ liệu, nguồn để VP sinh câu lệnh tạo bảng & 4.2 Database - entity relationship diagram\\
-Thành phần (component) & Ba khối logic và thứ đi qua mỗi phụ thuộc (HTTP, SQL, ảnh, âm thanh) & 4.4a Three Logical Components\\
-Lớp thiết kế & Kiểu, phương thức, chiều quan hệ, tên vai trò & 4.3 Class Diagram in Design; 4.4a--c theo tầng\\
-Tuần tự thiết kế & Lớp thật gọi phương thức thật qua các tầng, đúng như code chạy & 4.4d Checkout across the layers; 4.4d, 4.4e\\
+Thành phần (component) & Ba khối logic và thứ đi qua mỗi phụ thuộc (HTTP, SQL, ảnh, âm thanh) & 4.4a Three Logical Components (chỉ có trong VP)\\
+Lớp thiết kế & Kiểu, phương thức, chiều quan hệ, tên vai trò & 4.3 Class Diagram in Design; 4.4a, 4.4c theo tầng (4.4b chỉ có trong VP)\\
+Tuần tự thiết kế & Lớp thật gọi phương thức thật qua các tầng, đúng như code chạy & 4.4d Checkout across the layers (tìm kiếm, hủy đơn: 4.4d, 4.4e, chỉ có trong VP)\\
 \bottomrule
 \end{longtable}
 \end{center}
@@ -65,7 +65,7 @@ Tuần tự thiết kế & Lớp thật gọi phương thức thật qua các t�
 \subsection{Mô hình dữ liệu, khóa và quan hệ}
 \qa{Ba mức của mô hình dữ liệu khác nhau thế nào?}
 {Mỗi mức thêm chi tiết cho mức trước. Mức khái niệm chỉ có tên các thứ cần cất và các đường nối có tên. Mức logic thêm thông tin cần lưu và số lượng ở hai đầu mỗi đường nối. Mức vật lý thêm bảng, cột có kiểu, khóa chính, khóa ngoại; từ đó sinh ra cơ sở dữ liệu thật.}
-{Logic: «ORM-Persistable», bội số 1, 0..1, 0..*, 1..*; kế thừa thành ``is a'' 1 -- 0..1. Vật lý: «table», \code{numeric(12,2)}, \{PK\}, \{FK\}, \{U\}. Bài §2.10 (khái niệm, logic) và §4.2.1 (vật lý).}
+{Logic: «ORM-Persistable», bội số 1, 0..1, 0..*, 1..*; kế thừa thành ``is a'' 1 -- 0..1. Vật lý: «table», \code{numeric(12,2)}, \{PK\}, \{FK\}, \{U\}. Bài §2.8.1 (khái niệm), §2.8.2 (logic) và §4.2.1 (vật lý).}
 
 \qa{Khóa ngoại của danh mục hoạt động thế nào?}
 {Mỗi sản phẩm trỏ tới đúng một danh mục và không được để trống; một danh mục có thể có nhiều sản phẩm hoặc chưa có cái nào. Cơ sở dữ liệu từ chối một sản phẩm trỏ tới danh mục không tồn tại. Còn luật ``chi tiết phải nằm đúng bảng danh mục chỉ định'' thì khóa ngoại không diễn tả được, nên em giữ nó trong code và kiểm tra lại bằng một truy vấn.}
@@ -112,7 +112,7 @@ Tuần tự thiết kế & Lớp thật gọi phương thức thật qua các t�
 \subsection{Kiểm chứng yêu cầu}
 \qa{Em kiểm chứng các yêu cầu thế nào?}
 {Bốn lớp bằng chứng. Một, kiểm thử tự động theo từng nhóm: luật của đơn, giỏ, kho, đặt hàng, quyền xem đơn, tìm kiếm, trợ lý. Hai, một lần chạy thử từ đầu đến cuối trên cơ sở dữ liệu mới, qua đúng các đường web, cả khi có và khi tắt Gemma. Ba, công cụ so code với đặc tả. Bốn, thử ghi dữ liệu sai vào cơ sở dữ liệu và xem nó bị từ chối. Phần AI thì đo riêng bằng bộ câu hỏi.}
-{\factTests{} kiểm thử (\file{build/test_results.txt}); \factEtoE{}/\factEtoE{} bước (\file{tools/e2e_check.py}, \file{build/e2e_results.txt}); \factSqlRejected{} câu sai bị từ chối (\file{build/sql_validation.txt}). Không phải yêu cầu nào cũng có kiểm thử tự động: bảng yêu cầu ở showcase G ghi rõ cái nào chứng minh bằng demo.}
+{\factTests{} kiểm thử (\file{build/test_results.txt}); \factEtoE{}/\factEtoE{} bước (\file{tools/e2e_check.py}, \file{build/e2e_results.txt}); \factSqlRejected{} câu sai bị từ chối (\file{build/sql_validation.txt}). Không phải yêu cầu nào cũng có kiểm thử tự động: phụ lục A.2 của bài ghi cách kiểm chứng từng yêu cầu chất lượng; showcase phần 5 liệt kê mọi bài kiểm thử và các bước chạy thử.}
 
 \qa{Kiểm thử có gọi Gemma thật không?}
 {Kiểm thử tự động thì không: em dùng bản giả, lúc trả lời như Gemma, lúc giả như mất kết nối, nên mọi đường lui đều được thử. Lần chạy thử đầu cuối thì gọi Gemma thật. Chất lượng của AI thật đo riêng ở Chương 3.}
@@ -125,7 +125,7 @@ Tuần tự thiết kế & Lớp thật gọi phương thức thật qua các t�
 \subsection{Đánh đổi và hạn chế}\label{sec:hanche}
 \qa{Hạn chế lớn nhất của bài là gì?}
 {Em nói thẳng năm điều, mỗi điều có cách sửa. Đặt hàng chưa nằm gọn trong một giao dịch: nếu sập giữa chừng có thể có đơn đã lưu mà kho chưa trừ; cách sửa là gói lưu đơn, trừ kho, làm rỗng giỏ vào một giao dịch. Hủy đơn chưa trả hàng về kho. Thanh toán chỉ mô phỏng, chưa có mật khẩu. Hiểu ảnh còn đơn giản. Và chỉ chạy trên một máy, một file dữ liệu.}
-{Bài §5.12; showcase G ``Limitations''. Cách sửa việc hủy: thêm thao tác ngược với \code{decreaseStock} rồi gọi trong \code{OrderService.cancelOrder}.}
+{Bài §5.12. Cách sửa việc hủy: thêm thao tác ngược với \code{decreaseStock} rồi gọi trong \code{OrderService.cancelOrder}.}
 
 \qa{Vì sao ``hiểu ảnh'' bằng ba nhãn mà không dùng vector học sâu?}
 {Ba nhãn (phong cách, chủ đề, màu) giải thích được cho khách (``cùng phong cách, cùng màu''), dùng chung từ vựng với tìm bằng chữ nên cộng điểm được, và không cần thêm mô hình trên laptop. Cái giá là độ tinh: hai bức phong cảnh xanh khác hẳn nhau vẫn giống nhau với cửa hàng.}
@@ -138,4 +138,4 @@ Tuần tự thiết kế & Lớp thật gọi phương thức thật qua các t�
 \subsection{Sơ đồ chụp từ bản dùng thử}\label{sec:qtrial}
 \qa{Vì sao có năm sơ đồ là ảnh chụp bản dùng thử của Visual Paradigm?}
 {Bản Community miễn phí từ chối vẽ BPMN, ArchiMate và DFD. Bản dùng thử vẽ được nhưng in dấu ``evaluation copy'' lên mọi file xuất ra, nên em chụp chính cửa sổ VP và ghi rõ ``bản dùng thử'' dưới mỗi hình. Mọi sơ đồ UML và ERD còn lại xuất từ bản Community, không có dấu. Cả năm sơ đồ vẫn nằm trong file project, mở và sửa được.}
-{Năm sơ đồ: 1.3 Stakeholder Map, 1.4 Business Process (BPMN), 1.6 Problem Tree, 1.7 Context Diagram - DFD Level 0, 2.9c DFD Level 1. Hình minh họa trong phụ lục ``Từ phân tích đến thiết kế'' của thầy cũng là ảnh chụp VP Enterprise (Evaluation Copy). Bản dùng thử 30 ngày từ 5/11 nên hôm nay vẫn mở được; hết hạn thì ảnh chụp và file project vẫn còn, bản Community vẫn mở mọi sơ đồ UML, ERD.}
+{Năm sơ đồ (tên trong VP): 1.3 Stakeholder Map, 1.4 Business Process (BPMN), 1.6 Problem Tree, 1.7 Context Diagram - DFD Level 0, 2.9c DFD Level 1; trong bài là Hình 1.1--1.4 và 2.11. Hình minh họa trong phụ lục ``Từ phân tích đến thiết kế'' của thầy cũng là ảnh chụp VP Enterprise (Evaluation Copy). Bản dùng thử 30 ngày từ 5/11 nên hôm nay vẫn mở được; hết hạn thì ảnh chụp và file project vẫn còn, bản Community vẫn mở mọi sơ đồ UML, ERD.}
